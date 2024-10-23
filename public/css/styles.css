@@ -1,0 +1,148 @@
+/* Estilo para la página de login */
+.login-page {
+    font-family: 'Poppins', sans-serif;
+    background: url('../images/blur.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+/* Estilo para el logo */
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px; /* Espacio debajo del logo */
+}
+
+.logo img {
+    max-width: 300px; /* Ajusta el tamaño del logo si es necesario */
+}
+
+/* Título */
+.title {
+    font-size: 50px;
+    margin-bottom: 20px;
+    color: #ffffff;
+    text-align: center;
+    border-bottom: 2px solid #ff3366;
+    padding-bottom: 10px;
+    width: 250px; /* Ancho del título con la línea */
+    margin: 0 auto; /* Centra el título horizontalmente */
+}
+
+
+/* Caja de login */
+.login-box {
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+  
+    color: white;
+}
+
+/* Contenedor del grupo de formularios */
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+/* Input */
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    border-radius: 0;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: transparent;
+    transition: border-bottom 0.3s ease-in-out;
+}
+
+/* Efecto de hover en el input */
+.form-control:focus {
+    border-bottom: 2px solid #ff3366;
+    outline: none;
+}
+
+/* Etiqueta flotante */
+.floating-label {
+    position: absolute;
+    top: 10px; /* Inicialmente está dentro del input */
+    left: 0;
+    font-size: 16px;
+    color: #cccccc;
+    transition: all 0.2s ease-in-out;
+    pointer-events: none;
+}
+
+/* Mover la etiqueta cuando el input tiene foco o contenido */
+.form-control:focus + .floating-label,
+.form-control:not(:placeholder-shown) + .floating-label {
+    top: -20px; /* Mueve la etiqueta hacia arriba */
+    font-size: 12px; /* Reduce el tamaño de la etiqueta */
+    color: #f8f5f6; /* Cambia el color de la etiqueta */
+}
+
+/* Cambiar el color del asterisco (*) */
+label .required {
+    color: #ff3366; /* Cambiar este color al que desees */
+}
+
+
+/* Estilo para el botón de login */
+.login-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #ff3366;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.login-btn:hover {
+    background-color: #ff6699;
+}
+
+/* Estilo para el link de "Olvidaste tu contraseña" */
+.forgot-link {
+    display: block;
+    margin-top: 10px;
+    color: #ff3366;
+    text-decoration: none;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+/* Checkbox */
+.checkbox label {
+    font-size: 14px;
+    color: #333;
+}
+/* Sección de "Registrarse ahora" */
+.register-link {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #999;
+}
+
+.register-link a {
+    color: #ff3366;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
