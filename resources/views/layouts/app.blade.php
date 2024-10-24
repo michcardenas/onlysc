@@ -18,6 +18,68 @@
 
 </head>
 <body>
+<header>
+    <nav class="navbar navbar-top">
+        <!-- Sección izquierda con el botón "PUBLICATE" -->
+        <div class="navbar-left">
+            <button class="btn-publish">PUBLICATE</button>
+        </div>
+
+        <!-- Sección derecha con el selector de ubicación y botones de login/register -->
+        <div class="navbar-right">
+        <div class="location-dropdown">
+            <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon">
+            <select name="location" id="location">
+                <option value="" disabled selected>Seleccionar ciudad</option>
+                @foreach($ciudades as $ciudad)
+                    <option value="{{ $ciudad->id }}">{{ ucfirst($ciudad->nombre) }}</option>
+                @endforeach
+            </select>
+        </div>
+
+
+
+            <!-- Verificamos si el usuario está autenticado -->
+            @if(Auth::check())
+                <a class="btn-user">{{ Auth::user()->name }}</a>
+                <form action="{{ route('logout') }}" method="POST" class="logout-form">
+                    @csrf
+                    <button class="btn-logout">SALIR</button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="btn-login">ACCEDER</a>
+                <a href="{{ route('register') }}" class="btn-register">REGISTRARSE</a>
+            @endif
+        </div>
+       
+
+    </nav>
+    <div class="navbar-bottom">
+    <!-- Logo y barra de búsqueda en la misma fila -->
+    <div class="navbar-left">
+        <a href="/" class="logo2c">
+            <img src="{{ asset('images/logo_v2.png') }}" alt="Logo" class="logo2">
+        </a>
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar por nombre, servicio o atributo...">
+            <button type="submit" class="btn-search">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Enlaces de navegación -->
+    <div class="navbar-right">
+        <a href="/" class="nav-link">INICIO</a>
+        <a href="#" class="nav-link">CATEGORÍAS</a>
+        <a href="#" class="nav-link">FAVORITOS</a>
+        <a href="#" class="nav-link">BLOG</a>
+        <a href="#" class="nav-link">FORO</a>
+    </div>
+</div>
+
+</header>
+
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">

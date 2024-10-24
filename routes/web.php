@@ -1,13 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\InicioController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Auth::routes();
 
-Route::get('/inicio', [App\Http\Controllers\HomeController::class, 'index'])->name('inicio');
+Route::get('/', function () {
+    return redirect()->route('home');
+});
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'showHome'])->name('home');
+
+
+Route::get('/inicio', [InicioController::class, 'show'])->name('inicio');

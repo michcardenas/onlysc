@@ -16,6 +16,8 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
 </head>
 <body class="custom-background">
@@ -38,8 +40,35 @@
             @yield('content')
         </div>
     </main>
+    <footer class="footer">
+    <p>© 2024 Only Escorts | Todos los derechos reservados</p>
+</footer>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <!-- <script src="{{ asset('js/app.js') }}" defer></script> -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var swiper = new Swiper('.swiper-container', {
+            slidesPerView: 3,  // Número de tarjetas visibles
+            spaceBetween: 0,   // Reducir espacio entre tarjetas
+            loop: true,        // Deja habilitado el loop si lo prefieres
+            grabCursor: true,  // Permite agarrar y arrastrar
+            // Eliminamos paginación y flechas
+            pagination: false,  
+            navigation: false,  
+        });
+
+        document.getElementById('location-form').addEventListener('submit', function (e) {
+        var select = document.getElementById('ciudad');
+        if (!select.value) {
+            e.preventDefault(); // Previene que el formulario se envíe
+            window.location.href = '/inicio'; // Redirige a /inicio
+        }
+    });
+    });
+
+</script>
+
+
 </body>
 </html>

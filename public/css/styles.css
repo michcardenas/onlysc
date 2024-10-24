@@ -1,4 +1,10 @@
 /* Estilo para la página de login */
+body, html {
+    overflow-x: hidden;  /* Asegura que no haya scroll horizontal en toda la página */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 .login-page {
     font-family: 'Poppins', sans-serif;
     background: url('../images/blur.jpg') no-repeat center center fixed;
@@ -32,20 +38,11 @@
     max-width: 250px; /* Ajusta el tamaño del logo */
 }
 
-/* Título */
-.title {
-    font-size: 40px; /* Ajusta el tamaño del título */
-    margin-bottom: 15px; /* Espacio debajo del título */
-    color: #ffffff;
-    text-align: center;
-    border-bottom: 2px solid #ff3366;
-    padding-bottom: 8px;
-    width: auto; /* Ajusta el ancho del título para que se adapte al contenido */
-}
+
 
 /* Título */
 .title {
-    font-size: 40px;
+    font-size: 30px;
     margin-bottom: 20px;
     color: #ffffff;
     text-align: center;
@@ -55,7 +52,12 @@
     margin: 0 auto; /* Centra el título horizontalmente */
 }
 
-
+.login-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centra verticalmente */
+    align-items: center;
+}
 /* Caja de login */
 .login-box {
     padding: 40px;
@@ -262,47 +264,245 @@ label .required {
 .location-selector .btn-location:hover {
     background-color: #e63946;
 }
+.swiper-container {
+    width: 100%;
+    height: auto;
+    padding: 20px 0;
+    overflow: hidden;  /* Evita el desbordamiento horizontal */
+}
 
-/* Tarjetas */
+.swiper-slide {
+    display: flex;
+    justify-content: center;
+}
+
+/* Ajusta el gap entre las tarjetas en general */
 .cards-container {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     padding: 20px;
-    gap: 20px;
+    width: 100%;              /* Asegura que el contenedor ocupe el 100% del espacio disponible */
+    max-width: 1200px;         /* Establece un ancho máximo para pantallas grandes */
+    margin: 0 auto;            /* Centra el contenedor horizontalmente */
 }
 
+
 .card {
-    width: 250px;
-    overflow: hidden;
+    width: 24rem; /* Tamaño de las tarjetas */
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: relative; /* Para posicionar el texto dentro de la tarjeta */
 }
 
 .card img {
     width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 10px 10px 0 0;
+    height: 28rem;
 }
 
 .card-content {
-    padding: 15px;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    text-align: center;
+    position: absolute;  /* Posiciona el contenido de la tarjeta de manera absoluta */
+    top: 10px;           /* Ajusta la distancia desde la parte superior */
+    left: 10px;          /* Ajusta la distancia desde la parte izquierda */
+    color: white;        /* Texto en color blanco */
+    z-index: 2;          /* Asegura que el texto esté sobre la imagen */
+    text-align: left;    /* Alinea el texto a la izquierda */
 }
-
 .card h3 {
     margin: 0;
+    font-size: 20px;
+    font-weight: 700;    /* Negrita para el título */
 }
 
 .card p {
     margin: 5px 0 0;
+    font-size: 14px;
+    font-weight: 400;    /* Peso normal para el texto descriptivo */
 }
 
-/* Enlaces dentro de las tarjetas */
 .card-link {
     text-decoration: none;
     color: inherit;
+}
+.footer {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+    position: fixed;   /* Fija el footer en la parte inferior de la ventana */
+    bottom: 0;
+    left: 0;
+    width: 100%;       /* Asegura que ocupe todo el ancho */
+    z-index: 100;      /* Asegura que esté sobre otros elementos */
+}
+
+
+
+
+
+/* Estilos para la barra de navegación superior negra */
+.navbar-top {
+    background-color: #1a1a1a;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 20px;
+    color: #fff;
+}
+
+/* Botón PUBLICATE */
+.btn-publish {
+    background-color: #ff3366;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.btn-publish:hover {
+    background-color: #ff6699;
+}
+
+/* Dropdown de ubicación */
+.location-dropdown {
+    display: flex;
+    align-items: center;
+    color: white;
+    margin-right: 15px; 
+}
+.location-dropdown img.location-icon {
+    width: 20px; /* Ajusta el tamaño del icono */
+    height: auto;
+    margin-right: 5px; /* Espaciado entre el icono y el select */
+    color: #f8f5f6;
+    filter: invert(100%);
+}
+.location-dropdown select {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-left: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    
+}
+
+/* Estilos de los botones de ACCEDER, REGISTRARSE o NOMBRE/SALIR */
+.btn-login, .btn-register, .btn-user, .btn-logout {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 8px 15px;  /* Tamaño reducido del padding */
+    font-size: 12px;    /* Tamaño de la fuente más pequeño */
+    cursor: pointer;
+    margin-left: 10px;  /* Espaciado entre los botones */
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.btn-register {
+color: #cccccc;
+}
+
+.btn-login:hover, .btn-register:hover, .btn-user:hover, .btn-logout:hover {
+    background-color: #ff6699;
+}
+
+/* Estilo para el formulario de logout */
+.logout-form {
+    margin-left: 15px; 
+}
+.navbar-right {
+    display: flex;
+    align-items: center;  /* Alinea verticalmente todos los elementos */
+}
+
+
+/* Para asegurar que el texto se vea siempre pequeño */
+.btn-login, .btn-register {
+    font-size: 12px;
+}
+.btn-login{
+    background-color: white;
+    color: #333;  /* Cambia el texto a oscuro cuando el fondo es blanco */
+    outline: none; /* Elimina el borde de enfoque predeterminado */
+}
+
+
+
+/* Barra de navegación inferior */
+.navbar-bottom {
+    display: flex;
+    justify-content:space-around;
+    align-items: center;
+    padding: 10px 40px;
+    background-color: #fff;
+    color: #333;
+    border-bottom: 2px solid #ccc; /* Agrega un borde inferior */
+}
+
+/* Logo */
+.navbar-left {
+    display: flex;
+    align-items: center;
+}
+
+/* Barra de búsqueda */
+.search-bar {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    padding: 5px;
+    width: 300px;
+}
+
+.search-bar .btn-search {
+    background-color: #ff3366;
+    border: none;
+    padding: 5px 10px;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+    height: 100%; /* Asegurar que el botón esté alineado verticalmente */
+
+}
+
+.search-bar .btn-search i {
+    font-size: 16px;
+}
+
+/* Enlaces de navegación */
+.navbar-right .nav-link {
+    color: #333;
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: bold;
+}
+
+.navbar-right .nav-link:hover {
+    color: #ff3366;
+}
+.logo img {
+    height: 40px; /* Ajusta el tamaño del logo */
+    margin-right: 20px;
+}
+.logo2 {
+  
+    height: 30px;
+}
+.logo2c{
+    padding: 10px;
 }
