@@ -46,7 +46,7 @@ body, html {
     margin-bottom: 20px;
     color: #ffffff;
     text-align: center;
-    border-bottom: 2px solid #ff3366;
+    border-bottom: 2px solid #e00037;
     padding-bottom: 10px;
     width: 250px; /* Ancho del título con la línea */
     margin: 0 auto; /* Centra el título horizontalmente */
@@ -90,7 +90,7 @@ body, html {
 
 /* Efecto de hover en el input */
 .form-control:focus {
-    border-bottom: 2px solid #ff3366;
+    border-bottom: 2px solid #e00037;
     outline: none;
 }
 
@@ -115,7 +115,7 @@ body, html {
 
 /* Cambiar el color del asterisco (*) */
 label .required {
-    color: #ff3366; /* Cambiar este color al que desees */
+    color: #e00037; /* Cambiar este color al que desees */
 }
 
 
@@ -123,7 +123,7 @@ label .required {
 .login-btn {
     width: 100%;
     padding: 10px;
-    background-color: #ff3366;
+    background-color: #e00037;
     color: white;
     border: none;
     border-radius: 5px;
@@ -139,7 +139,7 @@ label .required {
 .forgot-link {
     display: block;
     margin-top: 10px;
-    color: #ff3366;
+    color: #e00037;
     text-decoration: none;
 }
 
@@ -160,7 +160,7 @@ label .required {
 }
 
 .register-link a {
-    color: #ff3366;
+    color: #e00037;
     text-decoration: none;
     font-weight: bold;
 }
@@ -171,7 +171,7 @@ label .required {
 /* Estilo para el mensaje de error */
 .alert-danger {
     color: #ffffff; /* Texto blanco */
-    background-color: #ff3366; /* Fondo rojo */
+    background-color: #e00037; /* Fondo rojo */
     border: 1px solid #ff6699; /* Borde rojo más claro */
     padding: 10px; /* Espaciado interno */
     border-radius: 5px; /* Bordes redondeados */
@@ -354,7 +354,7 @@ label .required {
 
 /* Botón PUBLICATE */
 .btn-publish {
-    background-color: #ff3366;
+    background-color: #e00037;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -421,6 +421,7 @@ color: #cccccc;
 .navbar-right {
     display: flex;
     align-items: center;  /* Alinea verticalmente todos los elementos */
+    opacity: .75;
 }
 
 
@@ -439,18 +440,77 @@ color: #cccccc;
 /* Barra de navegación inferior */
 .navbar-bottom {
     display: flex;
-    justify-content:space-around;
+    justify-content:center;
     align-items: center;
-    padding: 10px 40px;
     background-color: #fff;
     color: #333;
     border-bottom: 2px solid #ccc; /* Agrega un borde inferior */
+    font-family: "Work Sans", sans-serif !important;
+    font-size: .875rem;
+    font-weight: normal;
+    color: #000;
+    height: 3rem;
+ 
+}
+/* Botón de Filtros */
+.btn-filters {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    color: #333;
+    margin-left: 20px;
+}
+
+/* Alinear el ícono SVG y el texto */
+.btn-filters .icon-filter {
+    width: 16px; /* Ajusta el tamaño del ícono */
+    height: 16px;
+    margin-right: 5px; /* Espacio entre el ícono y el texto */
+}
+
+/* Cambiar el color del botón al hacer hover */
+.btn-filters:hover {
+    background-color: #e00037;
+    color: white;
+}
+
+/* Cambiar el color del ícono SVG al hacer hover (opcional) */
+.btn-filters:hover .icon-filter {
+    filter: invert(100%); /* Cambia el ícono a blanco en hover */
+}
+
+.navbar-nav .dropdown-menu {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.navbar-nav .dropdown-menu .dropdown-item {
+    color: #333;
+}
+
+.navbar-nav .dropdown-menu .dropdown-item:hover {
+  
+    color: #fff;
+}
+
+/* Ajuste general de enlaces en la barra de navegación */
+.nav-link {
+    font-weight: bold;
+    color: #333;
 }
 
 /* Logo */
 .navbar-left {
     display: flex;
     align-items: center;
+  
 }
 
 /* Barra de búsqueda */
@@ -460,6 +520,7 @@ color: #cccccc;
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 5px;
+    margin-right: 20px;
 }
 
 .search-bar input {
@@ -470,7 +531,7 @@ color: #cccccc;
 }
 
 .search-bar .btn-search {
-    background-color: #ff3366;
+    background-color: #e00037;
     border: none;
     padding: 5px 10px;
     color: #fff;
@@ -479,7 +540,15 @@ color: #cccccc;
     height: 100%; /* Asegurar que el botón esté alineado verticalmente */
 
 }
+.search-bar .btn-search .search-icon {
+    width: 16px; /* Ajusta el tamaño del ícono */
+    height: 16px;
+    filter: invert(100%); /* Cambia el color del SVG de negro a blanco */
+}
 
+.search-bar .btn-search:hover .search-icon {
+    filter: invert(50%) sepia(100%) saturate(500%) hue-rotate(-20deg); /* Cambia el color en hover */
+}
 .search-bar .btn-search i {
     font-size: 16px;
 }
@@ -491,13 +560,33 @@ color: #cccccc;
     margin-left: 20px;
     font-weight: bold;
 }
-
-.navbar-right .nav-link:hover {
-    color: #ff3366;
+/* Select de categorías estilo limpio */
+.navbar-right select#categorias {
+    border: none;
+    background-color: transparent; /* Elimina el fondo */
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    appearance: none; /* Elimina la flecha por defecto del select */
+    -webkit-appearance: none; /* Compatibilidad con WebKit */
+    -moz-appearance: none; /* Compatibilidad con Firefox */
+    padding: 5px 10px; /* Ajusta el padding */
 }
+
+.navbar-right select#categorias:focus {
+    outline: none; /* Elimina el contorno al enfocarse */
+}
+
+/* Para agregar una flecha personalizada o eliminarla por completo */
+.navbar-right select#categorias::after {
+    content: ""; /* Elimina la flecha nativa del select */
+}
+
+
 .logo img {
     height: 40px; /* Ajusta el tamaño del logo */
-    margin-right: 20px;
+    margin-right: 50px;
+    margin-top: 3.8rem;
 }
 .logo2 {
   
@@ -505,4 +594,217 @@ color: #cccccc;
 }
 .logo2c{
     padding: 10px;
+}
+
+
+
+   /* Estilo general del footer */
+.footer {
+    background-color: #1a1a1a;
+    color: #fff;
+    font-family: "Work Sans", sans-serif;
+    padding: 20px 0;
+}
+
+/* Sección superior: enlaces de ubicación */
+.footer-top {
+    padding: 20px 0;
+    border-bottom: 1px solid #4e4e4e;
+}
+
+
+.footer-title {
+    color: #fff;
+    font-weight: 300;
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+    text-align: left;
+    margin-left: 0; /* Eliminamos márgenes adicionales */
+    padding-left: 0; /* Eliminamos el padding */
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Alineamos el título y las ciudades a la izquierda */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+/* Alinear las listas de ubicaciones */
+.locations-grid {
+    display: flex;
+    justify-content: flex-start; /* Alinear las columnas hacia la izquierda */
+    flex-wrap: wrap;
+    max-width: 1200px;
+    padding-top: 10px; /* Espacio entre el título y las ubicaciones */
+    border-top: 1px solid #4e4e4e; /* Línea debajo del título */
+}
+
+.locations-grid ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 20px 0 0;
+    flex-basis: auto;  /* Ajuste del ancho de cada columna */
+    text-align: left; /* Alineación del contenido dentro de la columna a la izquierda */
+
+}
+
+.locations-grid ul li {
+    margin-bottom: 5px;
+}
+
+.locations-grid ul li a {
+    color: #fff;
+    font-weight: 300; /* Letra más fina */
+    font-size: 0.875rem; /* Letra más pequeña para las ubicaciones */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.locations-grid ul li a:hover {
+    color: #ff3366;
+}
+
+/* Sección de enlaces en la parte media */
+.footer-middle {
+    padding: 20px 0;
+    text-align: center;
+}
+
+.footer-middle .links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.footer-middle .link-row {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 600px; /* Controlamos el ancho máximo */
+    margin-bottom: 10px; /* Espacio entre las filas */
+}
+/* Estilo para el footer inferior */
+.custom-footer-bottom {
+    text-align: center;
+    padding: 20px 0;
+}
+
+/* Estilo para el logo centrado */
+.custom-footer-logo {
+    margin-bottom: 20px; /* Espacio entre el logo y los enlaces */
+}
+
+.custom-logo-footer {
+    max-width: 150px; /* Ajustar el tamaño del logo */
+}
+
+/* Enlaces distribuidos en tres filas */
+.custom-footer-middle {
+    margin-bottom: 20px; /* Espacio entre los enlaces y las redes sociales */
+}
+
+.custom-footer-middle .custom-links {
+    display: flex;
+    align-items: center;
+}
+
+.custom-footer-middle .custom-link-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+    flex-direction: column;
+}
+
+.custom-footer-middle .custom-link-row a {
+    color: #d1d4db;
+    text-decoration: none;
+    font-size: 1rem;
+    margin: 15px; /* Espacio entre los enlaces */
+    text-align: left;
+
+}
+
+.custom-footer-middle .custom-link-row a:hover {
+    color: #ff3366;
+}
+
+/* Redes sociales centradas */
+.custom-social-links {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Espacio entre los iconos */
+}
+
+.custom-social-links a {
+    display: inline-block;
+    background-color: #ff3366; /* Color de fondo para los botones de redes sociales */
+    width: 50px; /* Tamaño del botón */
+    height: 50px;
+    border-radius: 50%; /* Hacer el botón circular */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transición para el hover */
+}
+.custom-social-links a:hover {
+    background-color: #ff6699; /* Cambiar color de fondo al pasar el mouse */
+    transform: scale(1.1); /* Efecto de aumento al hacer hover */
+}
+.custom-social-icon {
+    width: 24px; /* Ajuste del tamaño del ícono dentro del botón */
+    height: 24px;
+    filter: invert(100%); /* Cambiar color del ícono a blanco */
+}
+
+.custom-social-icon:hover {
+    transform: scale(1.2); /* Aumentar el tamaño en hover */
+}
+.custom-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.footer-middle .links a:hover {
+    color: #ff3366;
+}
+
+/* Sección inferior: logo y redes sociales */
+.footer-bottom {
+    padding: 20px 0;
+    text-align: center;
+}
+
+.footer-bottom .footer-logo {
+    margin-bottom: 20px;
+}
+
+.footer-bottom .footer-logo img {
+    height: 40px;
+}
+
+.footer-bottom .social-links a {
+    margin: 0 10px;
+    font-size: 24px;
+    color: #fff;
+}
+
+.footer-bottom .social-links a:hover {
+    color: #ff3366;
+}
+
+/* Sección de derechos reservados */
+.footer-info {
+    background-color: #111;
+    padding: 10px 0;
+    font-size: 0.875rem;
+    border-top: 1px solid #4e4e4e;
+}
+
+.footer-info p {
+    margin: 5px 0;
+}
+
+.footer-info .splazk-logo {
+    height: 20px;
+    vertical-align: middle;
 }

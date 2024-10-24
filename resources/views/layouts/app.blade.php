@@ -55,28 +55,46 @@
 
     </nav>
     <div class="navbar-bottom">
-    <!-- Logo y barra de búsqueda en la misma fila -->
+    <!-- Logo, barra de búsqueda y botón de filtros -->
     <div class="navbar-left">
-        <a href="/" class="logo2c">
-            <img src="{{ asset('images/logo_v2.png') }}" alt="Logo" class="logo2">
+        <a href="/" class="logo">
+            <img src="{{ asset('images/logo_v2.png') }}" alt="Logo" class="logo1">
         </a>
+
+        <!-- Barra de búsqueda -->
         <div class="search-bar">
             <input type="text" placeholder="Buscar por nombre, servicio o atributo...">
             <button type="submit" class="btn-search">
-                <i class="fas fa-search"></i>
+                <img src="{{ asset('images/search.svg') }}" alt="search icon" class="search-icon">
             </button>
         </div>
+
+        <!-- Botón de Filtros -->
+        <button class="btn-filters">
+            <img src="{{ asset('images/filtro.svg') }}" alt="Filtros" class="icon-filter"> Filtros
+        </button>
     </div>
 
-    <!-- Enlaces de navegación -->
+    <!-- Enlaces de navegación con Select de CATEGORÍAS -->
     <div class="navbar-right">
         <a href="/" class="nav-link">INICIO</a>
-        <a href="#" class="nav-link">CATEGORÍAS</a>
+
+        <!-- Select de categorías -->
+        <select name="categorias" id="categorias" class="nav-link">
+            <option value="" disabled selected>CATEGORÍAS</option>
+            <option value="DELUXE">DELUXE</option>
+            <option value="VIP">VIP</option>
+            <option value="PREMIUM">PREMIUM</option>
+            <option value="MASAJES">MASAJES</option>
+        </select>
+
         <a href="#" class="nav-link">FAVORITOS</a>
         <a href="#" class="nav-link">BLOG</a>
         <a href="#" class="nav-link">FORO</a>
     </div>
 </div>
+
+
 
 </header>
 
@@ -139,5 +157,93 @@
             @yield('content')
         </main>
     </div>
+    <footer class="footer">
+
+   <div class="footer-top">
+        <div class="container">
+        <h3 class="footer-title">Escorts disponibles por ubicación</h3>
+
+            <div class="locations-grid">
+                <ul>
+                    <li><a href="#">Escorts en Santiago</a></li>
+                    <li><a href="#">Escorts en Antofagasta</a></li>
+                    <li><a href="#">Escorts en Calama</a></li>
+                    <li><a href="#">Escorts en Chillan</a></li>
+                </ul>
+                <ul>
+                    <li><a href="#">Escorts en Concepcion</a></li>
+                    <li><a href="#">Escorts en Copiapo</a></li>
+                    <li><a href="#">Escorts en Curico</a></li>
+                    <li><a href="#">Escorts en Iquique</a></li>
+                </ul>
+                <ul>
+                    <li><a href="#">Escorts en La Serena</a></li>
+                    <li><a href="#">Escorts en Linares</a></li>
+                    <li><a href="#">Escorts en Los Angeles</a></li>
+                    <li><a href="#">Escorts en Osorno</a></li>
+                </ul>
+                <ul>
+                    <li><a href="#">Escorts en Pucon</a></li>
+                    <li><a href="#">Escorts en Puerto Montt</a></li>
+                    <li><a href="#">Escorts en Punta Arenas</a></li>
+                    <li><a href="#">Escorts en Quillque</a></li>
+                </ul>
+                <ul>
+                    <li><a href="#">Escorts en Rancagua</a></li>
+                    <li><a href="#">Escorts en San Fernando</a></li>
+                    <li><a href="#">Escorts en Talca</a></li>
+                    <li><a href="#">Escorts en Temuco</a></li>
+                </ul>
+                <ul>
+                    <li><a href="#">Escorts en Valdivia</a></li>
+                    <li><a href="#">Escorts en Viña del Mar</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+  <!-- Sección del logo, enlaces y redes sociales -->
+<div class="custom-footer-bottom">
+    <div class="custom-container">
+        <!-- Logo centrado -->
+        <div class="custom-footer-logo">
+            <img src="{{ asset('images/logo_XL-2.png') }}" alt="OnlyEscorts Logo" class="custom-logo-footer">
+        </div>
+
+        <!-- Enlaces en tres filas -->
+        <div class="custom-footer-middle">
+            <div class="custom-links">
+                <div class="custom-link-row">
+                    <a href="#">FORO</a>
+                    <a href="#">BLOG</a>
+                </div>
+                <div class="custom-link-row">
+                    <a href="#">CONTACTO</a>
+                    <a href="#">POLÍTICA DE PRIVACIDAD</a>
+                </div>
+                <div class="custom-link-row">
+                    <a href="#">REGISTRO</a>
+                    <a href="#">PUBLICATE</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Redes sociales centradas -->
+        <div class="custom-social-links">
+            <a href="#"><img src="{{ asset('images/facebook.svg') }}" alt="Facebook" class="custom-social-icon"></a>
+            <a href="#"><img src="{{ asset('images/instagram.svg') }}" alt="Instagram" class="custom-social-icon"></a>
+            <a href="#"><img src="{{ asset('images/x.svg') }}" alt="X" class="custom-social-icon"></a>
+        </div>
+    </div>
+</div>
+
+
+        <!-- Derechos reservados y aviso -->
+        <div class="footer-info">
+            <p>© 2024 Only Escorts | Todos los derechos reservados</p>
+        </div>
+    </div>
+</footer>
+
+
 </body>
 </html>
