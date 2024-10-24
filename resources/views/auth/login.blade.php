@@ -3,12 +3,21 @@
 @section('content')
 <div class="login-container">
     <!-- Logo y Título fuera de la caja -->
-    <div class="logo">
-        <img class="only" src="{{ asset('images/logo_XL-2.png') }}" alt="Logo">
+    <div class="logo-title-container">
+        <div class="logo">
+            <img class="only" src="{{ asset('images/logo_XL-2.png') }}" alt="Logo">
+        </div>
+        <h2 class="title">Mi cuenta</h2>
     </div>
-    <h2 class="title">Mi cuenta</h2>
 
     <div class="login-box">
+        <!-- Mostrar el mensaje de error si las credenciales no son correctas -->
+        @if ($errors->has('email'))
+            <div class="alert alert-danger">
+                {{ $errors->first('email') }}
+            </div>
+        @endif
+
         <form method="POST" action="{{ route('login') }}">
             @csrf
 
@@ -21,11 +30,6 @@
                 <input id="password" type="password" class="form-control" name="password" placeholder=" " required>
                 <label for="password" class="floating-label">Contraseña <span class="required">*</span></label>
             </div>
-
-
-
-
-
 
             <a href="{{ route('password.request') }}" class="forgot-link">Olvidaste tu contraseña</a>
 

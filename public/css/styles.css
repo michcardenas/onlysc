@@ -6,26 +6,46 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     margin: 0;
-    padding: 0;
+    padding-top: 80px; /* Ajusta la distancia desde la parte superior */
 }
-/* Estilo para el logo */
+/* Contenedor para el logo y el título */
+.logo-title-container {
+    display: flex;
+    flex-direction: column; /* Coloca el logo y el título uno debajo del otro */
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px; /* Ajusta el espacio debajo del contenedor */
+}
+
+/* Logo */
 .logo {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px; /* Espacio debajo del logo */
+    margin-bottom: 10px; /* Espacio entre el logo y el título */
 }
 
 .logo img {
-    max-width: 300px; /* Ajusta el tamaño del logo si es necesario */
+    max-width: 250px; /* Ajusta el tamaño del logo */
 }
 
 /* Título */
 .title {
-    font-size: 50px;
+    font-size: 40px; /* Ajusta el tamaño del título */
+    margin-bottom: 15px; /* Espacio debajo del título */
+    color: #ffffff;
+    text-align: center;
+    border-bottom: 2px solid #ff3366;
+    padding-bottom: 8px;
+    width: auto; /* Ajusta el ancho del título para que se adapte al contenido */
+}
+
+/* Título */
+.title {
+    font-size: 40px;
     margin-bottom: 20px;
     color: #ffffff;
     text-align: center;
@@ -128,7 +148,7 @@ label .required {
 /* Checkbox */
 .checkbox label {
     font-size: 14px;
-    color: #333;
+    color: #999;
 }
 /* Sección de "Registrarse ahora" */
 .register-link {
@@ -145,4 +165,14 @@ label .required {
 
 .register-link a:hover {
     text-decoration: underline;
+}
+/* Estilo para el mensaje de error */
+.alert-danger {
+    color: #ffffff; /* Texto blanco */
+    background-color: #ff3366; /* Fondo rojo */
+    border: 1px solid #ff6699; /* Borde rojo más claro */
+    padding: 10px; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    margin-bottom: 3rem; /* Espacio debajo del mensaje */
+    text-align: center; /* Centrar el texto */
 }
