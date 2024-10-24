@@ -176,3 +176,133 @@ label .required {
     margin-bottom: 3rem; /* Espacio debajo del mensaje */
     text-align: center; /* Centrar el texto */
 }
+
+
+/* Fondo de la página */
+.custom-background {
+    background-image: url('../images/IMAGEN-scaled-e1727837771908.jpg'); /* Ruta de la imagen de fondo */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    height: 100vh;
+    font-family: 'Work Sans', sans-serif;
+}
+
+/* Logo */
+.logo-container1 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.logo1 {
+    margin-bottom: 50px;
+    height: 80px;
+}
+
+/* Contenedor del selector centrado */
+.selector-container {
+    display: flex;
+    justify-content: center; /* Centrar horizontalmente */
+    margin-top: 20px; /* Espacio hacia el logo */
+    margin-bottom: 20px; /* Espacio antes de las tarjetas */
+}
+
+/* Contenedor del select y botón */
+.location-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centra horizontalmente */
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    padding: 5px;
+    flex-wrap: nowrap;
+}
+
+/* Ícono de ubicación */
+.location-selector i {
+    font-size: 18px;
+    color: #000;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+/* Estilo del select */
+.location-selector select {
+    border: none;
+    background-color: transparent;
+    font-size: 16px;
+    color: #333;
+    padding: 8px;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+/* Flecha del select */
+.location-selector select::-ms-expand {
+    display: none;
+}
+
+/* Botón de "Entrar" */
+.location-selector .btn-location {
+    background-color: #ff4757;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.location-selector .btn-location:hover {
+    background-color: #e63946;
+}
+
+/* Tarjetas */
+.cards-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 20px;
+    gap: 20px;
+}
+
+.card {
+    width: 250px;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+}
+
+.card-content {
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    text-align: center;
+}
+
+.card h3 {
+    margin: 0;
+}
+
+.card p {
+    margin: 5px 0 0;
+}
+
+/* Enlaces dentro de las tarjetas */
+.card-link {
+    text-decoration: none;
+    color: inherit;
+}

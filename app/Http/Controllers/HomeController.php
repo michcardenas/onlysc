@@ -3,26 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Ciudad;  // Modelo para la tabla 'ciudades'
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function index()
+    public function showHome()
     {
-        return view('home');
+        // Obtener las ciudades desde la base de datos
+        $ciudades = Ciudad::all();
+
+        // Retornar la vista 'home.blade.php', pasando la variable $ciudades
+        return view('home', compact('ciudades'));
     }
 }
