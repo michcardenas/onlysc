@@ -4,7 +4,7 @@
     <!-- Contenido del selector de ciudades -->
     <div class="location-selector">
         <i class="fas fa-map-marker-alt"></i>
-        <form id="location-form" action="/set-location" method="POST">
+        <form id="location-form" action="/inicio" method="POST">
             @csrf
             <select id="ciudad" name="ciudad" >
                 <option value="" disabled selected>Seleccionar ubicación</option>

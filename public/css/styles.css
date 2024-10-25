@@ -34,9 +34,6 @@ body, html {
     margin-bottom: 10px; /* Espacio entre el logo y el título */
 }
 
-.logo img {
-    max-width: 250px; /* Ajusta el tamaño del logo */
-}
 
 
 
@@ -379,16 +376,18 @@ label .required {
 }
 
 .footer {
-    background-color: #1a1a1a;
     color: #ffffff;
     text-align: center;
     padding: 10px 0;
     font-size: 14px;
-    position: fixed;   /* Fija el footer en la parte inferior de la ventana */
+    position: relative;  /* Fija el footer en la parte inferior de la ventana */
     bottom: 0;
     left: 0;
     width: 100%;       /* Asegura que ocupe todo el ancho */
-    z-index: 100;      /* Asegura que esté sobre otros elementos */
+    z-index: 100;   
+    background-color: #1a1a1a;
+    font-family: "Work Sans", sans-serif;
+    padding: 20px 0;   /* Asegura que esté sobre otros elementos */
 }
 
 /* Estilos para la barra de navegación superior negra */
@@ -399,6 +398,7 @@ label .required {
     align-items: center;
     padding: 10px 20px;
     color: #fff;
+    margin-bottom: 0;
 }
 
 /* Botón PUBLICATE */
@@ -636,7 +636,7 @@ color: #cccccc;
 .logo img {
     height: 40px; /* Ajusta el tamaño del logo */
     margin-right: 50px;
-    margin-top: 3.8rem;
+    margin-top: 5rem;
 }
 .logo2 {
   
@@ -651,7 +651,7 @@ color: #cccccc;
     background-color: #1a1a1a;
     color: #fff;
     font-family: "Work Sans", sans-serif;
-    /* padding: 20px 0; */
+    padding: 20px 0;
 }
 
 /* Sección superior: enlaces de ubicación */
@@ -1355,4 +1355,59 @@ color: #cccccc;
 .footer-info .splazk-logo {
     height: 20px;
     vertical-align: middle;
+}
+/* INCIO  */
+/* Estilo para el contenedor del banner */
+.banner {
+    position: relative;
+    width: 100%;
+    height: 500px; /* Ajusta la altura según tu preferencia */
+    overflow: hidden;
+    margin-top: 0; /* Para que esté pegado al borde superior */
+}
+
+.banner-img {
+    width: 100%;
+    object-fit: cover; /* Hace que la imagen se ajuste sin distorsionar */
+    height: 12rem;
+}
+
+.banner-content {
+    position: relative;
+    bottom: 22%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    text-align: center;
+    height: 13rem;
+    width: 100%;
+    background: #00000047;
+
+}
+
+.banner-content h1 {
+    font-size: 35px; /* Ajusta el tamaño del texto si es necesario */
+
+}
+
+.banner-content .highlight {
+    color: #f25555; /* Color destacado */
+}
+.texto_banner{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 10rem;
+
+}
+.texto_banner .thin {
+    font-weight: 100; /* Esto hace que la fuente sea muy fina */
+    font-family: 'Poppins', sans-serif;
+
+}
+
+.texto_banner .bold {
+    font-weight: bold; /* Esto aplica negrita */
+    font-family: 'Poppins', sans-serif;
+
 }
