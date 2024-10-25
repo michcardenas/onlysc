@@ -34,9 +34,6 @@ body, html {
     margin-bottom: 10px; /* Espacio entre el logo y el título */
 }
 
-.logo img {
-    max-width: 250px; /* Ajusta el tamaño del logo */
-}
 
 
 
@@ -379,16 +376,18 @@ label .required {
 }
 
 .footer {
-    background-color: #1a1a1a;
     color: #ffffff;
     text-align: center;
     padding: 10px 0;
     font-size: 14px;
-    position: fixed;   /* Fija el footer en la parte inferior de la ventana */
+    position: relative;  /* Fija el footer en la parte inferior de la ventana */
     bottom: 0;
     left: 0;
     width: 100%;       /* Asegura que ocupe todo el ancho */
-    z-index: 100;      /* Asegura que esté sobre otros elementos */
+    z-index: 100;   
+    background-color: #1a1a1a;
+    font-family: "Work Sans", sans-serif;
+    padding: 20px 0;   /* Asegura que esté sobre otros elementos */
 }
 
 /* Estilos para la barra de navegación superior negra */
@@ -399,6 +398,7 @@ label .required {
     align-items: center;
     padding: 10px 20px;
     color: #fff;
+    margin-bottom: 0;
 }
 
 /* Botón PUBLICATE */
@@ -636,7 +636,7 @@ color: #cccccc;
 .logo img {
     height: 40px; /* Ajusta el tamaño del logo */
     margin-right: 50px;
-    margin-top: 3.8rem;
+    margin-top: 5rem;
 }
 .logo2 {
   
@@ -651,7 +651,7 @@ color: #cccccc;
     background-color: #1a1a1a;
     color: #fff;
     font-family: "Work Sans", sans-serif;
-    /* padding: 20px 0; */
+    padding: 20px 0;
 }
 
 /* Sección superior: enlaces de ubicación */
@@ -1212,6 +1212,237 @@ color: #cccccc;
     }
 }
 
+/* Estilos del banner */
+.foro-banner {
+    position: relative;
+    width: calc(100% - 10rem);
+    height: 500px;
+    overflow: hidden;
+    margin: 0 auto 0;
+    z-index: -1;
+}
+
+.foro-banner video.banner-img {
+    width: 100%;
+    height: 12rem;
+    object-fit: cover;
+}
+
+.foro-banner-content {
+    position: relative;
+    bottom: 22%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    text-align: center;
+    height: 13rem;
+    width: 100%;
+    background: #00000047;
+}
+
+.foro-banner-content h1 {
+    font-size: 35px;
+}
+
+.foro-banner-content .highlight {
+    color: #f25555;
+}
+
+.foro-texto_banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 10rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-texto_banner .thin {
+    font-weight: 100;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-texto_banner .bold {
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Estilos del buscador */
+.foro-search-container {
+    width: 100%;
+    max-width: 400px;
+    margin: -19rem 0 2rem 21rem;
+    position: relative;
+    z-index: 10;
+    grid-template-columns: 1fr 300px; /* Mantiene el sidebar */
+}
+
+.foro-search-input {
+    width: 90%;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: 2px solid #e5e5e5;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    outline: none;
+    background-color: #ffffff;
+}
+
+.foro-search-input::placeholder {
+    color: #888;
+}
+
+.foro-search-input:hover {
+    border-color: #e00037;
+}
+
+.foro-search-input:focus {
+    border-color: #e00037;
+    box-shadow: 0 0 0 2px rgba(224, 0, 55, 0.1);
+}
+
+.foro-search-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #e00037;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.foro-search-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: #fff;
+    transition: fill 0.3s ease;
+}
+
+.foro-search-btn:hover svg {
+    fill: #e00037;
+}
+
+/* Layout principal y tarjetas */
+.foro-container {
+    max-width: 1200px;
+    margin: 1.5rem auto;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 2rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Contenedor de tarjetas - Ajustado para layout vertical */
+.foro-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Ajuste de las tarjetas individuales con hover */
+.foro-card {
+    width: 50%; /* Cambiado para ocupar todo el ancho */
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none; /* Elimina el subrayado del enlace */
+    color: inherit; /* Mantiene los colores originales */
+}
+
+/* Efecto hover */
+.foro-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+}
+
+.foro-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.foro-card-description {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+}
+
+.foro-card-image {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+}
+
+.foro-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.foro-card:hover .foro-card-image img {
+    transform: scale(1.05);
+}
+
+.foro-card:hover .foro-card-title {
+    color: #e00037;
+    transition: color 0.3s ease;
+}
+
+.foro-card-footer {
+    padding: 10px 15px;
+    border-top: 1px solid #eee;
+    text-align: right;
+}
+
+.foro-card-footer span {
+    font-size: 13px;
+    color: #666;
+}
+
+.foro-card-footer svg {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+
+/* Sidebar y comentarios */
+.foro-sidebar {
+    width: 300px;
+}
+
+.foro-comments {
+    width: 100%;
+    max-width: 300px;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.foro-comments__title {
+    color: #333;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #ff4081;
+}
+
+.foro-comments__empty {
+    color: #666;
+    font-size: 0.9rem;
+    padding: 15px 0;
+}
+
 
 /* Sección de enlaces en la parte media */
 .footer-middle {
@@ -1355,4 +1586,59 @@ color: #cccccc;
 .footer-info .splazk-logo {
     height: 20px;
     vertical-align: middle;
+}
+/* INCIO  */
+/* Estilo para el contenedor del banner */
+.banner {
+    position: relative;
+    width: 100%;
+    height: 500px; /* Ajusta la altura según tu preferencia */
+    overflow: hidden;
+    margin-top: 0; /* Para que esté pegado al borde superior */
+}
+
+.banner-img {
+    width: 100%;
+    object-fit: cover; /* Hace que la imagen se ajuste sin distorsionar */
+    height: 12rem;
+}
+
+.banner-content {
+    position: relative;
+    bottom: 22%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    text-align: center;
+    height: 13rem;
+    width: 100%;
+    background: #00000047;
+
+}
+
+.banner-content h1 {
+    font-size: 35px; /* Ajusta el tamaño del texto si es necesario */
+
+}
+
+.banner-content .highlight {
+    color: #f25555; /* Color destacado */
+}
+.texto_banner{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 10rem;
+
+}
+.texto_banner .thin {
+    font-weight: 100; /* Esto hace que la fuente sea muy fina */
+    font-family: 'Poppins', sans-serif;
+
+}
+
+.texto_banner .bold {
+    font-weight: bold; /* Esto aplica negrita */
+    font-family: 'Poppins', sans-serif;
+
 }
