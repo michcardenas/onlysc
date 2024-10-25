@@ -14,7 +14,6 @@
             </select>
             <button type="submit" class="btn-location">ENTRAR</button>
         </form>
-
     </div>
 @endsection
 
@@ -28,8 +27,8 @@
                     <a href="/foro" class="card-link">
                         <img src="{{ asset('images/foro.jpg') }}" alt="Foro">
                         <div class="card-content">
+                            <p>Participa en nuestra comunidad</p> <!-- Se corrigió <php> a <p> -->
                             <h3>Foro</h3>
-                            <p>Participa en nuestra comunidad</p>
                         </div>
                     </a>
                 </div>
@@ -41,8 +40,8 @@
                     <a href="/sitemap" class="card-link">
                         <img src="{{ asset('images/sitemap.webp') }}" alt="Sitemap">
                         <div class="card-content">
-                            <h3>Sitemap</h3>
                             <p>Mapa de nuestro sitio</p>
+                            <h3>Sitemap</h3>
                         </div>
                     </a>
                 </div>
@@ -54,8 +53,8 @@
                     <a href="/contacto" class="card-link">
                         <img src="{{ asset('images/contacto.jpg') }}" alt="Contacto">
                         <div class="card-content">
-                            <h3>Contacto</h3>
                             <p>Ponte en contacto</p>
+                            <h3>Contacto</h3>
                         </div>
                     </a>
                 </div>
@@ -67,18 +66,28 @@
                     <a href="/blog" class="card-link">
                         <img src="{{ asset('images/blog.jpg') }}" alt="Blog">
                         <div class="card-content">
-                            <h3>Blog</h3>
                             <p>Actualizaciones y noticias</p>
+                            <h3>Blog</h3>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tarjeta 5 -->
+            <div class="swiper-slide">
+                <div class="card contacto">
+                    <a href="/publicate" class="card-link">
+                        <img src="{{ asset('images/publicate.jpeg') }}" alt="Publicate">
+                        <div class="card-content">
+                            <p>Publica tu anuncio ahora</p>
+                            <h3>Publicate</h3>
                         </div>
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Agrega controles de navegación si los necesitas -->
-
-
-        <!-- Paginación -->
+        <!-- Paginación (opcional) -->
         <div class="swiper-pagination"></div>
     </div>
 @endsection

@@ -8,6 +8,9 @@
     <!-- Icono de la pestaña (favicon) -->
     <link rel="icon" href="{{ asset('images/icono.png') }}" type="image/png">
 
+    <!-- Transiciones -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
+
     <!-- Incluir Work Sans desde Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 
@@ -20,7 +23,7 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
 </head>
 <body class="custom-background">
@@ -50,25 +53,33 @@
     <!-- Scripts -->
     <!-- <script src="{{ asset('js/app.js') }}" defer></script> -->
     <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var swiper = new Swiper('.swiper-container', {
-            slidesPerView: 3,  // Número de tarjetas visibles
-            spaceBetween: 0,   // Reducir espacio entre tarjetas
-            loop: true,        // Deja habilitado el loop si lo prefieres
-            grabCursor: true,  // Permite agarrar y arrastrar
-            // Eliminamos paginación y flechas
-            pagination: false,  
-            navigation: false,  
-        });
+document.addEventListener("DOMContentLoaded", function() {
+    var swiper = new Swiper('.swiper-container', {
+        slidesPerView: 3,   // Mostrar 3 tarjetas al mismo tiempo en pantallas grandes
+        spaceBetween: 20,   // Espacio entre las tarjetas
+        loop: true,        // Desactiva el loop si no deseas que se repitan las tarjetas
+        grabCursor: true,   // Cambia el cursor a "mano" cuando el usuario pasa sobre las tarjetas
 
-        document.getElementById('location-form').addEventListener('submit', function (e) {
-        var select = document.getElementById('ciudad');
-        if (!select.value) {
-            e.preventDefault(); // Previene que el formulario se envíe
-            window.location.href = '/inicio'; // Redirige a /inicio
+        breakpoints: {
+            // Cuando la pantalla es de 1024px o más
+            1024: {
+                slidesPerView: 3,
+                spaceBetween: 30
+            },
+            // Cuando la pantalla es de 768px o más
+            768: {
+                slidesPerView: 2,
+                spaceBetween: 20
+            },
+            // Cuando la pantalla es de 640px o más
+            640: {
+                slidesPerView: 1,
+                spaceBetween: 10
+            }
         }
     });
-    });
+});
+
 
 </script>
 
