@@ -3,7 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>Only Escorts</title>
+    
+    <!-- Icono de la pestaña (favicon) -->
+    <link rel="icon" href="{{ asset('images/icono.png') }}" type="image/png">
 
     <!-- Incluir Work Sans desde Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;700&display=swap" rel="stylesheet">
