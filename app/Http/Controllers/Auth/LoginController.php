@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 
 class LoginController extends Controller
 {
@@ -40,28 +42,34 @@ class LoginController extends Controller
         $this->middleware('auth')->only('logout');
     }
     protected function authenticated(Request $request, $user)
-    {
-        // Verificamos si el rol es 1
-        if ($user->role == 1) {
-            // Si el rol es 1, redirigimos al panel de control
-            return redirect()->route('panel_control');
-        }
+{
+    // Verificamos si el rol es 1 y registramos el rol del usuario
 
-        // Si el rol no es 1, redirigimos al inicio
-        return redirect('inicio');
+    if ($user->rol == 1) {
+        // Si el rol es 1, redirigimos al panel de control
+        return redirect()->route('panel_control');
     }
-    public function login(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
-            // Si las credenciales son correctas, redirigir según el rol del usuario
-            return $this->authenticated($request, Auth::user());
-        }
+    // Si el rol no es 1, redirigimos al inicio
+    return redirect('inicio');
+}
 
-        // Si las credenciales no son correctas, redirigir de vuelta con un mensaje de error
-        return redirect()->back()->withErrors([
-            'email' => 'El usuario o la contraseña son incorrectos.',
-        ])->withInput($request->except('password'));
+public function login(Request $request)
+{
+    $credentials = $request->only('email', 'password');
+
+    // Registramos las credenciales recibidas para verificar
+
+    if (Auth::attempt($credentials)) {
+        // Si las credenciales son correctas, redirigir según el rol del usuario
+        return $this->authenticated($request, Auth::user());
     }
+
+    // Si las credenciales no son correctas, registramos el fallo
+    
+    // Redirigir de vuelta con un mensaje de error
+    return redirect()->back()->withErrors([
+        'email' => 'El usuario o la contraseña son incorrectos.',
+    ])->withInput($request->except('password'));
+}
 }

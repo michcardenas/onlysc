@@ -592,7 +592,7 @@ color: #cccccc;
 .logo img {
     height: 40px; /* Ajusta el tamaño del logo */
     margin-right: 50px;
-    margin-top: 5rem;
+    margin-top: 4rem;
 }
 .logo2 {
   
@@ -1598,4 +1598,133 @@ color: #cccccc;
     font-weight: bold; /* Esto aplica negrita */
     font-family: 'Poppins', sans-serif;
 
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.alert-danger ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.alert::before {
+    content: '✔';
+    font-size: 18px;
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.alert-danger::before {
+    content: '✖';
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.navbar-admin {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: #1e1e1e; /* Color oscuro para la barra */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.logo-text-admin {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.nav-links-admin {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links-admin a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.nav-links-admin a:hover {
+    color: #4CAF50; /* Color de hover (puedes ajustarlo) */
+}
+
+.user-info-admin {
+    background-color: #2e2e2e; /* Fondo para destacar el nombre del usuario */
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+h2 {
+    color: #ffffff;
+    margin-top: 20px;
+}
+
+.table-admin {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background-color: #2e2e2e; /* Color de fondo de la tabla */
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table-admin th, .table-admin td {
+    padding: 12px;
+    border-bottom: 1px solid #444;
+    color: #ffffff;
+    text-align: left;
+}
+
+.table-admin th {
+    background-color: #3a3a3a;
+    color: #e0e0e0;
+}
+
+.table-admin tr:hover {
+    background-color: #3a3a3a; /* Color de fondo al pasar el ratón sobre las filas */
+}
+
+.footer-admin {
+    margin-top: 20px;
+    text-align: center;
+    padding: 10px;
+    background-color: #1e1e1e;
+    color: #888;
 }
