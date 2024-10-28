@@ -12,13 +12,13 @@ class AdminController extends Controller
     {
         // Obtener usuarios con estadop = 0
         $usuariosInactivos = UsuarioPublicate::where('estadop', 0)
-            ->select('id', 'fantasia', 'nombre', 'ubicacion', 'edad', 'estadop')
+            ->select('id', 'fantasia', 'nombre','edad', 'ubicacion', 'categorias', 'estadop', 'posicion')
             ->get();
         
         // Obtener usuarios con estadop = 1
         $usuariosActivos = UsuarioPublicate::where('estadop', 1)
-            ->select('id', 'fantasia', 'nombre', 'ubicacion', 'edad', 'estadop')
-            ->get();
+        ->select('id', 'fantasia', 'nombre','edad', 'ubicacion', 'categorias', 'estadop', 'posicion')
+        ->get();
     
         // Obtener el usuario autenticado
         $usuarioAutenticado = Auth::user();

@@ -30,27 +30,30 @@
                     <th>Nombre</th>
                     <th>Ubicación</th>
                     <th>Edad</th>
+                    <th>Categoría</th>
+                    <th>Posición</th>
                 </tr>
             </thead>
             <tbody>
-    @foreach($usuariosActivos as $usuario)
-        <tr>
-            <td>
-                <a href="{{ route('usuarios_publicate.edit', ['id' => $usuario->id]) }}">
-                    {{ $usuario->fantasia }}
-                </a>
-            </td>
-            <td>
-                <a href="{{ route('usuarios_publicate.edit', ['id' => $usuario->id]) }}">
-                    {{ $usuario->nombre }}
-                </a>
-            </td>
-            <td>{{ $usuario->ubicacion }}</td>
-            <td>{{ $usuario->edad }}</td>
-        </tr>
-    @endforeach
-</tbody>
-
+                @foreach($usuariosActivos as $usuario)
+                    <tr>
+                        <td>
+                            <a href="{{ route('usuarios_publicate.edit', ['id' => $usuario->id]) }}">
+                                {{ $usuario->fantasia }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ route('usuarios_publicate.edit', ['id' => $usuario->id]) }}">
+                                {{ $usuario->nombre }}
+                            </a>
+                        </td>
+                        <td>{{ $usuario->ubicacion }}</td>
+                        <td>{{ $usuario->edad }}</td>
+                        <td>{{ ucfirst($usuario->categorias) }}</td>
+                        <td>{{ $usuario->posicion ?? 'Sin posición' }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
         </table>
     </section>
 
@@ -63,27 +66,30 @@
                     <th>Nombre</th>
                     <th>Ubicación</th>
                     <th>Edad</th>
+                    <th>Categoría</th>
+                    <th>Posición</th>
                 </tr>
             </thead>
             <tbody>
-    @foreach($usuariosInactivos as $usuario)
-        <tr>
-            <td>
-                <a href="{{ route('usuarios_publicate.edit', ['id' => $usuario->id]) }}">
-                    {{ $usuario->fantasia }}
-                </a>
-            </td>
-            <td>
-                <a href="{{ route('usuarios_publicate.edit', ['id' => $usuario->id]) }}">
-                    {{ $usuario->nombre }}
-                </a>
-            </td>
-            <td>{{ $usuario->ubicacion }}</td>
-            <td>{{ $usuario->edad }}</td>
-        </tr>
-    @endforeach
-</tbody>
-
+                @foreach($usuariosInactivos as $usuario)
+                    <tr>
+                        <td>
+                            <a href="{{ route('usuarios_publicate.edit', ['id' => $usuario->id]) }}">
+                                {{ $usuario->fantasia }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ route('usuarios_publicate.edit', ['id' => $usuario->id]) }}">
+                                {{ $usuario->nombre }}
+                            </a>
+                        </td>
+                        <td>{{ $usuario->ubicacion }}</td>
+                        <td>{{ $usuario->edad }}</td>
+                        <td>{{ ucfirst($usuario->categorias) }}</td>
+                        <td>{{ $usuario->posicion ?? 'Sin posición' }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
         </table>
     </section>
 </main>
