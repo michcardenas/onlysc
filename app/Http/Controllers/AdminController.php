@@ -10,13 +10,22 @@ class AdminController extends Controller
 {
     public function index()
     {
-        // Obtener todos los usuarios de la tabla usuarios_publicate
-        $usuarios = UsuarioPublicate::select('fantasia', 'nombre', 'ubicacion', 'edad')->get();
+        // Obtener usuarios con estadop = 0
+        $usuariosInactivos = UsuarioPublicate::where('estadop', 0)
+            ->select('id', 'fantasia', 'nombre', 'ubicacion', 'edad', 'estadop')
+            ->get();
         
+        // Obtener usuarios con estadop = 1
+        $usuariosActivos = UsuarioPublicate::where('estadop', 1)
+            ->select('id', 'fantasia', 'nombre', 'ubicacion', 'edad', 'estadop')
+            ->get();
+    
         // Obtener el usuario autenticado
         $usuarioAutenticado = Auth::user();
-
+    
         // Pasar los datos a la vista
-        return view('admin.dashboard', compact('usuarios', 'usuarioAutenticado'));
+        return view('admin.dashboard', compact('usuariosInactivos', 'usuariosActivos', 'usuarioAutenticado'));
     }
+    
+    
 }

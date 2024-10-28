@@ -5,6 +5,8 @@ use App\Http\Controllers\InicioController;
 use App\Http\Controllers\PublicateController;
 use App\Http\Controllers\ForoController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UsuarioPublicateController;
+
 
 
 
@@ -29,3 +31,6 @@ Route::get('/foros/{categoria}', [ForoController::class, 'show_foro'])->name('fo
 
 //panel
 Route::get('/panel-control', [AdminController::class, 'index'])->name('panel_control');
+Route::get('/usuarios-publicate/{id}/edit', [UsuarioPublicateController::class, 'edit'])->name('usuarios_publicate.edit');
+Route::put('/usuarios-publicate/{id}', [UsuarioPublicateController::class, 'update'])->name('usuarios_publicate.update');
+

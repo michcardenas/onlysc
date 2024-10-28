@@ -4,8 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
+    <!-- Título de la pestaña -->
+    <title>Escorts</title>
+    
+    <!-- Icono de la pestaña (favicon) -->
+    <link rel="icon" href="{{ asset('images/icono.png') }}" type="image/png">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 

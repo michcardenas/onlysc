@@ -28,5 +28,7 @@ class UsuarioPublicate extends Model
         'fotos',
         'cuentanos',
         'verificada',
+        'estadop',
+        'categorias',
     ];
 }
