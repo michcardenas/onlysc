@@ -1,6 +1,28 @@
 @extends('layouts.app_login')
 
 @section('content')
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <header>
     <nav class="navbar-admin">
         <div class="logo-admin">
@@ -46,6 +68,10 @@
                     <option value="VIP" {{ old('categorias', $usuario->categorias) == 'VIP' ? 'selected' : '' }}>VIP</option>
                     <option value="masajes" {{ old('categorias', $usuario->categorias) == 'masajes' ? 'selected' : '' }}>Masajes</option>
                 </select>
+            </div>
+            <div class="form-group">
+                <label for="posicion">Posición</label>
+                <input type="number" name="posicion" value="{{ old('posicion', $usuario->posicion) }}" placeholder="Ingrese la posición" min="1" step="1">
             </div>
 
 
@@ -126,6 +152,7 @@
         </form>
     </section>
 </main>
+
 
 <footer class="footer-admin">
     <p>&copy; {{ date('Y') }} Mi Aplicación. Todos los derechos reservados.</p>

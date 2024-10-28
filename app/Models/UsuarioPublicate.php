@@ -30,5 +30,6 @@ class UsuarioPublicate extends Model
         'verificada',
         'estadop',
         'categorias',
+        'posicion',
     ];
 }
