@@ -29,8 +29,18 @@ Route::post('/publicate', [PublicateController::class, 'store'])->name('publicat
 Route::get('/foro', [ForoController::class, 'showForo'])->name('foro');
 Route::get('/foros/{categoria}', [ForoController::class, 'show_foro'])->name('foro.show_foro');
 
+
 //panel
 Route::get('/panel-control', [AdminController::class, 'index'])->name('panel_control');
 Route::get('/usuarios-publicate/{id}/edit', [UsuarioPublicateController::class, 'edit'])->name('usuarios_publicate.edit');
 Route::put('/usuarios-publicate/{id}', [UsuarioPublicateController::class, 'update'])->name('usuarios_publicate.update');
 
+//Foro Admin
+Route::get('/foroadmin', [ForoController::class, 'foroadmin'])->name('foroadmin');
+    
+// Rutas para CRUD de foros
+Route::get('/foroadmin/edit/{id}', [ForoController::class, 'edit'])->name('foroadmin.edit');
+Route::put('/foroadmin/update/{id}', [ForoController::class, 'update'])->name('foroadmin.update');
+Route::delete('/foroadmin/delete/{id}', [ForoController::class, 'destroy'])->name('foroadmin.destroy');
+Route::get('/foroadmin/create', [ForoController::class, 'create'])->name('foroadmin.create');
+Route::post('/foroadmin/store', [ForoController::class, 'store'])->name('foroadmin.store');

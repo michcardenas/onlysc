@@ -1279,37 +1279,38 @@ color: #cccccc;
     fill: #e00037;
 }
 
-/* Layout principal y tarjetas */
+/* Layout principal y contenedores */
 .foro-container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 1.5rem auto;
     padding: 0 1rem;
     display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 2rem;
+    grid-template-columns: 2fr 1fr;
+    /* gap: 2rem; */
     font-family: 'Poppins', sans-serif;
 }
 
-/* Contenedor de tarjetas - Ajustado para layout vertical */
+/* Contenedor de tarjetas */
 .foro-cards-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Crea 2 columnas de igual tamaño */
+    gap: 1.5rem;
 }
 
-/* Ajuste de las tarjetas individuales con hover */
+
+/* Estilos de las tarjetas */
 .foro-card {
-    width: 50%; /* Cambiado para ocupar todo el ancho */
+    width: 100%;
     background: white;
-    border-radius: 4px;
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
     transition: all 0.3s ease;
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    text-decoration: none; /* Elimina el subrayado del enlace */
-    color: inherit; /* Mantiene los colores originales */
+    text-decoration: none;
+    color: inherit;
 }
 
 /* Efecto hover */
@@ -1371,9 +1372,15 @@ color: #cccccc;
     vertical-align: middle;
 }
 
-/* Sidebar y comentarios */
+
 .foro-sidebar {
+    width: 100%;
+    margin-left: -400px;
+}
+
+.foro-sidebar1 {
     width: 300px;
+    transform: translate(1300px, -690px);
 }
 
 .foro-comments {
@@ -1382,7 +1389,6 @@ color: #cccccc;
     padding: 15px;
     background: white;
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .foro-comments__title {
