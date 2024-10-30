@@ -33,7 +33,7 @@
         <ul class="nav-links-admin">
             <li><a href="{{ route('home') }}">Inicio</a></li>
             <li><a href="{{ route('publicate.form') }}">Publicar</a></li>
-            <li><a href="{{ route('foro') }}">Foro</a></li>
+            <li><a href="{{ route('foroadmin') }}">Foro</a></li>
             <li><a href="{{ route('logout') }}">Cerrar Sesión</a></li>
         </ul>
         <div class="user-info-admin">
