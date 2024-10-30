@@ -62,7 +62,6 @@ class PublicateController extends Controller
             'servicios' => json_encode($validatedData['servicios'] ?? []),
             'servicios_adicionales' => json_encode($validatedData['servicios_adicionales'] ?? []),
             'cuentanos' => $validatedData['about'] ?? null,
-            'verificada' => 0,
         ]);
 
        // Procesar y guardar las imágenes
