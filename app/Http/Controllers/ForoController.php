@@ -1,92 +1,106 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Ciudad; // O el modelo que estés usando
 use App\Models\Foro;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\DB;
 
 class ForoController extends Controller
 {
     public function showForo()
     {
-        // Lógica de consulta a la base de datos
-        $ciudades = Ciudad::all();  // Ejemplo: obtienes todas las ciudades
+        // Obtenemos todos los foros ordenados por fecha
+        $foros = DB::table('foro')
+            ->select('foro.*', 'users.name as nombre_usuario')
+            ->leftJoin('users', 'foro.id_usuario', '=', 'users.id')
+            ->orderBy('fecha', 'desc')
+            ->get();
 
-        // Retorna la vista con los datos consultados
-        return view('foro', ['ciudades' => $ciudades]);
+        // Obtenemos todas las ciudades
+        $ciudades = Ciudad::all();
+
+        return view('foro', [
+            'foros' => $foros,
+            'ciudades' => $ciudades
+        ]);
     }
 
     public function show_foro($categoria)
     {
         // Agregar la consulta de ciudades aquí también
         $ciudades = Ciudad::all();
-
-        $categorias = [
-            'conversaciones' => [
-                'titulo' => 'Conversaciones sobre Sexo',
-                'descripcion' => 'Bienvenidos a "Charla sobre Sexo", un espacio sin tabúes para discutir todo lo relacionado con la sexualidad.',
-                'imagen' => 'foro1.jpg'
-            ],
-            'experiencias' => [
-                'titulo' => 'Experiencias',
-                'descripcion' => 'Descubre y comparte tu experiencia con las chicas de la plataforma.',
-                'imagen' => 'foro2.jpeg'
-            ],
-            'gentlemens-club' => [
-                'titulo' => "Gentlemen's Club",
-                'descripcion' => 'Para hablar con libertad de lo que desees.',
-                'imagen' => 'pexels-79380313-9007274-scaled.jpg'
-            ]
-        ];
-
+    
+        // Obtener todos los foros ordenados por fecha
+        $foros = DB::table('foro')
+            ->select('foro.*', 'users.name as nombre_usuario')
+            ->leftJoin('users', 'foro.id_usuario', '=', 'users.id')
+            ->orderBy('fecha', 'desc')
+            ->get();
+    
+        // Agrupar los foros por id_blog
+        $categorias = $foros->groupBy('id_blog');
+    
+        // Verificar si la categoría solicitada existe
         if (!isset($categorias[$categoria])) {
             abort(404);
         }
-
+    
+        // Obtener la categoría actual
+        $categoriaActual = (object)[
+            'titulo' => $categorias[$categoria]->first()->titulo,
+            'descripcion' => $categorias[$categoria]->first()->subtitulo,
+            'foros' => $categorias[$categoria]
+        ];
+    
         return view('layouts.show_foro', [
-            'categoria' => (object)$categorias[$categoria],
+            'categoria' => $categoriaActual,
             'ciudades' => $ciudades
         ]);
     }
+    
 
     public function foroadmin()
-    {
-        $forosConversaciones = Foro::where('id_blog', 1)->orderBy('fecha', 'desc')->get();
-        $forosGentlemen = Foro::where('id_blog', 2)->orderBy('fecha', 'desc')->get();
-        $forosExperiencias = Foro::where('id_blog', 3)->orderBy('fecha', 'desc')->get();
+{
+    $foros = Foro::select('foro.*', 'users.name as nombre_usuario')
+        ->leftJoin('users', 'foro.id_usuario', '=', 'users.id')
+        ->orderBy('fecha', 'desc')
+        ->get();
 
-        $usuarioAutenticado = auth()->user();
-
-        return view('admin.foroadmin', compact('forosConversaciones', 'forosGentlemen', 'forosExperiencias', 'usuarioAutenticado'));
-    }
-
+    return view('admin.foroadmin', [
+        'foros' => $foros,
+        'usuarioAutenticado' => Auth::user()
+    ]);
+}
     public function create()
     {
-        $usuarioAutenticado = auth()->user();
+        $usuarioAutenticado = Auth::user();
         return view('admin.foroadmincreate', compact('usuarioAutenticado'));
     }
 
     public function store(Request $request)
     {
+        // Validación de los campos
         $validated = $request->validate([
             'titulo' => 'required|max:255',
             'subtitulo' => 'required|max:255',
             'contenido' => 'required',
             'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'id_blog' => 'required|exists:blogs,id', // Asegúrate de que id_blog sea válido
+            'id_blog' => 'required|exists:foro,id'
         ]);
 
-        if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('foros', 'public');
-        }
+        // Almacenar la foto
+        $fotoPath = $request->file('foto')->store('foros', 'public');
 
+        // Crear un nuevo foro
         Foro::create([
             'titulo' => $validated['titulo'],
             'subtitulo' => $validated['subtitulo'],
             'contenido' => $validated['contenido'],
-            'foto' => $fotoPath ?? null,
+            'foto' => $fotoPath,
             'id_usuario' => auth()->id(),
             'fecha' => now(),
             'id_blog' => $validated['id_blog'], // Guardar id_blog
@@ -95,19 +109,20 @@ class ForoController extends Controller
         return redirect()->route('foroadmin')->with('success', 'Foro creado exitosamente');
     }
 
-
     public function edit($id)
     {
+        // Obtener el foro a editar
         $foro = Foro::findOrFail($id);
-        $usuarioAutenticado = auth()->user();
+        $usuarioAutenticado = Auth::user();
         return view('admin.foroadminedit', compact('foro', 'usuarioAutenticado'));
     }
 
-
     public function update(Request $request, $id)
     {
+        // Obtener el foro a actualizar
         $foro = Foro::findOrFail($id);
 
+        // Validación de los campos
         $validated = $request->validate([
             'titulo' => 'required|max:255',
             'subtitulo' => 'required|max:255',
@@ -135,11 +150,9 @@ class ForoController extends Controller
         return redirect()->route('foroadmin')->with('success', 'Foro actualizado exitosamente');
     }
 
-
-
-
     public function destroy($id)
     {
+        // Eliminar el foro
         $foro = Foro::findOrFail($id);
         if ($foro->foto) {
             Storage::disk('public')->delete($foro->foto);

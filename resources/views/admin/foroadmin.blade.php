@@ -35,132 +35,45 @@
                 </div>
             @endif
 
-            <main>
-                <section>
-                    <h2 class="text-lg font-bold mb-4">Conversaciones</h2>
-                    <table class="table-admin">
-                        <thead>
+            <main class="mt-6">
+                <table class="table-admin">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Subtítulo</th>
+                            <th>Fecha</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($foros as $foro)
                             <tr>
-                                <th>Título</th>
-                                <th>Subtítulo</th>
-                                <th>Fecha</th>
-                                <th>Acciones</th>
+                                <td>
+                                    <a href="{{ route('foroadmin.edit', $foro->id) }}">
+                                        {{ $foro->titulo }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ route('foroadmin.edit', $foro->id) }}">
+                                        {{ $foro->subtitulo }}
+                                    </a>
+                                </td>
+                                <td>{{ \Carbon\Carbon::parse($foro->fecha)->format('d/m/Y') }}</td>
+                                <td>
+                                    <form action="{{ route('foroadmin.destroy', $foro->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" 
+                                                class="text-red-600 hover:text-red-900 mx-2"
+                                                onclick="return confirm('¿Estás seguro de que deseas eliminar este foro?')">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($forosConversaciones as $foro)
-                                <tr>
-                                    <td>
-                                        <a href="{{ route('foroadmin.edit', $foro->id) }}">
-                                            {{ $foro->titulo }}
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('foroadmin.edit', $foro->id) }}">
-                                            {{ $foro->subtitulo }}
-                                        </a>
-                                    </td>
-                                    <td>{{ \Carbon\Carbon::parse($foro->fecha)->format('d/m/Y') }}</td>
-                                    <td>
-                                        <form action="{{ route('foroadmin.destroy', $foro->id) }}" method="POST" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" 
-                                                    class="text-red-600 hover:text-red-900 mx-2"
-                                                    onclick="return confirm('¿Estás seguro de que deseas eliminar este foro?')">
-                                                Eliminar
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </section>
-
-                <section>
-                    <h2 class="text-lg font-bold mb-4">Gentlemen</h2>
-                    <table class="table-admin">
-                        <thead>
-                            <tr>
-                                <th>Título</th>
-                                <th>Subtítulo</th>
-                                <th>Fecha</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($forosGentlemen as $foro)
-                                <tr>
-                                    <td>
-                                        <a href="{{ route('foroadmin.edit', $foro->id) }}">
-                                            {{ $foro->titulo }}
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('foroadmin.edit', $foro->id) }}">
-                                            {{ $foro->subtitulo }}
-                                        </a>
-                                    </td>
-                                    <td>{{ \Carbon\Carbon::parse($foro->fecha)->format('d/m/Y') }}</td>
-                                    <td>
-                                        <form action="{{ route('foroadmin.destroy', $foro->id) }}" method="POST" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" 
-                                                    class="text-red-600 hover:text-red-900 mx-2"
-                                                    onclick="return confirm('¿Estás seguro de que deseas eliminar este foro?')">
-                                                Eliminar
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </section>
-
-                <section>
-                    <h2 class="text-lg font-bold mb-4">Experiencias</h2>
-                    <table class="table-admin">
-                        <thead>
-                            <tr>
-                                <th>Título</th>
-                                <th>Subtítulo</th>
-                                <th>Fecha</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($forosExperiencias as $foro)
-                                <tr>
-                                    <td>
-                                        <a href="{{ route('foroadmin.edit', $foro->id) }}">
-                                            {{ $foro->titulo }}
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('foroadmin.edit', $foro->id) }}">
-                                            {{ $foro->subtitulo }}
-                                        </a>
-                                    </td>
-                                    <td>{{ \Carbon\Carbon::parse($foro->fecha)->format('d/m/Y') }}</td>
-                                    <td>
-                                        <form action="{{ route('foroadmin.destroy', $foro->id) }}" method="POST" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" 
-                                                    class="text-red-600 hover:text-red-900 mx-2"
-                                                    onclick="return confirm('¿Estás seguro de que deseas eliminar este foro?')">
-                                                Eliminar
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </section>
+                        @endforeach
+                    </tbody>
+                </table>
             </main>
         </div>
     </div>
@@ -169,4 +82,3 @@
 <footer class="footer-admin">
     <p>&copy; {{ date('Y') }} Mi Aplicación. Todos los derechos reservados.</p>
 </footer>
-@endsection

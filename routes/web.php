@@ -5,11 +5,8 @@ use App\Http\Controllers\InicioController;
 use App\Http\Controllers\PublicateController;
 use App\Http\Controllers\ForoController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ComentarioController;
 use App\Http\Controllers\UsuarioPublicateController;
-
-
-
-
 
 Auth::routes();
 
@@ -28,6 +25,7 @@ Route::post('/publicate', [PublicateController::class, 'store'])->name('publicat
 //Foro
 Route::get('/foro', [ForoController::class, 'showForo'])->name('foro');
 Route::get('/foros/{categoria}', [ForoController::class, 'show_foro'])->name('foro.show_foro');
+Route::post('/comentarios', [ComentarioController::class, 'store'])->name('comentarios.store');
 
 
 //panel

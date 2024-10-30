@@ -17,7 +17,8 @@ class Foro extends Model
         'contenido',
         'foto',
         'id_usuario',
-        'fecha'
+        'fecha',
+        'id_blog'
     ];
 
     protected $dates = [

@@ -1280,23 +1280,30 @@ color: #cccccc;
 }
 
 /* Layout principal y contenedores */
+/* Layout principal y contenedores */
 .foro-container {
     max-width: 1400px;
     margin: 1.5rem auto;
     padding: 0 1rem;
     display: grid;
     grid-template-columns: 2fr 1fr;
-    /* gap: 2rem; */
+    gap: 2rem;
     font-family: 'Poppins', sans-serif;
 }
 
-/* Contenedor de tarjetas */
-.foro-cards-container {
+/* Layout de la columna principal */
+.foro-main {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Crea 2 columnas de igual tamaño */
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
 }
 
+/* Columnas de foros */
+.foro-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
 
 /* Estilos de las tarjetas */
 .foro-card {
@@ -1372,15 +1379,9 @@ color: #cccccc;
     vertical-align: middle;
 }
 
-
-.foro-sidebar {
-    width: 100%;
-    margin-left: -400px;
-}
-
 .foro-sidebar1 {
     width: 300px;
-    transform: translate(1300px, -690px);
+    transform: translate(200px, -10px);
 }
 
 .foro-comments {
