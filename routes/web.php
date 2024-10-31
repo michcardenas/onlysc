@@ -25,7 +25,10 @@ Route::post('/publicate', [PublicateController::class, 'store'])->name('publicat
 //Foro
 Route::get('/foro', [ForoController::class, 'showForo'])->name('foro');
 Route::get('/foros/{categoria}', [ForoController::class, 'show_foro'])->name('foro.show_foro');
+Route::get('/foros/{id_blog}/{id}', [ComentarioController::class, 'showComentario'])->name('comentario.show');
 Route::post('/comentarios', [ComentarioController::class, 'store'])->name('comentarios.store');
+
+
 
 
 //panel

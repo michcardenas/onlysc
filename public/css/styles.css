@@ -1280,7 +1280,6 @@ color: #cccccc;
 }
 
 /* Layout principal y contenedores */
-/* Layout principal y contenedores */
 .foro-container {
     max-width: 1400px;
     margin: 1.5rem auto;
@@ -1384,29 +1383,361 @@ color: #cccccc;
     transform: translate(200px, -10px);
 }
 
-.foro-comments {
-    width: 100%;
-    max-width: 300px;
-    padding: 15px;
-    background: white;
-    border-radius: 8px;
-}
-
-.foro-comments__title {
-    color: #333;
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin: 0 0 10px 0;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #ff4081;
-}
-
-.foro-comments__empty {
-    color: #666;
-    font-size: 0.9rem;
+/* Estilos para el listado de foros */
+/* Estilos del breadcrumb */
+.foro-breadcrumb {
+    display: flex;
     padding: 15px 0;
+    margin-left: 80px;
+    margin-top: -300px; /* Mantener el margen superior */
+    position: relative; /* Asegura que se posicione correctamente dentro del flujo del documento */
+    bottom: 0; /* Alinear al fondo */
+    width: 100%; /* Asegura que el contenedor ocupe el ancho completo */
+    font-family: 'Poppins', sans-serif;
 }
 
+.foro-description {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #555; /* Cambia el color según el diseño */
+    line-height: 1.6;
+    padding: 10px 0;
+    margin-left: 80px; /* Ajusta para espacio entre el título y la descripción */
+     /* Ajuste de alineación */
+    width: 100%; /* Asegura que ocupe el ancho completo del contenedor */
+    max-width: 800px; /* Limita el ancho para mejor lectura */
+}
+
+
+
+.foro-breadcrumb-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.foro-breadcrumb-item {
+    font-size: 14px;
+}
+
+.foro-breadcrumb-item:not(:last-child)::after {
+    content: "/";
+    margin: 0 8px;
+    color: #6c757d;
+}
+
+.foro-breadcrumb-item a {
+    color: #F28B50;
+    text-decoration: none;
+}
+
+.foro-breadcrumb-item a:hover {
+    text-decoration: underline;
+}
+
+.foro-breadcrumb-item.active {
+    color: #666;
+}
+
+.foro-comments-table {
+    width: 80%;
+    margin: 20px auto;
+    font-family: 'Poppins', sans-serif;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.foro-comments-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.foro-comments-table th, .foro-comments-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.foro-comments-table th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+}
+
+.foro-comments-avatar-cell {
+    text-align: center;
+}
+
+.foro-comments-avatar {
+    width: 40px;
+    height: 40px;
+    background: #F28B50;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 auto;
+    text-transform: uppercase;
+}
+
+.foro-comments-author-date {
+    color: #6c757d;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+
+.foro-comments-title {
+    font-weight: 500;
+    color: #495057;
+}
+
+.foro-comments-table td div {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+
+.foro-comments-title {
+    font-weight: 500;
+    color: #F28B50;
+    margin-bottom: 5px;
+    font-family: 'Poppins', sans-serif; /* Aplicar fuente aquí */
+}
+
+.foro-comments-content {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.foro-comments-avatar-cell {
+    text-align: center;
+}
+
+.foro-comments-avatar {
+    width: 40px;
+    height: 40px;
+    background: #F28B50;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin: 0 auto 5px;
+    text-transform: uppercase;
+}
+
+.foro-comments-author {
+    font-size: 14px;
+    color: #495057;
+}
+
+.foro-comments-stats {
+    font-size: 14px;
+}
+
+.foro-comments-stat-item {
+    margin-bottom: 5px;
+}
+
+.foro-comments-stat-label {
+    color: #6c757d;
+    margin-right: 5px;
+}
+
+.foro-comments-stat-value {
+    font-weight: 500;
+    color: #495057;
+}
+
+.foro-comments-last {
+    text-align: center;
+}
+
+.foro-comments-date {
+    font-weight: 500;
+    color: #495057;
+}
+
+.foro-comments-time {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+/* Estilos del comentario */
+.foro-comentario-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-card {
+    display: flex;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 800px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-avatar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 20px;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-avatar-circle {
+    width: 50px;
+    height: 50px;
+    background-color: #f28b50;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-user-info {
+    margin-top: 8px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-user-info strong {
+    font-size: 16px;
+    color: #333;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-role {
+    font-size: 14px;
+    color: #6c757d;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-content-wrapper {
+    flex: 1;
+    background-color: #eeeeee;
+    padding: 15px;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #6c757d;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-date {
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-link a {
+    color: #ff6b6b;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-link a:hover {
+    text-decoration: underline;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-content {
+    font-size: 16px;
+    color: #333;
+    padding: 10px;
+    background-color: white;
+    border-radius: 4px;
+    margin-top: 10px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Contenedor principal del formulario de comentarios */
+.foro-comentario-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    padding: 0 15px; /* Espaciado en los lados para pantallas pequeñas */
+}
+
+.foro-comentario-form {
+    width: 100%;
+    max-width: 600px; /* Ancho máximo para que no se expanda demasiado */
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.foro-comentario-form-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 2px solid #d9534f; /* Color rojo para el subrayado */
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.foro-comentario-form-group {
+    margin-bottom: 15px;
+}
+
+.foro-comentario-form-group label {
+    display: block;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.foro-comentario-textarea {
+    width: 100%;
+    padding: 10px;
+    font-family: 'Poppins', sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+.foro-comentario-btn {
+    background-color: #d9534f; /* Color rojo */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.foro-comentario-btn:hover {
+    background-color: #c9302c; /* Un tono más oscuro de rojo */
+}
+
+
+.poppins-font {
+    font-family: 'Poppins', sans-serif;
+}
 
 /* Sección de enlaces en la parte media */
 .footer-middle {

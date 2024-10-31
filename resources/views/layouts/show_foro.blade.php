@@ -1,96 +1,91 @@
 @extends('layouts.app_foro')
 
 @section('content')
-<div class="foro-banner" style="background-image: url('{{ asset('images/default.jpg') }}')">
-   <h1>{{ $categoria->titulo }}</h1>
+<div class="foro-banner">
+    <div class="banner-img" style="background-image: url('{{ $categoria->foto ? asset('storage/' . $categoria->foto) : asset('storage/foros/default.jpg') }}')">
+    </div>
+    <div class="foro-banner-content">
+        <div class="foro-texto_banner">
+            <h1>
+                <span class="700">{{ $categoria->titulo }}</span>
+            </h1>
+        </div>
+    </div>
 </div>
 
 <div class="foro-breadcrumb">
-   <a href="{{ route('inicio') }}">Inicio</a> /
-   <a href="{{ route('foro') }}">Foros</a> /
-   <span>{{ $categoria->titulo }}</span>
+    <nav aria-label="breadcrumb">
+        <ol class="foro-breadcrumb-list">
+            <li class="foro-breadcrumb-item"><a href="{{ route('inicio') }}">Inicio</a></li>
+            <li class="foro-breadcrumb-item"><a href="{{ route('foro') }}">Foros</a></li>
+            <li class="foro-breadcrumb-item active">{{ $categoria->titulo }}</li>
+        </ol>
+    </nav>
 </div>
 
 <div class="foro-description mb-4">
-   <p>{{ $categoria->descripcion }}</p>
+    <p>{{ $categoria->descripcion }}</p>
 </div>
 
-<!-- Lista de foros de esta categoría -->
+<!-- Contenido del Foro -->
 @if(isset($categoria->foros) && count($categoria->foros) > 0)
-    @foreach($categoria->foros as $foro)
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h3 class="mb-0">{{ $foro->titulo }}</h3>
-                <small>Por: {{ $foro->nombre_usuario }}</small>
-            </div>
+@foreach($categoria->foros as $foro)
+<!-- Tabla de Comentarios -->
+<div class="foro-comments-table">
+    <table>
+        <thead>
+            <!-- Encabezado de la tabla si es necesario -->
+        </thead>
+        <tbody>
+            @php
+            $comentarios = DB::table('comentarios as c')
+            ->select('c.*', 'u.name as nombre_usuario')
+            ->leftJoin('users as u', 'c.id_usuario', '=', 'u.id')
+            ->where('c.id_blog', $foro->id_blog)
+            ->orderBy('c.created_at', 'desc')
+            ->get();
+            @endphp
 
-            <div class="card-body">
-                @if($foro->foto)
-                    <img src="{{ asset('images/' . $foro->foto) }}" class="img-fluid mb-3" alt="Imagen del foro">
-                @endif
+            @if(count($comentarios) > 0)
+            @foreach($comentarios as $comentario)
+            <tr class="foro-comments-row">
+                <!-- Avatar del autor -->
+                <td class="foro-comments-avatar-cell">
+                    <div class="foro-comments-avatar">
+                        {{ strtoupper(substr($comentario->nombre_usuario, 0, 1)) }}
+                    </div>
+                </td>
 
-                <p>{{ $foro->contenido }}</p>
+                <!-- Contenido del comentario con autor y enlace -->
+                <td class="foro-comments-topic">
+                    <div class="foro-comments-content">
+                        <a href="{{ route('comentario.show', ['id_blog' => $comentario->id_blog, 'id' => $comentario->id]) }}">
+                            {{ $comentario->comentario }}
+                        </a>
+                    </div>
+                    <div class="foro-comments-author-date">
+                        <small>{{ $comentario->nombre_usuario }} | {{ \Carbon\Carbon::parse($comentario->created_at)->format('d M Y') }}</small>
+                    </div>
+                </td>
 
-                <!-- Sección de comentarios -->
-                <div class="comentarios-section mt-4">
-                    <h4>Comentarios</h4>
-                    
-                    @php
-                        $comentarios = DB::table('comentarios as c')
-                            ->select('c.*', 'u.name as nombre_usuario')
-                            ->leftJoin('users as u', 'c.id_usuario', '=', 'u.id')
-                            ->where('c.id_blog', $foro->id_blog)
-                            ->orderBy('c.created_at', 'desc')
-                            ->get();
-                    @endphp
-
-                    <!-- Lista de comentarios -->
-                    @if(count($comentarios) > 0)
-                        @foreach($comentarios as $comentario)
-                            <div class="comentario mb-3">
-                                <p class="mb-1">{{ $comentario->comentario }}</p>
-                                <small class="text-muted">
-                                    Por: {{ $comentario->nombre_usuario }} - 
-                                    {{ \Carbon\Carbon::parse($comentario->created_at)->diffForHumans() }}
-                                </small>
-                            </div>
-                        @endforeach
-                    @else
-                        <p class="text-muted">No hay comentarios aún.</p>
-                    @endif
-
-                    <!-- Formulario de comentarios -->
-                    @auth
-                        <form action="{{ route('comentarios.store') }}" method="POST" class="mt-4">
-                            @csrf
-                            <input type="hidden" name="id_blog" value="{{ $foro->id_blog }}">
-                            
-                            <div class="form-group">
-                                <textarea 
-                                    name="comentario" 
-                                    class="form-control" 
-                                    rows="3" 
-                                    placeholder="Escribe un comentario..."
-                                    required
-                                ></textarea>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary mt-2">
-                                Enviar comentario
-                            </button>
-                        </form>
-                    @else
-                        <p class="mt-3">
-                            <a href="{{ route('login') }}">Inicia sesión</a> para dejar un comentario.
-                        </p>
-                    @endauth
-                </div>
-            </div>
-        </div>
-    @endforeach
+                <!-- Fecha del comentario -->
+                <td class="foro-comments-last">
+                    <div class="foro-comments-date">
+                        {{ \Carbon\Carbon::parse($comentario->created_at)->format('d M Y') }}
+                    </div>
+                </td>
+            </tr>
+            @endforeach
+            @else
+            <tr>
+                <td colspan="3" class="text-center">No hay comentarios aún.</td>
+            </tr>
+            @endif
+        </tbody>
+    </table>
+</div>
+@endforeach
 @else
-    <div class="alert alert-info">
-        No hay foros disponibles en esta categoría.
-    </div>
+<p>No hay foros en esta categoría.</p>
 @endif
 @endsection

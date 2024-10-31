@@ -30,37 +30,38 @@ class ForoController extends Controller
     }
 
     public function show_foro($categoria)
-    {
-        // Agregar la consulta de ciudades aquí también
-        $ciudades = Ciudad::all();
-    
-        // Obtener todos los foros ordenados por fecha
-        $foros = DB::table('foro')
-            ->select('foro.*', 'users.name as nombre_usuario')
-            ->leftJoin('users', 'foro.id_usuario', '=', 'users.id')
-            ->orderBy('fecha', 'desc')
-            ->get();
-    
-        // Agrupar los foros por id_blog
-        $categorias = $foros->groupBy('id_blog');
-    
-        // Verificar si la categoría solicitada existe
-        if (!isset($categorias[$categoria])) {
-            abort(404);
-        }
-    
-        // Obtener la categoría actual
-        $categoriaActual = (object)[
-            'titulo' => $categorias[$categoria]->first()->titulo,
-            'descripcion' => $categorias[$categoria]->first()->subtitulo,
-            'foros' => $categorias[$categoria]
-        ];
-    
-        return view('layouts.show_foro', [
-            'categoria' => $categoriaActual,
-            'ciudades' => $ciudades
-        ]);
+{
+    // Agregar la consulta de ciudades aquí también
+    $ciudades = Ciudad::all();
+
+    // Obtener todos los foros ordenados por fecha
+    $foros = DB::table('foro')
+        ->select('foro.*', 'users.name as nombre_usuario')
+        ->leftJoin('users', 'foro.id_usuario', '=', 'users.id')
+        ->orderBy('fecha', 'desc')
+        ->get();
+
+    // Agrupar los foros por id_blog
+    $categorias = $foros->groupBy('id_blog');
+
+    // Verificar si la categoría solicitada existe
+    if (!isset($categorias[$categoria])) {
+        abort(404);
     }
+
+    // Obtener la categoría actual
+    $categoriaActual = (object)[
+        'titulo' => $categorias[$categoria]->first()->titulo,
+        'descripcion' => $categorias[$categoria]->first()->subtitulo,
+        'foto' => $categorias[$categoria]->first()->foto, // Añadido el campo foto
+        'foros' => $categorias[$categoria]
+    ];
+
+    return view('layouts.show_foro', [
+        'categoria' => $categoriaActual,
+        'ciudades' => $ciudades
+    ]);
+}
     
 
     public function foroadmin()
@@ -161,4 +162,6 @@ class ForoController extends Controller
 
         return redirect()->route('foroadmin')->with('success', 'Foro eliminado exitosamente');
     }
+
+
 }
