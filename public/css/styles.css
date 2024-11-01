@@ -2118,7 +2118,7 @@ h2 {
 /* Contenedor principal */
 .inicio-container {
     max-width: 1200px;
-    margin: 0 ;
+    margin: 0 auto;
     padding: 20px;
 }
 
@@ -2142,7 +2142,7 @@ h2 {
     align-content: flex-start;
     justify-content: flex-start;
     max-width: 1050px;
-
+    margin: 0 auto; /* Esto centrará el contenedor */
 }
 
 /* Tarjeta individual */
@@ -2152,8 +2152,8 @@ h2 {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     background-color: #000;
-    height: 395px;
-    width: 255px;
+    height: 360px;
+    width: 229px;
 }
 .inicio-card-category {
     position: absolute;
@@ -2290,4 +2290,101 @@ h2 {
     font-size: 14px;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
+}
+
+/* Panel de chicas online */
+.online-panel {
+    width: 30%;
+    margin-left: 20px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+/* Título del panel */
+.online-panel-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Contador de chicas online */
+.online-count {
+    background-color: #00cc00;
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+/* Lista de chicas online */
+.online-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Elemento individual de la lista */
+.online-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Imagen de la chica online */
+.online-image {
+    width: 50px;
+    height: 50px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* Información de la chica online */
+.online-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Nombre y edad */
+.online-name {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.online-age {
+    font-size: 12px;
+    color: #999;
+    margin-left: 5px;
+}
+
+/* Estado online */
+.online-status {
+    font-size: 12px;
+    color: #00cc00;
+    font-weight: bold;
+}
+
+/* Botón de ver perfil */
+.online-profile-button {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #000;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 5px;
+    margin-top: 5px;
+    text-decoration: none;
 }

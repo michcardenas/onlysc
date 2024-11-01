@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\UsuarioPublicate;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use App\Models\User;
 use App\Notifications\UserCreatedNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Log;

@@ -5,6 +5,7 @@ use App\Http\Controllers\InicioController;
 use App\Http\Controllers\PublicateController;
 use App\Http\Controllers\ForoController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PostsController;
 use App\Http\Controllers\ComentarioController;
 use App\Http\Controllers\UsuarioPublicateController;
 
@@ -25,9 +26,8 @@ Route::post('/publicate', [PublicateController::class, 'store'])->name('publicat
 //Foro
 Route::get('/foro', [ForoController::class, 'showForo'])->name('foro');
 Route::get('/foros/{categoria}', [ForoController::class, 'show_foro'])->name('foro.show_foro');
-Route::get('/foros/{id_blog}/{id}', [ComentarioController::class, 'showComentario'])->name('comentario.show');
-Route::post('/comentarios', [ComentarioController::class, 'store'])->name('comentarios.store');
-
+Route::get('/foros/{id_blog}/{id}', [PostsController::class, 'showPost'])->name('post.show');
+Route::post('/comentarios', [ComentarioController::class, 'store'])->name('comentario.store');
 
 
 
