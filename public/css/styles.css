@@ -2143,6 +2143,7 @@ h2 {
     justify-content: flex-start;
     max-width: 1050px;
     margin: 0 auto; /* Esto centrará el contenedor */
+    font-family: 'Poppins', sans-serif;
 }
 
 /* Tarjeta individual */
@@ -2191,6 +2192,7 @@ h2 {
     justify-content: flex-end;
     border-radius: 0 0 8px 8px;
 }
+
 /* Imagen de fondo con opacidad */
 .inicio-image {
     position: absolute;
@@ -2204,18 +2206,38 @@ h2 {
     z-index: 1;
     border-radius: 8px;
 }
-/* Título y detalles de la tarjeta */
+/* Título de la tarjeta (nombre) */
 .inicio-card-title {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
     margin: 0;
+    color: #fff;
+    display: flex;
+    justify-content: space-between; /* Alinea nombre y edad en extremos */
 }
 
-.inicio-card-location,
+/* Edad del usuario */
 .inicio-card-age {
+    font-size: 16px;
+    color: #fff;
+    font-weight: bold;
+}
+
+/* Ubicación y precio en la misma línea */
+.inicio-card-location,
+.inicio-card-price {
     font-size: 14px;
-    margin: 2px 0;
     color: #ccc;
+    display: flex;
+    align-items: center;
+    margin-top: 4px;
+}
+
+/* Precio alineado a la derecha */
+.inicio-card-price {
+    color: #fff;
+    font-weight: bold;
+    margin-left: auto; /* Alinea el precio a la derecha */
 }
 
 /* Paginación */
@@ -2234,15 +2256,20 @@ h2 {
     border-color: #333;
     color: #fff;
 }
+
 /* Tarjeta destacada */
 .inicio-featured-card {
-    width: 200px;
+    width: 168px;
     margin-left: 20px;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     background-color: #000;
-    height: 311px;
+    height: 293px;
+    position: relative;
+    top: -350px;
+    left: 1000px;
+    font-family: 'Poppins', sans-serif;
 }
 
 /* Imagen de fondo de la tarjeta destacada */
@@ -2256,15 +2283,50 @@ h2 {
     align-items: flex-end;
 }
 
-/* Overlay para la tarjeta destacada */
+/* Contenedor de la superposición en la tarjeta destacada */
 .inicio-featured-overlay {
-    width: 100%;
-    padding: 15px;
+    padding: 10px;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0) 60%);
     color: #fff;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    border-radius: 0 0 8px 8px;
+    height: 100%; /* Asegura que el overlay ocupe toda la altura */
+}
+
+/* Título de la tarjeta destacada (nombre) y edad en la misma línea */
+.inicio-featured-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Alinea el nombre y la edad en extremos */
+    color: #fff;
+}
+
+/* Contenedor para ubicación y precio */
+.location-price {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Alinea la ubicación y el precio en extremos */
+    font-size: 14px;
+    color: #ccc;
+    margin-top: 5px;
+}
+
+/* Ubicación de la tarjeta destacada */
+.inicio-featured-location {
+    display: flex;
+    align-items: center;
+    color: #ccc;
+}
+
+/* Precio en la tarjeta destacada */
+.price {
+    font-weight: bold;
+    color: #fff;
 }
 
 /* Categoría destacada */
@@ -2281,6 +2343,7 @@ h2 {
     text-transform: uppercase;
     z-index: 2;
 }
+
 .inicio-featured-label {
     background-color: #FF0050; /* Color de fondo rosa */
     color: #fff; /* Texto en blanco */
@@ -2294,32 +2357,38 @@ h2 {
 
 /* Panel de chicas online */
 .online-panel {
-    width: 30%;
-    margin-left: 20px;
-    border: 1px solid #ddd;
-    padding: 15px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
+    width: 200px;
+    background-color: TRANSPARENT;
+    border-radius: 4px;
+    padding: 10px;
+    font-family: 'Work Sans', sans-serif;
+    position: relative;
+    top: -350px;
+    left: 1350px;
 }
 
 /* Título del panel */
 .online-panel-title {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
-    color: #333;
-    margin-bottom: 10px;
+    color: #000;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #e00037;
+    padding-bottom: 8px;
 }
 
 /* Contador de chicas online */
 .online-count {
-    background-color: #00cc00;
-    color: #fff;
-    text-align: center;
-    padding: 5px;
+    /* background-color: #f8f9fa; */
+    border: 1px solid #7ed321;
+    color: #000;
+    padding: 5px 53px;
     font-size: 14px;
+    /* border-radius: 4px; */
+    margin-bottom: 10px;
+    display: inline-block;
+    text-align: center;
     font-weight: bold;
-    border-radius: 5px;
-    margin-bottom: 15px;
 }
 
 /* Lista de chicas online */
@@ -2332,59 +2401,67 @@ h2 {
 /* Elemento individual de la lista */
 .online-item {
     display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    padding: 10px 0;
-    border-bottom: 1px solid #ddd;
+    padding: 8px 0;
+    /* border-bottom: 1px solid #e5e5e5; */
+    position: relative;
 }
 
 /* Imagen de la chica online */
 .online-image {
-    width: 50px;
-    height: 50px;
-    background-size: cover;
-    background-position: center;
-    border-radius: 50%;
+    width: 59px;
+    height: 69px;
+    object-fit: cover;
     margin-right: 10px;
 }
 
 /* Información de la chica online */
 .online-info {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-grow: 1;
 }
 
 /* Nombre y edad */
 .online-name {
     font-size: 14px;
-    font-weight: bold;
-    color: #333;
+    font-weight: 500;
+    color: #000;
+    /* margin-bottom: 2px; */
+    display: flex;
+    align-items: center;
 }
 
 .online-age {
-    font-size: 12px;
-    color: #999;
-    margin-left: 5px;
+    color: #000;
+    margin-left: 4px;
 }
 
 /* Estado online */
 .online-status {
+    display: flex;
+    align-items: center;
     font-size: 12px;
-    color: #00cc00;
+    color: #000;
+    margin: 4px 0;
     font-weight: bold;
+}
+
+.online-status::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: #22c55e;
+    border-radius: 50%;
+    margin-right: 4px;
 }
 
 /* Botón de ver perfil */
 .online-profile-button {
-    display: inline-block;
-    padding: 5px 10px;
     background-color: #000;
-    color: #fff;
+    color: white;
+    padding: 4px 12px;
+    /* border-radius: 4px; */
     font-size: 12px;
-    font-weight: bold;
-    text-align: center;
-    border-radius: 5px;
-    margin-top: 5px;
     text-decoration: none;
+    display: inline-block;
+    font-family: 'Poppins', sans-serif;
 }

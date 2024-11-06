@@ -18,6 +18,7 @@ Route::get('/', function () {
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'showHome'])->name('home');
 Route::get('/inicio', [InicioController::class, 'show'])->name('inicio');
 Route::post('/inicio', [InicioController::class, 'show'])->name('inicio');
+Route::get('/perfil/{id}', [InicioController::class, 'showPerfil'])->name('perfil.show');
 
 //Publicate
 Route::get('/publicate', [PublicateController::class, 'showRegistrationForm'])->name('publicate.form');

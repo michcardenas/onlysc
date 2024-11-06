@@ -2,25 +2,25 @@
 
 @section('content')
 @if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
 @endif
 
 @if(session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
+<div class="alert alert-danger">
+    {{ session('error') }}
+</div>
 @endif
 
 @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
 @endif
 
 <header>
@@ -45,11 +45,11 @@
 <main class="main-admin">
     <section class="form-section">
         <h2>Editar Usuario - {{ $usuario->nombre }}</h2>
-        
+
         <form action="{{ route('usuarios_publicate.update', ['id' => $usuario->id]) }}" method="POST" enctype="multipart/form-data" class="form-admin">
             @csrf
             @method('PUT')
-            
+
             <div class="form-group">
                 <label for="fantasia">Fantasia</label>
                 <input type="text" name="fantasia" value="{{ old('fantasia', $usuario->fantasia) }}" required>
@@ -139,6 +139,22 @@
             </div>
 
             <div class="form-group">
+                <label for="posicion">Posición</label>
+                <input type="number" name="posicion" value="{{ old('posicion', $usuario->posicion) }}" placeholder="Ingrese la posición" min="1" step="1">
+            </div>
+
+            <!-- Nuevo campo de precio -->
+            <div class="form-group">
+                <label for="precio">Precio</label>
+                <input type="number"
+                    name="precio"
+                    value="{{ old('precio', $usuario->precio) }}"
+                    placeholder="Ingrese el precio"
+                    min="0"
+                    step="1000">
+            </div>
+
+            <div class="form-group">
                 <label for="fotos">Fotos</label>
                 <input type="file" name="fotos[]" multiple>
                 <div class="fotos-actuales">
@@ -158,5 +174,3 @@
     <p>&copy; {{ date('Y') }} Mi Aplicación. Todos los derechos reservados.</p>
 </footer>
 @endsection
-
-

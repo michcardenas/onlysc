@@ -31,5 +31,6 @@ class UsuarioPublicate extends Model
         'estadop',
         'categorias',
         'posicion',
+        'precio',
     ];
 }

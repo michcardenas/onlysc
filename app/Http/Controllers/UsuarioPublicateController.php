@@ -52,6 +52,7 @@ class UsuarioPublicateController extends Controller
                 'estadop' => 'required|integer|in:0,1',
                 'categorias' => 'required|string|in:deluxe,premium,VIP,masajes',
                 'posicion' => 'nullable|integer|unique:usuarios_publicate,posicion,' . $usuario->id,
+                'precio' => 'nullable|numeric|min:0', // Agregada validación de precio
                 'fotos.*' => 'nullable|image|max:2048',
             ]);
     
@@ -75,7 +76,9 @@ class UsuarioPublicateController extends Controller
                 'estadop' => $request->estadop,
                 'categorias' => $request->categorias,
                 'posicion' => $request->posicion,
+                'precio' => $request->precio, // Agregada actualización de precio
             ]);
+    
     
             Log::info("Usuario actualizado en la base de datos");
     
