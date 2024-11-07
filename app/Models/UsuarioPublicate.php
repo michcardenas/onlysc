@@ -10,7 +10,6 @@ class UsuarioPublicate extends Model
 
     protected $table = 'usuarios_publicate';
 
-    // Lista de campos que pueden ser llenados en el modelo
     protected $fillable = [
         'fantasia',
         'email',
@@ -33,4 +32,12 @@ class UsuarioPublicate extends Model
         'posicion',
         'precio',
     ];
+
+    /**
+     * Obtener la disponibilidad del usuario
+     */
+    public function disponibilidad()
+    {
+        return $this->hasMany(Disponibilidad::class, 'publicate_id');
+    }
 }

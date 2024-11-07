@@ -39,6 +39,10 @@ Route::put('/usuarios-publicate/{id}', [UsuarioPublicateController::class, 'upda
 
 //Foro Admin
 Route::get('/foroadmin', [ForoController::class, 'foroadmin'])->name('foroadmin');
+
+//Disponibilidad
+Route::post('/disponibilidad', [DisponibilidadController::class, 'store'])->name('disponibilidad.store');
+Route::get('/disponibilidad', [DisponibilidadController::class, 'index'])->name('disponibilidad.index');
     
 // Rutas para CRUD de foros
 Route::get('/foroadmin/edit/{id}', [ForoController::class, 'edit'])->name('foroadmin.edit');

@@ -115,6 +115,40 @@
                 <textarea name="disponibilidad" rows="2">{{ old('disponibilidad', $usuario->disponibilidad) }}</textarea>
             </div>
 
+            <!-- Checkboxes para los días de la semana -->
+            <div class="form-group">
+                <label>Días Disponibles</label>
+                <div class="admin-checkbox-group">
+                    @foreach(['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'] as $dia)
+                    <div class="admin-checkbox-item">
+                        <div class="day-container">
+                            <input type="checkbox"
+                                id="admin-dia-{{ $dia }}"
+                                name="dias_disponibles[]"
+                                value="{{ $dia }}"
+                                {{ in_array($dia, $diasDisponibles ?? []) ? 'checked' : '' }}>
+                            <label for="admin-dia-{{ $dia }}">{{ $dia }}</label>
+                        </div>
+                        <div class="time-inputs">
+                            <div class="time-input-group">
+                                <input type="time"
+                                    id="desde-{{ $dia }}"
+                                    name="horario[{{ $dia }}][desde]"
+                                    value="{{ $horarios[$dia]['desde'] ?? '10:00' }}"
+                                    class="time-input">
+                                <span class="time-separator">-</span>
+                                <input type="time"
+                                    id="hasta-{{ $dia }}"
+                                    name="horario[{{ $dia }}][hasta]"
+                                    value="{{ $horarios[$dia]['hasta'] ?? '02:00' }}"
+                                    class="time-input">
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+
             <div class="form-group">
                 <label for="servicios">Servicios</label>
                 <textarea name="servicios" rows="3">{{ old('servicios', json_encode($usuario->servicios)) }}</textarea>

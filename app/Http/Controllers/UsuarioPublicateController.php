@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\UsuarioPublicate;
+use App\Models\Disponibilidad;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use App\Models\User;
@@ -11,29 +12,45 @@ use App\Notifications\UserCreatedNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Log;
 
-
-
-
 class UsuarioPublicateController extends Controller
 {
     public function edit($id)
     {
-        // Obtener la información del usuario a partir del ID
-        $usuario = UsuarioPublicate::findOrFail($id);
-
-        // Pasar los datos del usuario a la vista de edición
-        return view('admin.edit', compact('usuario'));
+        try {
+            // Obtener el usuario
+            $usuario = UsuarioPublicate::findOrFail($id);
+            
+            // Obtener la disponibilidad
+            $disponibilidad = Disponibilidad::where('publicate_id', $id)->get();
+            
+            // Preparar los datos para la vista
+            $diasDisponibles = $disponibilidad->pluck('dia')->toArray();
+            $horarios = [];
+            
+            foreach($disponibilidad as $disp) {
+                $horarios[$disp->dia] = [
+                    'desde' => $disp->hora_desde,
+                    'hasta' => $disp->hora_hasta
+                ];
+            }
+            
+            // Pasar a la vista
+            return view('admin.edit', compact('usuario', 'diasDisponibles', 'horarios'));
+            
+        } catch (\Exception $e) {
+            Log::error("Error al cargar el formulario de edición: " . $e->getMessage());
+            return redirect()->back()->with('error', 'Error al cargar el formulario.');
+        }
     }
-   
-   
+
     public function update(Request $request, $id)
     {
         try {
             Log::info("Iniciando actualización del usuario con ID: $id");
-    
+
             $usuario = UsuarioPublicate::findOrFail($id);
             Log::info("Usuario encontrado: {$usuario->id}");
-    
+
             // Validar los datos del formulario
             $request->validate([
                 'fantasia' => 'required|string|max:255',
@@ -52,12 +69,16 @@ class UsuarioPublicateController extends Controller
                 'estadop' => 'required|integer|in:0,1',
                 'categorias' => 'required|string|in:deluxe,premium,VIP,masajes',
                 'posicion' => 'nullable|integer|unique:usuarios_publicate,posicion,' . $usuario->id,
-                'precio' => 'nullable|numeric|min:0', // Agregada validación de precio
+                'precio' => 'nullable|numeric|min:0',
                 'fotos.*' => 'nullable|image|max:2048',
+                'dias_disponibles' => 'array',
+                'dias_disponibles.*' => 'string',
+                'horario' => 'array',
+                'horario.*' => 'array',
             ]);
-    
+
             Log::info("Validación completada para el usuario con ID: $id");
-    
+
             // Actualizar los datos del usuario
             $usuario->update([
                 'fantasia' => $request->fantasia,
@@ -76,37 +97,56 @@ class UsuarioPublicateController extends Controller
                 'estadop' => $request->estadop,
                 'categorias' => $request->categorias,
                 'posicion' => $request->posicion,
-                'precio' => $request->precio, // Agregada actualización de precio
+                'precio' => $request->precio,
             ]);
-    
-    
-            Log::info("Usuario actualizado en la base de datos");
-    
+
+            // Actualizar disponibilidad
+            if ($request->has('dias_disponibles')) {
+                Log::info("Actualizando disponibilidad para usuario: $id");
+                
+                // Eliminar registros antiguos
+                Disponibilidad::where('publicate_id', $id)->delete();
+                
+                // Crear nuevos registros solo para los días seleccionados
+                foreach ($request->dias_disponibles as $dia) {
+                    if (isset($request->horario[$dia])) {
+                        Disponibilidad::create([
+                            'publicate_id' => $id,
+                            'dia' => $dia,
+                            'hora_desde' => $request->horario[$dia]['desde'],
+                            'hora_hasta' => $request->horario[$dia]['hasta'],
+                            'estado' => 'activo'
+                        ]);
+                    }
+                }
+                Log::info("Disponibilidad actualizada correctamente");
+            }
+
             // Procesar y guardar las nuevas imágenes
             $nombresFotos = json_decode($usuario->fotos, true) ?: [];
-    
+
             if ($request->hasFile('fotos')) {
                 foreach ($request->file('fotos') as $foto) {
                     $nombreArchivo = uniqid() . '_' . time() . '.' . $foto->getClientOriginalExtension();
                     $path = storage_path("app/public/chicas/{$usuario->id}");
-    
+
                     if (!File::exists($path)) {
                         File::makeDirectory($path, 0755, true);
                     }
-    
+
                     $foto->move($path, $nombreArchivo);
                     $nombresFotos[] = $nombreArchivo;
                 }
             }
-    
+
             $usuario->update([
                 'fotos' => json_encode($nombresFotos),
             ]);
-    
+
             // Si el estado es activo, crear un usuario en la tabla users
             if ($usuario->estadop == 1) {
                 Log::info("El estado del usuario es activo, creando usuario en 'users'");
-    
+
                 $user = User::updateOrCreate(
                     ['email' => $usuario->email],
                     [
@@ -117,10 +157,9 @@ class UsuarioPublicateController extends Controller
                         'rol' => 2,
                     ]
                 );
-    
+
                 Log::info("Usuario creado o actualizado en la tabla 'users' con email: {$user->email}");
-    
-                // Intentar enviar la notificación
+
                 try {
                     Notification::send($user, new UserCreatedNotification($usuario->nombre, $usuario->email));
                     Log::info("Notificación enviada a {$user->email}");
@@ -132,6 +171,7 @@ class UsuarioPublicateController extends Controller
             }
             
             return redirect()->route('panel_control')->with('success', 'Usuario actualizado correctamente.');
+
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             Log::error("Error: El usuario con ID $id no existe.");
             return redirect()->route('panel_control')->with('error', 'El usuario no existe.');
@@ -143,7 +183,4 @@ class UsuarioPublicateController extends Controller
             return redirect()->route('panel_control')->with('error', 'Ocurrió un error al actualizar el usuario. Inténtalo de nuevo.');
         }
     }
-    
-    
-
 }

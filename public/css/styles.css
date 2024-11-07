@@ -2115,6 +2115,70 @@ h2 {
     object-fit: cover;
     border-radius: 5px;
 }
+
+.admin-checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.admin-checkbox-item {
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.admin-checkbox-item input[type="checkbox"] {
+    display: none;
+}
+
+.admin-checkbox-item label {
+    background-color: #d91e48;
+    color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+    min-width: 100px;
+    text-align: center;
+}
+
+.admin-checkbox-item input[type="checkbox"]:checked + label {
+    background-color: #83946e;
+}
+
+.time-inputs {
+    display: flex;
+    align-items: center;
+}
+
+.time-input-group {
+    display: flex;
+    align-items: center;
+}
+
+.time-input {
+    width: 100px;
+    padding: 5px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.time-separator {
+    color: #333;
+    font-size: 1rem;
+    margin: 0 5px;
+}
+
+/* Estilo para inputs deshabilitados */
+input[type="checkbox"]:not(:checked) ~ .time-inputs input[type="time"] {
+    pointer-events: none;
+    background-color: #e9ecef;
+    opacity: 0.7;
+}
+
 /* Contenedor principal */
 .inicio-container {
     max-width: 1200px;
