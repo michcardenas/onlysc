@@ -680,6 +680,18 @@ color: #cccccc;
     font-family: 'Work Sans', sans-serif;
 }
 
+.remove-button, .publicate-remove-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 2px 5px;
+}
+
 .publicate-header {
     margin-top: 40px;
     margin-bottom: 80px;
@@ -2092,6 +2104,105 @@ h2 {
     background-color: #2e2e2e;
     color: #ffffff;
 }
+
+.admin-form-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #333;
+}
+
+.required-asterisk{
+    color:#e0456c;
+}
+
+/* Sección del formulario */
+.admin-form-section {
+    width: 50%;
+    padding: 50px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-form-section h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.admin-form-section p {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 40px;
+}
+
+.admin-input-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+/* Estilos del input */
+.admin-input-wrapper input {
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    border-bottom: 1px solid #777771;
+    background: transparent;
+    outline: none;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+/* Estilos del label */
+.admin-input-wrapper label {
+    position: absolute;
+    top: 8px;
+    left: 0;
+    font-size: 16px;
+    color: #666;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+/* Animación del label */
+.admin-input-wrapper input:focus ~ label,
+.admin-input-wrapper input:not(:placeholder-shown) ~ label {
+    top: -20px;
+    font-size: 14px;
+    color: #e00037;
+}
+
+/* Estilo para el asterisco */
+.admin-input-wrapper label::after {
+    content: '*';
+    color: #e00037;
+    margin-left: 2px;
+    display: none;
+}
+
+.admin-input-wrapper input[required] ~ label::after {
+    display: inline;
+}
+
+/* Estado activo del input */
+.admin-input-wrapper input:focus {
+    border-bottom: 2px solid #e00037;
+}
+
+.admin-service-item {
+    display: flex;
+    align-items: center;
+    font-size: 13px; /* Reducido de 14px a 13px */
+    color: #fff;
+    padding: 4px 6px; /* Reducido de 8px a 4px 6px */
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
 .btn-submit {
     background-color: #4CAF50;
     border: none;
@@ -2202,11 +2313,11 @@ input[type="checkbox"]:not(:checked) ~ .time-inputs input[type="time"] {
 .inicio-card-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px; /* Espacio entre las tarjetas, ajusta este valor según lo necesites */
+    gap: 10px;
     align-content: flex-start;
     justify-content: flex-start;
     max-width: 1050px;
-    margin: 0 auto; /* Esto centrará el contenedor */
+    margin: 0 auto;
     font-family: 'Poppins', sans-serif;
 }
 
@@ -2219,13 +2330,22 @@ input[type="checkbox"]:not(:checked) ~ .time-inputs input[type="time"] {
     background-color: #000;
     height: 360px;
     width: 229px;
+    text-decoration: none; /* Quita el subrayado del enlace */
+    color: inherit; /* Hereda el color del texto del padre */
+    display: block; /* Hace que el enlace ocupe todo el espacio de la tarjeta */
+    transition: transform 0.2s ease; /* Suave transición para el efecto hover */
 }
+
+.inicio-card:hover {
+    transform: translateY(-5px); /* Efecto de elevación al pasar el mouse */
+}
+
 .inicio-card-category {
     position: absolute;
     top: 10px;
     left: 10px;
-    background-color: rgba(0, 0, 0, 0.8); /* Fondo negro con opacidad */
-    color: #fff; /* Texto en blanco */
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
     padding: 2px 3px;
     border-radius: 5px;
     font-size: 12px;
@@ -2246,7 +2366,7 @@ input[type="checkbox"]:not(:checked) ~ .time-inputs input[type="time"] {
 /* Overlay con degradado para texto */
 .inicio-card-overlay {
     position: relative;
-    z-index: 2; /* Para que el texto esté encima de la superposición */
+    z-index: 2;
     width: 100%;
     padding: 15px;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0) 60%);
@@ -2266,10 +2386,11 @@ input[type="checkbox"]:not(:checked) ~ .time-inputs input[type="time"] {
     height: 100%;
     background-size: cover;
     background-position: center;
-    opacity: 0.7; /* Aplica opacidad a solo la imagen */
+    opacity: 0.7;
     z-index: 1;
     border-radius: 8px;
 }
+
 /* Título de la tarjeta (nombre) */
 .inicio-card-title {
     font-size: 16px;
@@ -2277,7 +2398,7 @@ input[type="checkbox"]:not(:checked) ~ .time-inputs input[type="time"] {
     margin: 0;
     color: #fff;
     display: flex;
-    justify-content: space-between; /* Alinea nombre y edad en extremos */
+    justify-content: space-between;
 }
 
 /* Edad del usuario */
@@ -2295,13 +2416,14 @@ input[type="checkbox"]:not(:checked) ~ .time-inputs input[type="time"] {
     display: flex;
     align-items: center;
     margin-top: 4px;
+    gap: 5px;
 }
 
 /* Precio alineado a la derecha */
 .inicio-card-price {
     color: #fff;
     font-weight: bold;
-    margin-left: auto; /* Alinea el precio a la derecha */
+    margin-left: auto;
 }
 
 /* Paginación */
@@ -2331,8 +2453,6 @@ input[type="checkbox"]:not(:checked) ~ .time-inputs input[type="time"] {
     background-color: #000;
     height: 293px;
     position: relative;
-    top: -350px;
-    left: 1000px;
     font-family: 'Poppins', sans-serif;
 }
 
@@ -2427,8 +2547,8 @@ input[type="checkbox"]:not(:checked) ~ .time-inputs input[type="time"] {
     padding: 10px;
     font-family: 'Work Sans', sans-serif;
     position: relative;
-    top: -350px;
-    left: 1350px;
+    /* top: -350px; */
+    left: 950px;
 }
 
 /* Título del panel */
@@ -2528,4 +2648,398 @@ input[type="checkbox"]:not(:checked) ~ .time-inputs input[type="time"] {
     text-decoration: none;
     display: inline-block;
     font-family: 'Poppins', sans-serif;
+}
+
+.online-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: #7ed321; /* Cambia a red para mejor visibilidad */
+    border-radius: 50%;
+    margin-left: -40px;
+    vertical-align: middle;
+}
+
+.escortperfil-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Poppins, sans-serif;
+}
+
+.escortperfil-breadcrumb {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px;
+    color: #666;
+    font-size: 1.1em;
+}
+
+.escortperfil-breadcrumb a {
+    color: #666;
+    text-decoration: none;
+}
+
+.escortperfil-breadcrumb a:hover {
+    color: #e00037;
+}
+
+.escortperfil-banner {
+    position: relative;
+    width: 100vw; /* Ocupa todo el ancho de la ventana */
+    height: 450px; /* Altura fija para el carrusel */
+    overflow: hidden;
+    margin-bottom: 20px;
+    margin-left: calc(-50vw + 50%); /* Técnica para full width dentro de contenedor */
+    margin-right: calc(-50vw + 50%);
+}
+
+.escortperfil-banner-slider {
+    display: flex;
+    transition: transform 0.5s ease;
+    width: max-content; /* Permite que el contenedor crezca según las imágenes */
+}
+
+.escortperfil-banner-slider img {
+    width: 50vw; /* Cada imagen ocupa el ancho de la ventana */
+    height: 450px;
+    object-fit: cover;
+    flex-shrink: 0; /* Evita que las imágenes se compriman */
+}
+
+/* Controles del carrusel */
+.carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 60px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    /* border-radius: 50%; */
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.carousel-control:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.carousel-control.prev {
+    left: 20px;
+}
+
+.carousel-control.next {
+    right: 20px;
+}
+
+/* Indicadores del carrusel */
+.carousel-indicators {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 3;
+}
+
+.carousel-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.carousel-indicator.active {
+    background-color: white;
+}
+
+.escortperfil-banner-img {
+    width: 100%;
+    height: 450px;
+    object-fit: cover;
+    scroll-snap-align: start;
+}
+
+.escortperfil-nombre {
+    position: absolute;
+    bottom: 25px;
+    left: 360px;
+    color: #fff;
+    font-size: 3em;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    margin: 0;
+    padding: 0;
+}
+
+.escortperfil-info-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 30px;
+    margin-top: -50px;
+    position: relative;
+    z-index: 2;
+}
+
+.escortperfil-info-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+    min-width: 150px;
+}
+
+.escortperfil-info-icon {
+    color: #e00037;
+    font-size: 1.8em;
+}
+
+.escortperfil-info-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.escortperfil-info-label {
+    font-size: 0.85em;
+    color: #888;
+    font-weight: 500;
+}
+
+.escortperfil-info-value {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #333;
+}
+
+.escortperfil-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: absolute;
+    right: 355px;
+    top: 640px; /* Ajusta según necesites */
+    z-index: 3;
+    width: auto; /* En lugar de un ancho fijo */
+}
+
+.escortperfil-btn {
+    text-decoration: none;  /* Elimina la línea del enlace */
+    width: 290px;
+    padding: 12px 0;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 5px;
+    text-transform: uppercase;
+    /* height: 40px; */
+}
+
+.escortperfil-btn.disponible {
+    background-color: #7ed321;
+}
+
+.escortperfil-btn.contactar {
+    background-color: #e00037;
+}
+
+.escortperfil-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    margin: 40px 0;
+}
+
+.escortperfil-section {
+    flex: 1;
+    margin-bottom: 40px;
+}
+
+.escortperfil-section-title {
+    font-size: 1.5em;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e00037;
+    display: inline-block;
+}
+
+.escortperfil-description-text {
+    line-height: 1.6;
+    color: #666;
+}
+
+.escortperfil-attributes-list {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.escortperfil-attribute-item {
+    background-color: #2c2c2c;
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.escortperfil-services-list {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.escortperfil-service-item {
+    background-color: #e00037;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    font-weight: 500;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.escortperfil-service-item:hover {
+    background-color: #c40030;
+    transform: translateY(-1px);
+}
+
+/* Contenedor del horario */
+.escortperfil-schedule {
+    position: absolute;
+    right: 330px;
+    /* top: 650px; */
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    width: 290px;
+    margin-top: 20px;
+    /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
+}
+
+/* Título del horario */
+.escortperfil-schedule .escortperfil-section-title {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e00037;
+    display: inline-block;
+}
+
+/* Lista de horarios */
+.escortperfil-schedule-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Cada ítem del horario */
+.escortperfil-schedule-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    font-size: 0.95em;
+}
+
+/* Badge del día */
+.day-badge {
+    background-color: #e00037;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.9em;
+    min-width: 45px;
+    text-align: center;
+}
+
+/* Horario */
+.schedule-time {
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* Día actual */
+.escortperfil-schedule-item.current-day {
+    background-color: #f8fff4;
+}
+
+/* Día actual badge */
+.escortperfil-schedule-item.current-day .day-badge {
+    background-color: #7ed321;
+}
+
+/* Mensaje cuando no hay horario disponible */
+.escortperfil-schedule-list p {
+    color: #666;
+    text-align: center;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid #eee;
+    margin: 0;
+}
+.favorite-button {
+    position: absolute;
+    top: 480px;
+    right: 360px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    z-index: 10;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.favorite-button i {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.favorite-button span {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Opcional: Efecto hover */
+.favorite-button:hover {
+    transform: scale(1.05);
+}
+
+/* Opcional: Efecto cuando está en favoritos */
+.favorite-button.active i {
+    font-weight: 900; /* Cambia a corazón sólido cuando está en favoritos */
 }

@@ -26,6 +26,73 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <script>
+  document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('fileInput');
+        const previewContainer = document.getElementById('previewContainer');
 
+        // Manejar la selección de archivos
+        fileInput.addEventListener('change', handleFiles);
+
+        function handleFiles(e) {
+            const files = [...e.target.files];
+            files.forEach(previewFile);
+        }
+
+        function previewFile(file) {
+            if (!file.type.startsWith('image/')) return;
+
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+
+            reader.onload = function() {
+                const preview = document.createElement('div');
+                preview.className = 'publicate-preview-item';
+                
+                const img = document.createElement('img');
+                img.src = reader.result;
+                img.className = 'foto-preview';
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'publicate-remove-button';
+                removeBtn.innerHTML = '&times;';
+                removeBtn.onclick = function() {
+                    preview.remove();
+                };
+                
+                preview.appendChild(img);
+                preview.appendChild(removeBtn);
+                previewContainer.appendChild(preview);
+            };
+        }
+
+        window.removeExistingPhoto = function(foto, button) {
+            // Eliminar el elemento del DOM
+            button.parentElement.remove();
+
+            // Enviar solicitud para actualizar la base de datos
+            fetch('/eliminar-foto', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    usuario_id: '{{ $usuario->id }}',
+                    foto: foto
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Foto eliminada exitosamente');
+                } else {
+                    console.error('Error al eliminar la foto');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    });
+</script>
 </body>
 </html>

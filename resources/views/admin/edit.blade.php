@@ -91,6 +91,11 @@
             </div>
 
             <div class="form-group">
+                <label for="nacionalidad">Nacionalidad</label>
+                <input type="text" name="nacionalidad" value="{{ old('nacionalidad', $usuario->nacionalidad) }}" required>
+            </div>
+
+            <div class="form-group">
                 <label for="edad">Edad</label>
                 <input type="number" name="edad" value="{{ old('edad', $usuario->edad) }}" required min="18" max="100">
             </div>
@@ -159,6 +164,178 @@
                 <textarea name="servicios_adicionales" rows="3">{{ old('servicios_adicionales', json_encode($usuario->servicios_adicionales)) }}</textarea>
             </div>
 
+            <div class="admin-form-group">
+                <div class="admin-services-wrapper">
+                    <label class="admin-services-label">Atributos<span class="required-asterisk">*</span></label>
+                    <div class="publicate-services-grid">
+                        @php
+                        $atributosActuales = json_decode($usuario->atributos, true) ?? [];
+                        @endphp
+
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Busto Grande"
+                                {{ in_array('Busto Grande', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Busto Grande</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Busto Mediano"
+                                {{ in_array('Busto Mediano', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Busto Mediano</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Busto Pequeño"
+                                {{ in_array('Busto Pequeño', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Busto Pequeño</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Cara Visible"
+                                {{ in_array('Cara Visible', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Cara Visible</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Cola Grande"
+                                {{ in_array('Cola Grande', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Cola Grande</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Cola Mediana"
+                                {{ in_array('Cola Mediana', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Cola Mediana</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Cola Pequeña"
+                                {{ in_array('Cola Pequeña', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Cola Pequeña</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Con Video"
+                                {{ in_array('Con Video', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Con Video</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Contextura Delgada"
+                                {{ in_array('Contextura Delgada', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Contextura Delgada</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Contextura Grande"
+                                {{ in_array('Contextura Grande', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Contextura Grande</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Contextura Mediana"
+                                {{ in_array('Contextura Mediana', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Contextura Mediana</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Depilación Full"
+                                {{ in_array('Depilación Full', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Depilación Full</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Depto Propio"
+                                {{ in_array('Depto Propio', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Depto Propio</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="En Promoción"
+                                {{ in_array('En Promoción', $atributosActuales) ? 'checked' : '' }}>
+                            <span>En Promoción</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="English"
+                                {{ in_array('English', $atributosActuales) ? 'checked' : '' }}>
+                            <span>English</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Escort Independiente"
+                                {{ in_array('Escort Independiente', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Escort Independiente</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Español"
+                                {{ in_array('Español', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Español</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Estatura Alta"
+                                {{ in_array('Estatura Alta', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Estatura Alta</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Estatura Mediana"
+                                {{ in_array('Estatura Mediana', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Estatura Mediana</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Estatura Pequeña"
+                                {{ in_array('Estatura Pequeña', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Estatura Pequeña</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Hentai"
+                                {{ in_array('Hentai', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Hentai</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Morena"
+                                {{ in_array('Morena', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Morena</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Mulata"
+                                {{ in_array('Mulata', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Mulata</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="No fuma"
+                                {{ in_array('No fuma', $atributosActuales) ? 'checked' : '' }}>
+                            <span>No fuma</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Ojos Claros"
+                                {{ in_array('Ojos Claros', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Ojos Claros</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Ojos Oscuros"
+                                {{ in_array('Ojos Oscuros', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Ojos Oscuros</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Peliroja"
+                                {{ in_array('Peliroja', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Peliroja</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Portugues"
+                                {{ in_array('Portugues', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Portugues</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Relato Erotico"
+                                {{ in_array('Relato Erotico', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Relato Erótico</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Rubia"
+                                {{ in_array('Rubia', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Rubia</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Tatuajes"
+                                {{ in_array('Tatuajes', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Tatuajes</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="atributos[]" value="Trigueña"
+                                {{ in_array('Trigueña', $atributosActuales) ? 'checked' : '' }}>
+                            <span>Trigueña</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label for="cuentanos">Cuéntanos sobre ti</label>
                 <textarea name="cuentanos" rows="5">{{ old('cuentanos', $usuario->cuentanos) }}</textarea>
@@ -188,15 +365,21 @@
                     step="1000">
             </div>
 
+
             <div class="form-group">
                 <label for="fotos">Fotos</label>
-                <input type="file" name="fotos[]" multiple>
-                <div class="fotos-actuales">
+                <input type="file" name="fotos[]" multiple id="fileInput">
+                <div class="fotos-actuales" id="previewContainer">
                     @foreach(json_decode($usuario->fotos) as $foto)
-                    <img src="{{ asset('storage/chicas/'.$usuario->id.'/'.$foto) }}" alt="Foto de {{ $usuario->nombre }}" class="foto-preview">
+                    <div class="publicate-preview-item" data-foto="{{ $foto }}">
+                        <img src="{{ asset('storage/chicas/'.$usuario->id.'/'.$foto) }}" alt="Foto de {{ $usuario->nombre }}" class="foto-preview">
+                        <button class="publicate-remove-button" onclick="removeExistingPhoto('{{ $foto }}', this)">&times;</button>
+                    </div>
                     @endforeach
                 </div>
             </div>
+
+
 
             <button type="submit" class="btn-submit">Actualizar</button>
         </form>

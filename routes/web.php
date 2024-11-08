@@ -8,6 +8,9 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\ComentarioController;
 use App\Http\Controllers\UsuarioPublicateController;
+use App\Http\Controllers\DisponibilidadController;
+use App\Http\Controllers\PerfilController;
+use App\Models\UsuarioPublicate;
 
 Auth::routes();
 
@@ -43,7 +46,11 @@ Route::get('/foroadmin', [ForoController::class, 'foroadmin'])->name('foroadmin'
 //Disponibilidad
 Route::post('/disponibilidad', [DisponibilidadController::class, 'store'])->name('disponibilidad.store');
 Route::get('/disponibilidad', [DisponibilidadController::class, 'index'])->name('disponibilidad.index');
-    
+
+//Perfil
+Route::get('/escorts/{id}', [PerfilController::class, 'show'])->name('escorts.show');
+
+
 // Rutas para CRUD de foros
 Route::get('/foroadmin/edit/{id}', [ForoController::class, 'edit'])->name('foroadmin.edit');
 Route::put('/foroadmin/update/{id}', [ForoController::class, 'update'])->name('foroadmin.update');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Ciudad;
 use App\Models\UsuarioPublicate;
+use Carbon\Carbon;
 
 class InicioController extends Controller
 {
@@ -13,21 +14,61 @@ class InicioController extends Controller
         // Obtener todas las ciudades
         $ciudades = Ciudad::all();
 
-        // Obtener usuarios con estadop = 1 y paginación de 12 por página
-        // Obtener usuarios ordenados por posición
-        $usuarios = UsuarioPublicate::where('estadop', 1)
-            ->select('id', 'fantasia', 'nombre', 'edad', 'ubicacion', 'fotos', 'categorias', 'posicion', 'precio')
-            ->orderBy('posicion', 'asc')  // Esto asegura que se ordenen por posición
+        // Obtener la hora y día actuales
+        $now = Carbon::now();
+        $currentDay = strtolower($now->locale('es')->dayName);
+        $currentTime = $now->format('H:i:s');
+
+        // Obtener todos los usuarios (estadop 1 y 3)
+        $usuarios = UsuarioPublicate::with('disponibilidad')
+            ->whereIn('estadop', [1, 3])
+            ->select(
+                'id',
+                'fantasia',
+                'nombre',
+                'edad',
+                'ubicacion',
+                'fotos',
+                'categorias',
+                'posicion',
+                'precio',
+                'estadop'
+            )
+            ->orderBy('posicion', 'asc')
             ->paginate(12);
 
-        // Obtener el usuario destacado con estadop = 3
+        // Mantener la consulta separada para usuario destacado
         $usuarioDestacado = UsuarioPublicate::where('estadop', 3)
-            ->select('id', 'fantasia', 'nombre', 'edad', 'ubicacion', 'fotos', 'categorias', 'precio')
+            ->select(
+                'id',
+                'fantasia',
+                'nombre',
+                'edad',
+                'ubicacion',
+                'fotos',
+                'categorias',
+                'precio',
+                'estadop'
+            )
             ->first();
 
-        // Obtener usuarios para el panel lateral (11 usuarios)
-        $usuariosOnline = UsuarioPublicate::where('estadop', 1)
-            ->select('id', 'fantasia', 'edad', 'fotos')
+        // Obtener usuarios online para el panel lateral
+        $usuariosOnline = UsuarioPublicate::with(['disponibilidad' => function ($query) use ($currentDay, $currentTime) {
+            $query->where('dia', 'LIKE', $currentDay)
+                ->where(function ($q) use ($currentTime) {
+                    $q->whereRaw("(hora_hasta < hora_desde AND ('$currentTime' >= hora_desde OR '$currentTime' <= hora_hasta))")
+                        ->orWhereRaw("(hora_hasta >= hora_desde AND '$currentTime' BETWEEN hora_desde AND hora_hasta)");
+                });
+        }])
+            ->where('estadop', 1)
+            ->whereHas('disponibilidad', function ($query) use ($currentDay, $currentTime) {
+                $query->where('dia', 'LIKE', $currentDay)
+                    ->where(function ($q) use ($currentTime) {
+                        $q->whereRaw("(hora_hasta < hora_desde AND ('$currentTime' >= hora_desde OR '$currentTime' <= hora_hasta))")
+                            ->orWhereRaw("(hora_hasta >= hora_desde AND '$currentTime' BETWEEN hora_desde AND hora_hasta)");
+                    });
+            })
+            ->select('id', 'fantasia', 'edad', 'fotos', 'estadop')
             ->take(11)
             ->get();
 
@@ -36,13 +77,16 @@ class InicioController extends Controller
             'usuarios' => $usuarios,
             'usuarioDestacado' => $usuarioDestacado,
             'usuariosOnline' => $usuariosOnline,
-            'totalOnline' => $usuariosOnline->count()
+            'totalOnline' => $usuariosOnline->count(),
+            'currentTime' => $currentTime,
+            'currentDay' => $currentDay
         ]);
     }
 
     public function showPerfil($id)
     {
-        $usuario = UsuarioPublicate::findOrFail($id);
+        $usuario = UsuarioPublicate::with('disponibilidad')
+            ->findOrFail($id);
         return view('perfil', ['usuario' => $usuario]);
     }
 }

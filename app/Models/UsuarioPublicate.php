@@ -3,6 +3,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class UsuarioPublicate extends Model
 {
@@ -31,8 +32,9 @@ class UsuarioPublicate extends Model
         'categorias',
         'posicion',
         'precio',
+        'nacionalidad', // Nueva columna agregada
+        'atributos',    // Nueva columna agregada
     ];
-
     /**
      * Obtener la disponibilidad del usuario
      */
@@ -40,4 +42,29 @@ class UsuarioPublicate extends Model
     {
         return $this->hasMany(Disponibilidad::class, 'publicate_id');
     }
+
+    // /**
+    //  * Get the route key for the model.
+    //  * Esto le dice a Laravel que use 'fantasia' en lugar de 'id' para las rutas
+    //  */
+    // public function getRouteKeyName()
+    // {
+    //     return 'fantasia';
+    // }
+
+    // /**
+    //  * Obtener el slug del nombre de fantasía para URLs
+    //  */
+    // public function getSlugAttribute()
+    // {
+    //     return Str::slug($this->fantasia);
+    // }
+
+    // /**
+    //  * Modificar cómo se resuelve el modelo en las rutas
+    //  */
+    // public function resolveRouteBinding($value, $field = null)
+    // {
+    //     return $this->where('fantasia', str_replace('-', ' ', $value))->firstOrFail();
+    // }
 }

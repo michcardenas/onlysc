@@ -11,11 +11,16 @@
     
     <!-- Icono de la pestaña (favicon) -->
     <link rel="icon" href="{{ asset('images/icono.png') }}" type="image/png">
-   
+
+
+   <!--Iconos-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link href="https://fonts.bunny.net/css?family=Poppins" rel="stylesheet">
 
     <!-- Scripts -->
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
@@ -198,6 +203,55 @@
                 </div>
 </footer>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const slider = document.querySelector('.escortperfil-banner-slider');
+    const slides = document.querySelectorAll('.escortperfil-banner-img');
+    const prevBtn = document.querySelector('.carousel-control.prev');
+    const nextBtn = document.querySelector('.carousel-control.next');
+    const indicators = document.querySelectorAll('.carousel-indicator');
+    let currentSlide = 0;
+
+    // Función para actualizar las clases active
+    function updateActiveClasses() {
+        slides.forEach((slide, index) => {
+            slide.classList.toggle('active', index === currentSlide);
+        });
+        
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === currentSlide);
+        });
+    }
+
+    // Función para ir a un slide específico
+    function goToSlide(index) {
+        currentSlide = index;
+        const offset = -(currentSlide * (100 / 3)); // Ajustado para el nuevo layout
+        slider.style.transform = `translateX(${offset}vw)`;
+        updateActiveClasses();
+    }
+
+    // Inicializar el primer slide como activo
+    updateActiveClasses();
+
+    // Event listeners
+    prevBtn.addEventListener('click', () => {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        goToSlide(currentSlide);
+    });
+
+    nextBtn.addEventListener('click', () => {
+        currentSlide = (currentSlide + 1) % slides.length;
+        goToSlide(currentSlide);
+    });
+
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            goToSlide(index);
+        });
+    });
+});
+</script>
 
 </body>
 </html>
