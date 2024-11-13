@@ -31,7 +31,6 @@
         const fileInput = document.getElementById('fileInput');
         const previewContainer = document.getElementById('previewContainer');
 
-        // Manejar la selección de archivos
         fileInput.addEventListener('change', handleFiles);
 
         function handleFiles(e) {
@@ -67,10 +66,8 @@
         }
 
         window.removeExistingPhoto = function(foto, button) {
-            // Eliminar el elemento del DOM
             button.parentElement.remove();
 
-            // Enviar solicitud para actualizar la base de datos
             fetch('/eliminar-foto', {
                 method: 'POST',
                 headers: {
@@ -78,7 +75,7 @@
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 body: JSON.stringify({
-                    usuario_id: '{{ $usuario->id }}',
+                    usuario_id: '{{ Auth::check() ? Auth::user()->id : '' }}',
                     foto: foto
                 })
             })
@@ -94,5 +91,6 @@
         }
     });
 </script>
+
 </body>
 </html>
