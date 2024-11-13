@@ -7,27 +7,26 @@ use Illuminate\Support\Facades\Log;
 use App\Models\UsuarioPublicate;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr; // Añadido para usar Arr::except
 
 class PublicateController extends Controller
 {
     public function showRegistrationForm()
     {
+        Log::info('Accediendo al formulario de registro');
         return view('publicate');
     }
 
     public function store(Request $request)
     {
-        Log::info('Iniciando proceso de registro');
+        Log::info('Iniciando proceso de registro', [
+            'datos_recibidos' => Arr::except($request->all(), ['password', 'fotos'])
+        ]);
         
         DB::beginTransaction();
         
         try {
-            // Convertir el campo 'declaration' a booleano
-            $request->merge([
-                'declaration' => $request->has('declaration') ? true : false,
-            ]);
-
-            // Validar los datos del formulario
+            // Validar solo los campos necesarios para el registro inicial
             $validatedData = $request->validate([
                 'fantasia' => 'required|string|max:255',
                 'email' => 'required|email|max:255',
@@ -45,12 +44,15 @@ class PublicateController extends Controller
                 'servicios_adicionales' => 'nullable|array',
                 'servicios_adicionales.*' => 'string',
                 'fotos.*' => 'nullable|image|max:2048',
-                'about' => 'nullable|string',
-                'declaration' => 'nullable|boolean',
+                'cuentanos' => 'nullable|string',
             ]);
 
-            // Crear el usuario
-            $usuario = UsuarioPublicate::create([
+            Log::info('Datos validados correctamente', [
+                'campos' => array_keys($validatedData)
+            ]);
+
+            // Preparar solo los datos iniciales necesarios
+            $userData = [
                 'fantasia' => $validatedData['fantasia'],
                 'email' => $validatedData['email'],
                 'nombre' => $validatedData['nombre'],
@@ -64,15 +66,27 @@ class PublicateController extends Controller
                 'disponibilidad' => $validatedData['disponibilidad'] ?? null,
                 'servicios' => json_encode($request->servicios ?? []),
                 'servicios_adicionales' => json_encode($request->servicios_adicionales ?? []),
-                'cuentanos' => $validatedData['about'] ?? null,
-                'estadop' => 0, // Estado inicial inactivo
-            ]);
+                'cuentanos' => $validatedData['cuentanos'] ?? null,
+                'estadop' => 0,  // Estado inicial pendiente
+            ];
+
+            Log::info('Intentando crear usuario con datos:', Arr::except($userData, ['password']));
+
+            // Crear el usuario
+            try {
+                $usuario = UsuarioPublicate::create($userData);
+                Log::info('Usuario creado exitosamente', ['id' => $usuario->id]);
+            } catch (\Exception $e) {
+                Log::error('Error al crear usuario en la base de datos', [
+                    'mensaje' => $e->getMessage(),
+                    'sql' => $e instanceof \Illuminate\Database\QueryException ? $e->getSql() : null,
+                ]);
+                throw $e;
+            }
 
             // Procesar y guardar las imágenes
-            $nombresFotos = [];
             if ($request->hasFile('fotos')) {
-                Log::info('Procesando imágenes:', ['cantidad' => count($request->file('fotos'))]);
-                
+                $nombresFotos = [];
                 foreach ($request->file('fotos') as $foto) {
                     $nombreArchivo = uniqid() . '_' . time() . '.' . $foto->getClientOriginalExtension();
                     $path = storage_path("app/public/chicas/{$usuario->id}");
@@ -82,37 +96,58 @@ class PublicateController extends Controller
                     }
                     
                     try {
-                        $contenidoImagen = file_get_contents($foto->getRealPath());
-                        File::put($path . '/' . $nombreArchivo, $contenidoImagen);
-                        
-                        Log::info('Imagen guardada:', ['ruta' => $path . '/' . $nombreArchivo]);
-                        
+                        $foto->move($path, $nombreArchivo);
                         $nombresFotos[] = $nombreArchivo;
-                        
-                        // Actualizar después de cada foto para evitar timeouts
-                        DB::reconnect();
-                        $usuario->update(['fotos' => json_encode($nombresFotos)]);
-                        
+                        Log::info('Foto guardada exitosamente', [
+                            'nombre' => $nombreArchivo,
+                            'ruta' => $path
+                        ]);
                     } catch (\Exception $e) {
-                        Log::error('Error al guardar imagen:', ['error' => $e->getMessage()]);
+                        Log::error('Error al guardar foto', [
+                            'error' => $e->getMessage(),
+                            'ruta' => $path
+                        ]);
                         throw $e;
                     }
+                }
+                
+                // Actualizar el usuario con las fotos
+                try {
+                    $usuario->fotos = json_encode($nombresFotos);
+                    $usuario->save();
+                    Log::info('Fotos actualizadas en la base de datos', [
+                        'cantidad' => count($nombresFotos)
+                    ]);
+                } catch (\Exception $e) {
+                    Log::error('Error al actualizar fotos en la base de datos', [
+                        'error' => $e->getMessage()
+                    ]);
+                    throw $e;
                 }
             }
 
             DB::commit();
+            Log::info('Transacción completada exitosamente');
+            
             return redirect()->back()->with('success', 'Tu perfil ha sido creado y está pendiente de aprobación.');
             
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
-            Log::error('Errores de validación:', $e->errors());
+            Log::error('Error de validación:', [
+                'errores' => $e->errors()
+            ]);
             return redirect()->back()
                 ->withErrors($e->errors())
                 ->withInput();
                 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error en el registro:', ['error' => $e->getMessage()]);
+            Log::error('Error general en el proceso:', [
+                'mensaje' => $e->getMessage(),
+                'linea' => $e->getLine(),
+                'archivo' => $e->getFile(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return redirect()->back()
                 ->with('error', 'Ocurrió un error al procesar tu registro. Por favor, intenta nuevamente.')
                 ->withInput();
