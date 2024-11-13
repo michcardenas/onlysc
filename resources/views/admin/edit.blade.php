@@ -154,14 +154,358 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="servicios">Servicios</label>
-                <textarea name="servicios" rows="3">{{ old('servicios', json_encode($usuario->servicios)) }}</textarea>
+            <div class="admin-form-group">
+                <div class="admin-services-wrapper">
+                    <label class="admin-services-label">Servicios <span class="required-asterisk">*</span></label>
+                    <div class="publicate-services-grid">
+                        @php
+                        $serviciosActuales = json_decode($usuario->servicios, true) ?? [];
+                        @endphp
+
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Anal"
+                                {{ in_array('Anal', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Anal</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Atención a domicilio"
+                                {{ in_array('Atención a domicilio', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Atención a domicilio</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Atención en hoteles"
+                                {{ in_array('Atención en hoteles', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Atención en hoteles</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Baile Erotico"
+                                {{ in_array('Baile Erotico', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Baile Erótico</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Besos"
+                                {{ in_array('Besos', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Besos</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Cambio de rol"
+                                {{ in_array('Cambio de rol', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Cambio de rol</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Departamento Propio"
+                                {{ in_array('Departamento Propio', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Departamento Propio</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Disfraces"
+                                {{ in_array('Disfraces', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Disfraces</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Ducha Erotica"
+                                {{ in_array('Ducha Erotica', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Ducha Erótica</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Eventos y Cenas"
+                                {{ in_array('Eventos y Cenas', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Eventos y Cenas</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Eyaculación Cuerpo"
+                                {{ in_array('Eyaculación Cuerpo', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Eyaculación Cuerpo</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Eyaculación Facial"
+                                {{ in_array('Eyaculación Facial', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Eyaculación Facial</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Hetero"
+                                {{ in_array('Hetero', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Hetero</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Juguetes"
+                                {{ in_array('Juguetes', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Juguetes</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Lesbico"
+                                {{ in_array('Lesbico', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Lésbico</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Lluvia dorada"
+                                {{ in_array('Lluvia dorada', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Lluvia dorada</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Masaje Erotico"
+                                {{ in_array('Masaje Erotico', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Masaje Erótico</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Masaje prostatico"
+                                {{ in_array('Masaje prostatico', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Masaje prostático</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Masaje Tantrico"
+                                {{ in_array('Masaje Tantrico', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Masaje Tántrico</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Masaje Thai"
+                                {{ in_array('Masaje Thai', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Masaje Thai</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Masajes con final feliz"
+                                {{ in_array('Masajes con final feliz', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Masajes con final feliz</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Masajes desnudos"
+                                {{ in_array('Masajes desnudos', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Masajes desnudos</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Masajes Eroticos"
+                                {{ in_array('Masajes Eroticos', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Masajes Eróticos</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Masajes para hombres"
+                                {{ in_array('Masajes para hombres', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Masajes para hombres</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Masajes sensitivos"
+                                {{ in_array('Masajes sensitivos', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Masajes sensitivos</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Masajes sexuales"
+                                {{ in_array('Masajes sexuales', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Masajes sexuales</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Masturbación Rusa"
+                                {{ in_array('Masturbación Rusa', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Masturbación Rusa</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Oral Americana"
+                                {{ in_array('Oral Americana', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Oral Americana</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Oral con preservativo"
+                                {{ in_array('Oral con preservativo', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Oral con preservativo</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Oral sin preservativo"
+                                {{ in_array('Oral sin preservativo', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Oral sin preservativo</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Orgias"
+                                {{ in_array('Orgias', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Orgías</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Parejas"
+                                {{ in_array('Parejas', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Parejas</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios[]" value="Trio"
+                                {{ in_array('Trio', $serviciosActuales) ? 'checked' : '' }}>
+                            <span>Trío</span>
+                        </label>
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="servicios_adicionales">Servicios Adicionales</label>
-                <textarea name="servicios_adicionales" rows="3">{{ old('servicios_adicionales', json_encode($usuario->servicios_adicionales)) }}</textarea>
+            <div class="admin-form-group">
+                <div class="admin-services-wrapper">
+                    <label class="admin-services-label">Servicios Adicionales<span class="required-asterisk">*</span></label>
+                    <div class="publicate-services-grid">
+                        @php
+                        $serviciosAdicionalesActuales = json_decode($usuario->servicios_adicionales, true) ?? [];
+                        @endphp
+
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Anal"
+                                {{ in_array('Anal', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Anal</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Atención a domicilio"
+                                {{ in_array('Atención a domicilio', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Atención a domicilio</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Atención en hoteles"
+                                {{ in_array('Atención en hoteles', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Atención en hoteles</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Baile Erotico"
+                                {{ in_array('Baile Erotico', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Baile Erótico</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Besos"
+                                {{ in_array('Besos', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Besos</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Cambio de rol"
+                                {{ in_array('Cambio de rol', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Cambio de rol</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Departamento Propio"
+                                {{ in_array('Departamento Propio', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Departamento Propio</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Disfraces"
+                                {{ in_array('Disfraces', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Disfraces</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Ducha Erotica"
+                                {{ in_array('Ducha Erotica', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Ducha Erótica</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Eventos y Cenas"
+                                {{ in_array('Eventos y Cenas', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Eventos y Cenas</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Eyaculación Cuerpo"
+                                {{ in_array('Eyaculación Cuerpo', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Eyaculación Cuerpo</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Eyaculación Facial"
+                                {{ in_array('Eyaculación Facial', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Eyaculación Facial</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Hetero"
+                                {{ in_array('Hetero', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Hetero</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Juguetes"
+                                {{ in_array('Juguetes', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Juguetes</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Lesbico"
+                                {{ in_array('Lesbico', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Lésbico</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Lluvia dorada"
+                                {{ in_array('Lluvia dorada', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Lluvia dorada</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Masaje Erotico"
+                                {{ in_array('Masaje Erotico', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Masaje Erótico</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Masaje prostatico"
+                                {{ in_array('Masaje prostatico', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Masaje prostático</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Masaje Tantrico"
+                                {{ in_array('Masaje Tantrico', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Masaje Tántrico</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Masaje Thai"
+                                {{ in_array('Masaje Thai', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Masaje Thai</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Masajes con final feliz"
+                                {{ in_array('Masajes con final feliz', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Masajes con final feliz</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Masajes desnudos"
+                                {{ in_array('Masajes desnudos', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Masajes desnudos</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Masajes Eroticos"
+                                {{ in_array('Masajes Eroticos', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Masajes Eróticos</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Masajes para hombres"
+                                {{ in_array('Masajes para hombres', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Masajes para hombres</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Masajes sensitivos"
+                                {{ in_array('Masajes sensitivos', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Masajes sensitivos</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Masajes sexuales"
+                                {{ in_array('Masajes sexuales', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Masajes sexuales</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Masturbación Rusa"
+                                {{ in_array('Masturbación Rusa', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Masturbación Rusa</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Oral Americana"
+                                {{ in_array('Oral Americana', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Oral Americana</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Oral con preservativo"
+                                {{ in_array('Oral con preservativo', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Oral con preservativo</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Oral sin preservativo"
+                                {{ in_array('Oral sin preservativo', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Oral sin preservativo</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Orgias"
+                                {{ in_array('Orgias', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Orgías</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Parejas"
+                                {{ in_array('Parejas', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Parejas</span>
+                        </label>
+                        <label class="admin-service-item">
+                            <input type="checkbox" name="servicios_adicionales[]" value="Trio"
+                                {{ in_array('Trio', $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>Trío</span>
+                        </label>
+                    </div>
+                </div>
             </div>
 
             <div class="admin-form-group">
@@ -368,17 +712,21 @@
 
             <div class="form-group">
                 <label for="fotos">Fotos</label>
-                <input type="file" name="fotos[]" multiple id="fileInput">
-                <div class="fotos-actuales" id="previewContainer">
-                    @foreach(json_decode($usuario->fotos) as $foto)
-                    <div class="publicate-preview-item" data-foto="{{ $foto }}">
-                        <img src="{{ asset('storage/chicas/'.$usuario->id.'/'.$foto) }}" alt="Foto de {{ $usuario->nombre }}" class="foto-preview">
-                        <button class="publicate-remove-button" onclick="removeExistingPhoto('{{ $foto }}', this)">&times;</button>
+                <input type="file" name="fotos[]" multiple id="fileInput" accept="image/*" class="form-control" max="5">
+                <small class="form-text text-muted">Puede seleccionar múltiples imágenes. Tamaño máximo por imagen: 2MB</small>
+
+                <div class="fotos-actuales" id="previewContainer" data-user-id="{{ $usuario->id }}">
+                    @foreach(json_decode($usuario->fotos) ?? [] as $foto)
+                    <div class="publicate-preview-item" data-foto="{{ $foto }}" data-user-id="{{ $usuario->id }}">
+                        <img src="{{ asset('storage/chicas/'.$usuario->id.'/'.$foto) }}"
+                            alt="Foto de {{ $usuario->nombre }}"
+                            class="foto-preview"
+                            onerror="this.src='{{ asset('images/default-image.png') }}'">
+                        <button type="button" class="publicate-remove-button" onclick="removeExistingPhoto('{{ $foto }}', this)">&times;</button>
                     </div>
                     @endforeach
                 </div>
             </div>
-
 
 
             <button type="submit" class="btn-submit">Actualizar</button>

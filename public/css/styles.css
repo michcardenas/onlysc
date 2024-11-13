@@ -2283,12 +2283,6 @@ h2 {
     margin: 0 5px;
 }
 
-/* Estilo para inputs deshabilitados */
-input[type="checkbox"]:not(:checked) ~ .time-inputs input[type="time"] {
-    pointer-events: none;
-    background-color: #e9ecef;
-    opacity: 0.7;
-}
 
 /* Contenedor principal */
 .inicio-container {
@@ -3042,4 +3036,44 @@ input[type="checkbox"]:not(:checked) ~ .time-inputs input[type="time"] {
 /* Opcional: Efecto cuando está en favoritos */
 .favorite-button.active i {
     font-weight: 900; /* Cambia a corazón sólido cuando está en favoritos */
+}
+
+/* Añade estos estilos a tu archivo CSS */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    min-width: 300px;
+    padding: 15px;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.3s ease-in-out;
+}
+
+.notification-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notification button {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
 }

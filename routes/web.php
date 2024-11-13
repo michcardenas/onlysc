@@ -39,6 +39,7 @@ Route::post('/comentarios', [ComentarioController::class, 'store'])->name('comen
 Route::get('/panel-control', [AdminController::class, 'index'])->name('panel_control');
 Route::get('/usuarios-publicate/{id}/edit', [UsuarioPublicateController::class, 'edit'])->name('usuarios_publicate.edit');
 Route::put('/usuarios-publicate/{id}', [UsuarioPublicateController::class, 'update'])->name('usuarios_publicate.update');
+Route::post('/usuarios-publicate/eliminar-foto', [UsuarioPublicateController::class, 'eliminarFoto'])->name('usuarios_publicate.eliminarFoto');
 
 //Foro Admin
 Route::get('/foroadmin', [ForoController::class, 'foroadmin'])->name('foroadmin');

@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-      <!-- Título de la pestaña -->
-      <title>Escorts</title>
-    
+    <!-- Título de la pestaña -->
+    <title>Escorts</title>
+
     <!-- Icono de la pestaña (favicon) -->
     <link rel="icon" href="{{ asset('images/icono.png') }}" type="image/png">
 
@@ -18,8 +20,8 @@
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 
 </head>
-<body class="login-page">
 
+<body class="login-page">
     <div id="app">
         @yield('content')
     </div>
@@ -27,72 +29,119 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script>
-  document.addEventListener('DOMContentLoaded', function() {
-        const fileInput = document.getElementById('fileInput');
-        const previewContainer = document.getElementById('previewContainer');
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('fileInput');
+            const previewContainer = document.getElementById('previewContainer');
+            const maxFileSize = 2 * 1024 * 1024; // 2MB en bytes
+            const userId = previewContainer.dataset.userId;
 
-        // Manejar la selección de archivos
-        fileInput.addEventListener('change', handleFiles);
-
-        function handleFiles(e) {
-            const files = [...e.target.files];
-            files.forEach(previewFile);
-        }
-
-        function previewFile(file) {
-            if (!file.type.startsWith('image/')) return;
-
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-
-            reader.onload = function() {
-                const preview = document.createElement('div');
-                preview.className = 'publicate-preview-item';
-                
-                const img = document.createElement('img');
-                img.src = reader.result;
-                img.className = 'foto-preview';
-                
-                const removeBtn = document.createElement('button');
-                removeBtn.className = 'publicate-remove-button';
-                removeBtn.innerHTML = '&times;';
-                removeBtn.onclick = function() {
-                    preview.remove();
-                };
-                
-                preview.appendChild(img);
-                preview.appendChild(removeBtn);
-                previewContainer.appendChild(preview);
-            };
-        }
-
-        window.removeExistingPhoto = function(foto, button) {
-            // Eliminar el elemento del DOM
-            button.parentElement.remove();
-
-            // Enviar solicitud para actualizar la base de datos
-            fetch('/eliminar-foto', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    usuario_id: '{{ $usuario->id }}',
-                    foto: foto
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    console.log('Foto eliminada exitosamente');
-                } else {
-                    console.error('Error al eliminar la foto');
+            // Validar tipo y tamaño de archivo
+            function validateFile(file) {
+                if (!file.type.startsWith('image/')) {
+                    alert('Por favor, seleccione solo archivos de imagen');
+                    return false;
                 }
-            })
-            .catch(error => console.error('Error:', error));
-        }
-    });
-</script>
+
+                if (file.size > maxFileSize) {
+                    alert(`El archivo ${file.name} excede el tamaño máximo permitido de 2MB`);
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Manejar la selección de nuevos archivos
+            fileInput.addEventListener('change', function(e) {
+                const files = Array.from(e.target.files);
+
+                files.forEach(file => {
+                    if (validateFile(file)) {
+                        previewFile(file);
+                    }
+                });
+            });
+
+            function previewFile(file) {
+                const reader = new FileReader();
+
+                reader.onload = function() {
+                    const preview = document.createElement('div');
+                    preview.className = 'publicate-preview-item';
+                    preview.dataset.userId = userId;
+
+                    const img = document.createElement('img');
+                    img.src = reader.result;
+                    img.className = 'foto-preview';
+                    img.alt = 'Vista previa';
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'publicate-remove-button';
+                    removeBtn.type = 'button';
+                    removeBtn.innerHTML = '&times;';
+                    removeBtn.onclick = function() {
+                        preview.remove();
+                    };
+
+                    preview.appendChild(img);
+                    preview.appendChild(removeBtn);
+                    previewContainer.appendChild(preview);
+                };
+
+                reader.onerror = function() {
+                    console.error('Error al leer el archivo');
+                    alert('Error al procesar la imagen');
+                };
+
+                reader.readAsDataURL(file);
+            }
+
+            // Función global para eliminar fotos existentes
+            window.removeExistingPhoto = function(foto, button) {
+                if (!confirm('¿Estás seguro de que deseas eliminar esta foto?')) {
+                    return;
+                }
+
+                const item = button.closest('.publicate-preview-item');
+                const userId = item.dataset.userId;
+
+                fetch('/usuarios-publicate/eliminar-foto', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body: JSON.stringify({
+                            usuario_id: userId,
+                            foto: foto
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Recargar la página con un mensaje de éxito
+                            window.location.reload();
+                        } else {
+                            alert('Error al eliminar la foto: ' + (data.message || 'Error desconocido'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error al eliminar la foto. Por favor, intente nuevamente.');
+                    });
+            };
+
+            // Prevenir envío del formulario si hay errores
+            document.querySelector('form').addEventListener('submit', function(e) {
+                const files = fileInput.files;
+                for (let file of files) {
+                    if (!validateFile(file)) {
+                        e.preventDefault();
+                        return;
+                    }
+                }
+            });
+        });
+    </script>
 </body>
+
 </html>
