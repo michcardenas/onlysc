@@ -114,6 +114,7 @@
                             usuario_id: userId,
                             foto: foto
                         })
+                        
                     })
                     .then(response => response.json())
                     .then(data => {
