@@ -120,7 +120,7 @@
                 @endphp
 
                 @foreach($dias as $diaCompleto => $diaAbrev)
-                <div class="escortperfil-schedule-item {{ strtolower($diaAbrev) == strtolower(substr(\Carbon\Carbon::now()->locale('es')->dayName, 0, 3)) ? 'current-day' : '' }}">
+                <div class="escortperfil-schedule-item {{ strtolower($diaCompleto) == strtolower(\Carbon\Carbon::now()->locale('es')->dayName) ? 'current-day' : '' }}">
                     <span class="day-badge">{{ $diaAbrev }}</span>
                     <span class="schedule-time">
                         @if(isset($disponibilidadMap[$diaCompleto]))
@@ -131,6 +131,7 @@
                     </span>
                 </div>
                 @endforeach
+
             </div>
         </aside>
     </div>

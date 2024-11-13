@@ -110,7 +110,32 @@ class UsuarioPublicateController extends Controller
             ]);
     
             // Procesar fotos de forma separada
-            DB::beginTransaction();
+            // Actualizar la disponibilidad del usuario
+DB::beginTransaction();
+
+try {
+    Disponibilidad::where('publicate_id', $usuario->id)->delete(); // Primero, elimina la disponibilidad existente
+
+    if ($request->has('dias_disponibles') && $request->has('horario')) {
+        foreach ($request->dias_disponibles as $index => $dia) {
+            if (isset($request->horario[$dia])) {
+                Disponibilidad::create([
+                    'publicate_id' => $usuario->id,
+                    'dia' => $dia,
+                    'hora_desde' => $request->horario[$dia]['desde'],
+                    'hora_hasta' => $request->horario[$dia]['hasta'],
+                    'estado' => 1 // Puedes establecer un valor por defecto para el estado
+                ]);
+            }
+        }
+    }
+
+    DB::commit();
+} catch (\Exception $e) {
+    DB::rollBack();
+    Log::error("Error al actualizar la disponibilidad del usuario: " . $e->getMessage());
+    return redirect()->back()->with('error', 'Error al actualizar la disponibilidad.');
+}
             
             try {
                 $nombresFotos = json_decode($usuario->fotos, true) ?: [];

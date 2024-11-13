@@ -69,11 +69,6 @@
                     <option value="masajes" {{ old('categorias', $usuario->categorias) == 'masajes' ? 'selected' : '' }}>Masajes</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label for="posicion">Posición</label>
-                <input type="number" name="posicion" value="{{ old('posicion', $usuario->posicion) }}" placeholder="Ingrese la posición" min="1" step="1">
-            </div>
-
 
             <div class="form-group">
                 <label for="email">Email</label>
