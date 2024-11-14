@@ -35,7 +35,8 @@ class InicioController extends Controller
                 'estadop'
             )
             ->orderBy('posicion', 'asc')
-            ->paginate(12);
+            ->paginate(12)
+            ->appends(request()->query());
 
         // Mantener la consulta separada para usuario destacado
         $usuarioDestacado = UsuarioPublicate::where('estadop', 3)

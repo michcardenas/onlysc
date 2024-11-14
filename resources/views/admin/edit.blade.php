@@ -92,7 +92,7 @@
                     @endforeach
                 </select>
             </div>
-            
+
             <div class="form-group">
                 <label for="nacionalidad">Nacionalidad</label>
                 <input type="text" name="nacionalidad" value="{{ old('nacionalidad', $usuario->nacionalidad) }}" required>
@@ -701,17 +701,16 @@
                 <input type="number" name="posicion" value="{{ old('posicion', $usuario->posicion) }}" placeholder="Ingrese la posición" min="1" step="1">
             </div>
 
-            <!-- Nuevo campo de precio -->
             <div class="form-group">
                 <label for="precio">Precio</label>
-                <input type="number"
-                    name="precio"
-                    value="{{ old('precio', $usuario->precio) }}"
-                    placeholder="Ingrese el precio"
-                    min="0"
-                    step="1000">
+                <div class="input-group">
+                    <input type="text"
+                        name="precio"
+                        value="CLP ${{ number_format(old('precio', $usuario->precio), 0, ',', '.') }}"
+                        placeholder="Ingrese el precio"
+                        class="precio-input">
+                </div>
             </div>
-
 
             <div class="form-group">
                 <label for="fotos">Fotos</label>

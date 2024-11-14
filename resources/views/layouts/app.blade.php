@@ -205,70 +205,59 @@
         </div>
     </footer>
 
-    <script>
-document.addEventListener('DOMContentLoaded', function() {
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
     const slider = document.querySelector('.escortperfil-banner-slider');
     const slides = document.querySelectorAll('.escortperfil-banner-img');
     const prevBtn = document.querySelector('.carousel-control.prev');
     const nextBtn = document.querySelector('.carousel-control.next');
     const indicators = document.querySelectorAll('.carousel-indicator');
-
-    // Total de imágenes, restando 5
-    let totalSlides = slides.length - 5;
-
-    // Asegurarnos de que el total de slides sea al menos 1 para evitar errores
-    totalSlides = totalSlides < 1 ? 1 : totalSlides;
-
     let currentSlide = 0;
-    const slideWidth = slides[0].clientWidth; // Obtener el ancho dinámicamente
 
-    // Ajustar el ancho del slider en base al total de imágenes
-    slider.style.width = `${slides.length * slideWidth}px`;
-
-    function goToSlide(index) {
-        if (index >= totalSlides) {
-            currentSlide = 0; // Volver al principio si llegamos al final
-        } else if (index < 0) {
-            currentSlide = totalSlides - 1; // Ir al último slide si retrocedemos desde el primero
-        } else {
-            currentSlide = index;
-        }
-
-        const offset = -(currentSlide * slideWidth);
-        slider.style.transform = `translateX(${offset}px)`;
-        updateActiveClasses();
-    }
-
+    // Función para actualizar las clases active
     function updateActiveClasses() {
         slides.forEach((slide, index) => {
             slide.classList.toggle('active', index === currentSlide);
         });
-
+        
         indicators.forEach((indicator, index) => {
             indicator.classList.toggle('active', index === currentSlide);
         });
     }
 
-    function initializeSlider() {
+    // Función para ir a un slide específico
+    function goToSlide(index) {
+        currentSlide = index;
+        const offset = -(currentSlide * (100 / 3)); // Ajustado para el nuevo layout
+        slider.style.transform = `translateX(${offset}vw)`;
         updateActiveClasses();
-
-        prevBtn?.addEventListener('click', () => {
-            goToSlide(currentSlide - 1);
-        });
-
-        nextBtn?.addEventListener('click', () => {
-            goToSlide(currentSlide + 1);
-        });
-
-        indicators.forEach((indicator, index) => {
-            indicator.addEventListener('click', () => goToSlide(index));
-        });
     }
 
-    initializeSlider();
+    // Inicializar el primer slide como activo
+    updateActiveClasses();
+
+    // Event listeners
+    prevBtn.addEventListener('click', () => {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        goToSlide(currentSlide);
+    });
+
+    nextBtn.addEventListener('click', () => {
+        currentSlide = (currentSlide + 1) % slides.length;
+        goToSlide(currentSlide);
+    });
+
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            goToSlide(index);
+        });
+    });
 });
 
-    </script>
+
+
+    
+</script>
 
 </body>
 

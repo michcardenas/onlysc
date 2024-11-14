@@ -380,7 +380,7 @@
             <label>Cuéntanos sobre ti <span class="required-asterisk">*</span></label>
         </div>
         <div class="publicate-textarea-wrapper">
-            <textarea id="about" name="about" required></textarea>
+            <textarea id="cuentanos" name="cuentanos" required></textarea>
         </div>
     </div>
 </div>

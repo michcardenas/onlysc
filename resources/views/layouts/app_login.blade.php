@@ -114,7 +114,7 @@
                             usuario_id: userId,
                             foto: foto
                         })
-                        
+
                     })
                     .then(response => response.json())
                     .then(data => {
@@ -141,6 +141,22 @@
                     }
                 }
             });
+        });
+
+        const precioInput = document.querySelector('.precio-input');
+        const form = precioInput.closest('form');
+
+        form.addEventListener('submit', function(e) {
+            let value = precioInput.value.replace(/[^\d]/g, '');
+            precioInput.value = value;
+        });
+
+        precioInput.addEventListener('input', function(e) {
+            let value = this.value.replace(/[^\d]/g, '');
+            if (value) {
+                value = 'CLP $' + parseInt(value).toLocaleString('es-CL');
+                this.value = value;
+            }
         });
     </script>
 </body>

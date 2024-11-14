@@ -6,40 +6,40 @@
 <div class="escortperfil-container">
     <!-- Sección del Banner con nombre superpuesto -->
     <header class="escortperfil-banner">
-    <div class="escortperfil-banner-wrapper">
-        <div class="escortperfil-banner-slider">
-            @php
-            $fotos = json_decode($usuarioPublicate->fotos, true);
-            $fotos = is_array($fotos) ? $fotos : [];
-            @endphp
-            @foreach($fotos as $foto)
+        <div class="escortperfil-banner-wrapper">
+            <div class="escortperfil-banner-slider">
+                @php
+                $fotos = json_decode($usuarioPublicate->fotos, true);
+                $fotos = is_array($fotos) ? $fotos : [];
+                @endphp
+                @foreach($fotos as $foto)
                 <img src="{{ asset("storage/chicas/{$usuarioPublicate->id}/{$foto}") }}"
                     alt="Foto de {{ $usuarioPublicate->fantasia }}"
                     class="escortperfil-banner-img">
-            @endforeach
+                @endforeach
+            </div>
         </div>
-    </div>
 
-    <!-- Controles del carrusel -->
-    <button class="carousel-control prev">
-        <i class="fas fa-chevron-left"></i>
-    </button>
-    <button class="carousel-control next">
-        <i class="fas fa-chevron-right"></i>
-    </button>
+        <!-- Controles del carrusel -->
+        <button class="carousel-control prev">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="carousel-control next">
+            <i class="fas fa-chevron-right"></i>
+        </button>
 
-    <!-- Indicadores -->
-    <div class="carousel-indicators">
-        @foreach($fotos as $index => $foto)
+        <!-- Indicadores -->
+        <div class="carousel-indicators">
+            @foreach($fotos as $index => $foto)
             <div class="carousel-indicator {{ $index === 0 ? 'active' : '' }}"
                 data-index="{{ $index }}"></div>
-        @endforeach
-    </div>
+            @endforeach
+        </div>
 
-    <h1 class="escortperfil-nombre">
-        {{ strtoupper($usuarioPublicate->fantasia) }}
-    </h1>
-</header>
+        <h1 class="escortperfil-nombre">
+            {{ strtoupper($usuarioPublicate->fantasia) }}
+        </h1>
+    </header>
 
 
 
@@ -82,11 +82,10 @@
     <!-- Breadcrumb -->
     <div class="escortperfil-breadcrumb">
         <a href="/">Inicio</a> /
-        <a href="/escorts-en-santiago">Escorts en Santiago</a> /
-        <a href="/masajes">Masajes</a> /
+        <a href="{{ strtolower($usuarioPublicate->ubicacion) }}">Escorts en {{ $usuarioPublicate->ubicacion }}</a> /
+        <a href="/{{ strtolower($usuarioPublicate->categorias) }}">{{ $usuarioPublicate->categorias }}</a> /
         <span>{{ $usuarioPublicate->fantasia }}</span>
     </div>
-
     <div class="escortperfil-side-section">
         <div class="escortperfil-actions">
             <a href="https://wa.me/{{ $usuarioPublicate->telefono }}" class="escortperfil-btn disponible" target="_blank">
