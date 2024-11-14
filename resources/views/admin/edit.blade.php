@@ -82,9 +82,17 @@
 
             <div class="form-group">
                 <label for="ubicacion">Ubicación</label>
-                <input type="text" name="ubicacion" value="{{ old('ubicacion', $usuario->ubicacion) }}" required>
+                <select name="ubicacion" id="ubicacion" class="form-control" required>
+                    <option value="">Seleccione una ciudad</option>
+                    @foreach($ciudades as $ciudad)
+                    <option value="{{ $ciudad->nombre }}"
+                        {{ old('ubicacion', $usuario->ubicacion) == $ciudad->nombre ? 'selected' : '' }}>
+                        {{ $ciudad->nombre }}
+                    </option>
+                    @endforeach
+                </select>
             </div>
-
+            
             <div class="form-group">
                 <label for="nacionalidad">Nacionalidad</label>
                 <input type="text" name="nacionalidad" value="{{ old('nacionalidad', $usuario->nacionalidad) }}" required>
@@ -707,7 +715,7 @@
 
             <div class="form-group">
                 <label for="fotos">Fotos</label>
-                <input type="file" name="fotos[]" multiple id="fileInput" accept="image/*" class="form-control" max="5">
+                <input type="file" name="fotos[]" multiple id="fileInput" accept="image/*" class="form-control">
                 <small class="form-text text-muted">Puede seleccionar múltiples imágenes. Tamaño máximo por imagen: 2MB</small>
 
                 <div class="fotos-actuales" id="previewContainer" data-user-id="{{ $usuario->id }}">

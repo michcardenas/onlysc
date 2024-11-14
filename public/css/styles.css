@@ -2657,7 +2657,7 @@ h2 {
 .escortperfil-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    /* padding: 20px; */
     font-family: Poppins, sans-serif;
 }
 
@@ -2680,25 +2680,38 @@ h2 {
 
 .escortperfil-banner {
     position: relative;
-    width: 100vw; /* Ocupa todo el ancho de la ventana */
-    height: 450px; /* Altura fija para el carrusel */
+    width: 100vw;
+    height: 400px;
     overflow: hidden;
     margin-bottom: 20px;
-    margin-left: calc(-50vw + 50%); /* Técnica para full width dentro de contenedor */
+    margin-left: calc(-50vw + 50%);
     margin-right: calc(-50vw + 50%);
 }
 
+/* Contenedor del slider */
 .escortperfil-banner-slider {
     display: flex;
     transition: transform 0.5s ease;
-    width: max-content; /* Permite que el contenedor crezca según las imágenes */
+    width: 100%;
+}
+
+
+/* Contenedor que envuelve el slider */
+.escortperfil-banner-wrapper {
+    width: 100%;
+    overflow: hidden; /* Oculta cualquier parte desbordada del slider */
+}
+
+.escortperfil-banner-slider,
+.escortperfil-banner-slider img {
+    box-sizing: border-box;
 }
 
 .escortperfil-banner-slider img {
-    width: 50vw; /* Cada imagen ocupa el ancho de la ventana */
-    height: 450px;
-    object-fit: cover;
-    flex-shrink: 0; /* Evita que las imágenes se compriman */
+    width: 400px;
+    height: 400px;
+    object-fit: cover; /* Ajuste para que las imágenes se vean bien */
+    flex-shrink: 0; /* Para evitar que las imágenes se compriman */
 }
 
 /* Controles del carrusel */
@@ -2826,7 +2839,7 @@ h2 {
     gap: 10px;
     position: absolute;
     right: 355px;
-    top: 640px; /* Ajusta según necesites */
+    top: 570px; /* Ajusta según necesites */
     z-index: 3;
     width: auto; /* En lugar de un ancho fijo */
 }
@@ -2925,7 +2938,7 @@ h2 {
 .escortperfil-schedule {
     position: absolute;
     right: 330px;
-    /* top: 650px; */
+    top: 621px;
     background-color: #fff;
     padding: 25px;
     border-radius: 10px;
@@ -3003,7 +3016,7 @@ h2 {
 }
 .favorite-button {
     position: absolute;
-    top: 480px;
+    top: 413px;
     right: 360px;
     display: flex;
     flex-direction: column;
