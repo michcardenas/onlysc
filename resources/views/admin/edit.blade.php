@@ -130,12 +130,20 @@
                     @foreach(['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'] as $dia)
                     <div class="admin-checkbox-item">
                         <div class="day-container">
-                            <input type="checkbox"
-                                id="admin-dia-{{ $dia }}"
-                                name="dias_disponibles[]"
-                                value="{{ $dia }}"
-                                {{ in_array($dia, $diasDisponibles ?? []) ? 'checked' : '' }}>
-                            <label for="admin-dia-{{ $dia }}">{{ $dia }}</label>
+                            <div class="day-checkboxes">
+                                <input type="checkbox"
+                                    id="admin-dia-{{ $dia }}"
+                                    name="dias_disponibles[]"
+                                    value="{{ $dia }}"
+                                    {{ in_array($dia, $diasDisponibles ?? []) ? 'checked' : '' }}>
+                                <label for="admin-dia-{{ $dia }}">{{ $dia }}</label>
+                                <input type="checkbox"
+                                    id="fulltime-{{ $dia }}"
+                                    name="fulltime[{{ $dia }}]"
+                                    value="1"
+                                    {{ isset($horarios[$dia]) && $horarios[$dia]['desde'] === '00:00' && $horarios[$dia]['hasta'] === '23:59' ? 'checked' : '' }}>
+                                <label for="fulltime-{{ $dia }}">Full Time</label>
+                            </div>
                         </div>
                         <div class="time-inputs">
                             <div class="time-input-group">
@@ -143,20 +151,21 @@
                                     id="desde-{{ $dia }}"
                                     name="horario[{{ $dia }}][desde]"
                                     value="{{ $horarios[$dia]['desde'] ?? '10:00' }}"
-                                    class="time-input">
+                                    class="time-input"
+                                    {{ isset($horarios[$dia]) && $horarios[$dia]['desde'] === '00:00' && $horarios[$dia]['hasta'] === '23:59' ? 'disabled' : '' }}>
                                 <span class="time-separator">-</span>
                                 <input type="time"
                                     id="hasta-{{ $dia }}"
                                     name="horario[{{ $dia }}][hasta]"
                                     value="{{ $horarios[$dia]['hasta'] ?? '02:00' }}"
-                                    class="time-input">
+                                    class="time-input"
+                                    {{ isset($horarios[$dia]) && $horarios[$dia]['desde'] === '00:00' && $horarios[$dia]['hasta'] === '23:59' ? 'disabled' : '' }}>
                             </div>
                         </div>
                     </div>
                     @endforeach
                 </div>
             </div>
-
             <div class="admin-form-group">
                 <div class="admin-services-wrapper">
                     <label class="admin-services-label">Servicios <span class="required-asterisk">*</span></label>
@@ -712,24 +721,96 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="fotos">Fotos</label>
-                <input type="file" name="fotos[]" multiple id="fileInput" accept="image/*" class="form-control">
-                <small class="form-text text-muted">Puede seleccionar múltiples imágenes. Tamaño máximo por imagen: 2MB</small>
+            <!-- Botón para abrir el modal -->
+            <button type="button" class="btn" style="background-color: #e00037; color: white;" data-bs-toggle="modal" data-bs-target="#fotosModal">
+                Gestionar Fotos
+            </button>
 
-                <div class="fotos-actuales" id="previewContainer" data-user-id="{{ $usuario->id }}">
-                    @foreach(json_decode($usuario->fotos) ?? [] as $foto)
-                    <div class="publicate-preview-item" data-foto="{{ $foto }}" data-user-id="{{ $usuario->id }}">
-                        <img src="{{ asset('storage/chicas/'.$usuario->id.'/'.$foto) }}"
-                            alt="Foto de {{ $usuario->nombre }}"
-                            class="foto-preview"
-                            onerror="this.src='{{ asset('images/default-image.png') }}'">
-                        <button type="button" class="publicate-remove-button" onclick="removeExistingPhoto('{{ $foto }}', this)">&times;</button>
+            <!-- Modal -->
+            <div class="modal fade" id="fotosModal" tabindex="-1" aria-labelledby="fotosModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="fotosModalLabel">Gestionar Fotos y Videos</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Foto Destacada -->
+                            <div class="mb-4">
+                                <h6 class="border-bottom pb-2">Foto/Video Destacado</h6>
+                                <div class="form-group">
+                                    <input type="file" name="foto_destacada" id="fotoDestacada" accept="image/*,video/*" class="form-control">
+                                    <small class="form-text text-muted">Esta será la imagen principal que se mostrará en las tarjetas. Acepta imágenes y videos. Tamaño máximo: 2MB</small>
+
+                                    <div id="previewDestacada" class="mt-2">
+                                        @if(!empty(json_decode($usuario->fotos)[0] ?? null))
+                                        <div class="publicate-preview-item destacada" data-foto="{{ json_decode($usuario->fotos)[0] }}" data-user-id="{{ $usuario->id }}">
+                                            @php
+                                            $extension = pathinfo(json_decode($usuario->fotos)[0], PATHINFO_EXTENSION);
+                                            $isVideo = in_array(strtolower($extension), ['mp4', 'webm', 'ogg']);
+                                            @endphp
+
+                                            @if($isVideo)
+                                            <video src="{{ asset('storage/chicas/'.$usuario->id.'/'.json_decode($usuario->fotos)[0]) }}"
+                                                controls
+                                                class="foto-preview-destacada"
+                                                onerror="this.src='{{ asset('images/default-video.png') }}'">
+                                            </video>
+                                            @else
+                                            <img src="{{ asset('storage/chicas/'.$usuario->id.'/'.json_decode($usuario->fotos)[0]) }}"
+                                                alt="Foto destacada de {{ $usuario->nombre }}"
+                                                class="foto-preview-destacada"
+                                                onerror="this.src='{{ asset('images/default-image.png') }}'">
+                                            @endif
+                                            <button type="button" class="publicate-remove-button" onclick="removeDestacada(this)">&times;</button>
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Fotos Adicionales -->
+                            <div>
+                                <h6 class="border-bottom pb-2">Fotos/Videos Adicionales</h6>
+                                <div class="form-group">
+                                    <input type="file" name="fotos[]" multiple id="fotosAdicionales" accept="image/*,video/*" class="form-control">
+                                    <small class="form-text text-muted">Puede seleccionar múltiples archivos. Tamaño máximo por archivo: 2MB</small>
+
+                                    <div class="fotos-actuales" id="previewContainer" data-user-id="{{ $usuario->id }}">
+                                        @if(!empty(json_decode($usuario->fotos)))
+                                        @foreach(array_slice(json_decode($usuario->fotos) ?? [], 1) as $foto)
+                                        <div class="publicate-preview-item" data-foto="{{ $foto }}" data-user-id="{{ $usuario->id }}">
+                                            @php
+                                            $extension = pathinfo($foto, PATHINFO_EXTENSION);
+                                            $isVideo = in_array(strtolower($extension), ['mp4', 'webm', 'ogg']);
+                                            @endphp
+
+                                            @if($isVideo)
+                                            <video src="{{ asset('storage/chicas/'.$usuario->id.'/'.$foto) }}"
+                                                controls
+                                                class="foto-preview"
+                                                onerror="this.src='{{ asset('images/default-video.png') }}'">
+                                            </video>
+                                            @else
+                                            <img src="{{ asset('storage/chicas/'.$usuario->id.'/'.$foto) }}"
+                                                alt="Foto de {{ $usuario->nombre }}"
+                                                class="foto-preview"
+                                                onerror="this.src='{{ asset('images/default-image.png') }}'">
+                                            @endif
+                                            <button type="button" class="publicate-remove-button" onclick="removeExistingPhoto('{{ $foto }}', this)">&times;</button>
+                                        </div>
+                                        @endforeach
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
                     </div>
-                    @endforeach
                 </div>
             </div>
-
 
             <button type="submit" class="btn-submit">Actualizar</button>
         </form>

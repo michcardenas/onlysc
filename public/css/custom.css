@@ -1,0 +1,265 @@
+/* Estilos para el modal */
+.modal-content {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    background-color: #1e1e1e;
+    color: white;
+}
+
+.modal-header {
+    border-bottom: 1px solid #333;
+    background-color: #1e1e1e;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    padding: 1rem 1.5rem;
+}
+
+.modal-footer {
+    border-top: 1px solid #333 !important;
+    background-color: #1e1e1e !important;
+    border-bottom-left-radius: 15px !important;
+    border-bottom-right-radius: 15px !important;
+    padding: 1rem 1.5rem !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+}
+
+.modal-title {
+    color: white;
+    font-weight: 600;
+}
+
+.modal-body {
+    padding: 1.5rem;
+    max-height: 70vh;
+    overflow-y: auto;
+    background-color: #1e1e1e;
+    color: white;
+}
+
+/* Estilos para los contenedores de preview */
+.fotos-actuales {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.publicate-preview-item {
+    position: relative;
+    background: #2d2d2d;
+    border-radius: 8px;
+    padding: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.publicate-preview-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Estilos para las imágenes/videos de preview */
+.foto-preview {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.foto-preview-destacada {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Botón para eliminar fotos */
+.publicate-remove-button {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    background-color: #e00037;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+    z-index: 1;
+}
+
+.publicate-remove-button:hover {
+    background-color: #c60030;
+    transform: scale(1.1);
+}
+
+/* Estilos para la foto destacada */
+.destacada {
+    border: 2px solid #e00037;
+    position: relative;
+}
+
+.destacada::after {
+    content: 'Destacada';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #e00037;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    z-index: 1;
+}
+
+/* Estilos para los inputs de archivo */
+.form-control[type="file"] {
+    padding: 0.75rem;
+    background-color: #2d2d2d;
+    border-color: #333;
+    color: white;
+    border-radius: 8px;
+}
+
+.form-control[type="file"]:hover {
+    background-color: #363636;
+}
+
+/* Estilos para las secciones del modal */
+.modal-section {
+    margin-bottom: 2rem;
+}
+
+.modal-section h6 {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* Estilos para los mensajes de ayuda */
+.form-text {
+    color: #a0a0a0;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* Estilos para videos */
+video.foto-preview,
+video.foto-preview-destacada {
+    background-color: #000;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.publicate-preview-item {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .modal-body {
+        padding: 1rem;
+    }
+
+    .foto-preview-destacada {
+        width: 100%;
+        height: 250px;
+    }
+
+    .foto-preview {
+        width: 120px;
+        height: 120px;
+    }
+
+    .fotos-actuales {
+        gap: 10px;
+    }
+}
+
+/* Estilos para el scroll del modal */
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: #2d2d2d;
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: #4d4d4d;
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: #5a5a5a;
+}
+
+/* Estilos para los botones del modal */
+.modal-footer .btn {
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.modal-footer .btn-primary {
+    background-color: #e00037;
+    border-color: #e00037;
+}
+
+.modal-footer .btn-primary:hover {
+    background-color: #c60030;
+    border-color: #c60030;
+    transform: translateY(-1px);
+}
+
+/* Estilos específicos para el botón Cerrar */
+.modal-footer .btn-secondary {
+    background-color: #2d2d2d;
+    border: none;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.modal-footer .btn-secondary:hover {
+    background-color: #363636;
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* Estados adicionales del botón cerrar */
+.modal-footer .btn-secondary:focus,
+.modal-footer .btn-secondary:active {
+    background-color: #363636;
+    color: white;
+    box-shadow: none;
+    border: none;
+}
+
+/* Estilo para el botón cerrar del header */
+.btn-close {
+    background-color: #e00037;
+    opacity: 1;
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.btn-close:hover {
+    background-color: #c60030;
+    opacity: 1;
+}

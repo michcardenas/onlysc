@@ -133,138 +133,135 @@
                     </span>
                 </div>
                 @endforeach
-
             </div>
         </aside>
-    </div>
+        <div class="escortperfil-content">
+            <div class="escortperfil-section">
+                <h2 class="escortperfil-section-title">Sobre mí</h2>
+                <p class="escortperfil-description-text">{{ $usuarioPublicate->cuentanos }}</p>
+            </div>
 
-    <div class="escortperfil-content">
-        <div class="escortperfil-section">
-            <h2 class="escortperfil-section-title">Sobre mí</h2>
-            <p class="escortperfil-description-text">{{ $usuarioPublicate->cuentanos }}</p>
+            <div class="escortperfil-section">
+                <h2 class="escortperfil-section-title">Atributos</h2>
+                <div class="escortperfil-attributes-list">
+                    @php
+                    $atributos = json_decode($usuarioPublicate->atributos, true);
+                    $atributos = is_array($atributos) ? $atributos : [];
+                    @endphp
+                    @foreach($atributos as $atributo)
+                    <span class="escortperfil-attribute-item">{{ $atributo }}</span>
+                    @endforeach
+                </div>
+            </div>
         </div>
 
+        <!-- Sección de Servicios -->
         <div class="escortperfil-section">
-            <h2 class="escortperfil-section-title">Atributos</h2>
-            <div class="escortperfil-attributes-list">
+            <h2 class="escortperfil-section-title">Servicios</h2>
+            <div class="escortperfil-services-list">
                 @php
-                $atributos = json_decode($usuarioPublicate->atributos, true);
-                $atributos = is_array($atributos) ? $atributos : [];
+                $serviciosRaw = $usuarioPublicate->servicios;
+
+                // Limpiamos todas las barras invertidas y comillas extras
+                $serviciosClean = str_replace('\\', '', $serviciosRaw);
+                $serviciosClean = trim($serviciosClean, '"');
+
+                // Convertimos a array
+                $servicios = json_decode($serviciosClean, true);
+
+                // Si aún es null, intentamos una última limpieza
+                if (!is_array($servicios)) {
+                $serviciosClean = preg_replace('/["\\\]+/', '', $serviciosRaw);
+                $serviciosClean = trim($serviciosClean, '[]');
+                $servicios = explode(',', $serviciosClean);
+                }
+
+                // Limpiamos cada elemento del array y corregimos caracteres especiales
+                $servicios = array_map(function($item) {
+                $item = trim(str_replace(['\\', '"', '[', ']'], '', $item));
+                $item = htmlspecialchars_decode($item, ENT_QUOTES);
+
+                // Correcciones específicas para caracteres mal codificados
+                $replacements = [
+                'u00f3' => 'ó',
+                'u00e9' => 'é',
+                'u00e1' => 'á',
+                'u00ed' => 'í',
+                'u00fa' => 'ú',
+                'u00f1' => 'ñ',
+                'Erotico' => 'Erótico',
+                'Tantrico' => 'Tántrico',
+                'prostatico' => 'prostático',
+                'Lesbico' => 'Lésbico',
+                'Orgias' => 'Orgías',
+                'Trio' => 'Trío'
+                ];
+
+                return str_replace(array_keys($replacements), array_values($replacements), $item);
+                }, $servicios);
+
+                // Eliminamos elementos vacíos
+                $servicios = array_filter($servicios, function($item) {
+                return !empty($item);
+                });
                 @endphp
-                @foreach($atributos as $atributo)
-                <span class="escortperfil-attribute-item">{{ $atributo }}</span>
+                @foreach($servicios as $servicio)
+                <span class="escortperfil-service-item">{{ $servicio }}</span>
                 @endforeach
             </div>
         </div>
-    </div>
 
-    <!-- Sección de Servicios -->
-    <div class="escortperfil-section">
-        <h2 class="escortperfil-section-title">Servicios</h2>
-        <div class="escortperfil-services-list">
-            @php
-            $serviciosRaw = $usuarioPublicate->servicios;
+        <!-- Sección de Servicios Adicionales -->
+        <div class="escortperfil-section">
+            <h2 class="escortperfil-section-title">Servicios Adicionales</h2>
+            <div class="escortperfil-services-list">
+                @php
+                $serviciosAdicionalesRaw = $usuarioPublicate->servicios_adicionales;
 
-            // Limpiamos todas las barras invertidas y comillas extras
-            $serviciosClean = str_replace('\\', '', $serviciosRaw);
-            $serviciosClean = trim($serviciosClean, '"');
+                // Aplicamos el mismo proceso de limpieza
+                $serviciosAdicionalesClean = str_replace('\\', '', $serviciosAdicionalesRaw);
+                $serviciosAdicionalesClean = trim($serviciosAdicionalesClean, '"');
 
-            // Convertimos a array
-            $servicios = json_decode($serviciosClean, true);
+                $serviciosAdicionales = json_decode($serviciosAdicionalesClean, true);
 
-            // Si aún es null, intentamos una última limpieza
-            if (!is_array($servicios)) {
-            $serviciosClean = preg_replace('/["\\\]+/', '', $serviciosRaw);
-            $serviciosClean = trim($serviciosClean, '[]');
-            $servicios = explode(',', $serviciosClean);
-            }
+                if (!is_array($serviciosAdicionales)) {
+                $serviciosAdicionalesClean = preg_replace('/["\\\]+/', '', $serviciosAdicionalesRaw);
+                $serviciosAdicionalesClean = trim($serviciosAdicionalesClean, '[]');
+                $serviciosAdicionales = explode(',', $serviciosAdicionalesClean);
+                }
 
-            // Limpiamos cada elemento del array y corregimos caracteres especiales
-            $servicios = array_map(function($item) {
-            $item = trim(str_replace(['\\', '"', '[', ']'], '', $item));
-            $item = htmlspecialchars_decode($item, ENT_QUOTES);
+                // Aplicamos las mismas correcciones de caracteres especiales
+                $serviciosAdicionales = array_map(function($item) {
+                $item = trim(str_replace(['\\', '"', '[', ']'], '', $item));
+                $item = htmlspecialchars_decode($item, ENT_QUOTES);
 
-            // Correcciones específicas para caracteres mal codificados
-            $replacements = [
-            'u00f3' => 'ó',
-            'u00e9' => 'é',
-            'u00e1' => 'á',
-            'u00ed' => 'í',
-            'u00fa' => 'ú',
-            'u00f1' => 'ñ',
-            'Erotico' => 'Erótico',
-            'Tantrico' => 'Tántrico',
-            'prostatico' => 'prostático',
-            'Lesbico' => 'Lésbico',
-            'Orgias' => 'Orgías',
-            'Trio' => 'Trío'
-            ];
+                $replacements = [
+                'u00f3' => 'ó',
+                'u00e9' => 'é',
+                'u00e1' => 'á',
+                'u00ed' => 'í',
+                'u00fa' => 'ú',
+                'u00f1' => 'ñ',
+                'Erotico' => 'Erótico',
+                'Tantrico' => 'Tántrico',
+                'prostatico' => 'prostático',
+                'Lesbico' => 'Lésbico',
+                'Orgias' => 'Orgías',
+                'Trio' => 'Trío'
+                ];
 
-            return str_replace(array_keys($replacements), array_values($replacements), $item);
-            }, $servicios);
+                return str_replace(array_keys($replacements), array_values($replacements), $item);
+                }, $serviciosAdicionales);
 
-            // Eliminamos elementos vacíos
-            $servicios = array_filter($servicios, function($item) {
-            return !empty($item);
-            });
-            @endphp
-            @foreach($servicios as $servicio)
-            <span class="escortperfil-service-item">{{ $servicio }}</span>
-            @endforeach
+                $serviciosAdicionales = array_filter($serviciosAdicionales, function($item) {
+                return !empty($item);
+                });
+                @endphp
+                @foreach($serviciosAdicionales as $servicioAdicional)
+                <span class="escortperfil-service-item">{{ $servicioAdicional }}</span>
+                @endforeach
+            </div>
         </div>
+
     </div>
-
-    <!-- Sección de Servicios Adicionales -->
-    <div class="escortperfil-section">
-        <h2 class="escortperfil-section-title">Servicios Adicionales</h2>
-        <div class="escortperfil-services-list">
-            @php
-            $serviciosAdicionalesRaw = $usuarioPublicate->servicios_adicionales;
-
-            // Aplicamos el mismo proceso de limpieza
-            $serviciosAdicionalesClean = str_replace('\\', '', $serviciosAdicionalesRaw);
-            $serviciosAdicionalesClean = trim($serviciosAdicionalesClean, '"');
-
-            $serviciosAdicionales = json_decode($serviciosAdicionalesClean, true);
-
-            if (!is_array($serviciosAdicionales)) {
-            $serviciosAdicionalesClean = preg_replace('/["\\\]+/', '', $serviciosAdicionalesRaw);
-            $serviciosAdicionalesClean = trim($serviciosAdicionalesClean, '[]');
-            $serviciosAdicionales = explode(',', $serviciosAdicionalesClean);
-            }
-
-            // Aplicamos las mismas correcciones de caracteres especiales
-            $serviciosAdicionales = array_map(function($item) {
-            $item = trim(str_replace(['\\', '"', '[', ']'], '', $item));
-            $item = htmlspecialchars_decode($item, ENT_QUOTES);
-
-            $replacements = [
-            'u00f3' => 'ó',
-            'u00e9' => 'é',
-            'u00e1' => 'á',
-            'u00ed' => 'í',
-            'u00fa' => 'ú',
-            'u00f1' => 'ñ',
-            'Erotico' => 'Erótico',
-            'Tantrico' => 'Tántrico',
-            'prostatico' => 'prostático',
-            'Lesbico' => 'Lésbico',
-            'Orgias' => 'Orgías',
-            'Trio' => 'Trío'
-            ];
-
-            return str_replace(array_keys($replacements), array_values($replacements), $item);
-            }, $serviciosAdicionales);
-
-            $serviciosAdicionales = array_filter($serviciosAdicionales, function($item) {
-            return !empty($item);
-            });
-            @endphp
-            @foreach($serviciosAdicionales as $servicioAdicional)
-            <span class="escortperfil-service-item">{{ $servicioAdicional }}</span>
-            @endforeach
-        </div>
-    </div>
-
-</div>
-@endsection
+    @endsection

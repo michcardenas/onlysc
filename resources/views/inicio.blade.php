@@ -102,38 +102,38 @@
         </section>
 
         <aside class="online-panel">
-            <h2 class="online-panel-title">Chicas online</h2>
-            <div class="online-count">
-                {{ $totalOnline }} Disponibles
-            </div>
-            <ul class="online-list">
-                @foreach($usuariosOnline as $usuario)
-                @php
-                $fotos = json_decode($usuario->fotos, true);
-                $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
-                @endphp
-
-                <li class="online-item">
-                    <img
-                        src="{{ $primeraFoto ? asset('storage/chicas/' . $usuario->id . '/' . $primeraFoto) : asset('images/default-avatar.png') }}"
-                        alt="{{ $usuario->fantasia }}"
-                        class="online-image"
-                        loading="lazy">
-                    <div class="online-info">
-                        <div class="online-name">
-                            {{ $usuario->fantasia }}
-                            <span class="online-age">{{ $usuario->edad }}</span>
-                        </div>
-                        <div class="online-status">ONLINE</div>
-                        <a href="{{ url('escorts/' . $usuario->id) }}"
-                            class="online-profile-button">Ver perfil</a>
-                    </div>
-                </li>
-                @endforeach
-            </ul>
-        </aside>
+    <h2 class="online-panel-title">Chicas online</h2>
+    <div class="online-count">
+        {{ $totalOnline }} Disponibles
     </div>
-</main>
+    <div class="online-container">
+        <ul class="online-list">
+            @foreach($usuariosOnline as $usuario)
+            @php
+            $fotos = json_decode($usuario->fotos, true);
+            $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
+            @endphp
+
+            <li class="online-item">
+                <img
+                    src="{{ $primeraFoto ? asset('storage/chicas/' . $usuario->id . '/' . $primeraFoto) : asset('images/default-avatar.png') }}"
+                    alt="{{ $usuario->fantasia }}"
+                    class="online-image"
+                    loading="lazy">
+                <div class="online-info">
+                    <div class="online-name">
+                        {{ $usuario->fantasia }}
+                        <span class="online-age">{{ $usuario->edad }}</span>
+                    </div>
+                    <div class="online-status">ONLINE</div>
+                    <a href="{{ url('escorts/' . $usuario->id) }}"
+                        class="online-profile-button">Ver perfil</a>
+                </div>
+            </li>
+            @endforeach
+        </ul>
+    </div>
+</aside>
 
 <div class="pagination-container">
     {{ $usuarios->links('layouts.pagination') }}

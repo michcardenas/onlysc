@@ -609,7 +609,7 @@ color: #cccccc;
     background-color: #1a1a1a;
     color: #fff;
     font-family: "Work Sans", sans-serif;
-    padding: 20px 0;
+    padding: 0px 0;
 }
 
 /* Sección superior: enlaces de ubicación */
@@ -2111,6 +2111,14 @@ h2 {
     color: #333;
 }
 
+.table-admin a {
+    color: #e00037; /* Cambia el color del enlace */
+    text-decoration: none; /* Quita la línea subrayada */
+}
+.table-admin a:hover {
+    text-decoration: underline; /* Opcional: puedes agregar un subrayado al pasar el cursor */
+}
+
 .required-asterisk{
     color:#e0456c;
 }
@@ -2439,16 +2447,16 @@ h2 {
 
 /* Tarjeta de presentación */
 .inicio-featured-card {
-    width: 168px;
+    width: 189px;
     margin-left: -60px;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     background-color: #000;
-    height: 293px;
+    height: 325px;
     position: absolute; /* Cambiado a absolute */
-    top: 392px; /* Ajusta según la distancia deseada desde el borde superior */
-    right: 388px; /* Ajusta según lo que necesites */
+    /* top: 392px; */ /* Ajusta según la distancia deseada desde el borde superior */
+    right: 369px; /* Ajusta según lo que necesites */
     font-family: 'Poppins', sans-serif;
     z-index: 10; /* Asegúrate de que quede por encima de otros elementos */
 }
@@ -2544,7 +2552,7 @@ h2 {
     padding: 10px;
     font-family: 'Work Sans', sans-serif;
     position: absolute; /* Cambiado a absolute */
-    top: 740px; /* Ajusta según la distancia deseada desde el borde superior */
+    top: 645px; /* Ajusta según la distancia deseada desde el borde superior */
     right: 346px; /* Ajusta según lo que necesites */
     z-index: 10; /* Asegúrate de que quede por encima de otros elementos */
 }
@@ -3097,7 +3105,7 @@ width: 450px; /* O el ancho que prefieras */
 
 /* Contenedor principal */
 .pagination-container nav {
-    margin: 30px 0;
+    margin-top: 100px; /* Ajusta según la altura del panel online */
     font-family: 'Poppins', sans-serif;
 }
 
@@ -3144,3 +3152,10 @@ width: 450px; /* O el ancho que prefieras */
     cursor: not-allowed;
     background-color: #f5f5f5;
 }
+
+.online-container {
+    height: 250px; /* Altura para mostrar aproximadamente 3 perfiles */
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
