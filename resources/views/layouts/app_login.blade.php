@@ -447,6 +447,59 @@ document.addEventListener('DOMContentLoaded', function() {
     <!-- Justo antes de cerrar el </body> -->
 <!-- JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.tiny.cloud/1/z94ao1xzansr93pi0qe5kfxgddo1f4ltb8q7qa8pw9g52txs/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    tinymce.init({
+        selector: '#contenido',
+        plugins: 'emoticons',
+        toolbar: 'undo redo | bold italic underline | emoticons',
+        menubar: false,
+        height: 300,
+        skin: 'oxide', // Usar el skin por defecto como base
+        content_css: false, 
+        content_style: `
+            body {
+                background-color: #2b2b2b;
+                color: #e0e0e0;
+                font-family: 'Poppins', sans-serif;
+                padding: 10px;
+                border-radius: 4px;
+            }
+            a {
+                color: #1e90ff;
+            }
+        `,
+        setup: function (editor) {
+            editor.on('change', function () {
+                tinymce.triggerSave(); // Sincroniza el contenido con el textarea
+            });
+        },
+        init_instance_callback: function (editor) {
+            // Obtener todos los elementos de la interfaz de TinyMCE
+            let elementsToUpdate = editor.getContainer().querySelectorAll(
+                '.tox-tinymce, .tox-editor-header, .tox-toolbar, .tox-toolbar__primary, .tox-toolbar__group, .tox-button, .tox-statusbar, .tox-editor-container, .tox-edit-area'
+            );
+
+            // Eliminar bordes y sombras de todos los elementos seleccionados
+            elementsToUpdate.forEach(function(element) {
+                element.style.backgroundColor = '#ad002a'; // Cambia el color de fondo a rojo
+                element.style.border = 'none'; // Elimina el borde blanco
+                element.style.boxShadow = 'none'; // Elimina cualquier sombra para evitar bordes adicionales
+            });
+
+            // Cambiar el borde del contenedor principal del editor
+            let mainContainer = editor.getContainer();
+            mainContainer.style.border = '1px solid #2b2b2b'; // Cambia el borde a gris oscuro para integrarse con el fondo
+            mainContainer.style.boxShadow = 'none'; // Elimina sombras adicionales
+
+            // Cambiar el color del texto de los botones para que sea más legible
+            let buttons = editor.getContainer().querySelectorAll('.tox-button span, .tox-toolbar__group button');
+            buttons.forEach(function(button) {
+                button.style.color = '#ffffff'; // Cambia el color del texto a blanco para un mejor contraste
+            });
+        }
+    });
+</script>
 </body>
 
 </html>

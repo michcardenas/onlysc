@@ -52,6 +52,7 @@
 </div>
 @endif
 
+
 <!-- Formulario para nuevo comentario -->
 <div class="foro-comentario-container">
     <div class="foro-comentario-form">
@@ -88,6 +89,7 @@
         @endauth
     </div>
 </div>
+
 
 @if(session('success'))
 <div class="alert alert-success">

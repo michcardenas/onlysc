@@ -1199,14 +1199,15 @@ color: #cccccc;
 
 .foro-banner-content {
     position: relative;
-    bottom: 22%;
+    bottom: 7.1rem;
     left: 50%;
     transform: translate(-50%, -50%);
     color: #fff;
     text-align: center;
-    height: 13rem;
     width: 100%;
     background: #00000047;
+    height: 12.5rem;
+    bottom: 100px;
 }
 
 .foro-banner-content h1 {
@@ -1307,14 +1308,9 @@ color: #cccccc;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
+    grid-auto-flow: row; /* Asegura que el flujo sea por filas */
 }
 
-/* Columnas de foros */
-.foro-column {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
 
 /* Estilos de las tarjetas */
 .foro-card {
@@ -1329,6 +1325,16 @@ color: #cccccc;
     flex-direction: column;
     text-decoration: none;
     color: inherit;
+}
+
+
+/* Asegura que los elementos se ordenen correctamente */
+.foro-card:nth-child(odd) {
+    grid-column: 1;
+}
+
+.foro-card:nth-child(even) {
+    grid-column: 2;
 }
 
 /* Efecto hover */
@@ -1414,7 +1420,7 @@ color: #cccccc;
     color: #555; /* Cambia el color según el diseño */
     line-height: 1.6;
     padding: 10px 0;
-    margin-left: 80px; /* Ajusta para espacio entre el título y la descripción */
+    margin-left: 190px; /* Ajusta para espacio entre el título y la descripción */
      /* Ajuste de alineación */
     width: 100%; /* Asegura que ocupe el ancho completo del contenedor */
     max-width: 800px; /* Limita el ancho para mejor lectura */
@@ -1440,7 +1446,7 @@ color: #cccccc;
 }
 
 .foro-breadcrumb-item a {
-    color: #F28B50;
+    color: #000;
     text-decoration: none;
 }
 
@@ -1449,17 +1455,21 @@ color: #cccccc;
 }
 
 .foro-breadcrumb-item.active {
-    color: #666;
+    color: #000;
 }
 
 .foro-comments-table {
     width: 80%;
-    margin: 20px auto;
+    margin: 0 auto;
     font-family: 'Poppins', sans-serif;
     border: 1px solid #dee2e6;
     border-radius: 8px;
     overflow: hidden;
+    display: table; /* Changed from block to table */
+    text-align: left; /* Changed to left for better content alignment */
+    border-collapse: collapse;
 }
+
 
 .foro-comments-table table {
     width: 100%;

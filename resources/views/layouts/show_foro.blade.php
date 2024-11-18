@@ -24,9 +24,8 @@
 </div>
 
 <div class="foro-description mb-4">
-    <p>{{ $categoria->descripcion }}</p>
+    {!! $categoria->contenido !!}
 </div>
-
 <!-- Contenido del Foro -->
 @if(isset($categoria->foros) && count($categoria->foros) > 0)
 @foreach($categoria->foros as $foro)

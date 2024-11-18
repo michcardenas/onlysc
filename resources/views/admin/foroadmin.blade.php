@@ -19,66 +19,63 @@
     </nav>
 </header>
 
-<div class="container mx-auto px-4 py-8">
-    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-        <div class="p-6">
-            <div>
-                <h2 class="text-2xl font-bold text-gray-800">Administración de Foros</h2>
-                <a href="{{ route('foroadmin.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    Crear Nuevo Foro
-                </a>
-            </div>
-
-            @if(session('success'))
-                <div>
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            <main class="mt-6">
-                <table class="table-admin">
-                    <thead>
-                        <tr>
-                            <th>Título</th>
-                            <th>Subtítulo</th>
-                            <th>Fecha</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($foros as $foro)
-                            <tr>
-                                <td>
-                                    <a href="{{ route('foroadmin.edit', $foro->id) }}">
-                                        {{ $foro->titulo }}
-                                    </a>
-                                </td>
-                                <td>
-                                    <a href="{{ route('foroadmin.edit', $foro->id) }}">
-                                        {{ $foro->subtitulo }}
-                                    </a>
-                                </td>
-                                <td>{{ \Carbon\Carbon::parse($foro->fecha)->format('d/m/Y') }}</td>
-                                <td>
-                                    <form action="{{ route('foroadmin.destroy', $foro->id) }}" method="POST" class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" 
-                                                class="text-red-600 hover:text-red-900 mx-2"
-                                                onclick="return confirm('¿Estás seguro de que deseas eliminar este foro?')">
-                                            Eliminar
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </main>
+<main>
+    <section>
+        <h2>Administración de Foros</h2>
+        <div class="admin-actions">
+            <a href="{{ route('foroadmin.create') }}" class="btn-admin">
+                Crear Nuevo Foro
+            </a>
         </div>
-    </div>
-</div>
+
+        @if(session('success'))
+            <div class="alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <table class="table-admin">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Subtítulo</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($foros as $foro)
+                    <tr>
+                        <td>
+                            <a href="{{ route('foroadmin.edit', $foro->id) }}">
+                                {{ $foro->titulo }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ route('foroadmin.edit', $foro->id) }}">
+                                {{ $foro->subtitulo }}
+                            </a>
+                        </td>
+                        <td>{{ \Carbon\Carbon::parse($foro->fecha)->format('d/m/Y') }}</td>
+                        <td>
+                            <form action="{{ route('foroadmin.destroy', $foro->id) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" 
+                                        class="btn-delete"
+                                        onclick="return confirm('¿Estás seguro de que deseas eliminar este foro?')">
+                                    Eliminar
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </section>
+</main>
 
 <footer class="footer-admin">
     <p>&copy; {{ date('Y') }} Mi Aplicación. Todos los derechos reservados.</p>
 </footer>
+@endsection

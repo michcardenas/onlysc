@@ -17,7 +17,7 @@ class ForoController extends Controller
         $foros = DB::table('foro')
             ->select('foro.*', 'users.name as nombre_usuario')
             ->leftJoin('users', 'foro.id_usuario', '=', 'users.id')
-            ->orderBy('fecha', 'desc')
+            ->orderBy('posicion', 'asc')
             ->get();
 
         // Obtenemos todas las ciudades
@@ -30,52 +30,53 @@ class ForoController extends Controller
     }
 
     public function show_foro($categoria)
-{
-    // Agregar la consulta de ciudades aquí también
-    $ciudades = Ciudad::all();
+    {
+        // Agregar la consulta de ciudades aquí también
+        $ciudades = Ciudad::all();
 
-    // Obtener todos los foros ordenados por fecha
-    $foros = DB::table('foro')
-        ->select('foro.*', 'users.name as nombre_usuario')
-        ->leftJoin('users', 'foro.id_usuario', '=', 'users.id')
-        ->orderBy('fecha', 'desc')
-        ->get();
+        // Obtener todos los foros ordenados por fecha
+        $foros = DB::table('foro')
+            ->select('foro.*', 'users.name as nombre_usuario')
+            ->leftJoin('users', 'foro.id_usuario', '=', 'users.id')
+            ->orderBy('fecha', 'desc')
+            ->get();
 
-    // Agrupar los foros por id_blog
-    $categorias = $foros->groupBy('id_blog');
+        // Agrupar los foros por id_blog
+        $categorias = $foros->groupBy('id_blog');
 
-    // Verificar si la categoría solicitada existe
-    if (!isset($categorias[$categoria])) {
-        abort(404);
+        // Verificar si la categoría solicitada existe
+        if (!isset($categorias[$categoria])) {
+            abort(404);
+        }
+
+        // Obtener la categoría actual
+        $categoriaActual = (object)[
+            'titulo' => $categorias[$categoria]->first()->titulo,
+            'descripcion' => $categorias[$categoria]->first()->subtitulo,
+            'contenido' => $categorias[$categoria]->first()->contenido, // Añadido el campo contenido
+            'foto' => $categorias[$categoria]->first()->foto,
+            'foros' => $categorias[$categoria]->sortBy('posicion')
+        ];
+
+        return view('layouts.show_foro', [
+            'categoria' => $categoriaActual,
+            'ciudades' => $ciudades
+        ]);
     }
 
-    // Obtener la categoría actual
-    $categoriaActual = (object)[
-        'titulo' => $categorias[$categoria]->first()->titulo,
-        'descripcion' => $categorias[$categoria]->first()->subtitulo,
-        'foto' => $categorias[$categoria]->first()->foto, // Añadido el campo foto
-        'foros' => $categorias[$categoria]
-    ];
-
-    return view('layouts.show_foro', [
-        'categoria' => $categoriaActual,
-        'ciudades' => $ciudades
-    ]);
-}
-    
 
     public function foroadmin()
-{
-    $foros = Foro::select('foro.*', 'users.name as nombre_usuario')
-        ->leftJoin('users', 'foro.id_usuario', '=', 'users.id')
-        ->orderBy('fecha', 'desc')
-        ->get();
+    {
+        $foros = Foro::select('foro.*', 'users.name as nombre_usuario')
+            ->leftJoin('users', 'foro.id_usuario', '=', 'users.id')
+            ->orderBy('fecha', 'desc')
+            ->get();
 
-    return view('admin.foroadmin', [
-        'foros' => $foros,
-        'usuarioAutenticado' => Auth::user()
-    ]);
-}
+        return view('admin.foroadmin', [
+            'foros' => $foros,
+            'usuarioAutenticado' => Auth::user()
+        ]);
+    }
     public function create()
     {
         $usuarioAutenticado = Auth::user();
@@ -162,6 +163,4 @@ class ForoController extends Controller
 
         return redirect()->route('foroadmin')->with('success', 'Foro eliminado exitosamente');
     }
-
-
 }
