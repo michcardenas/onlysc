@@ -19,7 +19,7 @@ Route::get('/', function () {
     return redirect()->route('home');
 });
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'showHome'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'showHome'])->name('home');
 Route::post('/escorts-{nombreCiudad}', [InicioController::class, 'show'])->name('inicio');
 Route::get('/escorts-{nombreCiudad}', [InicioController::class, 'show'])->name('inicio');
 Route::get('/escorts-{nombreCiudad}/{categoria}', [InicioController::class, 'showByCategory'])->name('inicio.categoria');
