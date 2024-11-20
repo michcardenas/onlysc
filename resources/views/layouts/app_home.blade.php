@@ -80,7 +80,19 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
+document.getElementById('location-form').addEventListener('submit', function(e) {
+        const ciudadSelect = document.getElementById('ciudad');
+        const ciudadNombre = ciudadSelect.value;
 
+        if (!ciudadNombre) {
+            e.preventDefault();
+            alert('Por favor selecciona una ciudad antes de continuar.');
+            return;
+        }
+
+        // Cambiar la acción del formulario para usar el nombre
+        this.action = `/escorts-${ciudadNombre}`;
+    });
 </script>
 
 
