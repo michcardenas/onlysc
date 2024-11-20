@@ -267,6 +267,28 @@ document.getElementById('location').addEventListener('change', function() {
         window.location.href = `/escorts-${ciudadNombre}`;
     });
     
+   document.getElementById('categorias').addEventListener('change', function () {
+    const categoria = this.value.toLowerCase(); // Convertir a minúsculas
+    let currentUrl = window.location.pathname;
+
+    if (!categoria) {
+        alert('Por favor selecciona una categoría.');
+        return;
+    }
+
+    // Eliminar cualquier categoría existente en la URL
+    currentUrl = currentUrl.replace(/\/(deluxe|vip|premium|masajes)$/i, ''); // Ignorar mayúsculas y eliminar categoría existente
+
+    // Asegurarse de que la URL no termine con '/'
+    if (currentUrl.endsWith('/')) {
+        currentUrl = currentUrl.slice(0, -1);
+    }
+
+    // Construir la nueva URL con la categoría en minúsculas
+    window.location.href = `${currentUrl}/${categoria}`;
+});
+
+
 </script>
 
 </body>

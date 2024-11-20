@@ -22,6 +22,7 @@ Route::get('/', function () {
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'showHome'])->name('home');
 Route::post('/escorts-{nombreCiudad}', [InicioController::class, 'show'])->name('inicio');
 Route::get('/escorts-{nombreCiudad}', [InicioController::class, 'show'])->name('inicio');
+Route::get('/escorts-{nombreCiudad}/{categoria}', [InicioController::class, 'showByCategory'])->name('inicio.categoria');
 
 Route::post('/inicio', [InicioController::class, 'show'])->name('inicio');
 Route::get('/perfil/{id}', [InicioController::class, 'showPerfil'])->name('perfil.show');

@@ -21,8 +21,8 @@
 @section('content')
     <!-- Swiper Container -->
     <div class="swiper-container">
-        <div class="swiper-wrapper">
-            <!-- Tarjeta 1 -->
+    <div class="swiper-wrapper" style="display: flex;">
+    <!-- Tarjeta 1 -->
             <div class="swiper-slide">
                 <div class="card">
                     <a href="/foro" class="card-link">
