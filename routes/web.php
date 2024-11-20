@@ -35,12 +35,14 @@ Route::post('/comentarios', [ComentarioController::class, 'store'])->name('comen
 
 
 
+
 //panel
 Route::get('/panel-control', [AdminController::class, 'index'])->name('panel_control');
 Route::get('/usuarios-publicate/{id}/edit', [UsuarioPublicateController::class, 'edit'])->name('usuarios_publicate.edit');
 Route::put('/usuarios-publicate/{id}', [UsuarioPublicateController::class, 'update'])->name('usuarios_publicate.update');
 Route::post('/usuarios-publicate/eliminar-foto', [UsuarioPublicateController::class, 'eliminarFoto'])->name('usuarios_publicate.eliminarFoto');
 Route::post('/validate-fantasia', [UsuarioPublicateController::class, 'validateFantasia']);
+Route::post('/actualizar-posicion-foto', [UsuarioPublicateController::class, 'actualizarPosicionFoto'])->name('actualizar.posicion.foto');
 
 //Foro Admin
 Route::get('/foroadmin', [ForoController::class, 'foroadmin'])->name('foroadmin');

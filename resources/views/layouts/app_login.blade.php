@@ -442,6 +442,68 @@ document.addEventListener('DOMContentLoaded', function() {
     ubicacionSelect.addEventListener('change', validateFantasia);
 });
 
+// Función para actualizar la posición en la base de datos
+function updateImagePosition(position) {
+    const destacada = document.querySelector('.destacada');
+    if (!destacada) return;
+
+    const userId = destacada.dataset.userId;
+    const fotoName = destacada.dataset.foto;
+    
+    fetch('/actualizar-posicion-foto', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+            user_id: userId,
+            foto: fotoName,
+            position: position
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const mediaElement = destacada.querySelector('.foto-preview-destacada');
+            
+            // Actualizar clases de posición
+            mediaElement.classList.remove('image-left', 'image-center', 'image-right');
+            mediaElement.classList.add(`image-${position}`);
+            
+            // Actualizar botones
+            const buttons = document.querySelectorAll('.position-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-position') === position) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            destacada.setAttribute('data-position', position);
+        } else {
+            console.error('Error al actualizar la posición');
+            alert('Error al actualizar la posición de la imagen');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al comunicarse con el servidor');
+    });
+}
+
+// Event listener para los botones de posición
+document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('position-btn')) {
+            const position = e.target.getAttribute('data-position');
+            if (position) {
+                updateImagePosition(position);
+            }
+        }
+    });
+});
+
     </script>
 
     <!-- Justo antes de cerrar el </body> -->

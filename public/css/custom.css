@@ -50,7 +50,8 @@
     position: relative;
     background: #2d2d2d;
     border-radius: 8px;
-    padding: 5px;
+    padding-bottom: 40px; /* Espacio para los controles */
+    margin-bottom: 10px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -262,4 +263,97 @@ video.foto-preview-destacada {
 .btn-close:hover {
     background-color: #c60030;
     opacity: 1;
+}
+
+
+/* Botones de posición */
+.position-btn {
+    padding: 4px 8px;
+    border: 1px solid #363636;
+    border-radius: 4px;
+    background: #1e1e1e;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 11px;
+    min-width: 45px;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+
+/* Hover state */
+.position-btn:hover {
+    background: #363636;
+    color: white;
+}
+
+/* Estado activo */
+.position-btn.active {
+    background: #e00037;
+    color: white;
+    border-color: #e00037;
+}
+
+/* Estado activo al hacer hover */
+.position-btn.active:hover {
+    background: #c60030;
+}
+
+/* Contenedor para la foto destacada y sus controles */
+.destacada-container {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+/* Ajuste del contenedor destacado */
+.destacada {
+    position: relative;
+    width: 300px; /* Ancho fijo para la foto destacada */
+    margin-bottom: 20px;
+}
+
+
+/* Controles de posición para la foto destacada */
+.destacada-controls {
+    background-color: #2d2d2d;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 120px;
+}
+
+/* Título para los controles */
+.destacada-controls-title {
+    color: #ffffff;
+    font-size: 12px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+
+/* Mantener los controles normales para las fotos adicionales */
+.publicate-preview-item:not(.destacada) {
+    position: relative;
+    padding-bottom: 40px;
+    margin-bottom: 10px;
+}
+
+/* Clases para las posiciones de imagen */
+.image-left {
+    object-position: left center !important;
+}
+
+.image-center {
+    object-position: center center !important;
+}
+
+.image-right {
+    object-position: right center !important;
 }

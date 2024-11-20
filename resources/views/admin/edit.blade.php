@@ -744,25 +744,44 @@
 
                                     <div id="previewDestacada" class="mt-2">
                                         @if(!empty(json_decode($usuario->fotos)[0] ?? null))
-                                        <div class="publicate-preview-item destacada" data-foto="{{ json_decode($usuario->fotos)[0] }}" data-user-id="{{ $usuario->id }}">
-                                            @php
-                                            $extension = pathinfo(json_decode($usuario->fotos)[0], PATHINFO_EXTENSION);
-                                            $isVideo = in_array(strtolower($extension), ['mp4', 'webm', 'ogg']);
-                                            @endphp
+                                        <div class="destacada-container">
+                                            <div class="publicate-preview-item destacada"
+                                                data-foto="{{ json_decode($usuario->fotos)[0] }}"
+                                                data-user-id="{{ $usuario->id }}"
+                                                data-position="{{ $positions[json_decode($usuario->fotos)[0]] ?? 'center' }}">
+                                                @php
+                                                $extension = pathinfo(json_decode($usuario->fotos)[0], PATHINFO_EXTENSION);
+                                                $isVideo = in_array(strtolower($extension), ['mp4', 'webm', 'ogg']);
+                                                @endphp
 
-                                            @if($isVideo)
-                                            <video src="{{ asset('storage/chicas/'.$usuario->id.'/'.json_decode($usuario->fotos)[0]) }}"
-                                                controls
-                                                class="foto-preview-destacada"
-                                                onerror="this.src='{{ asset('images/default-video.png') }}'">
-                                            </video>
-                                            @else
-                                            <img src="{{ asset('storage/chicas/'.$usuario->id.'/'.json_decode($usuario->fotos)[0]) }}"
-                                                alt="Foto destacada de {{ $usuario->nombre }}"
-                                                class="foto-preview-destacada"
-                                                onerror="this.src='{{ asset('images/default-image.png') }}'">
-                                            @endif
-                                            <button type="button" class="publicate-remove-button" onclick="removeDestacada(this)">&times;</button>
+                                                @if($isVideo)
+                                                <video src="{{ asset('storage/chicas/'.$usuario->id.'/'.json_decode($usuario->fotos)[0]) }}"
+                                                    controls
+                                                    class="foto-preview-destacada image-{{ $positions[json_decode($usuario->fotos)[0]] ?? 'center' }}"
+                                                    onerror="this.src='{{ asset('images/default-video.png') }}'">
+                                                </video>
+                                                @else
+                                                <img src="{{ asset('storage/chicas/'.$usuario->id.'/'.json_decode($usuario->fotos)[0]) }}"
+                                                    alt="Foto destacada de {{ $usuario->nombre }}"
+                                                    class="foto-preview-destacada image-{{ $positions[json_decode($usuario->fotos)[0]] ?? 'center' }}"
+                                                    onerror="this.src='{{ asset('images/default-image.png') }}'">
+                                                @endif
+                                                <button type="button" class="publicate-remove-button" onclick="removeDestacada(this)">&times;</button>
+                                            </div>
+
+                                            <!-- Controles de posición para la foto destacada -->
+                                            <div class="destacada-controls">
+                                                <span class="destacada-controls-title">Posición de imagen</span>
+                                                <button type="button"
+                                                    class="position-btn {{ ($positions[json_decode($usuario->fotos)[0]] ?? 'center') == 'left' ? 'active' : '' }}"
+                                                    data-position="left">Izquierda</button>
+                                                <button type="button"
+                                                    class="position-btn {{ ($positions[json_decode($usuario->fotos)[0]] ?? 'center') == 'center' ? 'active' : '' }}"
+                                                    data-position="center">Centro</button>
+                                                <button type="button"
+                                                    class="position-btn {{ ($positions[json_decode($usuario->fotos)[0]] ?? 'center') == 'right' ? 'active' : '' }}"
+                                                    data-position="right">Derecha</button>
+                                            </div>
                                         </div>
                                         @endif
                                     </div>
@@ -811,7 +830,6 @@
                     </div>
                 </div>
             </div>
-
             <button type="submit" class="btn-submit">Actualizar</button>
         </form>
     </section>

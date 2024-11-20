@@ -55,35 +55,46 @@ class UsuarioPublicateController extends Controller
     }
 
     public function edit($id)
-    {
-        try {
-            // Obtener el usuario
-            $usuario = UsuarioPublicate::findOrFail($id);
+{
+    try {
+        // Obtener el usuario
+        $usuario = UsuarioPublicate::findOrFail($id);
 
-            // Obtener la disponibilidad
-            $disponibilidad = Disponibilidad::where('publicate_id', $id)->get();
+        // Obtener la disponibilidad
+        $disponibilidad = Disponibilidad::where('publicate_id', $id)->get();
 
-            // Obtener las ciudades
-            $ciudades = DB::table('ciudades')->orderBy('nombre')->get();
+        // Obtener las ciudades
+        $ciudades = DB::table('ciudades')->orderBy('nombre')->get();
 
-            // Preparar los datos para la vista
-            $diasDisponibles = $disponibilidad->pluck('dia')->toArray();
-            $horarios = [];
+        // Preparar los datos para la vista
+        $diasDisponibles = $disponibilidad->pluck('dia')->toArray();
+        $horarios = [];
 
-            foreach ($disponibilidad as $disp) {
-                $horarios[$disp->dia] = [
-                    'desde' => $disp->hora_desde,
-                    'hasta' => $disp->hora_hasta
-                ];
-            }
-
-            // Pasar a la vista
-            return view('admin.edit', compact('usuario', 'diasDisponibles', 'horarios', 'ciudades'));
-        } catch (\Exception $e) {
-            Log::error("Error al cargar el formulario de edición: " . $e->getMessage());
-            return redirect()->back()->with('error', 'Error al cargar el formulario.');
+        foreach ($disponibilidad as $disp) {
+            $horarios[$disp->dia] = [
+                'desde' => $disp->hora_desde,
+                'hasta' => $disp->hora_hasta
+            ];
         }
+
+        // Obtener las posiciones de las fotos
+        $positions = json_decode($usuario->foto_positions, true) ?? [];
+        
+        // Si hay una foto destacada pero no tiene posición, establecer 'center' por defecto
+        if (!empty(json_decode($usuario->fotos, true))) {
+            $fotoDestacada = json_decode($usuario->fotos, true)[0];
+            if (!isset($positions[$fotoDestacada])) {
+                $positions[$fotoDestacada] = 'center';
+            }
+        }
+
+        // Pasar a la vista incluyendo las posiciones
+        return view('admin.edit', compact('usuario', 'diasDisponibles', 'horarios', 'ciudades', 'positions'));
+    } catch (\Exception $e) {
+        Log::error("Error al cargar el formulario de edición: " . $e->getMessage());
+        return redirect()->back()->with('error', 'Error al cargar el formulario.');
     }
+}
 
     public function update(Request $request, $id)
     {
@@ -349,4 +360,41 @@ class UsuarioPublicateController extends Controller
             ]);
         }
     }
+
+    public function actualizarPosicionFoto(Request $request)
+{
+    try {
+        $request->validate([
+            'user_id' => 'required',
+            'foto' => 'required',
+            'position' => 'required|in:left,center,right'
+        ]);
+
+        $usuario = UsuarioPublicate::findOrFail($request->user_id);
+        
+        // Decodificar las posiciones actuales o crear un array vacío si no existen
+        $positions = json_decode($usuario->foto_positions, true) ?? [];
+        
+        // Actualizar la posición para esta foto específica
+        $positions[$request->foto] = $request->position;
+        
+        // Guardar las posiciones actualizadas
+        $usuario->update(['foto_positions' => json_encode($positions)]);
+        
+        // Si todo salió bien, devolver respuesta exitosa
+        return response()->json([
+            'success' => true,
+            'message' => 'Posición actualizada correctamente'
+        ]);
+        
+    } catch (\Exception $e) {
+        Log::error("Error al actualizar posición de foto: " . $e->getMessage());
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al actualizar la posición: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
 }

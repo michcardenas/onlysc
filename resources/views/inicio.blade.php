@@ -21,29 +21,31 @@
                     @foreach($usuarios as $usuario)
                     @php
                     $fotos = json_decode($usuario->fotos, true);
+                    $positions = json_decode($usuario->foto_positions, true) ?? [];
                     $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
+                    $posicionFoto = in_array(($positions[$primeraFoto] ?? ''), ['left', 'right', 'center']) ? $positions[$primeraFoto] : 'center';
 
                     $now = Carbon\Carbon::now();
                     $currentDay = strtolower($now->locale('es')->dayName);
                     $isAvailable = false;
 
                     foreach ($usuario->disponibilidad as $disponibilidad) {
-                    if (strtolower($disponibilidad->dia) === $currentDay) {
-                    $horaDesde = Carbon\Carbon::parse($disponibilidad->hora_desde);
-                    $horaHasta = Carbon\Carbon::parse($disponibilidad->hora_hasta);
+                        if (strtolower($disponibilidad->dia) === $currentDay) {
+                            $horaDesde = Carbon\Carbon::parse($disponibilidad->hora_desde);
+                            $horaHasta = Carbon\Carbon::parse($disponibilidad->hora_hasta);
 
-                    if ($horaHasta->lessThan($horaDesde)) {
-                    if ($now->greaterThanOrEqualTo($horaDesde) || $now->lessThanOrEqualTo($horaHasta)) {
-                    $isAvailable = true;
-                    break;
-                    }
-                    } else {
-                    if ($now->between($horaDesde, $horaHasta)) {
-                    $isAvailable = true;
-                    break;
-                    }
-                    }
-                    }
+                            if ($horaHasta->lessThan($horaDesde)) {
+                                if ($now->greaterThanOrEqualTo($horaDesde) || $now->lessThanOrEqualTo($horaHasta)) {
+                                    $isAvailable = true;
+                                    break;
+                                }
+                            } else {
+                                if ($now->between($horaDesde, $horaHasta)) {
+                                    $isAvailable = true;
+                                    break;
+                                }
+                            }
+                        }
                     }
 
                     $mostrarPuntoVerde = $usuario->estadop == 1 && $isAvailable;
@@ -52,7 +54,10 @@
                     <a href="{{ url('escorts/' . $usuario->id) }}" class="inicio-card">
                         <div class="inicio-card-category">{{ strtoupper($usuario->categorias) }}</div>
                         <div class="inicio-card-image">
-                            <div class="inicio-image" style="background-image: url('{{ $primeraFoto ? asset("storage/chicas/{$usuario->id}/{$primeraFoto}") : asset("images/default-avatar.png") }}');"></div>
+                            <div class="inicio-image" 
+                                 style="background-image: url('{{ $primeraFoto ? asset("storage/chicas/{$usuario->id}/{$primeraFoto}") : asset("images/default-avatar.png") }}');
+                                        background-position: {{ $posicionFoto }} center;">
+                            </div>
                             <div class="inicio-card-overlay">
                                 <h3 class="inicio-card-title" style="display: flex; align-items: center;">
                                     {{ $usuario->fantasia }}
@@ -72,18 +77,20 @@
                 </div>
             </div>
 
-
-
             <!-- Usuario destacado -->
             @if($usuarioDestacado)
             @php
             $fotosDestacado = json_decode($usuarioDestacado->fotos, true);
+            $positionsDestacado = json_decode($usuarioDestacado->foto_positions, true) ?? [];
             $primeraFotoDestacado = is_array($fotosDestacado) && !empty($fotosDestacado) ? $fotosDestacado[0] : null;
+            $posicionFotoDestacado = in_array(($positionsDestacado[$primeraFotoDestacado] ?? ''), ['left', 'right', 'center']) ? $positionsDestacado[$primeraFotoDestacado] : 'center';
             @endphp
 
             <a href="{{ url('escorts/' . $usuarioDestacado->id) }}" class="inicio-featured-card">
                 <div class="inicio-featured-label">CHICA DEL MES</div>
-                <div class="inicio-featured-image" style="background-image: url('{{ $primeraFotoDestacado ? asset("storage/chicas/{$usuarioDestacado->id}/{$primeraFotoDestacado}") : asset("images/default-avatar.png") }}');">
+                <div class="inicio-featured-image" 
+                     style="background-image: url('{{ $primeraFotoDestacado ? asset("storage/chicas/{$usuarioDestacado->id}/{$primeraFotoDestacado}") : asset("images/default-avatar.png") }}');
+                            background-position: {{ $posicionFotoDestacado }} center;">
                     <div class="inicio-featured-overlay">
                         <h3 class="inicio-featured-title">
                             {{ $usuarioDestacado->fantasia }}
@@ -102,41 +109,44 @@
         </section>
 
         <aside class="online-panel">
-    <h2 class="online-panel-title">Chicas online</h2>
-    <div class="online-count">
-        {{ $totalOnline }} Disponibles
-    </div>
-    <div class="online-container">
-        <ul class="online-list">
-            @foreach($usuariosOnline as $usuario)
-            @php
-            $fotos = json_decode($usuario->fotos, true);
-            $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
-            @endphp
+            <h2 class="online-panel-title">Chicas online</h2>
+            <div class="online-count">
+                {{ $totalOnline }} Disponibles
+            </div>
+            <div class="online-container">
+                <ul class="online-list">
+                    @foreach($usuariosOnline as $usuario)
+                    @php
+                    $fotos = json_decode($usuario->fotos, true);
+                    $positions = json_decode($usuario->foto_positions, true) ?? [];
+                    $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
+                    $posicionFoto = in_array(($positions[$primeraFoto] ?? ''), ['left', 'right', 'center']) ? $positions[$primeraFoto] : 'center';
+                    @endphp
 
-            <li class="online-item">
-                <img
-                    src="{{ $primeraFoto ? asset('storage/chicas/' . $usuario->id . '/' . $primeraFoto) : asset('images/default-avatar.png') }}"
-                    alt="{{ $usuario->fantasia }}"
-                    class="online-image"
-                    loading="lazy">
-                <div class="online-info">
-                    <div class="online-name">
-                        {{ $usuario->fantasia }}
-                        <span class="online-age">{{ $usuario->edad }}</span>
-                    </div>
-                    <div class="online-status">ONLINE</div>
-                    <a href="{{ url('escorts/' . $usuario->id) }}"
-                        class="online-profile-button">Ver perfil</a>
-                </div>
-            </li>
-            @endforeach
-        </ul>
-    </div>
-</aside>
+                    <li class="online-item">
+                        <img src="{{ $primeraFoto ? asset('storage/chicas/' . $usuario->id . '/' . $primeraFoto) : asset('images/default-avatar.png') }}"
+                             alt="{{ $usuario->fantasia }}"
+                             class="online-image"
+                             style="object-position: {{ $posicionFoto }} center;"
+                             loading="lazy">
+                        <div class="online-info">
+                            <div class="online-name">
+                                {{ $usuario->fantasia }}
+                                <span class="online-age">{{ $usuario->edad }}</span>
+                            </div>
+                            <div class="online-status">ONLINE</div>
+                            <a href="{{ url('escorts/' . $usuario->id) }}" class="online-profile-button">Ver perfil</a>
+                        </div>
+                    </li>
+                    @endforeach
+                </ul>
+            </div>
+        </aside>
 
-<div class="pagination-container">
-    {{ $usuarios->links('layouts.pagination') }}
-</div>
+        <div class="pagination-container">
+            {{ $usuarios->links('layouts.pagination') }}
+        </div>
+    </div>
+</main>
 
 @endsection

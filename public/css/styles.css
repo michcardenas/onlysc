@@ -2375,6 +2375,8 @@ h2 {
     align-items: flex-end;
 }
 
+
+
 /* Overlay con degradado para texto */
 .inicio-card-overlay {
     position: relative;
@@ -3169,3 +3171,27 @@ width: 450px; /* O el ancho que prefieras */
     scrollbar-width: thin;
 }
 
+/* Estilos específicos para posiciones */
+.inicio-image[style*="background-position: left"] {
+    background-position: left center !important;
+}
+
+.inicio-image[style*="background-position: right"] {
+    background-position: right center !important;
+}
+
+.inicio-image[style*="background-position: center"] {
+    background-position: center center !important;
+}
+
+.online-image[style*="object-position: left"] {
+    object-position: left center !important;
+}
+
+.online-image[style*="object-position: right"] {
+    object-position: right center !important;
+}
+
+.online-image[style*="object-position: center"] {
+    object-position: center center !important;
+}

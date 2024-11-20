@@ -34,6 +34,7 @@ class UsuarioPublicate extends Model
         'precio',
         'nacionalidad', // Nueva columna agregada
         'atributos',    // Nueva columna agregada
+        'foto_positions',
     ];
     /**
      * Obtener la disponibilidad del usuario

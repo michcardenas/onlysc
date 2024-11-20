@@ -29,6 +29,7 @@ class InicioController extends Controller
                 'edad',
                 'ubicacion',
                 'fotos',
+                'foto_positions', // Añadido
                 'categorias',
                 'posicion',
                 'precio',
@@ -47,6 +48,7 @@ class InicioController extends Controller
                 'edad',
                 'ubicacion',
                 'fotos',
+                'foto_positions', // Añadido
                 'categorias',
                 'precio',
                 'estadop'
@@ -69,7 +71,7 @@ class InicioController extends Controller
                             ->orWhereRaw("(hora_hasta >= hora_desde AND '$currentTime' BETWEEN hora_desde AND hora_hasta)");
                     });
             })
-            ->select('id', 'fantasia', 'edad', 'fotos', 'estadop')
+            ->select('id', 'fantasia', 'edad', 'fotos', 'foto_positions', 'estadop') // Añadido foto_positions
             ->take(11)
             ->get();
 
