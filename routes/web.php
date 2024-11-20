@@ -11,6 +11,7 @@ use App\Http\Controllers\UsuarioPublicateController;
 use App\Http\Controllers\DisponibilidadController;
 use App\Http\Controllers\PerfilController;
 use App\Models\UsuarioPublicate;
+use App\Http\Controllers\CiudadController;
 
 Auth::routes();
 
@@ -61,3 +62,12 @@ Route::put('/foroadmin/update/{id}', [ForoController::class, 'update'])->name('f
 Route::delete('/foroadmin/delete/{id}', [ForoController::class, 'destroy'])->name('foroadmin.destroy');
 Route::get('/foroadmin/create', [ForoController::class, 'create'])->name('foroadmin.create');
 Route::post('/foroadmin/store', [ForoController::class, 'store'])->name('foroadmin.store');
+
+
+//ciudades
+Route::get('/ciudades', [CiudadController::class, 'index'])->name('ciudades.index');
+Route::get('/ciudades/{id}/edit', [CiudadController::class, 'edit'])->name('ciudades.edit');
+Route::delete('/ciudades/{id}', [CiudadController::class, 'destroy'])->name('ciudades.destroy');
+Route::put('/ciudades/{id}', [CiudadController::class, 'update'])->name('ciudades.update');
+Route::get('/ciudades/create', [CiudadController::class, 'create'])->name('ciudades.create');
+Route::post('/ciudades', [CiudadController::class, 'store'])->name('ciudades.store');

@@ -92,7 +92,9 @@
                     @endforeach
                 </select>
             </div>
-
+            <div class="mt-3">
+                <a href="{{ route('ciudades.index') }}" class="btn btn-primary">Agregar ciudad</a>
+            </div>
             <div class="form-group">
                 <label for="nacionalidad">Nacionalidad</label>
                 <input type="text" name="nacionalidad" value="{{ old('nacionalidad', $usuario->nacionalidad) }}" required>
