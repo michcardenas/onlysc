@@ -9,19 +9,28 @@ use Carbon\Carbon;
 
 class InicioController extends Controller
 {
-    public function show()
+    public function show($nombreCiudad)
     {
+        // Buscar la ciudad por nombre
+        $ciudadSeleccionada = Ciudad::where('nombre', $nombreCiudad)->first();
+    
+        if (!$ciudadSeleccionada) {
+            // Si la ciudad no existe, mostrar un error 404
+            abort(404, 'Ciudad no encontrada');
+        }
+    
         // Obtener todas las ciudades
         $ciudades = Ciudad::all();
-
+    
         // Obtener la hora y día actuales
         $now = Carbon::now();
         $currentDay = strtolower($now->locale('es')->dayName);
         $currentTime = $now->format('H:i:s');
-
-        // Obtener todos los usuarios (estadop 1 y 3)
+    
+        // Filtrar usuarios por la ciudad seleccionada
         $usuarios = UsuarioPublicate::with('disponibilidad')
             ->whereIn('estadop', [1, 3])
+            ->where('ubicacion', $ciudadSeleccionada->nombre)
             ->select(
                 'id',
                 'fantasia',
@@ -29,7 +38,7 @@ class InicioController extends Controller
                 'edad',
                 'ubicacion',
                 'fotos',
-                'foto_positions', // Añadido
+                'foto_positions',
                 'categorias',
                 'posicion',
                 'precio',
@@ -38,9 +47,10 @@ class InicioController extends Controller
             ->orderBy('posicion', 'asc')
             ->paginate(12)
             ->appends(request()->query());
-
-        // Mantener la consulta separada para usuario destacado
+    
+        // Obtener el usuario destacado
         $usuarioDestacado = UsuarioPublicate::where('estadop', 3)
+            ->where('ubicacion', $ciudadSeleccionada->nombre)
             ->select(
                 'id',
                 'fantasia',
@@ -48,14 +58,14 @@ class InicioController extends Controller
                 'edad',
                 'ubicacion',
                 'fotos',
-                'foto_positions', // Añadido
+                'foto_positions',
                 'categorias',
                 'precio',
                 'estadop'
             )
             ->first();
-
-        // Obtener usuarios online para el panel lateral
+    
+        // Usuarios online
         $usuariosOnline = UsuarioPublicate::with(['disponibilidad' => function ($query) use ($currentDay, $currentTime) {
             $query->where('dia', 'LIKE', $currentDay)
                 ->where(function ($q) use ($currentTime) {
@@ -64,6 +74,7 @@ class InicioController extends Controller
                 });
         }])
             ->where('estadop', 1)
+            ->where('ubicacion', $ciudadSeleccionada->nombre)
             ->whereHas('disponibilidad', function ($query) use ($currentDay, $currentTime) {
                 $query->where('dia', 'LIKE', $currentDay)
                     ->where(function ($q) use ($currentTime) {
@@ -71,12 +82,13 @@ class InicioController extends Controller
                             ->orWhereRaw("(hora_hasta >= hora_desde AND '$currentTime' BETWEEN hora_desde AND hora_hasta)");
                     });
             })
-            ->select('id', 'fantasia', 'edad', 'fotos', 'foto_positions', 'estadop') // Añadido foto_positions
+            ->select('id', 'fantasia', 'edad', 'fotos', 'foto_positions', 'estadop')
             ->take(11)
             ->get();
-
+    
         return view('inicio', [
             'ciudades' => $ciudades,
+            'ciudadSeleccionada' => $ciudadSeleccionada,
             'usuarios' => $usuarios,
             'usuarioDestacado' => $usuarioDestacado,
             'usuariosOnline' => $usuariosOnline,
@@ -85,6 +97,8 @@ class InicioController extends Controller
             'currentDay' => $currentDay
         ]);
     }
+    
+    
 
     public function showPerfil($id)
     {

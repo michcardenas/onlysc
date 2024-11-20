@@ -3,18 +3,19 @@
 @section('selector')
     <!-- Contenido del selector de ciudades -->
     <div class="location-selector">
-        <i class="fas fa-map-marker-alt"></i>
-        <form id="location-form" action="/inicio" method="POST">
-            @csrf
-            <select id="ciudad" name="ciudad" >
-                <option value="" disabled selected>Seleccionar ubicación</option>
-                @foreach($ciudades as $ciudad)
-                    <option value="{{ $ciudad->id }}">{{ ucfirst($ciudad->nombre) }}</option>
-                @endforeach
-            </select>
-            <button type="submit" class="btn-location">ENTRAR</button>
-        </form>
-    </div>
+    <i class="fas fa-map-marker-alt"></i>
+    <form id="location-form" action="/inicio" method="POST">
+        @csrf
+        <select id="ciudad" name="ciudad" required>
+            <option value="" disabled selected>Seleccionar ubicación</option>
+            @foreach($ciudades as $ciudad)
+                <option value="{{ strtolower($ciudad->nombre) }}">{{ ucfirst($ciudad->nombre) }}</option>
+            @endforeach
+        </select>
+        <button type="submit" class="btn-location">ENTRAR</button>
+</form>
+
+</div>
 @endsection
 
 @section('content')

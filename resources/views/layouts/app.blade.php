@@ -43,7 +43,7 @@
                     <select name="location" id="location">
                         <option value="" disabled selected>Seleccionar ciudad</option>
                         @foreach($ciudades as $ciudad)
-                        <option value="{{ $ciudad->id }}">{{ ucfirst($ciudad->nombre) }}</option>
+                        <option value="{{ strtolower($ciudad->nombre) }}">{{ ucfirst($ciudad->nombre) }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -255,7 +255,17 @@
 });
 
 
+document.getElementById('location').addEventListener('change', function() {
+        const ciudadNombre = this.value;
 
+        if (!ciudadNombre) {
+            alert('Por favor selecciona una ciudad.');
+            return;
+        }
+
+        // Redirigir a la ruta dinámica
+        window.location.href = `/escorts-${ciudadNombre}`;
+    });
     
 </script>
 
