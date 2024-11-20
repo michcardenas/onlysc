@@ -18,6 +18,7 @@ class Foro extends Model
         'foto',
         'id_usuario',
         'fecha',
+        'posicion',
         'id_blog'
     ];
 

@@ -506,6 +506,111 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+function mostrarFormulario(modo, data = null) {
+    document.getElementById('listadoPosts').style.display = 'none';
+    document.getElementById('formularioPost').style.display = 'block';
+    
+    const form = document.getElementById('postForm');
+    const tituloForm = document.getElementById('formularioTitulo');
+    const methodInput = document.getElementById('formMethod');
+    
+    form.reset();
+    
+    if (modo === 'crear') {
+        tituloForm.textContent = 'Nuevo Post';
+        form.action = '{{ route('foroadmin.storepost') }}';
+        methodInput.value = 'POST';
+    } else if (modo === 'editar' && data) {
+        tituloForm.textContent = 'Editar Post';
+        form.action = `/foroadmin/post/${data.id}`;
+        methodInput.value = 'PUT';
+        
+        if (document.getElementById('postId')) {
+            document.getElementById('postId').value = data.id;
+        }
+        if (document.getElementById('titulo')) {
+            document.getElementById('titulo').value = data.titulo || '';
+        }
+    }
+}
+
+function mostrarListado() {
+    document.getElementById('formularioPost').style.display = 'none';
+    document.getElementById('listadoPosts').style.display = 'block';
+}
+
+function editarPost(id) {
+    // Corregida la URL para coincidir con la ruta del controlador
+    fetch(`/foroadmin/post/${id}/edit`, {
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        mostrarFormulario('editar', data);
+    })
+    .catch(error => {
+        console.error('Error en editarPost:', error);
+    });
+}
+
+function confirmarEliminar(id) {
+    if (confirm('¿Estás seguro de querer eliminar este post?')) {
+        fetch(`/foroadmin/post/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            }
+        }).then(() => {
+            location.reload();
+        });
+    }
+}
+
+function verPost(id) {
+    window.location.href = `/foros/${id_blog}/${id}`;
+}
+
+// Evento al cargar el documento
+document.addEventListener('DOMContentLoaded', function() {
+    // Manejar el envío del formulario
+    const form = document.getElementById('postForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const method = document.getElementById('formMethod').value;
+            
+            fetch(form.action, {
+                method: method,
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(() => {
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error al guardar:', error);
+            });
+        });
+    }
+
+    // Manejar alertas
+    const alertList = document.querySelectorAll('.alert');
+    alertList.forEach(function(alert) {
+        setTimeout(function() {
+            if (alert && alert.parentNode) {
+                alert.parentNode.removeChild(alert);
+            }
+        }, 5000);
+    });
+});
     </script>
 
     <!-- Justo antes de cerrar el </body> -->
@@ -514,55 +619,98 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src="https://cdn.tiny.cloud/1/z94ao1xzansr93pi0qe5kfxgddo1f4ltb8q7qa8pw9g52txs/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
     tinymce.init({
-        selector: '#contenido',
-        plugins: 'emoticons',
-        toolbar: 'undo redo | bold italic underline | emoticons',
-        menubar: false,
-        height: 300,
-        skin: 'oxide', // Usar el skin por defecto como base
-        content_css: false, 
-        content_style: `
-            body {
-                background-color: #2b2b2b;
-                color: #e0e0e0;
-                font-family: 'Poppins', sans-serif;
-                padding: 10px;
-                border-radius: 4px;
+    selector: '#contenido',
+    plugins: 'emoticons',
+    toolbar: 'undo redo | bold italic underline | emoticons',
+    menubar: false,
+    height: 300,
+    forced_root_block: false,
+    
+    // Configuración para prevenir etiquetas HTML
+    verify_html: false,
+    cleanup: true,
+    paste_as_text: true,
+    
+    // Mantener el valor anterior si existe
+    setup: function (editor) {
+        editor.on('init', function () {
+            // Asegura que el valor inicial se mantenga
+            let initialContent = editor.getElement().value;
+            if (initialContent) {
+                editor.setContent(initialContent);
             }
-            a {
-                color: #1e90ff;
+        });
+
+        editor.on('change', function () {
+            // Obtener el texto plano y actualizar el textarea
+            let contenidoLimpio = editor.getBody().innerText;
+            editor.targetElm.value = contenidoLimpio;
+        });
+        
+        // Manejar la validación de Laravel
+        editor.on('blur', function() {
+            if (editor.getContent().trim().length === 0) {
+                editor.getElement().classList.add('border-red-500');
+            } else {
+                editor.getElement().classList.remove('border-red-500');
             }
-        `,
-        setup: function (editor) {
-            editor.on('change', function () {
-                tinymce.triggerSave(); // Sincroniza el contenido con el textarea
-            });
-        },
-        init_instance_callback: function (editor) {
-            // Obtener todos los elementos de la interfaz de TinyMCE
-            let elementsToUpdate = editor.getContainer().querySelectorAll(
-                '.tox-tinymce, .tox-editor-header, .tox-toolbar, .tox-toolbar__primary, .tox-toolbar__group, .tox-button, .tox-statusbar, .tox-editor-container, .tox-edit-area'
-            );
-
-            // Eliminar bordes y sombras de todos los elementos seleccionados
-            elementsToUpdate.forEach(function(element) {
-                element.style.backgroundColor = '#ad002a'; // Cambia el color de fondo a rojo
-                element.style.border = 'none'; // Elimina el borde blanco
-                element.style.boxShadow = 'none'; // Elimina cualquier sombra para evitar bordes adicionales
-            });
-
-            // Cambiar el borde del contenedor principal del editor
-            let mainContainer = editor.getContainer();
-            mainContainer.style.border = '1px solid #2b2b2b'; // Cambia el borde a gris oscuro para integrarse con el fondo
-            mainContainer.style.boxShadow = 'none'; // Elimina sombras adicionales
-
-            // Cambiar el color del texto de los botones para que sea más legible
-            let buttons = editor.getContainer().querySelectorAll('.tox-button span, .tox-toolbar__group button');
-            buttons.forEach(function(button) {
-                button.style.color = '#ffffff'; // Cambia el color del texto a blanco para un mejor contraste
-            });
+        });
+    },
+    
+    // Estilo visual adaptado a tu diseño Tailwind
+    skin: 'oxide',
+    content_css: false,
+    content_style: `
+        body {
+            background-color: #2b2b2b;
+            color: #e0e0e0;
+            font-family: 'Poppins', sans-serif;
+            padding: 10px;
+            border-radius: 0.375rem;
+            min-height: 200px;
         }
-    });
+        a { color: #1e90ff; }
+    `,
+    
+    init_instance_callback: function (editor) {
+        // Obtener todos los elementos de la interfaz de TinyMCE
+        let elementsToUpdate = editor.getContainer().querySelectorAll(
+            '.tox-tinymce, .tox-editor-header, .tox-toolbar, .tox-toolbar__primary, ' +
+            '.tox-toolbar__group, .tox-button, .tox-statusbar, .tox-editor-container, ' +
+            '.tox-edit-area'
+        );
+
+        // Aplicar estilos consistentes con tu diseño
+        elementsToUpdate.forEach(function(element) {
+            element.style.backgroundColor = '#ad002a';
+            element.style.border = 'none';
+            element.style.boxShadow = 'none';
+        });
+
+        // Estilizar el contenedor principal
+        let mainContainer = editor.getContainer();
+        mainContainer.style.border = '1px solid #2b2b2b';
+        mainContainer.style.boxShadow = 'none';
+        mainContainer.style.borderRadius = '0.375rem'; // rounded-md en Tailwind
+
+        // Estilizar los botones
+        let buttons = editor.getContainer().querySelectorAll('.tox-button span, .tox-toolbar__group button');
+        buttons.forEach(function(button) {
+            button.style.color = '#ffffff';
+        });
+
+        // Agregar clases de Tailwind para focus
+        editor.getElement().addEventListener('focus', function() {
+            mainContainer.style.borderColor = '#3b82f6'; // focus:border-blue-500
+            mainContainer.style.boxShadow = '0 0 0 1px #3b82f6'; // focus:ring-blue-500
+        });
+
+        editor.getElement().addEventListener('blur', function() {
+            mainContainer.style.borderColor = '#2b2b2b';
+            mainContainer.style.boxShadow = 'none';
+        });
+    }
+});
 </script>
 </body>
 

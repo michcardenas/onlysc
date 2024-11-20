@@ -26,6 +26,9 @@
             <a href="{{ route('foroadmin.create') }}" class="btn-admin">
                 Crear Nuevo Foro
             </a>
+            <a href="{{ route('foroadmin.posts') }}" class="btn-admin btn-posts">
+                Ver Todos los Posts
+            </a>
         </div>
 
         @if(session('success'))
@@ -58,15 +61,20 @@
                         </td>
                         <td>{{ \Carbon\Carbon::parse($foro->fecha)->format('d/m/Y') }}</td>
                         <td>
-                            <form action="{{ route('foroadmin.destroy', $foro->id) }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" 
-                                        class="btn-delete"
-                                        onclick="return confirm('¿Estás seguro de que deseas eliminar este foro?')">
-                                    Eliminar
-                                </button>
-                            </form>
+                            <div class="action-buttons">
+                                <a href="{{ route('foroadmin.posts', ['id_blog' => $foro->id]) }}" class="btn-view">
+                                    Ver Posts
+                                </a>
+                                <form action="{{ route('foroadmin.destroy', $foro->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" 
+                                            class="btn-delete"
+                                            onclick="return confirm('¿Estás seguro de que deseas eliminar este foro?')">
+                                        Eliminar
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 @endforeach

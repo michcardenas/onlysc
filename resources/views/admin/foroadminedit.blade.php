@@ -29,13 +29,14 @@
 
             <div class="form-group mb-4">
                 <label for="id_blog" class="block text-sm font-medium text-gray-700">ID del Blog</label>
-                <select name="id_blog" id="id_blog"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                    required>
-                    <option value="1" {{ $foro->id_blog == 1 ? 'selected' : '' }}>Conversaciones</option>
-                    <option value="2" {{ $foro->id_blog == 2 ? 'selected' : '' }}>Gentlemen</option>
-                    <option value="3" {{ $foro->id_blog == 3 ? 'selected' : '' }}>Experiencias</option>
-                </select>
+                <input type="text"
+                    id="id_blog"
+                    name="id_blog"
+                    value="{{ $foro->id_blog }}"
+                    readonly
+                    class="mt-1 block w-full rounded-md bg-gray-100 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 cursor-not-allowed">
+                <span class="text-sm text-gray-500">
+                </span>
                 @error('id_blog')
                 <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                 @enderror

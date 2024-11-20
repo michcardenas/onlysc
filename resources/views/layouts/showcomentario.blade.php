@@ -60,7 +60,8 @@
         @auth
         <form action="{{ route('comentario.store') }}" method="POST">
             @csrf
-            <input type="hidden" name="id_blog" value="{{ $foro->id ?? '' }}">
+            <input type="hidden" name="id_blog" value="{{ $post->id_blog }}">
+            <input type="hidden" name="id_post" value="{{ $post->id }}">
 
             <div class="foro-comentario-form-group">
                 <label for="comentario">Comentario</label>

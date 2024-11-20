@@ -16,17 +16,74 @@
     <script src="https://cdn.tiny.cloud/1/z94ao1xzansr93pi0qe5kfxgddo1f4ltb8q7qa8pw9g52txs/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
     tinymce.init({
-        selector: '#comentario',
-        plugins: 'emoticons',
-        toolbar: 'undo redo | bold italic | emoticons',
-        menubar: false,
-        height: 300,
-        setup: function (editor) {
-            editor.on('change', function () {
-                tinymce.triggerSave(); // Sincroniza el contenido con el textarea
-            });
+        tinymce.init({
+    selector: '#comentario', // Cambiado para coincidir con tu ID de textarea
+    plugins: 'emoticons',
+    toolbar: 'undo redo | bold italic underline | emoticons',
+    menubar: false,
+    height: 200,
+    forced_root_block: false,
+    
+    // Configuración para prevenir etiquetas HTML
+    verify_html: false,
+    cleanup: true,
+    paste_as_text: true, // Pega todo como texto plano
+    
+    // Evento para limpiar el contenido antes de enviar
+    setup: function (editor) {
+        editor.on('change', function () {
+            // Obtener el texto plano y actualizar el textarea
+            let contenidoLimpio = editor.getBody().innerText;
+            editor.targetElm.value = contenidoLimpio;
+        });
+        
+        // Antes de enviar el formulario
+        editor.getElement().form.addEventListener('submit', function(e) {
+            let contenidoLimpio = editor.getBody().innerText;
+            editor.setContent(contenidoLimpio);
+        });
+    },
+    
+    // Estilo visual para coincidir con tu diseño
+    skin: 'oxide',
+    content_css: false,
+    content_style: `
+        body {
+            background-color: #2b2b2b;
+            color: #e0e0e0;
+            font-family: 'Poppins', sans-serif;
+            padding: 10px;
+            border-radius: 4px;
         }
-    });
+    `,
+    
+    init_instance_callback: function (editor) {
+        let elementsToUpdate = editor.getContainer().querySelectorAll(
+            '.tox-tinymce, .tox-editor-header, .tox-toolbar, .tox-toolbar__primary, ' +
+            '.tox-toolbar__group, .tox-button, .tox-statusbar, .tox-editor-container, ' +
+            '.tox-edit-area'
+        );
+
+        elementsToUpdate.forEach(function(element) {
+            element.style.backgroundColor = '#ad002a';
+            element.style.border = 'none';
+            element.style.boxShadow = 'none';
+        });
+
+        let mainContainer = editor.getContainer();
+        mainContainer.style.border = '1px solid #2b2b2b';
+        mainContainer.style.boxShadow = 'none';
+
+        // Mantener la validación de Laravel
+        editor.on('blur', function() {
+            if (editor.getContent().trim().length === 0) {
+                editor.targetElm.classList.add('is-invalid');
+            } else {
+                editor.targetElm.classList.remove('is-invalid');
+            }
+        });
+    }
+});
 </script>
 
 </head>
