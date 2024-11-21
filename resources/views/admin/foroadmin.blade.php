@@ -23,18 +23,18 @@
     <section>
         <h2>Administración de Foros</h2>
         <div class="admin-actions">
-            <a href="{{ route('foroadmin.create') }}" class="btn-admin">
+            <a href="{{ route('foroadmin.create') }}" class="btn" style="background-color: #e00037; color: white;">
                 Crear Nuevo Foro
             </a>
-            <a href="{{ route('foroadmin.posts') }}" class="btn-admin btn-posts">
+            <a href="{{ route('foroadmin.posts') }}" class="btn" style="background-color: #e00037; color: white;">
                 Ver Todos los Posts
             </a>
         </div>
-
+        
         @if(session('success'))
-            <div class="alert-success">
-                {{ session('success') }}
-            </div>
+        <div class="alert-success">
+            {{ session('success') }}
+        </div>
         @endif
 
         <table class="table-admin">
@@ -48,35 +48,35 @@
             </thead>
             <tbody>
                 @foreach($foros as $foro)
-                    <tr>
-                        <td>
-                            <a href="{{ route('foroadmin.edit', $foro->id) }}">
-                                {{ $foro->titulo }}
+                <tr>
+                    <td>
+                        <a href="{{ route('foroadmin.edit', $foro->id) }}">
+                            {{ $foro->titulo }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ route('foroadmin.edit', $foro->id) }}">
+                            {{ $foro->subtitulo }}
+                        </a>
+                    </td>
+                    <td>{{ \Carbon\Carbon::parse($foro->fecha)->format('d/m/Y') }}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{{ route('foroadmin.posts', ['id_blog' => $foro->id]) }}" class="btn-view">
+                                Ver Posts
                             </a>
-                        </td>
-                        <td>
-                            <a href="{{ route('foroadmin.edit', $foro->id) }}">
-                                {{ $foro->subtitulo }}
-                            </a>
-                        </td>
-                        <td>{{ \Carbon\Carbon::parse($foro->fecha)->format('d/m/Y') }}</td>
-                        <td>
-                            <div class="action-buttons">
-                                <a href="{{ route('foroadmin.posts', ['id_blog' => $foro->id]) }}" class="btn-view">
-                                    Ver Posts
-                                </a>
-                                <form action="{{ route('foroadmin.destroy', $foro->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" 
-                                            class="btn-delete"
-                                            onclick="return confirm('¿Estás seguro de que deseas eliminar este foro?')">
-                                        Eliminar
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
+                            <form action="{{ route('foroadmin.destroy', $foro->id) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                    class="btn-delete"
+                                    onclick="return confirm('¿Estás seguro de que deseas eliminar este foro?')">
+                                    Eliminar
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
                 @endforeach
             </tbody>
         </table>

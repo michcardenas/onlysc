@@ -62,7 +62,7 @@
                             <td>{{ \Carbon\Carbon::parse($post->created_at)->format('d/m/Y H:i') }}</td>
                             <td>
                                 <div class="d-flex gap-2 justify-content-end">
-                                    <button onclick="verPost({{ $post->id }})" class="btn btn-info btn-sm" title="Ver Post">
+                                    <button onclick="verPost({{ $post->id_blog }}, {{ $post->id }})" class="btn btn-info btn-sm" title="Ver Post">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                     <button onclick="editarPost({{ $post->id }})" class="btn btn-warning btn-sm" title="Editar Post">

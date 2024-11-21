@@ -55,46 +55,46 @@ class UsuarioPublicateController extends Controller
     }
 
     public function edit($id)
-{
-    try {
-        // Obtener el usuario
-        $usuario = UsuarioPublicate::findOrFail($id);
+    {
+        try {
+            // Obtener el usuario
+            $usuario = UsuarioPublicate::findOrFail($id);
 
-        // Obtener la disponibilidad
-        $disponibilidad = Disponibilidad::where('publicate_id', $id)->get();
+            // Obtener la disponibilidad
+            $disponibilidad = Disponibilidad::where('publicate_id', $id)->get();
 
-        // Obtener las ciudades
-        $ciudades = DB::table('ciudades')->orderBy('nombre')->get();
+            // Obtener las ciudades
+            $ciudades = DB::table('ciudades')->orderBy('nombre')->get();
 
-        // Preparar los datos para la vista
-        $diasDisponibles = $disponibilidad->pluck('dia')->toArray();
-        $horarios = [];
+            // Preparar los datos para la vista
+            $diasDisponibles = $disponibilidad->pluck('dia')->toArray();
+            $horarios = [];
 
-        foreach ($disponibilidad as $disp) {
-            $horarios[$disp->dia] = [
-                'desde' => $disp->hora_desde,
-                'hasta' => $disp->hora_hasta
-            ];
-        }
-
-        // Obtener las posiciones de las fotos
-        $positions = json_decode($usuario->foto_positions, true) ?? [];
-        
-        // Si hay una foto destacada pero no tiene posición, establecer 'center' por defecto
-        if (!empty(json_decode($usuario->fotos, true))) {
-            $fotoDestacada = json_decode($usuario->fotos, true)[0];
-            if (!isset($positions[$fotoDestacada])) {
-                $positions[$fotoDestacada] = 'center';
+            foreach ($disponibilidad as $disp) {
+                $horarios[$disp->dia] = [
+                    'desde' => $disp->hora_desde,
+                    'hasta' => $disp->hora_hasta
+                ];
             }
-        }
 
-        // Pasar a la vista incluyendo las posiciones
-        return view('admin.edit', compact('usuario', 'diasDisponibles', 'horarios', 'ciudades', 'positions'));
-    } catch (\Exception $e) {
-        Log::error("Error al cargar el formulario de edición: " . $e->getMessage());
-        return redirect()->back()->with('error', 'Error al cargar el formulario.');
+            // Obtener las posiciones de las fotos
+            $positions = json_decode($usuario->foto_positions, true) ?? [];
+
+            // Si hay una foto destacada pero no tiene posición, establecer 'center' por defecto
+            if (!empty(json_decode($usuario->fotos, true))) {
+                $fotoDestacada = json_decode($usuario->fotos, true)[0];
+                if (!isset($positions[$fotoDestacada])) {
+                    $positions[$fotoDestacada] = 'center';
+                }
+            }
+
+            // Pasar a la vista incluyendo las posiciones
+            return view('admin.edit', compact('usuario', 'diasDisponibles', 'horarios', 'ciudades', 'positions'));
+        } catch (\Exception $e) {
+            Log::error("Error al cargar el formulario de edición: " . $e->getMessage());
+            return redirect()->back()->with('error', 'Error al cargar el formulario.');
+        }
     }
-}
 
     public function update(Request $request, $id)
     {
@@ -121,6 +121,23 @@ class UsuarioPublicateController extends Controller
                     ->withErrors(['fantasia' => 'Ya existe una persona con este nombre de fantasía en esta ciudad.']);
             }
 
+            // Verificar si está marcado como Chica del Mes
+            if ($request->has('chica_del_mes')) {
+                // Verificar si ya existe una Chica del Mes en la misma ciudad
+                $existingChicaDelMes = UsuarioPublicate::where('ubicacion', $request->ubicacion)
+                    ->where('estadop', 3)
+                    ->where('id', '!=', $id)
+                    ->first();
+
+                if ($existingChicaDelMes) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['chica_del_mes' => 'Ya existe una Chica del Mes en esta ciudad.']);
+                }
+
+                $request->merge(['estadop' => 3]);
+            }
+
             // Validar los datos del formulario
             $request->validate([
                 'fantasia' => 'required|string|max:255',
@@ -141,7 +158,7 @@ class UsuarioPublicateController extends Controller
                 'atributos.*' => 'string',
                 'nacionalidad' => 'required|string|max:100',
                 'cuentanos' => 'nullable|string',
-                'estadop' => 'required|integer|in:0,1',
+                'estadop' => 'required|integer|in:0,1,3',
                 'categorias' => 'required|string|in:deluxe,premium,VIP,masajes',
                 'posicion' => 'nullable|integer|unique:usuarios_publicate,posicion,' . $usuario->id,
                 'precio' => 'nullable|numeric|min:0',
@@ -176,7 +193,7 @@ class UsuarioPublicateController extends Controller
                     'atributos' => json_encode($request->atributos ?? []),
                     'nacionalidad' => $request->nacionalidad,
                     'cuentanos' => $request->cuentanos,
-                    'estadop' => $request->estadop,
+                    'estadop' => $request->has('chica_del_mes') ? 3 : $request->estadop,
                     'categorias' => $request->categorias,
                     'posicion' => $request->posicion,
                     'precio' => $request->precio,
@@ -263,8 +280,8 @@ class UsuarioPublicateController extends Controller
                 // Actualizar las fotos en la base de datos
                 $usuario->update(['fotos' => json_encode($nombresFotos)]);
 
-                // Crear usuario en tabla users si está activo
-                if ($usuario->estadop == 1) {
+                // Crear usuario en tabla users si está activo o es chica del mes
+                if ($usuario->estadop == 1 || $usuario->estadop == 3) {
                     $user = User::updateOrCreate(
                         ['email' => $usuario->email],
                         [
@@ -294,7 +311,11 @@ class UsuarioPublicateController extends Controller
                     ]);
                 }
 
-                return redirect()->route('panel_control')->with('success', 'Usuario actualizado correctamente.');
+                $message = $request->has('chica_del_mes')
+                    ? 'Usuario actualizado correctamente y establecido como Chica del Mes.'
+                    : 'Usuario actualizado correctamente.';
+
+                return redirect()->route('panel_control')->with('success', $message);
             } catch (\Exception $e) {
                 DB::rollBack();
                 Log::error("Error en la actualización: " . $e->getMessage(), [
@@ -362,39 +383,37 @@ class UsuarioPublicateController extends Controller
     }
 
     public function actualizarPosicionFoto(Request $request)
-{
-    try {
-        $request->validate([
-            'user_id' => 'required',
-            'foto' => 'required',
-            'position' => 'required|in:left,center,right'
-        ]);
+    {
+        try {
+            $request->validate([
+                'user_id' => 'required',
+                'foto' => 'required',
+                'position' => 'required|in:left,center,right'
+            ]);
 
-        $usuario = UsuarioPublicate::findOrFail($request->user_id);
-        
-        // Decodificar las posiciones actuales o crear un array vacío si no existen
-        $positions = json_decode($usuario->foto_positions, true) ?? [];
-        
-        // Actualizar la posición para esta foto específica
-        $positions[$request->foto] = $request->position;
-        
-        // Guardar las posiciones actualizadas
-        $usuario->update(['foto_positions' => json_encode($positions)]);
-        
-        // Si todo salió bien, devolver respuesta exitosa
-        return response()->json([
-            'success' => true,
-            'message' => 'Posición actualizada correctamente'
-        ]);
-        
-    } catch (\Exception $e) {
-        Log::error("Error al actualizar posición de foto: " . $e->getMessage());
-        
-        return response()->json([
-            'success' => false,
-            'message' => 'Error al actualizar la posición: ' . $e->getMessage()
-        ], 500);
+            $usuario = UsuarioPublicate::findOrFail($request->user_id);
+
+            // Decodificar las posiciones actuales o crear un array vacío si no existen
+            $positions = json_decode($usuario->foto_positions, true) ?? [];
+
+            // Actualizar la posición para esta foto específica
+            $positions[$request->foto] = $request->position;
+
+            // Guardar las posiciones actualizadas
+            $usuario->update(['foto_positions' => json_encode($positions)]);
+
+            // Si todo salió bien, devolver respuesta exitosa
+            return response()->json([
+                'success' => true,
+                'message' => 'Posición actualizada correctamente'
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Error al actualizar posición de foto: " . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar la posición: ' . $e->getMessage()
+            ], 500);
+        }
     }
-}
-
 }

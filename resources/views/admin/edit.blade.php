@@ -44,7 +44,7 @@
 
 <main class="main-admin">
     <section class="form-section">
-    <h2 style="color:white;" >Editar Usuario - {{ $usuario->nombre }}</h2>
+        <h2 style="color:white;">Editar Usuario - {{ $usuario->nombre }}</h2>
 
         <form action="{{ route('usuarios_publicate.update', ['id' => $usuario->id]) }}" method="POST" enctype="multipart/form-data" class="form-admin">
             @csrf
@@ -707,6 +707,16 @@
                 </select>
             </div>
 
+            <!-- Nuevo checkbox para Chica del Mes -->
+            <div class="admin-service-item">
+                <input type="checkbox"
+                    name="chica_del_mes"
+                    id="chica_del_mes"
+                    value="1"
+                    {{ old('estadop', $usuario->estadop) == 3 ? 'checked' : '' }}>
+                <span>Chica del Mes</span>
+            </div>
+
             <div class="form-group">
                 <label for="posicion">Posición</label>
                 <input type="number" name="posicion" value="{{ old('posicion', $usuario->posicion) }}" placeholder="Ingrese la posición" min="1" step="1">
@@ -722,6 +732,8 @@
                         class="precio-input">
                 </div>
             </div>
+
+
 
             <!-- Botón para abrir el modal -->
             <button type="button" class="btn" style="background-color: #e00037; color: white;" data-bs-toggle="modal" data-bs-target="#fotosModal">

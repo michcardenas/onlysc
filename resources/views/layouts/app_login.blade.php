@@ -570,8 +570,8 @@ function confirmarEliminar(id) {
     }
 }
 
-function verPost(id) {
-    window.location.href = `/foros/${id_blog}/${id}`;
+function verPost(idBlog, idPost) {
+    window.location.href = `/foros/${idBlog}/${idPost}`;
 }
 
 // Evento al cargar el documento

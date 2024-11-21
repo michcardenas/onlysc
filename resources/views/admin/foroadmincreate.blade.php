@@ -2,25 +2,25 @@
 
 @section('content')
 @if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
 @endif
 
 @if(session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
+<div class="alert alert-danger">
+    {{ session('error') }}
+</div>
 @endif
 
 @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
 @endif
 
 <header>
@@ -45,10 +45,10 @@
 <main class="main-admin">
     <section class="form-section">
         <h2>Crear Foro</h2>
-        
+
         <form action="{{ route('foroadmin.store') }}" method="POST" enctype="multipart/form-data" class="form-admin">
             @csrf
-            
+
             <div class="form-group">
                 <label for="titulo">Título</label>
                 <input type="text" name="titulo" value="{{ old('titulo') }}" required>
@@ -61,7 +61,7 @@
 
             <div class="form-group">
                 <label for="contenido">Contenido</label>
-                <textarea name="contenido" rows="5" required>{{ old('contenido') }}</textarea>
+                <textarea id="contenido" name="contenido" rows="5" required>{{ old('contenido') }}</textarea>
             </div>
 
             <div class="form-group">
