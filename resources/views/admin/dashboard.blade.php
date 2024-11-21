@@ -12,18 +12,20 @@
             <li><a href="{{ route('home') }}">Inicio</a></li>
             <li><a href="{{ route('publicate.form') }}">Publicar</a></li>
             <li><a href="{{ route('foroadmin') }}">Foro</a></li>
+            <li><a href="{{ route('seo') }}">SEO</a></li>
+
             <li><a href="{{ route('logout') }}">Cerrar Sesión</a></li>
         </ul>
         <div class="user-info-admin">
-            <p>Bienvenido, {{ $usuarioAutenticado->name }} ({{ $usuarioAutenticado->role == 1 ? 'Administrador' : 'Usuario' }})</p>
+        <p style="color:white;"  >Bienvenido, {{ $usuarioAutenticado->name }} ({{ $usuarioAutenticado->role == 2 ? 'Administrador' : 'Administrador' }})</p>
         </div>
     </nav>
 </header>
 
 <main>
     <section>
-        <h2>Usuarios Publicate - Activos</h2>
-        <table class="table-admin">
+    <h2  style="color:white;">Usuarios Publicate - Activos</h2>
+    <table class="table-admin">
             <thead>
                 <tr>
                     <th>Fantasia</th>
@@ -58,8 +60,8 @@
     </section>
 
     <section>
-        <h2>Usuarios Publicate - Inactivos</h2>
-        <table class="table-admin">
+    <h2 style="color:white;">Usuarios Publicate - Inactivos</h2>
+    <table class="table-admin">
             <thead>
                 <tr>
                     <th>Fantasia</th>
@@ -95,6 +97,6 @@
 </main>
 
 <footer class="footer-admin">
-    <p>&copy; {{ date('Y') }} Mi Aplicación. Todos los derechos reservados.</p>
+<p>&copy; {{ date('Y') }} Only scorts chile. Todos los derechos reservados.</p>
 </footer>
 @endsection

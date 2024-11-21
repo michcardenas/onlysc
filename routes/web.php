@@ -12,6 +12,8 @@ use App\Http\Controllers\DisponibilidadController;
 use App\Http\Controllers\PerfilController;
 use App\Models\UsuarioPublicate;
 use App\Http\Controllers\CiudadController;
+use App\Http\Controllers\SEOController;
+use App\Http\Controllers\SEOPaginasController;
 
 Auth::routes();
 
@@ -80,3 +82,8 @@ Route::delete('/ciudades/{id}', [CiudadController::class, 'destroy'])->name('ciu
 Route::put('/ciudades/{id}', [CiudadController::class, 'update'])->name('ciudades.update');
 Route::get('/ciudades/create', [CiudadController::class, 'create'])->name('ciudades.create');
 Route::post('/ciudades', [CiudadController::class, 'store'])->name('ciudades.store');
+
+//SEO
+
+Route::get('/seo', [SEOController::class, 'index'])->name('seo');
+Route::get('/seo-paginas', [SEOPaginasController::class, 'index'])->name('seo.paginas');

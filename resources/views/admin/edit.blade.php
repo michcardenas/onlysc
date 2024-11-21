@@ -44,7 +44,7 @@
 
 <main class="main-admin">
     <section class="form-section">
-        <h2>Editar Usuario - {{ $usuario->nombre }}</h2>
+    <h2 style="color:white;" >Editar Usuario - {{ $usuario->nombre }}</h2>
 
         <form action="{{ route('usuarios_publicate.update', ['id' => $usuario->id]) }}" method="POST" enctype="multipart/form-data" class="form-admin">
             @csrf
