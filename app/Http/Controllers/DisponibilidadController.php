@@ -10,7 +10,7 @@ class DisponibilidadController extends Controller
 {
     public function store(Request $request)
     {
-        // Validación de datos
+        // Validación de datos modificada para aceptar "Full Time"
         $request->validate([
             'dias_disponibles' => 'required|array',
             'dias_disponibles.*' => 'required|string',
@@ -20,7 +20,6 @@ class DisponibilidadController extends Controller
             'horario.*.hasta' => 'required|string',
         ]);
 
-        // Obtener el ID del usuario publicado
         $publicateId = auth()->user()->publicate->id;
 
         try {
@@ -40,15 +39,22 @@ class DisponibilidadController extends Controller
 
     public function index()
     {
-        // Obtener el ID del usuario publicado
         $publicateId = auth()->user()->publicate->id;
 
-        // Obtener la disponibilidad actual
-        $disponibilidad = Disponibilidad::where('publicate_id', $publicateId)
+        // Modificado para incluir información de Full Time
+        $disponibilidades = Disponibilidad::where('publicate_id', $publicateId)
             ->where('estado', 'activo')
-            ->get()
-            ->keyBy('dia')
-            ->toArray();
+            ->get();
+
+        $disponibilidad = $disponibilidades->map(function ($item) {
+            $isFullTime = $item->hora_desde === '00:00' && $item->hora_hasta === '23:59';
+            return [
+                'dia' => $item->dia,
+                'desde' => $isFullTime ? 'Full Time' : $item->hora_desde,
+                'hasta' => $isFullTime ? 'Full Time' : $item->hora_hasta,
+                'is_full_time' => $isFullTime
+            ];
+        })->keyBy('dia')->toArray();
 
         return view('tu-vista', compact('disponibilidad'));
     }
@@ -68,8 +74,17 @@ class DisponibilidadController extends Controller
 
             foreach ($diasDisponibles as $dia) {
                 if (isset($horarios[$dia])) {
-                    $horaDesde = isset($fullTime[$dia]) ? '00:00' : $horarios[$dia]['desde'];
-                    $horaHasta = isset($fullTime[$dia]) ? '23:59' : $horarios[$dia]['hasta'];
+                    $isFullTime = isset($fullTime[$dia]) || 
+                        (isset($horarios[$dia]['desde']) && $horarios[$dia]['desde'] === 'Full Time') ||
+                        (isset($horarios[$dia]['hasta']) && $horarios[$dia]['hasta'] === 'Full Time');
+
+                    if ($isFullTime) {
+                        $horaDesde = '00:00';
+                        $horaHasta = '23:59';
+                    } else {
+                        $horaDesde = $horarios[$dia]['desde'];
+                        $horaHasta = $horarios[$dia]['hasta'];
+                    }
 
                     Disponibilidad::create([
                         'publicate_id' => $publicateId,
@@ -82,7 +97,7 @@ class DisponibilidadController extends Controller
                     Log::info("Horario creado para el día $dia", [
                         'desde' => $horaDesde,
                         'hasta' => $horaHasta,
-                        'full_time' => isset($fullTime[$dia])
+                        'full_time' => $isFullTime
                     ]);
                 }
             }

@@ -6,15 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Posts extends Model
 {
-    protected $table = 'posts'; // Cambiado a la tabla correcta
-
+    protected $table = 'posts';
+    
     protected $fillable = [
-        'id_blog', // Asegúrate de que este campo existe en tu tabla posts
+        'id_blog',
         'id_usuario',
-        'titulo',
-        'contenido'
-        // otros campos que necesites
+        'comentario',
+        'is_fixed',
+        'created_at',
+        'updated_at'
     ];
+    
+    protected $casts = [
+        'is_fixed' => 'boolean'
+    ];
+
 
     public $timestamps = true;
 

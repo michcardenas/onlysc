@@ -183,7 +183,8 @@ class ForoController extends Controller
     public function showPosts($id_blog = null)
     {
         $query = Posts::with(['usuario', 'foro'])
-                      ->orderBy('created_at', 'desc');
+                      ->orderBy('is_fixed', 'desc')  // Primero ordenar por fijados
+                      ->orderBy('created_at', 'desc'); // Luego por fecha
         
         if ($id_blog) {
             $query->where('id_blog', $id_blog);
@@ -208,7 +209,8 @@ class ForoController extends Controller
                 return response()->json([
                     'id' => $post->id,
                     'titulo' => $post->titulo,
-                    'id_blog' => $post->id_blog
+                    'id_blog' => $post->id_blog,
+                    'is_fixed' => $post->is_fixed // Agregar el estado is_fixed
                 ]);
             }
             
@@ -226,13 +228,15 @@ class ForoController extends Controller
         try {
             $validated = $request->validate([
                 'titulo' => 'required|max:255',
-                'id_blog' => 'required|exists:foro,id'
+                'id_blog' => 'required|exists:foro,id',
+                'is_fixed' => 'nullable|boolean' // Agregar validación para is_fixed
             ]);
     
             $post = Posts::create([
                 'titulo' => strip_tags($request->titulo),
                 'id_blog' => $request->id_blog,
-                'id_usuario' => Auth::id()
+                'id_usuario' => Auth::id(),
+                'is_fixed' => $request->has('is_fixed') // Procesar el checkbox
             ]);
     
             if ($request->ajax()) {
@@ -255,10 +259,12 @@ class ForoController extends Controller
             $post = Posts::findOrFail($id);
     
             $validated = $request->validate([
-                'titulo' => 'required|max:255'
+                'titulo' => 'required|max:255',
+                'is_fixed' => 'nullable|boolean' // Agregar validación para is_fixed
             ]);
     
             $post->titulo = strip_tags($request->titulo);
+            $post->is_fixed = $request->has('is_fixed'); // Procesar el checkbox
             $post->save();
     
             if ($request->ajax()) {
@@ -291,6 +297,32 @@ class ForoController extends Controller
         } catch (\Exception $e) {
             if (request()->ajax()) {
                 return response()->json(['error' => $e->getMessage()], 422);
+            }
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    // Nuevo método para toggle de fijado
+    public function toggleFixed($id)
+    {
+        try {
+            $post = Posts::findOrFail($id);
+            $post->is_fixed = !$post->is_fixed;
+            $post->save();
+
+            if (request()->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'is_fixed' => $post->is_fixed,
+                    'message' => $post->is_fixed ? 'Post fijado exitosamente' : 'Post desfijado exitosamente'
+                ]);
+            }
+
+            return redirect()->back()->with('success', 
+                $post->is_fixed ? 'Post fijado exitosamente' : 'Post desfijado exitosamente');
+        } catch (\Exception $e) {
+            if (request()->ajax()) {
+                return response()->json(['error' => $e->getMessage()], 500);
             }
             return redirect()->back()->with('error', $e->getMessage());
         }

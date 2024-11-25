@@ -114,9 +114,13 @@
 
                 $disponibilidadMap = [];
                 foreach($disponibilidad as $disp) {
+                $horarioDesde = \Carbon\Carbon::parse($disp->hora_desde)->format('H:i');
+                $horarioHasta = \Carbon\Carbon::parse($disp->hora_hasta)->format('H:i');
+
                 $disponibilidadMap[$disp->dia] = [
-                'hora_desde' => \Carbon\Carbon::parse($disp->hora_desde)->format('H:i'),
-                'hora_hasta' => \Carbon\Carbon::parse($disp->hora_hasta)->format('H:i')
+                'hora_desde' => $horarioDesde,
+                'hora_hasta' => $horarioHasta,
+                'is_full_time' => ($horarioDesde === '00:00' && $horarioHasta === '23:59')
                 ];
                 }
                 @endphp
@@ -126,7 +130,11 @@
                     <span class="day-badge">{{ $diaAbrev }}</span>
                     <span class="schedule-time">
                         @if(isset($disponibilidadMap[$diaCompleto]))
+                        @if($disponibilidadMap[$diaCompleto]['is_full_time'])
+                        Full Time
+                        @else
                         {{ $disponibilidadMap[$diaCompleto]['hora_desde'] }} - {{ $disponibilidadMap[$diaCompleto]['hora_hasta'] }} hs
+                        @endif
                         @else
                         No disponible
                         @endif

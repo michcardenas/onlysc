@@ -10,6 +10,7 @@ use App\Http\Controllers\ComentarioController;
 use App\Http\Controllers\UsuarioPublicateController;
 use App\Http\Controllers\DisponibilidadController;
 use App\Http\Controllers\PerfilController;
+use App\Http\Controllers\BlogController;
 use App\Models\UsuarioPublicate;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\SEOController;
@@ -65,6 +66,24 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/post/{id}/edit', [ForoController::class, 'editpost'])->name('foroadmin.editpost');
         Route::put('/post/{id}', [ForoController::class, 'updatepost'])->name('foroadmin.updatepost');
         Route::delete('/post/{id}', [ForoController::class, 'destroypost'])->name('foroadmin.destroypost');
+        Route::post('/posts/{id}/toggle-fixed', [ForoController::class, 'toggleFixed'])->name('posts.toggle-fixed');
+    });
+});
+
+
+// Rutas para visualización pública
+Route::get('/blog', [BlogController::class, 'showBlog'])->name('blog');
+Route::get('/blog/{id}', [BlogController::class, 'show_article'])->name('blog.show_article');
+
+// Rutas para administración (siguiendo el patrón de tu foroadmin)
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('blogadmin')->group(function () {
+        Route::get('/', [BlogController::class, 'blogadmin'])->name('blogadmin');
+        Route::get('/edit/{id}', [BlogController::class, 'edit'])->name('blogadmin.edit');
+        Route::post('/store', [BlogController::class, 'store'])->name('blogadmin.store');
+        Route::put('/update/{id}', [BlogController::class, 'update'])->name('blogadmin.update');
+        Route::delete('/delete/{id}', [BlogController::class, 'destroy'])->name('blogadmin.destroy');
+        Route::post('/articles/{id}/toggle-featured', [BlogController::class, 'toggleFeatured'])->name('blogadmin.toggleFeatured');
     });
 });
 

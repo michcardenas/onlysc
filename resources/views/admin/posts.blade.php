@@ -12,13 +12,16 @@
             <li><a href="{{ route('home') }}">Inicio</a></li>
             <li><a href="{{ route('publicate.form') }}">Publicar</a></li>
             <li><a href="{{ route('foroadmin') }}">Foro</a></li>
+            <li><a href="{{ route('blogadmin') }}">Blog</a></li>
+            <li><a href="{{ route('seo') }}">SEO</a></li>
             <li><a href="{{ route('logout') }}">Cerrar Sesión</a></li>
         </ul>
         <div class="user-info-admin">
-            <p>Bienvenido, {{ $usuarioAutenticado->name }} ({{ $usuarioAutenticado->role == 1 ? 'Administrador' : 'Usuario' }})</p>
+            <p style="color:white;">Bienvenido, {{ $usuarioAutenticado->name }} ({{ $usuarioAutenticado->role == 2 ? 'Administrador' : 'Administrador' }})</p>
         </div>
     </nav>
 </header>
+
 
 <main class="main-admin">
     <section class="form-section">
@@ -118,6 +121,21 @@
                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
+
+                <div class="form-group mb-4">
+                    <div class="form-check">
+                        <input type="checkbox"
+                            class="form-check-input"
+                            id="is_fixed"
+                            name="is_fixed"
+                            value="1"
+                            {{ old('is_fixed', isset($post) && $post->is_fixed ? 'checked' : '') }}>
+                        <label class="form-check-label" for="is_fixed">
+                            <i class="fas fa-thumbtack me-1"></i> Fijar post en el foro
+                        </label>
+                    </div>
+                </div>
+
 
                 <div class="flex items-center justify-between mt-6">
                     <button type="submit" class="btn-submit">

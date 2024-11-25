@@ -9,6 +9,7 @@
     <link rel="icon" href="{{ asset('images/icono.png') }}" type="image/png">
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 
@@ -16,73 +17,150 @@
     <script src="https://cdn.tiny.cloud/1/z94ao1xzansr93pi0qe5kfxgddo1f4ltb8q7qa8pw9g52txs/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
     tinymce.init({
-        tinymce.init({
-    selector: '#comentario', // Cambiado para coincidir con tu ID de textarea
-    plugins: 'emoticons',
-    toolbar: 'undo redo | bold italic underline | emoticons',
-    menubar: false,
-    height: 200,
-    forced_root_block: false,
-    
-    // Configuración para prevenir etiquetas HTML
-    verify_html: false,
-    cleanup: true,
-    paste_as_text: true, // Pega todo como texto plano
-    
-    // Evento para limpiar el contenido antes de enviar
-    setup: function (editor) {
-        editor.on('change', function () {
-            // Obtener el texto plano y actualizar el textarea
-            let contenidoLimpio = editor.getBody().innerText;
-            editor.targetElm.value = contenidoLimpio;
-        });
-        
-        // Antes de enviar el formulario
-        editor.getElement().form.addEventListener('submit', function(e) {
-            let contenidoLimpio = editor.getBody().innerText;
-            editor.setContent(contenidoLimpio);
-        });
-    },
-    
-    // Estilo visual para coincidir con tu diseño
-    skin: 'oxide',
-    content_css: false,
-    content_style: `
-        body {
-            background-color: #2b2b2b;
-            color: #e0e0e0;
-            font-family: 'Poppins', sans-serif;
-            padding: 10px;
-            border-radius: 4px;
+        selector: '#comentario', // Cambiado para coincidir con tu ID de textarea
+        plugins: 'emoticons',
+        toolbar: 'undo redo | bold italic underline | emoticons',
+        menubar: false,
+        height: 200,
+        forced_root_block: false,
+
+        // Configuración para prevenir etiquetas HTML
+        verify_html: false,
+        cleanup: true,
+        paste_as_text: true, // Pega todo como texto plano
+
+        // Evento para limpiar el contenido antes de enviar
+        setup: function (editor) {
+            editor.on('change', function () {
+                // Obtener el texto plano y actualizar el textarea
+                let contenidoLimpio = editor.getBody().innerText;
+                editor.targetElm.value = contenidoLimpio;
+            });
+
+            // Antes de enviar el formulario
+            editor.getElement().form.addEventListener('submit', function(e) {
+                let contenidoLimpio = editor.getBody().innerText;
+                editor.setContent(contenidoLimpio);
+            });
+        },
+
+        // Estilo visual para coincidir con tu diseño
+        skin: 'oxide',
+        content_css: false,
+        content_style: `
+            body {
+                background-color: #2b2b2b;
+                color: #e0e0e0;
+                font-family: 'Poppins', sans-serif;
+                padding: 10px;
+                border-radius: 4px;
+            }
+        `,
+
+        init_instance_callback: function (editor) {
+            let elementsToUpdate = editor.getContainer().querySelectorAll(
+                '.tox-tinymce, .tox-editor-header, .tox-toolbar, .tox-toolbar__primary, ' +
+                '.tox-toolbar__group, .tox-button, .tox-statusbar, .tox-editor-container, ' +
+                '.tox-edit-area'
+            );
+
+            elementsToUpdate.forEach(function(element) {
+                element.style.backgroundColor = '#ad002a';
+                element.style.border = 'none';
+                element.style.boxShadow = 'none';
+            });
+
+            let mainContainer = editor.getContainer();
+            mainContainer.style.border = '1px solid #2b2b2b';
+            mainContainer.style.boxShadow = 'none';
+
+            // Mantener la validación de Laravel
+            editor.on('blur', function() {
+                if (editor.getContent().trim().length === 0) {
+                    editor.targetElm.classList.add('is-invalid');
+                } else {
+                    editor.targetElm.classList.remove('is-invalid');
+                }
+            });
         }
-    `,
+    });
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Primero verificamos que existan los elementos necesarios
+    const contenido = document.querySelector('.blog-text');
+    const contenidosDinamicos = document.getElementById('contenidos-dinamicos');
+
+    // Verificar si los elementos existen antes de continuar
+    if (!contenido || !contenidosDinamicos) {
+        console.log('No se encontraron los elementos necesarios');
+        return;
+    }
+
+    // Función para generar un ID único para cada encabezado
+    function slugify(text) {
+        return text.toString().toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/[^\w\-]+/g, '')
+            .replace(/\-\-+/g, '-')
+            .replace(/^-+/, '')
+            .replace(/-+$/, '');
+    }
+
+    // Obtener todos los encabezados h1 y h2 del contenido
+    const headings = contenido.querySelectorAll('h1, h2');
+
+    // Verificar si hay encabezados antes de crear la lista
+    if (headings.length === 0) {
+        contenidosDinamicos.innerHTML = '<p>No hay secciones disponibles</p>';
+        return;
+    }
+
+    // Generar la tabla de contenidos
+    const ul = document.createElement('ul');
+    ul.className = 'contents-list';
     
-    init_instance_callback: function (editor) {
-        let elementsToUpdate = editor.getContainer().querySelectorAll(
-            '.tox-tinymce, .tox-editor-header, .tox-toolbar, .tox-toolbar__primary, ' +
-            '.tox-toolbar__group, .tox-button, .tox-statusbar, .tox-editor-container, ' +
-            '.tox-edit-area'
-        );
+    headings.forEach((heading, index) => {
+        // Generar ID único para el encabezado si no tiene uno
+        if (!heading.id) {
+            heading.id = `heading-${slugify(heading.textContent)}-${index}`;
+        }
 
-        elementsToUpdate.forEach(function(element) {
-            element.style.backgroundColor = '#ad002a';
-            element.style.border = 'none';
-            element.style.boxShadow = 'none';
-        });
+        // Crear elemento de la lista
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        
+        // Estilizar según nivel de encabezado
+        if (heading.tagName === 'H2') {
+            li.style.paddingLeft = '1rem';
+        }
 
-        let mainContainer = editor.getContainer();
-        mainContainer.style.border = '1px solid #2b2b2b';
-        mainContainer.style.boxShadow = 'none';
+        a.href = `#${heading.id}`;
+        a.textContent = heading.textContent;
+        a.className = 'table-link';
+        
+        li.appendChild(a);
+        ul.appendChild(li);
+    });
 
-        // Mantener la validación de Laravel
-        editor.on('blur', function() {
-            if (editor.getContent().trim().length === 0) {
-                editor.targetElm.classList.add('is-invalid');
-            } else {
-                editor.targetElm.classList.remove('is-invalid');
+    // Limpiar el contenido existente y agregar la nueva lista
+    contenidosDinamicos.innerHTML = '';
+    contenidosDinamicos.appendChild(ul);
+
+    // Agregar comportamiento de scroll suave
+    document.querySelectorAll('.table-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
             }
         });
-    }
+    });
 });
 </script>
 

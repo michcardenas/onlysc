@@ -318,32 +318,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         document.addEventListener('DOMContentLoaded', function() {
-            function toggleFullTime(checkbox, dia) {
-    const desdeInput = document.getElementById(`desde-${dia}`);
-    const hastaInput = document.getElementById(`hasta-${dia}`);
-    const diaCheckbox = document.getElementById(`admin-dia-${dia}`);
+    function toggleFullTime(checkbox, dia) {
+        const desdeInput = document.getElementById(`desde-${dia}`);
+        const hastaInput = document.getElementById(`hasta-${dia}`);
+        const diaCheckbox = document.getElementById(`admin-dia-${dia}`);
 
-    if (checkbox.checked && diaCheckbox.checked) {
-        desdeInput.value = '00:00';
-        hastaInput.value = '23:59';
-        desdeInput.disabled = true;
-        hastaInput.disabled = true;
-    } else {
-        desdeInput.disabled = false;
-        hastaInput.disabled = false;
-        
-        if (!checkbox.checked) {
-            desdeInput.value = '10:00'; // Hora de inicio predeterminada en formato 24h
-            hastaInput.value = '22:00'; // Hora de fin predeterminada en formato 24h
+        if (checkbox.checked && diaCheckbox.checked) {
+            desdeInput.value = 'Full Time';
+            hastaInput.value = 'Full Time';
+            desdeInput.disabled = true;
+            hastaInput.disabled = true;
+        } else {
+            desdeInput.disabled = false;
+            hastaInput.disabled = false;
+            
+            if (!checkbox.checked) {
+                desdeInput.value = '10:00'; // Hora de inicio predeterminada en formato 24h
+                hastaInput.value = '22:00'; // Hora de fin predeterminada en formato 24h
+            }
         }
-    }
 
-
-        // Importante: Agregar inputs ocultos para asegurar que los valores se envíen
-        // incluso cuando los inputs estén deshabilitados
+        // Asegurar que los valores se envíen incluso cuando los inputs estén deshabilitados
         updateHiddenInputs(dia);
     }
-
+    
     function updateHiddenInputs(dia) {
         // Eliminar inputs ocultos anteriores si existen
         removeExistingHiddenInputs(dia);
@@ -352,15 +350,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const hastaInput = document.getElementById(`hasta-${dia}`);
         const form = desdeInput.closest('form');
 
-        if (desdeInput.disabled) {
+        // Solo crear inputs ocultos si los campos están deshabilitados (Full Time)
+        if (desdeInput.disabled && hastaInput.disabled) {
             const hiddenDesde = document.createElement('input');
             hiddenDesde.type = 'hidden';
             hiddenDesde.name = `horario[${dia}][desde]`;
             hiddenDesde.value = desdeInput.value;
             form.appendChild(hiddenDesde);
-        }
 
-        if (hastaInput.disabled) {
             const hiddenHasta = document.createElement('input');
             hiddenHasta.type = 'hidden';
             hiddenHasta.name = `horario[${dia}][hasta]`;
@@ -375,30 +372,45 @@ document.addEventListener('DOMContentLoaded', function() {
         hiddenInputs.forEach(input => input.remove());
     }
 
-    // Agregar event listeners a los checkboxes de full time
+    // Event listeners para los checkboxes de full time
     document.querySelectorAll('[id^="fulltime-"]').forEach(checkbox => {
         checkbox.addEventListener('change', function() {
             const dia = this.id.replace('fulltime-', '');
+            const diaCheckbox = document.getElementById(`admin-dia-${dia}`);
+            
+            if (checkbox.checked && !diaCheckbox.checked) {
+                diaCheckbox.checked = true; // Asegurarse que el día esté marcado al seleccionar Full Time
+            }
+            
             toggleFullTime(this, dia);
         });
     });
 
-    // Agregar event listeners para el envío del formulario
-    document.querySelector('form').addEventListener('submit', function(e) {
-        // Asegurarse de que todos los valores se envíen
-        document.querySelectorAll('[id^="fulltime-"]').forEach(checkbox => {
-            const dia = checkbox.id.replace('fulltime-', '');
-            if (checkbox.checked) {
-                updateHiddenInputs(dia);
-            }
+    // Event listener para el envío del formulario
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            document.querySelectorAll('[id^="fulltime-"]').forEach(checkbox => {
+                const dia = checkbox.id.replace('fulltime-', '');
+                const diaCheckbox = document.getElementById(`admin-dia-${dia}`);
+                
+                // Solo actualizar los inputs ocultos si tanto el día como Full Time están marcados
+                if (checkbox.checked && diaCheckbox.checked) {
+                    updateHiddenInputs(dia);
+                }
+            });
         });
-    });
+    }
 
     // Inicializar estado de los inputs al cargar
     document.querySelectorAll('[id^="fulltime-"]').forEach(checkbox => {
         if (checkbox.checked) {
             const dia = checkbox.id.replace('fulltime-', '');
-            toggleFullTime(checkbox, dia);
+            const diaCheckbox = document.getElementById(`admin-dia-${dia}`);
+            
+            if (diaCheckbox.checked) {
+                toggleFullTime(checkbox, dia);
+            }
         }
     });
 });
@@ -513,6 +525,7 @@ function mostrarFormulario(modo, data = null) {
     const form = document.getElementById('postForm');
     const tituloForm = document.getElementById('formularioTitulo');
     const methodInput = document.getElementById('formMethod');
+    const isFixedCheckbox = document.getElementById('is_fixed');
     
     form.reset();
     
@@ -520,6 +533,7 @@ function mostrarFormulario(modo, data = null) {
         tituloForm.textContent = 'Nuevo Post';
         form.action = '{{ route('foroadmin.storepost') }}';
         methodInput.value = 'POST';
+        isFixedCheckbox.checked = false;
     } else if (modo === 'editar' && data) {
         tituloForm.textContent = 'Editar Post';
         form.action = `/foroadmin/post/${data.id}`;
@@ -530,6 +544,9 @@ function mostrarFormulario(modo, data = null) {
         }
         if (document.getElementById('titulo')) {
             document.getElementById('titulo').value = data.titulo || '';
+        }
+        if (isFixedCheckbox) {
+            isFixedCheckbox.checked = data.is_fixed || false;
         }
     }
 }
@@ -555,6 +572,93 @@ function editarPost(id) {
         console.error('Error en editarPost:', error);
     });
 }
+
+// JavaScript actualizado
+function toggleFixed(postId) {
+    // Mostrar indicador de carga
+    const button = document.querySelector(`button[onclick="toggleFixed(${postId})"]`);
+    const originalContent = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    button.disabled = true;
+
+    fetch(`/posts/${postId}/toggle-fixed`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json'
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // Actualizar la UI sin recargar la página
+            const row = button.closest('tr');
+            const statusBadge = row.querySelector('.badge');
+            const pinIcon = row.querySelector('.fa-thumbtack');
+            
+            // Actualizar estado visual
+            if (data.is_fixed) {
+                statusBadge.textContent = 'Fijado';
+                statusBadge.classList.remove('bg-secondary');
+                statusBadge.classList.add('bg-primary');
+                row.classList.add('bg-light');
+                if (!pinIcon) {
+                    const titleCell = row.querySelector('td:nth-child(2)');
+                    titleCell.innerHTML += ' <i class="fas fa-thumbtack text-primary ml-2" title="Post Fijado"></i>';
+                }
+            } else {
+                statusBadge.textContent = 'Normal';
+                statusBadge.classList.remove('bg-primary');
+                statusBadge.classList.add('bg-secondary');
+                row.classList.remove('bg-light');
+                if (pinIcon) {
+                    pinIcon.remove();
+                }
+            }
+            
+            // Mostrar mensaje de éxito
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-success alert-dismissible fade show';
+            alert.innerHTML = `
+                ${data.message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            document.querySelector('.section-content').insertBefore(alert, document.querySelector('.table-admin'));
+            
+            // Remover alerta después de 3 segundos
+            setTimeout(() => alert.remove(), 3000);
+            
+            // Reordenar las filas si es necesario
+            const tbody = row.parentElement;
+            const rows = Array.from(tbody.children);
+            rows.sort((a, b) => {
+                const aFixed = a.querySelector('.badge').textContent === 'Fijado' ? 1 : 0;
+                const bFixed = b.querySelector('.badge').textContent === 'Fijado' ? 1 : 0;
+                return bFixed - aFixed;
+            });
+            rows.forEach(row => tbody.appendChild(row));
+        } else {
+            throw new Error(data.message || 'Error al actualizar el estado');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al actualizar el estado del post: ' + error.message);
+    })
+    .finally(() => {
+        // Restaurar el botón
+        button.innerHTML = originalContent;
+        button.disabled = false;
+    });
+}
+
 
 function confirmarEliminar(id) {
     if (confirm('¿Estás seguro de querer eliminar este post?')) {
@@ -613,28 +717,234 @@ document.addEventListener('DOMContentLoaded', function() {
 });
     </script>
 
+<script>
+// Función para mostrar formulario
+function blogMostrarFormulario(tipo, id = null) {
+    console.log('Mostrando formulario:', tipo, 'ID:', id);
+    
+    document.getElementById('listadoArticulos').style.display = 'none';
+    document.getElementById('formularioArticulo').style.display = 'block';
+    
+    const formularioTitulo = document.getElementById('formularioTitulo');
+    const form = document.getElementById('articuloForm');
+    
+    if (tipo === 'crear') {
+        formularioTitulo.textContent = 'Nuevo Artículo';
+        form.reset();
+        form.action = '/blogadmin/store';
+        document.getElementById('formMethod').value = 'POST';
+        // Limpiar TinyMCE
+        if (tinymce.get('contenido')) {
+            tinymce.get('contenido').setContent('');
+        }
+    } else {
+        formularioTitulo.textContent = 'Editar Artículo';
+        blogFetchArticleData(id);
+    }
+}
+
+function blogMostrarListado() {
+    document.getElementById('formularioArticulo').style.display = 'none';
+    document.getElementById('listadoArticulos').style.display = 'block';
+}
+
+function blogVerArticulo(id) {
+    window.location.href = `/blog/${id}`;
+}
+
+function blogEditarArticulo(id) {
+    blogMostrarFormulario('editar', id);
+}
+
+function blogConfirmarEliminar(id) {
+    if (confirm('¿Estás seguro de que deseas eliminar este artículo?')) {
+        const deleteForm = document.getElementById('deleteForm');
+        deleteForm.action = `/blogadmin/delete/${id}`;
+        deleteForm.submit();
+    }
+}
+
+async function blogFetchArticleData(id) {
+    try {
+        console.log('Intentando cargar datos del artículo:', id);
+
+        const response = await fetch(`/blogadmin/edit/${id}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+
+        if (!response.ok) {
+            console.error('Respuesta no exitosa:', response.status);
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Datos recibidos:', data);
+        
+        if (!data || data.error) {
+            throw new Error(data.error || 'Error al cargar los datos');
+        }
+
+        // Actualizar campos del formulario
+        document.getElementById('articuloId').value = data.id;
+        document.getElementById('titulo').value = data.titulo;
+        
+        // Actualizar TinyMCE
+        if (tinymce.get('contenido')) {
+            tinymce.get('contenido').setContent(data.contenido);
+        } else {
+            document.getElementById('contenido').value = data.contenido;
+        }
+        
+        document.getElementById('estado').value = data.estado;
+        document.getElementById('destacado').checked = data.destacado;
+
+        // Actualizar el formulario para edición
+        const form = document.getElementById('articuloForm');
+        form.action = `/blogadmin/update/${data.id}`;
+        
+        const methodInput = document.getElementById('formMethod');
+        if (methodInput) {
+            methodInput.value = 'PUT';
+        } else {
+            const hiddenMethod = document.createElement('input');
+            hiddenMethod.type = 'hidden';
+            hiddenMethod.name = '_method';
+            hiddenMethod.value = 'PUT';
+            form.appendChild(hiddenMethod);
+        }
+
+    } catch (error) {
+        console.error('Error completo:', error);
+        alert(`Error al cargar los datos del artículo: ${error.message}`);
+    }
+}
+
+async function blogToggleDestacado(id) {
+    try {
+        const response = await fetch(`/blogadmin/articles/${id}/toggle-featured`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            }
+        });
+        
+        if (!response.ok) throw new Error('Error al actualizar el estado destacado');
+        
+        const data = await response.json();
+        const button = document.querySelector(`button[data-article-id="${id}"]`);
+        
+        button.innerHTML = data.is_featured ? 
+            '<i class="fas fa-star"></i>' : 
+            '<i class="far fa-star"></i>';
+            
+        alert(data.message);
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al actualizar el estado destacado');
+    }
+}
+
+// Manejo del formulario
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('articuloForm');
+    if (form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Asegurarse de que TinyMCE actualice el textarea
+            if (tinymce.get('contenido')) {
+                tinymce.get('contenido').save();
+            }
+
+            try {
+                const formData = new FormData(this);
+                const method = document.getElementById('formMethod').value;
+                const url = this.action;
+
+                const response = await fetch(url, {
+                    method: method === 'PUT' ? 'POST' : method,
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(data.message);
+                    window.location.href = data.redirect;
+                } else {
+                    alert(data.message || 'Error al procesar el formulario');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al procesar el formulario');
+            }
+        });
+    }
+});
+</script>
+
     <!-- Justo antes de cerrar el </body> -->
 <!-- JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.tiny.cloud/1/z94ao1xzansr93pi0qe5kfxgddo1f4ltb8q7qa8pw9g52txs/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
-    tinymce.init({
+tinymce.init({
     selector: '#contenido',
-    plugins: 'emoticons',
-    toolbar: 'undo redo | bold italic underline | emoticons',
+    plugins: 'emoticons lists',
+    toolbar: [
+        'undo redo | blocks | formatselect | bold italic underline',
+        'alignleft aligncenter alignright | bullist numlist | emoticons'
+    ],
     menubar: false,
     height: 300,
-    forced_root_block: false,
+    forced_root_block: 'p',
     
-    // Configuración para prevenir etiquetas HTML
-    verify_html: false,
+    block_formats: 'Párrafo=p; Título 1=h1; Título 2=h2',
+    
+    formats: {
+        h1: { 
+            block: 'h1',
+            clear_formatting: true
+        },
+        h2: { 
+            block: 'h2',
+            clear_formatting: true
+        },
+        p: { 
+            block: 'p',
+            clear_formatting: true
+        },
+        bold: { inline: 'strong' },
+        italic: { inline: 'em' },
+        underline: { inline: 'span', styles: { 'text-decoration': 'underline' } }
+    },
+    
+    style_formats: [
+        {
+            title: 'Bloque',
+            items: [
+                { title: 'Párrafo', format: 'p' },
+                { title: 'Título 1', format: 'h1' },
+                { title: 'Título 2', format: 'h2' }
+            ]
+        }
+    ],
+    
+    verify_html: true,
     cleanup: true,
     paste_as_text: true,
     
-    // Mantener el valor anterior si existe
     setup: function (editor) {
         editor.on('init', function () {
-            // Asegura que el valor inicial se mantenga
             let initialContent = editor.getElement().value;
             if (initialContent) {
                 editor.setContent(initialContent);
@@ -642,22 +952,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         editor.on('change', function () {
-            // Obtener el texto plano y actualizar el textarea
-            let contenidoLimpio = editor.getBody().innerText;
-            editor.targetElm.value = contenidoLimpio;
+            let contenido = editor.getContent();
+            editor.targetElm.value = contenido;
         });
         
-        // Manejar la validación de Laravel
-        editor.on('blur', function() {
-            if (editor.getContent().trim().length === 0) {
-                editor.getElement().classList.add('border-red-500');
-            } else {
-                editor.getElement().classList.remove('border-red-500');
+        editor.on('NewBlock', function(e) {
+            if (e.newBlock) {
+                e.newBlock.nodeName = 'P';
+                editor.formatter.remove('h1', e.newBlock);
+                editor.formatter.remove('h2', e.newBlock);
             }
         });
     },
     
-    // Estilo visual adaptado a tu diseño Tailwind
     skin: 'oxide',
     content_css: false,
     content_style: `
@@ -669,40 +976,104 @@ document.addEventListener('DOMContentLoaded', function() {
             border-radius: 0.375rem;
             min-height: 200px;
         }
+        
+        /* Estilos para el selector de formato y menú desplegable */
+        .tox .tox-tbtn[aria-haspopup="true"],
+        .tox .tox-tbtn--select,
+        .tox .tox-tbtn[aria-label="Blocks"],
+        .tox-listbox__select-label {
+            background-color: #2b2b2b !important;
+            border: none !important;
+            color: #ffffff !important;
+        }
+        
+        /* Estilo para el menú desplegable */
+        .tox .tox-collection--list,
+        .tox .tox-menu {
+            background-color: #2b2b2b !important;
+            border: 1px solid #3b3b3b !important;
+        }
+        
+        .tox .tox-collection__item {
+            background-color: #2b2b2b !important;
+            color: #ffffff !important;
+        }
+        
+        .tox .tox-collection__item:hover {
+            background-color: #3b3b3b !important;
+        }
+        
+        .tox .tox-collection__item-label {
+            color: #ffffff !important;
+        }
+        
+        /* Resto de los estilos */
         a { color: #1e90ff; }
+        h1, h2, h3, h4, h5, h6 {
+            color: #e0e0e0 !important;
+            margin: 16px 0;
+            font-weight: bold;
+            display: block !important;
+            visibility: visible !important;
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        h2 {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 16px 0;
+        }
+        p {
+            margin: 10px 0;
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+        * {
+            color: #e0e0e0;
+        }
+        .emoji {
+            font-size: 1.2em;
+            vertical-align: middle;
+        }
     `,
     
     init_instance_callback: function (editor) {
-        // Obtener todos los elementos de la interfaz de TinyMCE
         let elementsToUpdate = editor.getContainer().querySelectorAll(
             '.tox-tinymce, .tox-editor-header, .tox-toolbar, .tox-toolbar__primary, ' +
             '.tox-toolbar__group, .tox-button, .tox-statusbar, .tox-editor-container, ' +
-            '.tox-edit-area'
+            '.tox-edit-area, .tox-tbtn[aria-label="Blocks"], select'
         );
 
-        // Aplicar estilos consistentes con tu diseño
         elementsToUpdate.forEach(function(element) {
-            element.style.backgroundColor = '#ad002a';
+            element.style.backgroundColor = '#e00037';
             element.style.border = 'none';
             element.style.boxShadow = 'none';
         });
 
-        // Estilizar el contenedor principal
+        // Ajustar específicamente el selector de formato
+        let formatSelect = editor.getContainer().querySelector('.tox-tbtn[aria-label="Blocks"]');
+        if (formatSelect) {
+            formatSelect.style.backgroundColor = '#2b2b2b';
+            formatSelect.style.color = '#ffffff';
+            formatSelect.style.border = 'none';
+        }
+
         let mainContainer = editor.getContainer();
         mainContainer.style.border = '1px solid #2b2b2b';
         mainContainer.style.boxShadow = 'none';
-        mainContainer.style.borderRadius = '0.375rem'; // rounded-md en Tailwind
+        mainContainer.style.borderRadius = '0.375rem';
 
-        // Estilizar los botones
         let buttons = editor.getContainer().querySelectorAll('.tox-button span, .tox-toolbar__group button');
         buttons.forEach(function(button) {
             button.style.color = '#ffffff';
         });
 
-        // Agregar clases de Tailwind para focus
         editor.getElement().addEventListener('focus', function() {
-            mainContainer.style.borderColor = '#3b82f6'; // focus:border-blue-500
-            mainContainer.style.boxShadow = '0 0 0 1px #3b82f6'; // focus:ring-blue-500
+            mainContainer.style.borderColor = '#3b82f6';
+            mainContainer.style.boxShadow = '0 0 0 1px #3b82f6';
         });
 
         editor.getElement().addEventListener('blur', function() {
