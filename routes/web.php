@@ -81,9 +81,18 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [BlogController::class, 'blogadmin'])->name('blogadmin');
         Route::get('/edit/{id}', [BlogController::class, 'edit'])->name('blogadmin.edit');
         Route::post('/store', [BlogController::class, 'store'])->name('blogadmin.store');
-        Route::put('/update/{id}', [BlogController::class, 'update'])->name('blogadmin.update');
+        Route::match(['post', 'put'], '/update/{id}', [BlogController::class, 'update'])->name('blogadmin.update');
         Route::delete('/delete/{id}', [BlogController::class, 'destroy'])->name('blogadmin.destroy');
-        Route::post('/articles/{id}/toggle-featured', [BlogController::class, 'toggleFeatured'])->name('blogadmin.toggleFeatured');
+        
+        // Rutas para categorías
+        Route::post('/categories/store', [BlogController::class, 'storeCategory'])->name('blogadmin.categories.store');
+        Route::put('/categories/update/{id}', [BlogController::class, 'updateCategory'])->name('blogadmin.categories.update');
+        Route::delete('/categories/delete/{id}', [BlogController::class, 'destroyCategory'])->name('blogadmin.categories.destroy');
+        
+        // Rutas para tags
+        Route::post('/tags/store', [BlogController::class, 'storeTag'])->name('blogadmin.tags.store');
+        Route::put('/tags/update/{id}', [BlogController::class, 'updateTag'])->name('blogadmin.tags.update');
+        Route::delete('/tags/delete/{id}', [BlogController::class, 'destroyTag'])->name('blogadmin.tags.destroy');
     });
 });
 

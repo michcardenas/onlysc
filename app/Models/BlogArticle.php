@@ -39,15 +39,15 @@ class BlogArticle extends Model
     public function tags()
     {
         return $this->belongsToMany(BlogTag::class, 'blog_article_tag', 'article_id', 'tag_id')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 
     // Scope para artículos publicados
     public function scopePublicados($query)
     {
         return $query->where('estado', 'publicado')
-                    ->whereNotNull('fecha_publicacion')
-                    ->where('fecha_publicacion', '<=', now());
+            ->whereNotNull('fecha_publicacion')
+            ->where('fecha_publicacion', '<=', now());
     }
 
     // Scope para artículos destacados
@@ -65,8 +65,13 @@ class BlogArticle extends Model
     // Obtener la URL de la imagen
     public function getImagenUrlAttribute()
     {
-        return $this->imagen 
+        return $this->imagen
             ? Storage::disk('public')->url($this->imagen)
             : asset('images/default-article.jpg');
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany(BlogCategory::class, 'blog_article_category', 'blog_article_id', 'blog_category_id');
     }
 }

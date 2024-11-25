@@ -1,10 +1,13 @@
 /* Estilo para la página de login */
-body, html {
-    overflow-x: hidden;  /* Asegura que no haya scroll horizontal en toda la página */
+body,
+html {
+    overflow-x: hidden;
+    /* Asegura que no haya scroll horizontal en toda la página */
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
+
 .login-page {
     font-family: 'Poppins', sans-serif;
     background: url('../images/blur.jpg') no-repeat center center fixed;
@@ -15,15 +18,19 @@ body, html {
     justify-content: flex-start;
     align-items: center;
     margin: 0;
-    padding-top: 80px; /* Ajusta la distancia desde la parte superior */
+    padding-top: 80px;
+    /* Ajusta la distancia desde la parte superior */
 }
+
 /* Contenedor para el logo y el título */
 .logo-title-container {
     display: flex;
-    flex-direction: column; /* Coloca el logo y el título uno debajo del otro */
+    flex-direction: column;
+    /* Coloca el logo y el título uno debajo del otro */
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px; /* Ajusta el espacio debajo del contenedor */
+    margin-bottom: 20px;
+    /* Ajusta el espacio debajo del contenedor */
 }
 
 /* Logo */
@@ -31,7 +38,65 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 10px; /* Espacio entre el logo y el título */
+    margin-bottom: 10px;
+    /* Espacio entre el logo y el título */
+}
+
+/* Estilos generales para títulos */
+.main-admin h2,
+.main-admin h3,
+.main-admin h4,
+.sidebar-section h3,
+.sidebar-section h4,
+.section-content h2,
+.section-content h3,
+.section-content h4,
+#formularioCategoriaTitulo,
+#formularioTagTitulo,
+#formularioTitulo,
+main h2,
+main section h2,
+.table-admin th {
+    color: #ffffff;
+}
+
+/* Estilos para los enlaces en la tabla */
+.table-admin a {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.table-admin a:hover {
+    color: #e00037;
+}
+
+/* Estilos para los encabezados de tabla */
+.table-admin th,
+.table-admin-sm th {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 12px;
+}
+
+/* Mantenemos el color blanco incluso al pasar el mouse */
+.main-admin h2:hover,
+.main-admin h3:hover,
+.main-admin h4:hover,
+main section h2:hover {
+    color: #ffffff;
+}
+
+
+
+/* Estilos para la navegación admin */
+.nav-links-admin a {
+    color: #ffffff;
+}
+
+/* Estilos para el texto de bienvenida */
+.user-info-admin p {
+    color: #ffffff;
 }
 
 
@@ -45,16 +110,20 @@ body, html {
     text-align: center;
     border-bottom: 2px solid #e00037;
     padding-bottom: 10px;
-    width: 250px; /* Ancho del título con la línea */
-    margin: 0 auto; /* Centra el título horizontalmente */
+    width: 250px;
+    /* Ancho del título con la línea */
+    margin: 0 auto;
+    /* Centra el título horizontalmente */
 }
 
-.login-container{
+.login-container {
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Centra verticalmente */
+    justify-content: center;
+    /* Centra verticalmente */
     align-items: center;
 }
+
 /* Caja de login */
 .login-box {
     padding: 40px;
@@ -62,7 +131,7 @@ body, html {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     max-width: 400px;
     width: 100%;
-  
+
     color: white;
 }
 
@@ -94,7 +163,8 @@ body, html {
 /* Etiqueta flotante */
 .floating-label {
     position: absolute;
-    top: 10px; /* Inicialmente está dentro del input */
+    top: 10px;
+    /* Inicialmente está dentro del input */
     left: 0;
     font-size: 16px;
     color: #cccccc;
@@ -103,16 +173,20 @@ body, html {
 }
 
 /* Mover la etiqueta cuando el input tiene foco o contenido */
-.form-control:focus + .floating-label,
-.form-control:not(:placeholder-shown) + .floating-label {
-    top: -20px; /* Mueve la etiqueta hacia arriba */
-    font-size: 12px; /* Reduce el tamaño de la etiqueta */
-    color: #f8f5f6; /* Cambia el color de la etiqueta */
+.form-control:focus+.floating-label,
+.form-control:not(:placeholder-shown)+.floating-label {
+    top: -20px;
+    /* Mueve la etiqueta hacia arriba */
+    font-size: 12px;
+    /* Reduce el tamaño de la etiqueta */
+    color: #f8f5f6;
+    /* Cambia el color de la etiqueta */
 }
 
 /* Cambiar el color del asterisco (*) */
 label .required {
-    color: #e00037; /* Cambiar este color al que desees */
+    color: #e00037;
+    /* Cambiar este color al que desees */
 }
 
 
@@ -218,6 +292,7 @@ label .required {
 .custom-checkbox input[type="checkbox"]:focus {
     outline: none;
 }
+
 /* Sección de "Registrarse ahora" */
 .register-link {
     margin-top: 20px;
@@ -234,21 +309,30 @@ label .required {
 .register-link a:hover {
     text-decoration: underline;
 }
+
 /* Estilo para el mensaje de error */
 .alert-danger {
-    color: #ffffff; /* Texto blanco */
-    background-color: #e00037; /* Fondo rojo */
-    border: 1px solid #ff6699; /* Borde rojo más claro */
-    padding: 10px; /* Espaciado interno */
-    border-radius: 5px; /* Bordes redondeados */
-    margin-bottom: 3rem; /* Espacio debajo del mensaje */
-    text-align: center; /* Centrar el texto */
+    color: #ffffff;
+    /* Texto blanco */
+    background-color: #e00037;
+    /* Fondo rojo */
+    border: 1px solid #ff6699;
+    /* Borde rojo más claro */
+    padding: 10px;
+    /* Espaciado interno */
+    border-radius: 5px;
+    /* Bordes redondeados */
+    margin-bottom: 3rem;
+    /* Espacio debajo del mensaje */
+    text-align: center;
+    /* Centrar el texto */
 }
 
 
 /* Fondo de la página */
 .custom-background {
-    background-image: url('../images/IMAGEN-scaled-e1727837771908.jpg'); /* Ruta de la imagen de fondo */
+    background-image: url('../images/IMAGEN-scaled-e1727837771908.jpg');
+    /* Ruta de la imagen de fondo */
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -270,16 +354,20 @@ label .required {
 /* Contenedor del selector centrado */
 .selector-container {
     display: flex;
-    justify-content: center; /* Centrar horizontalmente */
-    margin-top: 20px; /* Espacio hacia el logo */
-    margin-bottom: 20px; /* Espacio antes de las tarjetas */
+    justify-content: center;
+    /* Centrar horizontalmente */
+    margin-top: 20px;
+    /* Espacio hacia el logo */
+    margin-bottom: 20px;
+    /* Espacio antes de las tarjetas */
 }
 
 /* Contenedor del select y botón */
 .location-selector {
     display: flex;
     align-items: center;
-    justify-content: center; /* Centra horizontalmente */
+    justify-content: center;
+    /* Centra horizontalmente */
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -330,11 +418,13 @@ label .required {
 .location-selector .btn-location:hover {
     background-color: #e63946;
 }
+
 .swiper-container {
     width: 100%;
     height: auto;
     padding: 20px 0;
-    overflow: hidden;  /* Evita el desbordamiento horizontal */
+    overflow: hidden;
+    /* Evita el desbordamiento horizontal */
 }
 
 .swiper-slide {
@@ -348,18 +438,23 @@ label .required {
     justify-content: center;
     flex-wrap: wrap;
     padding: 20px;
-    width: 100%;              /* Asegura que el contenedor ocupe el 100% del espacio disponible */
-    max-width: 1200px;         /* Establece un ancho máximo para pantallas grandes */
-    margin: 0 auto;            /* Centra el contenedor horizontalmente */
+    width: 100%;
+    /* Asegura que el contenedor ocupe el 100% del espacio disponible */
+    max-width: 1200px;
+    /* Establece un ancho máximo para pantallas grandes */
+    margin: 0 auto;
+    /* Centra el contenedor horizontalmente */
 }
 
 
 .card {
-    width: 24rem; /* Tamaño de las tarjetas */
+    width: 24rem;
+    /* Tamaño de las tarjetas */
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    position: relative; /* Para posicionar el texto dentro de la tarjeta */
+    position: relative;
+    /* Para posicionar el texto dentro de la tarjeta */
 }
 
 .card img {
@@ -368,47 +463,62 @@ label .required {
 }
 
 .card-content {
-    position: absolute;  /* Posiciona el contenido de la tarjeta de manera absoluta */
-    top: 10px;           /* Ajusta la distancia desde la parte superior */
-    left: 10px;          /* Ajusta la distancia desde la parte izquierda */
-    color: white;        /* Texto en color blanco */
-    z-index: 2;          /* Asegura que el texto esté sobre la imagen */
-    text-align: left;    /* Alinea el texto a la izquierda */
+    position: absolute;
+    /* Posiciona el contenido de la tarjeta de manera absoluta */
+    top: 10px;
+    /* Ajusta la distancia desde la parte superior */
+    left: 10px;
+    /* Ajusta la distancia desde la parte izquierda */
+    color: white;
+    /* Texto en color blanco */
+    z-index: 2;
+    /* Asegura que el texto esté sobre la imagen */
+    text-align: left;
+    /* Alinea el texto a la izquierda */
 }
+
 .card h3 {
     margin: 0;
     font-size: 20px;
-    font-weight: 700;    /* Negrita para el título */
+    font-weight: 700;
+    /* Negrita para el título */
 }
 
 .card p {
     margin: 5px 0 0;
     font-size: 14px;
-    font-weight: 400;    /* Peso normal para el texto descriptivo */
+    font-weight: 400;
+    /* Peso normal para el texto descriptivo */
 }
 
 .card-link {
     text-decoration: none;
     color: inherit;
 }
+
 .footer {
     color: #ffffff;
     text-align: center;
     padding: 10px 0;
     font-size: 14px;
-    position: relative;  /* Fija el footer en la parte inferior de la ventana */
-    position: relative;  /* Fija el footer en la parte inferior de la ventana */
+    position: relative;
+    /* Fija el footer en la parte inferior de la ventana */
+    position: relative;
+    /* Fija el footer en la parte inferior de la ventana */
     bottom: 0;
     left: 0;
-    width: 100%;       /* Asegura que ocupe todo el ancho */
-    z-index: 100;   
+    width: 100%;
+    /* Asegura que ocupe todo el ancho */
+    z-index: 100;
     background-color: #1a1a1a;
     font-family: "Work Sans", sans-serif;
-    padding: 20px 0;   /* Asegura que esté sobre otros elementos */
-    z-index: 100;   
+    padding: 20px 0;
+    /* Asegura que esté sobre otros elementos */
+    z-index: 100;
     background-color: #1a1a1a;
     font-family: "Work Sans", sans-serif;
-    padding: 20px 0;   /* Asegura que esté sobre otros elementos */
+    padding: 20px 0;
+    /* Asegura que esté sobre otros elementos */
 }
 
 
@@ -447,15 +557,19 @@ label .required {
     display: flex;
     align-items: center;
     color: white;
-    margin-right: 15px; 
+    margin-right: 15px;
 }
+
 .location-dropdown img.location-icon {
-    width: 20px; /* Ajusta el tamaño del icono */
+    width: 20px;
+    /* Ajusta el tamaño del icono */
     height: auto;
-    margin-right: 5px; /* Espaciado entre el icono y el select */
+    margin-right: 5px;
+    /* Espaciado entre el icono y el select */
     color: #f8f5f6;
     filter: invert(100%);
 }
+
 .location-dropdown select {
     background-color: #333;
     color: white;
@@ -464,50 +578,65 @@ label .required {
     margin-left: 5px;
     border-radius: 5px;
     cursor: pointer;
-    
+
 }
 
 /* Estilos de los botones de ACCEDER, REGISTRARSE o NOMBRE/SALIR */
-.btn-login, .btn-register, .btn-user, .btn-logout {
+.btn-login,
+.btn-register,
+.btn-user,
+.btn-logout {
     background-color: #333;
     color: white;
     border: none;
-    padding: 8px 15px;  /* Tamaño reducido del padding */
-    font-size: 12px;    /* Tamaño de la fuente más pequeño */
+    padding: 8px 15px;
+    /* Tamaño reducido del padding */
+    font-size: 12px;
+    /* Tamaño de la fuente más pequeño */
     cursor: pointer;
-    margin-left: 10px;  /* Espaciado entre los botones */
+    margin-left: 10px;
+    /* Espaciado entre los botones */
     border-radius: 5px;
     text-decoration: none;
     font-weight: bold;
 }
 
 .btn-register {
-color: #cccccc;
+    color: #cccccc;
 }
 
-.btn-login:hover, .btn-register:hover, .btn-user:hover, .btn-logout:hover {
+.btn-login:hover,
+.btn-register:hover,
+.btn-user:hover,
+.btn-logout:hover {
     background-color: #ff6699;
 }
 
 /* Estilo para el formulario de logout */
 .logout-form {
-    margin-left: 15px; 
+    margin-left: 15px;
 }
+
 .navbar-right {
     display: flex;
-    align-items: center;  /* Alinea verticalmente todos los elementos */
+    align-items: center;
+    /* Alinea verticalmente todos los elementos */
     opacity: .75;
 }
 
 
 /* Para asegurar que el texto se vea siempre pequeño */
-.btn-login, .btn-register {
+.btn-login,
+.btn-register {
     font-size: 12px;
 }
-.btn-login{
+
+.btn-login {
     background-color: white;
-    color: #333;  /* Cambia el texto a oscuro cuando el fondo es blanco */
-    outline: none; /* Elimina el borde de enfoque predeterminado */
+    color: #333;
+    /* Cambia el texto a oscuro cuando el fondo es blanco */
+    outline: none;
+    /* Elimina el borde de enfoque predeterminado */
 }
 
 
@@ -515,18 +644,20 @@ color: #cccccc;
 /* Barra de navegación inferior */
 .navbar-bottom {
     display: flex;
-    justify-content:center;
+    justify-content: center;
     align-items: center;
     background-color: #fff;
     color: #333;
-    border-bottom: 2px solid #ccc; /* Agrega un borde inferior */
+    border-bottom: 2px solid #ccc;
+    /* Agrega un borde inferior */
     font-family: "Work Sans", sans-serif !important;
     font-size: .875rem;
     font-weight: normal;
     color: #000;
     height: 3rem;
- 
+
 }
+
 /* Botón de Filtros */
 .btn-filters {
     background-color: #fff;
@@ -544,9 +675,11 @@ color: #cccccc;
 
 /* Alinear el ícono SVG y el texto */
 .btn-filters .icon-filter {
-    width: 16px; /* Ajusta el tamaño del ícono */
+    width: 16px;
+    /* Ajusta el tamaño del ícono */
     height: 16px;
-    margin-right: 5px; /* Espacio entre el ícono y el texto */
+    margin-right: 5px;
+    /* Espacio entre el ícono y el texto */
 }
 
 /* Cambiar el color del botón al hacer hover */
@@ -557,7 +690,8 @@ color: #cccccc;
 
 /* Cambiar el color del ícono SVG al hacer hover (opcional) */
 .btn-filters:hover .icon-filter {
-    filter: invert(100%); /* Cambia el ícono a blanco en hover */
+    filter: invert(100%);
+    /* Cambia el ícono a blanco en hover */
 }
 
 .navbar-nav .dropdown-menu {
@@ -571,7 +705,7 @@ color: #cccccc;
 }
 
 .navbar-nav .dropdown-menu .dropdown-item:hover {
-  
+
     color: #fff;
 }
 
@@ -585,7 +719,7 @@ color: #cccccc;
 .navbar-left {
     display: flex;
     align-items: center;
-  
+
 }
 
 /* Barra de búsqueda */
@@ -612,18 +746,24 @@ color: #cccccc;
     color: #fff;
     cursor: pointer;
     border-radius: 5px;
-    height: 100%; /* Asegurar que el botón esté alineado verticalmente */
+    height: 100%;
+    /* Asegurar que el botón esté alineado verticalmente */
 
 }
+
 .search-bar .btn-search .search-icon {
-    width: 16px; /* Ajusta el tamaño del ícono */
+    width: 16px;
+    /* Ajusta el tamaño del ícono */
     height: 16px;
-    filter: invert(100%); /* Cambia el color del SVG de negro a blanco */
+    filter: invert(100%);
+    /* Cambia el color del SVG de negro a blanco */
 }
 
 .search-bar .btn-search:hover .search-icon {
-    filter: invert(50%) sepia(100%) saturate(500%) hue-rotate(-20deg); /* Cambia el color en hover */
+    filter: invert(50%) sepia(100%) saturate(500%) hue-rotate(-20deg);
+    /* Cambia el color en hover */
 }
+
 .search-bar .btn-search i {
     font-size: 16px;
 }
@@ -635,45 +775,56 @@ color: #cccccc;
     margin-left: 20px;
     font-weight: bold;
 }
+
 /* Select de categorías estilo limpio */
 .navbar-right select#categorias {
     border: none;
-    background-color: transparent; /* Elimina el fondo */
+    background-color: transparent;
+    /* Elimina el fondo */
     font-weight: bold;
     color: #333;
     cursor: pointer;
-    appearance: none; /* Elimina la flecha por defecto del select */
-    -webkit-appearance: none; /* Compatibilidad con WebKit */
-    -moz-appearance: none; /* Compatibilidad con Firefox */
-    padding: 5px 10px; /* Ajusta el padding */
+    appearance: none;
+    /* Elimina la flecha por defecto del select */
+    -webkit-appearance: none;
+    /* Compatibilidad con WebKit */
+    -moz-appearance: none;
+    /* Compatibilidad con Firefox */
+    padding: 5px 10px;
+    /* Ajusta el padding */
 }
 
 .navbar-right select#categorias:focus {
-    outline: none; /* Elimina el contorno al enfocarse */
+    outline: none;
+    /* Elimina el contorno al enfocarse */
 }
 
 /* Para agregar una flecha personalizada o eliminarla por completo */
 .navbar-right select#categorias::after {
-    content: ""; /* Elimina la flecha nativa del select */
+    content: "";
+    /* Elimina la flecha nativa del select */
 }
 
 
 .logo img {
-    height: 40px; /* Ajusta el tamaño del logo */
+    height: 40px;
+    /* Ajusta el tamaño del logo */
     margin-right: 50px;
     margin-top: 4rem;
 }
+
 .logo2 {
-  
+
     height: 30px;
 }
-.logo2c{
+
+.logo2c {
     padding: 10px;
 }
 
 
 
-   /* Estilo general del footer */
+/* Estilo general del footer */
 .footer {
     background-color: #1a1a1a;
     color: #fff;
@@ -695,32 +846,42 @@ color: #cccccc;
     margin-bottom: 10px;
     letter-spacing: 0.5px;
     text-align: left;
-    margin-left: 0; /* Eliminamos márgenes adicionales */
-    padding-left: 0; /* Eliminamos el padding */
+    margin-left: 0;
+    /* Eliminamos márgenes adicionales */
+    padding-left: 0;
+    /* Eliminamos el padding */
 }
+
 .container {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Alineamos el título y las ciudades a la izquierda */
+    align-items: flex-start;
+    /* Alineamos el título y las ciudades a la izquierda */
     max-width: 1200px;
     margin: 0 auto;
 }
+
 /* Alinear las listas de ubicaciones */
 .locations-grid {
     display: flex;
-    justify-content: flex-start; /* Alinear las columnas hacia la izquierda */
+    justify-content: flex-start;
+    /* Alinear las columnas hacia la izquierda */
     flex-wrap: wrap;
     max-width: 1200px;
-    padding-top: 10px; /* Espacio entre el título y las ubicaciones */
-    border-top: 1px solid #4e4e4e; /* Línea debajo del título */
+    padding-top: 10px;
+    /* Espacio entre el título y las ubicaciones */
+    border-top: 1px solid #4e4e4e;
+    /* Línea debajo del título */
 }
 
 .locations-grid ul {
     list-style: none;
     padding: 0;
     margin: 0 20px 0 0;
-    flex-basis: auto;  /* Ajuste del ancho de cada columna */
-    text-align: left; /* Alineación del contenido dentro de la columna a la izquierda */
+    flex-basis: auto;
+    /* Ajuste del ancho de cada columna */
+    text-align: left;
+    /* Alineación del contenido dentro de la columna a la izquierda */
 
 }
 
@@ -730,8 +891,10 @@ color: #cccccc;
 
 .locations-grid ul li a {
     color: #fff;
-    font-weight: 300; /* Letra más fina */
-    font-size: 0.875rem; /* Letra más pequeña para las ubicaciones */
+    font-weight: 300;
+    /* Letra más fina */
+    font-size: 0.875rem;
+    /* Letra más pequeña para las ubicaciones */
     text-decoration: none;
     transition: color 0.3s ease;
 }
@@ -749,7 +912,8 @@ color: #cccccc;
     font-family: 'Work Sans', sans-serif;
 }
 
-.remove-button, .publicate-remove-button {
+.remove-button,
+.publicate-remove-button {
     position: absolute;
     top: 5px;
     right: 5px;
@@ -768,21 +932,25 @@ color: #cccccc;
 }
 
 .publicate-logo {
-    width: 25%; /* Ajusta el tamaño del logo */
+    width: 25%;
+    /* Ajusta el tamaño del logo */
     margin-bottom: 10px;
     display: block;
     margin-left: auto;
-    margin-right: auto; /* Centrar el logo horizontalmente */
+    margin-right: auto;
+    /* Centrar el logo horizontalmente */
 }
 
 .publicate-form-title {
-    font-size: 32px; /* Tamaño del texto del título */
-    font-weight: bold; /* Negrita */
+    font-size: 32px;
+    /* Tamaño del texto del título */
+    font-weight: bold;
+    /* Negrita */
     color: #333;
 }
 
-.required-asterisk{
-    color:#e0456c;
+.required-asterisk {
+    color: #e0456c;
 }
 
 /* Sección del formulario */
@@ -845,8 +1013,8 @@ color: #cccccc;
 }
 
 /* Animación del label */
-.publicate-input-wrapper input:focus ~ label,
-.publicate-input-wrapper input:not(:placeholder-shown) ~ label {
+.publicate-input-wrapper input:focus~label,
+.publicate-input-wrapper input:not(:placeholder-shown)~label {
     top: -20px;
     font-size: 14px;
     color: #e00037;
@@ -860,7 +1028,7 @@ color: #cccccc;
     display: none;
 }
 
-.publicate-input-wrapper input[required] ~ label::after {
+.publicate-input-wrapper input[required]~label::after {
     display: inline;
 }
 
@@ -911,13 +1079,14 @@ color: #cccccc;
     display: none;
 }
 
-.publicate-input-wrapper input:invalid:not(:focus):not(:placeholder-shown) ~ .error-message {
+.publicate-input-wrapper input:invalid:not(:focus):not(:placeholder-shown)~.error-message {
     display: block;
 }
 
 /* Estilos específicos para el campo de disponibilidad */
 .publicate-input-wrapper input[name="disponibilidad"]::placeholder {
-    color: transparent; /* Inicialmente transparente */
+    color: transparent;
+    /* Inicialmente transparente */
     font-style: italic;
     font-size: 14px;
     transition: color 0.2s ease;
@@ -925,12 +1094,13 @@ color: #cccccc;
 
 /* Mostrar placeholder solo cuando el input está enfocado */
 .publicate-input-wrapper input[name="disponibilidad"]:focus::placeholder {
-    color: #999; /* Color del placeholder cuando está enfocado */
+    color: #999;
+    /* Color del placeholder cuando está enfocado */
 }
 
 /* Mantener el comportamiento del label */
-.publicate-input-wrapper input[name="disponibilidad"]:focus + label,
-.publicate-input-wrapper input[name="disponibilidad"]:not(:placeholder-shown) + label {
+.publicate-input-wrapper input[name="disponibilidad"]:focus+label,
+.publicate-input-wrapper input[name="disponibilidad"]:not(:placeholder-shown)+label {
     top: -20px;
     font-size: 14px;
     color: #e00037;
@@ -953,17 +1123,21 @@ color: #cccccc;
 
 .publicate-services-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Reducido de 200px a 160px */
-    gap: 5px; /* Reducido de 10px a 5px */
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    /* Reducido de 200px a 160px */
+    gap: 5px;
+    /* Reducido de 10px a 5px */
     margin-top: 8px;
 }
 
 .publicate-service-item {
     display: flex;
     align-items: center;
-    font-size: 13px; /* Reducido de 14px a 13px */
+    font-size: 13px;
+    /* Reducido de 14px a 13px */
     color: #333;
-    padding: 4px 6px; /* Reducido de 8px a 4px 6px */
+    padding: 4px 6px;
+    /* Reducido de 8px a 4px 6px */
     border-radius: 3px;
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -981,14 +1155,17 @@ color: #cccccc;
 .publicate-service-item input[type="checkbox"] {
     appearance: none;
     -webkit-appearance: none;
-    width: 15px; /* Reducido de 18px a 15px */
-    height: 15px; /* Reducido de 18px a 15px */
+    width: 15px;
+    /* Reducido de 18px a 15px */
+    height: 15px;
+    /* Reducido de 18px a 15px */
     border: 1px solid #777771;
     border-radius: 2px;
     outline: none;
     cursor: pointer;
     position: relative;
-    margin-right: 8px; /* Reducido de 10px a 8px */
+    margin-right: 8px;
+    /* Reducido de 10px a 8px */
     background-color: white;
     transition: all 0.2s ease;
 }
@@ -1003,10 +1180,14 @@ color: #cccccc;
 .publicate-service-item input[type="checkbox"]:checked::after {
     content: '';
     position: absolute;
-    left: 2px; /* Ajustado para el nuevo tamaño */
-    top: 0px; /* Ajustado para el nuevo tamaño */
-    width: 5px; /* Reducido para el nuevo tamaño */
-    height: 9px; /* Ajustado para el nuevo tamaño */
+    left: 2px;
+    /* Ajustado para el nuevo tamaño */
+    top: 0px;
+    /* Ajustado para el nuevo tamaño */
+    width: 5px;
+    /* Reducido para el nuevo tamaño */
+    height: 9px;
+    /* Ajustado para el nuevo tamaño */
     border: solid #e00037;
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
@@ -1019,6 +1200,7 @@ color: #cccccc;
         transform: rotate(45deg) scale(0);
         opacity: 0;
     }
+
     100% {
         transform: rotate(45deg) scale(1);
         opacity: 1;
@@ -1087,8 +1269,8 @@ color: #cccccc;
     cursor: pointer;
 }
 
-.publicate-textarea-wrapper textarea:focus + label,
-.publicate-textarea-wrapper textarea:not(:placeholder-shown) + label {
+.publicate-textarea-wrapper textarea:focus+label,
+.publicate-textarea-wrapper textarea:not(:placeholder-shown)+label {
     color: #e00037;
 }
 
@@ -1165,7 +1347,8 @@ color: #cccccc;
 /* Estilos para el label */
 .publicate-textarea-label {
     flex-shrink: 0;
-    padding-top: 10px;  /* Alinea con el borde superior del textarea */
+    padding-top: 10px;
+    /* Alinea con el borde superior del textarea */
 }
 
 .publicate-textarea-label label {
@@ -1244,6 +1427,7 @@ color: #cccccc;
         transform: rotate(45deg) scale(0);
         opacity: 0;
     }
+
     100% {
         transform: rotate(45deg) scale(1);
         opacity: 1;
@@ -1254,7 +1438,7 @@ color: #cccccc;
 .foro-banner {
     position: relative;
     width: calc(100% - 10rem);
-    height: 500px;
+    height: 192px;
     overflow: hidden;
     margin: 0 auto 0;
     z-index: -1;
@@ -1277,6 +1461,7 @@ color: #cccccc;
     background: #00000047;
     height: 12.5rem;
     bottom: 100px;
+    font-family: 'Poppins', sans-serif;
 }
 
 .foro-banner-content h1 {
@@ -1309,10 +1494,11 @@ color: #cccccc;
 .foro-search-container {
     width: 100%;
     max-width: 400px;
-    margin: -19rem 0 2rem 21rem;
+    margin: 2rem 0px 1rem 16rem;
     position: relative;
     z-index: 10;
-    grid-template-columns: 1fr 300px; /* Mantiene el sidebar */
+    grid-template-columns: 1fr 300px;
+    /* Mantiene el sidebar */
 }
 
 .foro-search-input {
@@ -1364,7 +1550,7 @@ color: #cccccc;
 /* Layout principal y contenedores */
 .foro-container {
     max-width: 1400px;
-    margin: 1.5rem auto;
+    margin: 0.5rem auto;
     padding: 0 1rem;
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -1377,7 +1563,8 @@ color: #cccccc;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
-    grid-auto-flow: row; /* Asegura que el flujo sea por filas */
+    grid-auto-flow: row;
+    /* Asegura que el flujo sea por filas */
 }
 
 
@@ -1387,7 +1574,7 @@ color: #cccccc;
     background: white;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
     cursor: pointer;
     display: flex;
@@ -1409,7 +1596,7 @@ color: #cccccc;
 /* Efecto hover */
 .foro-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 }
 
 .foro-card-title {
@@ -1476,23 +1663,31 @@ color: #cccccc;
     display: flex;
     padding: 15px 0;
     margin-left: 190px;
-    margin-top: -300px; /* Mantener el margen superior */
-    position: relative; /* Asegura que se posicione correctamente dentro del flujo del documento */
-    bottom: 0; /* Alinear al fondo */
-    width: 100%; /* Asegura que el contenedor ocupe el ancho completo */
+    margin-top: 10px;
+    /* Mantener el margen superior */
+    position: relative;
+    /* Asegura que se posicione correctamente dentro del flujo del documento */
+    bottom: 0;
+    /* Alinear al fondo */
+    width: 100%;
+    /* Asegura que el contenedor ocupe el ancho completo */
     font-family: 'Poppins', sans-serif;
 }
 
 .foro-description {
     font-family: 'Poppins', sans-serif;
     font-size: 16px;
-    color: #555; /* Cambia el color según el diseño */
+    color: #555;
+    /* Cambia el color según el diseño */
     line-height: 1.6;
     padding: 10px 0;
-    margin-left: 190px; /* Ajusta para espacio entre el título y la descripción */
-     /* Ajuste de alineación */
-    width: 100%; /* Asegura que ocupe el ancho completo del contenedor */
-    max-width: 800px; /* Limita el ancho para mejor lectura */
+    margin-left: 190px;
+    /* Ajusta para espacio entre el título y la descripción */
+    /* Ajuste de alineación */
+    width: 100%;
+    /* Asegura que ocupe el ancho completo del contenedor */
+    max-width: 800px;
+    /* Limita el ancho para mejor lectura */
 }
 
 
@@ -1538,6 +1733,7 @@ color: #cccccc;
     display: table;
     text-align: left;
     border-collapse: collapse;
+    margin-top: 20px;
 }
 
 /* Estilos base de la tabla */
@@ -1546,7 +1742,7 @@ color: #cccccc;
     border-collapse: collapse;
 }
 
-.foro-comments-table th, 
+.foro-comments-table th,
 .foro-comments-table td {
     padding: 15px;
     text-align: left;
@@ -1567,10 +1763,14 @@ color: #cccccc;
 }
 
 .fixed-pin {
-    color: #e00037; /* Color del pin */
-    font-size: 16px; /* Tamaño del ícono */
-    flex-shrink: 0; /* Evitar que el pin cambie de tamaño */
+    color: #e00037;
+    /* Color del pin */
+    font-size: 16px;
+    /* Tamaño del ícono */
+    flex-shrink: 0;
+    /* Evitar que el pin cambie de tamaño */
 }
+
 /* Estadísticas de los comentarios */
 .foro-comments-stats {
     display: flex;
@@ -1636,8 +1836,10 @@ color: #cccccc;
 
 .foro-comments-content {
     display: flex;
-    align-items: center; /* Alinear verticalmente */
-    gap: 10px; /* Espacio entre el pin y el texto */
+    align-items: center;
+    /* Alinear verticalmente */
+    gap: 10px;
+    /* Espacio entre el pin y el texto */
 }
 
 
@@ -1866,12 +2068,14 @@ color: #cccccc;
     display: flex;
     justify-content: center;
     margin-top: 20px;
-    padding: 0 15px; /* Espaciado en los lados para pantallas pequeñas */
+    padding: 0 15px;
+    /* Espaciado en los lados para pantallas pequeñas */
 }
 
 .foro-comentario-form {
     width: 100%;
-    max-width: 600px; /* Ancho máximo para que no se expanda demasiado */
+    max-width: 600px;
+    /* Ancho máximo para que no se expanda demasiado */
     font-family: 'Poppins', sans-serif;
     background-color: #fff;
     padding: 20px;
@@ -1883,7 +2087,8 @@ color: #cccccc;
     font-size: 18px;
     font-weight: bold;
     color: #333;
-    border-bottom: 2px solid #d9534f; /* Color rojo para el subrayado */
+    border-bottom: 2px solid #d9534f;
+    /* Color rojo para el subrayado */
     padding-bottom: 5px;
     margin-bottom: 15px;
 }
@@ -1909,7 +2114,8 @@ color: #cccccc;
 }
 
 .foro-comentario-btn {
-    background-color: #d9534f; /* Color rojo */
+    background-color: #d9534f;
+    /* Color rojo */
     color: white;
     padding: 10px 20px;
     border: none;
@@ -1921,7 +2127,8 @@ color: #cccccc;
 }
 
 .foro-comentario-btn:hover {
-    background-color: #c9302c; /* Un tono más oscuro de rojo */
+    background-color: #c9302c;
+    /* Un tono más oscuro de rojo */
 }
 
 
@@ -1940,13 +2147,17 @@ color: #cccccc;
     flex-direction: column;
     align-items: center;
 }
+
 .footer-middle .link-row {
     display: flex;
     justify-content: space-around;
     width: 100%;
-    max-width: 600px; /* Controlamos el ancho máximo */
-    margin-bottom: 10px; /* Espacio entre las filas */
+    max-width: 600px;
+    /* Controlamos el ancho máximo */
+    margin-bottom: 10px;
+    /* Espacio entre las filas */
 }
+
 /* Estilo para el footer inferior */
 .custom-footer-bottom {
     text-align: center;
@@ -1955,16 +2166,19 @@ color: #cccccc;
 
 /* Estilo para el logo centrado */
 .custom-footer-logo {
-    margin-bottom: 20px; /* Espacio entre el logo y los enlaces */
+    margin-bottom: 20px;
+    /* Espacio entre el logo y los enlaces */
 }
 
 .custom-logo-footer {
-    max-width: 150px; /* Ajustar el tamaño del logo */
+    max-width: 150px;
+    /* Ajustar el tamaño del logo */
 }
 
 /* Enlaces distribuidos en tres filas */
 .custom-footer-middle {
-    margin-bottom: 20px; /* Espacio entre los enlaces y las redes sociales */
+    margin-bottom: 20px;
+    /* Espacio entre los enlaces y las redes sociales */
 }
 
 .custom-footer-middle .custom-links {
@@ -1983,7 +2197,8 @@ color: #cccccc;
     color: #d1d4db;
     text-decoration: none;
     font-size: 1rem;
-    margin: 15px; /* Espacio entre los enlaces */
+    margin: 15px;
+    /* Espacio entre los enlaces */
     text-align: left;
 
 }
@@ -1996,38 +2211,52 @@ color: #cccccc;
 .custom-social-links {
     display: flex;
     justify-content: center;
-    gap: 15px; /* Espacio entre los iconos */
+    gap: 15px;
+    /* Espacio entre los iconos */
 }
 
 .custom-social-links a {
     display: inline-block;
-    background-color: #ff3366; /* Color de fondo para los botones de redes sociales */
-    width: 50px; /* Tamaño del botón */
+    background-color: #ff3366;
+    /* Color de fondo para los botones de redes sociales */
+    width: 50px;
+    /* Tamaño del botón */
     height: 50px;
-    border-radius: 50%; /* Hacer el botón circular */
+    border-radius: 50%;
+    /* Hacer el botón circular */
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Transición para el hover */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    /* Transición para el hover */
 }
+
 .custom-social-links a:hover {
-    background-color: #ff6699; /* Cambiar color de fondo al pasar el mouse */
-    transform: scale(1.1); /* Efecto de aumento al hacer hover */
+    background-color: #ff6699;
+    /* Cambiar color de fondo al pasar el mouse */
+    transform: scale(1.1);
+    /* Efecto de aumento al hacer hover */
 }
+
 .custom-social-icon {
-    width: 24px; /* Ajuste del tamaño del ícono dentro del botón */
+    width: 24px;
+    /* Ajuste del tamaño del ícono dentro del botón */
     height: 24px;
-    filter: invert(100%); /* Cambiar color del ícono a blanco */
+    filter: invert(100%);
+    /* Cambiar color del ícono a blanco */
 }
 
 .custom-social-icon:hover {
-    transform: scale(1.2); /* Aumentar el tamaño en hover */
+    transform: scale(1.2);
+    /* Aumentar el tamaño en hover */
 }
-.custom-container{
+
+.custom-container {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
 }
+
 .footer-middle .links a:hover {
     color: #ff3366;
 }
@@ -2072,20 +2301,23 @@ color: #cccccc;
     height: 20px;
     vertical-align: middle;
 }
+
 /* INCIO  */
 /* Estilo para el contenedor del banner */
 .banner {
     position: relative;
     width: 100%;
     overflow: hidden;
-    margin-top: 0; /* Para que esté pegado al borde superior */
+    margin-top: 0;
+    /* Para que esté pegado al borde superior */
     height: 13rem;
-    
+
 }
 
 .banner-img {
     width: 100%;
-    object-fit: cover; /* Hace que la imagen se ajuste sin distorsionar */
+    object-fit: cover;
+    /* Hace que la imagen se ajuste sin distorsionar */
     height: 12rem;
 }
 
@@ -2103,28 +2335,34 @@ color: #cccccc;
 }
 
 .banner-content h1 {
-    font-size: 35px; /* Ajusta el tamaño del texto si es necesario */
+    font-size: 35px;
+    /* Ajusta el tamaño del texto si es necesario */
 
 }
 
 .banner-content .highlight {
-    color: #f25555; /* Color destacado */
+    color: #f25555;
+    /* Color destacado */
 }
-.texto_banner{
+
+.texto_banner {
     display: flex;
     align-items: center;
     justify-content: space-around;
     height: 10rem;
 
 }
+
 .texto_banner .thin {
-    font-weight: 100; /* Esto hace que la fuente sea muy fina */
+    font-weight: 100;
+    /* Esto hace que la fuente sea muy fina */
     font-family: 'Poppins', sans-serif;
 
 }
 
 .texto_banner .bold {
-    font-weight: bold; /* Esto aplica negrita */
+    font-weight: bold;
+    /* Esto aplica negrita */
     font-family: 'Poppins', sans-serif;
 
 }
@@ -2175,6 +2413,7 @@ color: #cccccc;
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -2185,7 +2424,8 @@ color: #cccccc;
     justify-content: space-between;
     align-items: center;
     padding: 15px 30px;
-    background-color: #1e1e1e; /* Color oscuro para la barra */
+    background-color: #1e1e1e;
+    /* Color oscuro para la barra */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
@@ -2210,11 +2450,13 @@ color: #cccccc;
 }
 
 .nav-links-admin a:hover {
-    color: #4CAF50; /* Color de hover (puedes ajustarlo) */
+    color: #4CAF50;
+    /* Color de hover (puedes ajustarlo) */
 }
 
 .user-info-admin {
-    background-color: #2e2e2e; /* Fondo para destacar el nombre del usuario */
+    background-color: #2e2e2e;
+    /* Fondo para destacar el nombre del usuario */
     padding: 8px 15px;
     border-radius: 8px;
     font-size: 0.9rem;
@@ -2225,16 +2467,23 @@ h2 {
     margin-top: 20px;
 }
 
+.admin-h2 {
+    color: #ffffff;
+    margin-top: 20px;
+}
+
 .table-admin {
     width: 100%;
     margin-top: 20px;
     border-collapse: collapse;
-    background-color: #2e2e2e; /* Color de fondo de la tabla */
+    background-color: #2e2e2e;
+    /* Color de fondo de la tabla */
     border-radius: 8px;
     overflow: hidden;
 }
 
-.table-admin th, .table-admin td {
+.table-admin th,
+.table-admin td {
     padding: 12px;
     border-bottom: 1px solid #444;
     color: #ffffff;
@@ -2247,7 +2496,8 @@ h2 {
 }
 
 .table-admin tr:hover {
-    background-color: #3a3a3a; /* Color de fondo al pasar el ratón sobre las filas */
+    background-color: #3a3a3a;
+    /* Color de fondo al pasar el ratón sobre las filas */
 }
 
 .footer-admin {
@@ -2257,6 +2507,7 @@ h2 {
     background-color: #1e1e1e;
     color: #888;
 }
+
 .form-admin {
     background-color: #1e1e1e;
     padding: 20px;
@@ -2264,14 +2515,17 @@ h2 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     color: #ffffff;
 }
+
 .form-group {
     margin-bottom: 15px;
 }
+
 .form-group label {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
 }
+
 .form-group input,
 .form-group textarea,
 .form-group select {
@@ -2290,15 +2544,19 @@ h2 {
 }
 
 .table-admin a {
-    color: #e00037; /* Cambia el color del enlace */
-    text-decoration: none; /* Quita la línea subrayada */
-}
-.table-admin a:hover {
-    text-decoration: underline; /* Opcional: puedes agregar un subrayado al pasar el cursor */
+    color: #e00037;
+    /* Cambia el color del enlace */
+    text-decoration: none;
+    /* Quita la línea subrayada */
 }
 
-.required-asterisk{
-    color:#e0456c;
+.table-admin a:hover {
+    text-decoration: underline;
+    /* Opcional: puedes agregar un subrayado al pasar el cursor */
+}
+
+.required-asterisk {
+    color: #e0456c;
 }
 
 /* Sección del formulario */
@@ -2354,8 +2612,8 @@ h2 {
 }
 
 /* Animación del label */
-.admin-input-wrapper input:focus ~ label,
-.admin-input-wrapper input:not(:placeholder-shown) ~ label {
+.admin-input-wrapper input:focus~label,
+.admin-input-wrapper input:not(:placeholder-shown)~label {
     top: -20px;
     font-size: 14px;
     color: #e00037;
@@ -2369,7 +2627,7 @@ h2 {
     display: none;
 }
 
-.admin-input-wrapper input[required] ~ label::after {
+.admin-input-wrapper input[required]~label::after {
     display: inline;
 }
 
@@ -2381,9 +2639,11 @@ h2 {
 .admin-service-item {
     display: flex;
     align-items: center;
-    font-size: 13px; /* Reducido de 14px a 13px */
+    font-size: 13px;
+    /* Reducido de 14px a 13px */
     color: #fff;
-    padding: 4px 6px; /* Reducido de 8px a 4px 6px */
+    padding: 4px 6px;
+    /* Reducido de 8px a 4px 6px */
     border-radius: 3px;
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -2398,14 +2658,17 @@ h2 {
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
+
 .btn-submit:hover {
     background-color: #45a049;
 }
+
 .fotos-actuales {
     display: flex;
     gap: 10px;
     margin-top: 10px;
 }
+
 .foto-preview {
     width: 100px;
     height: 100px;
@@ -2441,7 +2704,7 @@ h2 {
     text-align: center;
 }
 
-.admin-checkbox-item input[type="checkbox"]:checked + label {
+.admin-checkbox-item input[type="checkbox"]:checked+label {
     background-color: #83946e;
 }
 
@@ -2510,14 +2773,19 @@ h2 {
     background-color: #000;
     height: 360px;
     width: 229px;
-    text-decoration: none; /* Quita el subrayado del enlace */
-    color: inherit; /* Hereda el color del texto del padre */
-    display: block; /* Hace que el enlace ocupe todo el espacio de la tarjeta */
-    transition: transform 0.2s ease; /* Suave transición para el efecto hover */
+    text-decoration: none;
+    /* Quita el subrayado del enlace */
+    color: inherit;
+    /* Hereda el color del texto del padre */
+    display: block;
+    /* Hace que el enlace ocupe todo el espacio de la tarjeta */
+    transition: transform 0.2s ease;
+    /* Suave transición para el efecto hover */
 }
 
 .inicio-card:hover {
-    transform: translateY(-5px); /* Efecto de elevación al pasar el mouse */
+    transform: translateY(-5px);
+    /* Efecto de elevación al pasar el mouse */
 }
 
 .inicio-card-category {
@@ -2634,11 +2902,15 @@ h2 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     background-color: #000;
     height: 325px;
-    position: absolute; /* Cambiado a absolute */
-    /* top: 392px; */ /* Ajusta según la distancia deseada desde el borde superior */
-    right: 369px; /* Ajusta según lo que necesites */
+    position: absolute;
+    /* Cambiado a absolute */
+    /* top: 392px; */
+    /* Ajusta según la distancia deseada desde el borde superior */
+    right: 369px;
+    /* Ajusta según lo que necesites */
     font-family: 'Poppins', sans-serif;
-    z-index: 10; /* Asegúrate de que quede por encima de otros elementos */
+    z-index: 10;
+    /* Asegúrate de que quede por encima de otros elementos */
 }
 
 /* Imagen de fondo de la tarjeta destacada */
@@ -2661,7 +2933,8 @@ h2 {
     flex-direction: column;
     justify-content: flex-end;
     border-radius: 0 0 8px 8px;
-    height: 100%; /* Asegura que el overlay ocupe toda la altura */
+    height: 100%;
+    /* Asegura que el overlay ocupe toda la altura */
 }
 
 /* Título de la tarjeta destacada (nombre) y edad en la misma línea */
@@ -2671,7 +2944,8 @@ h2 {
     margin: 0;
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Alinea el nombre y la edad en extremos */
+    justify-content: space-between;
+    /* Alinea el nombre y la edad en extremos */
     color: #fff;
 }
 
@@ -2679,7 +2953,8 @@ h2 {
 .location-price {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Alinea la ubicación y el precio en extremos */
+    justify-content: space-between;
+    /* Alinea la ubicación y el precio en extremos */
     font-size: 14px;
     color: #ccc;
     margin-top: 5px;
@@ -2703,7 +2978,8 @@ h2 {
     position: absolute;
     top: 10px;
     left: 10px;
-    background-color: rgba(255, 0, 0, 0.8); /* Fondo rojo para destacarla */
+    background-color: rgba(255, 0, 0, 0.8);
+    /* Fondo rojo para destacarla */
     color: #fff;
     padding: 5px 10px;
     border-radius: 5px;
@@ -2714,8 +2990,10 @@ h2 {
 }
 
 .inicio-featured-label {
-    background-color: #FF0050; /* Color de fondo rosa */
-    color: #fff; /* Texto en blanco */
+    background-color: #FF0050;
+    /* Color de fondo rosa */
+    color: #fff;
+    /* Texto en blanco */
     text-align: center;
     font-weight: bold;
     padding: 10px 0;
@@ -2731,10 +3009,14 @@ h2 {
     border-radius: 4px;
     padding: 10px;
     font-family: 'Work Sans', sans-serif;
-    position: absolute; /* Cambiado a absolute */
-    top: 645px; /* Ajusta según la distancia deseada desde el borde superior */
-    right: 346px; /* Ajusta según lo que necesites */
-    z-index: 10; /* Asegúrate de que quede por encima de otros elementos */
+    position: absolute;
+    /* Cambiado a absolute */
+    top: 645px;
+    /* Ajusta según la distancia deseada desde el borde superior */
+    right: 346px;
+    /* Ajusta según lo que necesites */
+    z-index: 10;
+    /* Asegúrate de que quede por encima de otros elementos */
 }
 
 /* Título del panel */
@@ -2840,7 +3122,8 @@ h2 {
     display: inline-block;
     width: 10px;
     height: 10px;
-    background-color: #7ed321; /* Cambia a red para mejor visibilidad */
+    background-color: #7ed321;
+    /* Cambia a red para mejor visibilidad */
     border-radius: 50%;
     margin-left: -40px;
     vertical-align: middle;
@@ -2891,7 +3174,8 @@ h2 {
 /* Contenedor que envuelve el slider */
 .escortperfil-banner-wrapper {
     width: 100%;
-    overflow: hidden; /* Oculta cualquier parte desbordada del slider */
+    overflow: hidden;
+    /* Oculta cualquier parte desbordada del slider */
 }
 
 .escortperfil-banner-slider,
@@ -2902,8 +3186,10 @@ h2 {
 .escortperfil-banner-slider img {
     width: 400px;
     height: 400px;
-    object-fit: cover; /* Ajuste para que las imágenes se vean bien */
-    flex-shrink: 0; /* Para evitar que las imágenes se compriman */
+    object-fit: cover;
+    /* Ajuste para que las imágenes se vean bien */
+    flex-shrink: 0;
+    /* Para evitar que las imágenes se compriman */
 }
 
 /* Controles del carrusel */
@@ -3031,13 +3317,16 @@ h2 {
     gap: 10px;
     position: absolute;
     right: 355px;
-    top: 570px; /* Ajusta según necesites */
+    top: 570px;
+    /* Ajusta según necesites */
     z-index: 3;
-    width: auto; /* En lugar de un ancho fijo */
+    width: auto;
+    /* En lugar de un ancho fijo */
 }
 
 .escortperfil-btn {
-    text-decoration: none;  /* Elimina la línea del enlace */
+    text-decoration: none;
+    /* Elimina la línea del enlace */
     width: 290px;
     padding: 12px 0;
     border: none;
@@ -3067,7 +3356,8 @@ h2 {
 }
 
 .escortperfil-section {
-width: 450px; /* O el ancho que prefieras */
+    width: 450px;
+    /* O el ancho que prefieras */
     margin-bottom: 40px;
 }
 
@@ -3206,6 +3496,7 @@ width: 450px; /* O el ancho que prefieras */
     border: 1px solid #eee;
     margin: 0;
 }
+
 .favorite-button {
     position: absolute;
     top: 413px;
@@ -3240,7 +3531,8 @@ width: 450px; /* O el ancho que prefieras */
 
 /* Opcional: Efecto cuando está en favoritos */
 .favorite-button.active i {
-    font-weight: 900; /* Cambia a corazón sólido cuando está en favoritos */
+    font-weight: 900;
+    /* Cambia a corazón sólido cuando está en favoritos */
 }
 
 /* Añade estos estilos a tu archivo CSS */
@@ -3285,7 +3577,8 @@ width: 450px; /* O el ancho que prefieras */
 
 /* Contenedor principal */
 .pagination-container nav {
-    margin-top: 100px; /* Ajusta según la altura del panel online */
+    margin-top: 100px;
+    /* Ajusta según la altura del panel online */
     font-family: 'Poppins', sans-serif;
 }
 
@@ -3304,7 +3597,7 @@ width: 450px; /* O el ancho que prefieras */
 }
 
 /* Enlaces y spans dentro de los items */
-.pagination li > * {
+.pagination li>* {
     padding: 8px 16px;
     border: 1px solid #ddd;
     color: #333;
@@ -3320,21 +3613,22 @@ width: 450px; /* O el ancho que prefieras */
 }
 
 /* Página activa */
-.pagination .active > span {
+.pagination .active>span {
     background-color: #dc3545;
     color: white;
     border-color: #dc3545;
 }
 
 /* Enlaces deshabilitados */
-.pagination .disabled > span {
+.pagination .disabled>span {
     color: #999;
     cursor: not-allowed;
     background-color: #f5f5f5;
 }
 
 .online-container {
-    height: 250px; /* Altura para mostrar aproximadamente 3 perfiles */
+    height: 250px;
+    /* Altura para mostrar aproximadamente 3 perfiles */
     overflow-y: auto;
     scrollbar-width: thin;
 }
@@ -3429,15 +3723,23 @@ width: 450px; /* O el ancho que prefieras */
 .table-contents {
     border-top: 1px solid #eee;
     padding-top: 20px;
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 40px);
+    /* Evita que sobrepase la ventana */
 }
+
 
 .table-contents h3 {
     font-size: 14px;
     color: #666;
     margin-bottom: 15px;
-    letter-spacing: 1px;          /* Espacio entre letras */
-    text-transform: uppercase;    /* Para que esté en mayúsculas */
-    font-weight: 800;            /* Un peso de fuente medio */
+    letter-spacing: 1px;
+    /* Espacio entre letras */
+    text-transform: uppercase;
+    /* Para que esté en mayúsculas */
+    font-weight: 800;
+    /* Un peso de fuente medio */
 }
 
 .contents-list {
@@ -3511,8 +3813,10 @@ width: 450px; /* O el ancho que prefieras */
     width: 800px;
     height: 970px;
     border-radius: 20px;
-    object-fit: cover;    /* Esto asegura que la imagen cubra el espacio sin distorsionarse */
-    max-width: 100%;      /* Esto hace que la imagen sea responsiva */
+    object-fit: cover;
+    /* Esto asegura que la imagen cubra el espacio sin distorsionarse */
+    max-width: 100%;
+    /* Esto hace que la imagen sea responsiva */
     margin-top: 10px;
 }
 
@@ -3523,6 +3827,7 @@ width: 450px; /* O el ancho que prefieras */
 .blog-section h2 {
     font-size: 24px;
     margin-bottom: 20px;
+    color: #333333;
 }
 
 .blog-text {
@@ -3534,31 +3839,330 @@ width: 450px; /* O el ancho que prefieras */
 .tox .tox-tbtn--select,
 .tox .tox-tbtn[aria-haspopup="true"],
 .tox .tox-tbtn[aria-label="Blocks"] {
-    background-color: #2b2b2b !important; /* Fondo oscuro */
-    color: #ffffff !important; /* Texto blanco */
+    background-color: #2b2b2b !important;
+    /* Fondo oscuro */
+    color: #ffffff !important;
+    /* Texto blanco */
     border: none !important;
 }
 
 /* Ajuste para el menú desplegable */
 .tox .tox-collection--list,
 .tox .tox-menu {
-    background-color: #2b2b2b !important; /* Fondo del menú */
+    background-color: #2b2b2b !important;
+    /* Fondo del menú */
     border: 1px solid #3b3b3b !important;
 }
 
 /* Estilo de los ítems dentro del menú desplegable */
 .tox .tox-collection__item {
-    background-color: #2b2b2b !important; /* Fondo de los ítems */
-    color: #ffffff !important; /* Texto blanco */
+    background-color: #2b2b2b !important;
+    /* Fondo de los ítems */
+    color: #ffffff !important;
+    /* Texto blanco */
 }
 
 /* Hover sobre los ítems */
 .tox .tox-collection__item:hover {
-    background-color: #3b3b3b !important; /* Fondo al pasar el ratón */
+    background-color: #3b3b3b !important;
+    /* Fondo al pasar el ratón */
 }
 
 /* Estilo para el ítem seleccionado */
 .tox .tox-collection__item--active {
-    background-color: #3b3b3b !important; /* Fondo del ítem seleccionado */
-    color: #ffffff !important; /* Texto blanco */
+    background-color: #3b3b3b !important;
+    /* Fondo del ítem seleccionado */
+    color: #ffffff !important;
+    /* Texto blanco */
+}
+
+
+
+/* Banner */
+.blog-banner {
+    position: relative;
+    width: calc(100% - 10rem);
+    height: 500px;
+    overflow: hidden;
+    margin: 0 auto 0;
+    z-index: -1;
+    font-family: 'Poppins', sans-serif;
+}
+
+.blog-banner-img {
+    width: 100%;
+    height: 12rem;
+    background-size: cover;
+    background-position: center -250px;
+    /* Ajusta este valor para mover la imagen */
+    font-family: 'Poppins', sans-serif;
+}
+
+.blog-banner-content {
+    position: relative;
+    bottom: 7.1rem;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    text-align: center;
+    width: 100%;
+    background: #00000047;
+    height: 12.5rem;
+    bottom: 100px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Contenedor principal */
+.blog-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    gap: 20px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.blog-main {
+    flex: 1;
+}
+
+/* Tarjetas heredadas del inicio pero con prefijo blog */
+.blog-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-content: flex-start;
+    justify-content: flex-start;
+    max-width: 1050px;
+    margin: 0 auto;
+    font-family: 'Poppins', sans-serif;
+}
+
+.blog-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #000;
+    height: 360px;
+    width: 229px;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.2s ease;
+}
+
+/* Resto de estilos de tarjetas y responsive... */
+
+/* Buscador */
+.blog-search-container {
+    max-width: 600px;
+    margin: 20px auto;
+    position: relative;
+}
+
+.blog-search-input {
+    width: 100%;
+    padding: 12px 45px 12px 15px;
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+.blog-search-btn {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Grid Layout */
+.admin-grid {
+    display: grid;
+    grid-template-columns: 250px 1fr 250px;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1800px;
+    margin: 0 auto;
+}
+
+/* Sidebar Sections */
+.sidebar-section {
+    background: #333333;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+}
+
+/* Tabla pequeña para sidebars */
+.table-admin-sm {
+    width: 100%;
+    font-size: 0.9rem;
+    color: #e0e0e0;
+}
+
+.table-admin-sm th,
+.table-admin-sm td {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Botones pequeños */
+.btn-submit-sm {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    background: #e00037;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-cancel-sm {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+.btn-icon {
+    padding: 4px 8px;
+    background: transparent;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+}
+
+.btn-icon-danger {
+    padding: 4px 8px;
+    background: transparent;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+}
+
+/* Formularios en sidebars */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+
+/* Overlay con degradado para texto */
+.blog-card-overlay {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 367px;
+    /* padding: 0px; */
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0) 60%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-radius: 0 0 8px 8px;
+    margin-left: 2px;
+}
+
+/* Estilos para el contenedor del carrusel */
+.blog-carousel-container {
+    width: 800px;
+    position: relative;
+    margin: 20px 0;
+}
+
+/* Ajustes para el carrusel */
+.swiper {
+    width: 100%;
+    padding: 0 0px;
+    /* Espacio para los botones de navegación */
+}
+
+/* Ajustes para los slides */
+.swiper-slide {
+    height: 362px;
+    width: 231px;
+    /* Ancho fijo para cada tarjeta */
+}
+
+/* Mantener el estilo original de las tarjetas */
+.swiper-slide .blog-card {
+    width: 100%;
+    margin: 0;
+    display: block;
+}
+
+.swiper-slide .blog-card-image {
+    position: relative;
+    width: 231px;
+    height: 362px;
+    /* Altura fija para las imágenes */
+    overflow: hidden;
+}
+
+.swiper-slide .blog-image {
+    width: 100%;
+    height: 104%;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Botones de navegación */
+.swiper-button-next,
+.swiper-button-prev {
+    width: 35px;
+    height: 35px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
+    font-size: 18px;
+    color: #e00037;
+}
+
+
+/* Paginación */
+.swiper-pagination {
+    position: relative;
+    bottom: -10px;
+    margin-top: 15px;
+}
+
+.swiper-pagination-bullet {
+    background: #333333;
+    opacity: 1;
+}
+
+.swiper-pagination-bullet-active {
+    background: #e00037;
+}
+
+/* Imagen de fondo con opacidad */
+.blog-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.7;
+    z-index: 1;
+    border-radius: 8px;
 }

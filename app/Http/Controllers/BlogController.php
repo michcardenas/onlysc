@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\BlogArticle;
+use App\Models\BlogCategory;
+use App\Models\BlogTag;
 use App\Models\Ciudad;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -13,48 +15,98 @@ class BlogController extends Controller
 {
     public function showBlog()
     {
-        $articulos = BlogArticle::with('user')
+        $articulos = BlogArticle::with(['user', 'categories', 'tags'])
             ->where('estado', 'publicado')
             ->orderBy('fecha_publicacion', 'desc')
             ->get();
 
+        $ciudades = Ciudad::all();
+        $categorias = BlogCategory::all();
+        $tags = BlogTag::all();
+
         return view('blog', [
-            'articulos' => $articulos
+            'articulos' => $articulos,
+            'ciudades' => $ciudades,
+            'categorias' => $categorias,
+            'tags' => $tags
         ]);
     }
 
     public function show_article($id)
     {
-        $articulo = BlogArticle::findOrFail($id);
+        $articulo = BlogArticle::with(['categories', 'tags'])->findOrFail($id);
         $articulo->increment('visitas');
-
-        // Obtén las ciudades
-        $ciudades = Ciudad::all(); // Asegúrate de importar el modelo
-
+    
+        $articulos = BlogArticle::with(['user', 'categories', 'tags'])
+            ->where('estado', 'publicado')
+            ->orderBy('fecha_publicacion', 'desc')
+            ->get();
+    
+        $ciudades = Ciudad::all();
+        $categorias = BlogCategory::all();
+        $tags = BlogTag::all();
+    
         return view('layouts.showblog', [
             'articulo' => $articulo,
-            'usuarioAutenticado' => Auth::user(),
-            'ciudades' => $ciudades
+            'articulos' => $articulos,
+            'ciudades' => $ciudades,
+            'categorias' => $categorias,
+            'tags' => $tags,
+            'usuarioAutenticado' => Auth::user()
         ]);
     }
 
     public function blogadmin()
     {
-        $articulos = BlogArticle::with('user')
+        $articulos = BlogArticle::with(['user', 'categories', 'tags'])
             ->orderBy('created_at', 'desc')
             ->get();
 
+        $categorias = BlogCategory::all();
+        $tags = BlogTag::all();
+
         return view('admin.blogadmin', [
             'articulos' => $articulos,
+            'categorias' => $categorias,
+            'tags' => $tags,
             'usuarioAutenticado' => Auth::user()
         ]);
     }
 
-    public function create()
+    // Nuevo método edit para cargar datos del artículo
+    public function edit($id)
     {
-        return view('admin.blogadmincreate', [
-            'usuarioAutenticado' => Auth::user()
-        ]);
+        try {
+            $articulo = BlogArticle::with(['categories', 'tags'])
+                ->findOrFail($id);
+
+            return response()->json([
+                'id' => $articulo->id,
+                'titulo' => $articulo->titulo,
+                'contenido' => $articulo->contenido,
+                'estado' => $articulo->estado,
+                'destacado' => (bool) $articulo->destacado,
+                'imagen' => $articulo->imagen ? Storage::url($articulo->imagen) : null,
+                'categories' => $articulo->categories->map(function($category) {
+                    return [
+                        'id' => $category->id,
+                        'nombre' => $category->nombre
+                    ];
+                }),
+                'tags' => $articulo->tags->map(function($tag) {
+                    return [
+                        'id' => $tag->id,
+                        'nombre' => $tag->nombre
+                    ];
+                })
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error en blog edit: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Error al cargar el artículo',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function store(Request $request)
@@ -63,19 +115,15 @@ class BlogController extends Controller
             $validated = $request->validate([
                 'titulo' => 'required|max:255',
                 'contenido' => 'required',
-                'imagen' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+                'imagen' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'categorias' => 'array',
+                'tags' => 'array'
             ]);
 
-            // Lista de etiquetas HTML permitidas
             $allowedTags = '<h1><h2><p><br><strong><em><ul><ol><li><a><span><div><img><table><tr><td><th><tbody><thead>';
-
-            // Filtrar el contenido manteniendo las etiquetas permitidas
             $contenidoFiltrado = strip_tags($request->contenido, $allowedTags);
-
-            // Almacenar imagen
             $imagenPath = $request->file('imagen')->store('blog', 'public');
 
-            // Crear artículo
             $articulo = BlogArticle::create([
                 'titulo' => $validated['titulo'],
                 'slug' => Str::slug($validated['titulo']),
@@ -86,6 +134,14 @@ class BlogController extends Controller
                 'destacado' => $request->has('destacado'),
                 'fecha_publicacion' => $request->estado === 'publicado' ? now() : null
             ]);
+
+            // Sincronizar categorías y tags
+            if ($request->has('categorias')) {
+                $articulo->categories()->sync($request->categorias);
+            }
+            if ($request->has('tags')) {
+                $articulo->tags()->sync($request->tags);
+            }
 
             return response()->json([
                 'success' => true,
@@ -100,24 +156,6 @@ class BlogController extends Controller
         }
     }
 
-    public function edit($id)
-    {
-        try {
-            $articulo = BlogArticle::findOrFail($id);
-
-            // Asegúrate de que la respuesta sea JSON
-            return response()->json([
-                'id' => $articulo->id,
-                'titulo' => $articulo->titulo,
-                'contenido' => $articulo->contenido,
-                'estado' => $articulo->estado,
-                'destacado' => $articulo->destacado
-            ]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al cargar el artículo'], 404);
-        }
-    }
-
     public function update(Request $request, $id)
     {
         try {
@@ -126,18 +164,15 @@ class BlogController extends Controller
             $validated = $request->validate([
                 'titulo' => 'required|max:255',
                 'contenido' => 'required',
-                'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+                'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'categorias' => 'array',
+                'tags' => 'array'
             ]);
 
-            // Lista de etiquetas HTML permitidas
             $allowedTags = '<h1><h2><p><br><strong><em><ul><ol><li><a><span><div><img><table><tr><td><th><tbody><thead>';
-
-            // Filtrar el contenido manteniendo las etiquetas permitidas
             $contenidoFiltrado = strip_tags($request->contenido, $allowedTags);
 
-            // Actualizar imagen si se proporcionó una nueva
             if ($request->hasFile('imagen')) {
-                // Eliminar imagen anterior si existe
                 if ($articulo->imagen) {
                     Storage::disk('public')->delete($articulo->imagen);
                 }
@@ -157,6 +192,14 @@ class BlogController extends Controller
 
             $articulo->save();
 
+            // Sincronizar categorías y tags
+            if ($request->has('categorias')) {
+                $articulo->categories()->sync($request->categorias);
+            }
+            if ($request->has('tags')) {
+                $articulo->tags()->sync($request->tags);
+            }
+
             return response()->json([
                 'success' => true,
                 'message' => 'Artículo actualizado exitosamente',
@@ -170,44 +213,143 @@ class BlogController extends Controller
         }
     }
 
-    public function destroy($id)
-    {
-        $articulo = BlogArticle::findOrFail($id);
-
-        if ($articulo->imagen) {
-            Storage::disk('public')->delete($articulo->imagen);
-        }
-
-        $articulo->delete();
-
-        return redirect()->route('blogadmin')
-            ->with('success', 'Artículo eliminado exitosamente');
-    }
-
-    public function toggleFeatured($id)
+    // Métodos para Categorías
+    public function storeCategory(Request $request)
     {
         try {
-            $articulo = BlogArticle::findOrFail($id);
-            $articulo->destacado = !$articulo->destacado;
-            $articulo->save();
+            $validated = $request->validate([
+                'nombre' => 'required|max:255',
+                'descripcion' => 'nullable'
+            ]);
 
-            if (request()->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'is_featured' => $articulo->destacado,
-                    'message' => $articulo->destacado ? 'Artículo destacado exitosamente' : 'Artículo quitado de destacados'
-                ]);
-            }
+            BlogCategory::create([
+                'nombre' => $validated['nombre'],
+                'slug' => Str::slug($validated['nombre']),
+                'descripcion' => $validated['descripcion']
+            ]);
 
-            return redirect()->back()->with(
-                'success',
-                $articulo->destacado ? 'Artículo destacado exitosamente' : 'Artículo quitado de destacados'
-            );
+            return response()->json([
+                'success' => true,
+                'message' => 'Categoría creada exitosamente'
+            ]);
         } catch (\Exception $e) {
-            if (request()->ajax()) {
-                return response()->json(['error' => $e->getMessage()], 500);
-            }
-            return redirect()->back()->with('error', $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al crear la categoría: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function updateCategory(Request $request, $id)
+    {
+        try {
+            $categoria = BlogCategory::findOrFail($id);
+            $validated = $request->validate([
+                'nombre' => 'required|max:255',
+                'descripcion' => 'nullable'
+            ]);
+
+            $categoria->update([
+                'nombre' => $validated['nombre'],
+                'slug' => Str::slug($validated['nombre']),
+                'descripcion' => $validated['descripcion']
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Categoría actualizada exitosamente'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar la categoría: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function destroyCategory($id)
+    {
+        try {
+            $categoria = BlogCategory::findOrFail($id);
+            $categoria->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Categoría eliminada exitosamente'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar la categoría: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // Métodos para Tags
+    public function storeTag(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'nombre' => 'required|max:255'
+            ]);
+
+            BlogTag::create([
+                'nombre' => $validated['nombre'],
+                'slug' => Str::slug($validated['nombre'])
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Tag creado exitosamente'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al crear el tag: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function updateTag(Request $request, $id)
+    {
+        try {
+            $tag = BlogTag::findOrFail($id);
+            $validated = $request->validate([
+                'nombre' => 'required|max:255'
+            ]);
+
+            $tag->update([
+                'nombre' => $validated['nombre'],
+                'slug' => Str::slug($validated['nombre'])
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Tag actualizado exitosamente'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar el tag: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function destroyTag($id)
+    {
+        try {
+            $tag = BlogTag::findOrFail($id);
+            $tag->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Tag eliminado exitosamente'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar el tag: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

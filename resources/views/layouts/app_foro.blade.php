@@ -11,10 +11,12 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 
     <!-- Scripts -->
     <script src="https://cdn.tiny.cloud/1/z94ao1xzansr93pi0qe5kfxgddo1f4ltb8q7qa8pw9g52txs/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
     <script>
     tinymce.init({
         selector: '#comentario', // Cambiado para coincidir con tu ID de textarea
@@ -49,8 +51,8 @@
         content_css: false,
         content_style: `
             body {
-                background-color: #2b2b2b;
-                color: #e0e0e0;
+                background-color: #fffff;
+                color: #000;
                 font-family: 'Poppins', sans-serif;
                 padding: 10px;
                 border-radius: 4px;
@@ -65,13 +67,13 @@
             );
 
             elementsToUpdate.forEach(function(element) {
-                element.style.backgroundColor = '#ad002a';
+                element.style.backgroundColor = '#fffff';
                 element.style.border = 'none';
                 element.style.boxShadow = 'none';
             });
 
             let mainContainer = editor.getContainer();
-            mainContainer.style.border = '1px solid #2b2b2b';
+            mainContainer.style.border = '1px solid #fffff';
             mainContainer.style.boxShadow = 'none';
 
             // Mantener la validación de Laravel
@@ -163,6 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
 
 </head>
 
@@ -342,5 +345,49 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </footer>
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+@stack('scripts')
+    
+    <!-- Script específico del blog -->
+    @if(request()->is('blog*'))
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        @if(isset($categorias))
+            @foreach($categorias as $categoria)
+                @php
+                    $articulos_count = $categoria->articles()->where('estado', 'publicado')->count();
+                @endphp
+                
+                @if($articulos_count > 3)
+                    new Swiper('.blog-carousel-{{ $categoria->id }}', {
+                        slidesPerView: 'auto',
+                        spaceBetween: 20,
+                        navigation: {
+                            nextEl: '.swiper-button-next',
+                            prevEl: '.swiper-button-prev',
+                        },
+                        pagination: {
+                            el: '.swiper-pagination',
+                            clickable: true,
+                        },
+                        grabCursor: true,
+                        breakpoints: {
+                            640: {
+                                slidesPerView: 'auto',
+                                spaceBetween: 20,
+                            },
+                            1024: {
+                                slidesPerView: 'auto',
+                                spaceBetween: 30,
+                            }
+                        }
+                    });
+                @endif
+            @endforeach
+        @endif
+    });
+    </script>
+    @endif
 
 </html>

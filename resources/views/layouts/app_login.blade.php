@@ -19,11 +19,18 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/choices-custom.css') }}">
 
     <!-- En el <head> de tu HTML -->
 <!-- CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<!-- Choices.js CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+
+<!-- Choices.js JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
 
 
 
@@ -718,7 +725,65 @@ document.addEventListener('DOMContentLoaded', function() {
     </script>
 
 <script>
-// Función para mostrar formulario
+// Variables globales para Choices.js
+let categoriaChoices = null;
+let tagsChoices = null;
+
+// Inicialización de componentes
+function initializeEditor() {
+    const contenidoTextarea = document.querySelector('#contenido');
+    if (!contenidoTextarea) return;
+
+    return tinymce.init({
+        selector: '#contenido',
+        height: 500,
+        menubar: true,
+        plugins: [
+            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+            'insertdatetime', 'media', 'table', 'help', 'wordcount'
+        ],
+        toolbar: 'undo redo | formatselect | ' +
+            'bold italic backcolor | alignleft aligncenter ' +
+            'alignright alignjustify | bullist numlist outdent indent | ' +
+            'removeformat | help',
+        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+    }).catch(error => {
+        console.error('Error al inicializar TinyMCE:', error);
+    });
+}
+
+function initializeChoices() {
+    try {
+        // Inicializar categorías
+        const categoriaSelect = document.querySelector('#categoria');
+        if (categoriaSelect && typeof Choices !== 'undefined') {
+            categoriaChoices = new Choices(categoriaSelect, {
+                removeItemButton: true,
+                maxItemCount: 5,
+                searchEnabled: true,
+                placeholder: true,
+                placeholderValue: 'Selecciona las categorías'
+            });
+        }
+
+        // Inicializar tags
+        const tagsSelect = document.querySelector('#tags');
+        if (tagsSelect && typeof Choices !== 'undefined') {
+            tagsChoices = new Choices(tagsSelect, {
+                removeItemButton: true,
+                maxItemCount: 10,
+                searchEnabled: true,
+                placeholder: true,
+                placeholderValue: 'Selecciona los tags'
+            });
+        }
+    } catch (error) {
+        console.error('Error al inicializar Choices.js:', error);
+    }
+}
+
+// Funciones de gestión del formulario
 function blogMostrarFormulario(tipo, id = null) {
     console.log('Mostrando formulario:', tipo, 'ID:', id);
     
@@ -733,16 +798,51 @@ function blogMostrarFormulario(tipo, id = null) {
         form.reset();
         form.action = '/blogadmin/store';
         document.getElementById('formMethod').value = 'POST';
-        // Limpiar TinyMCE
+        
+        // Limpiar editor
         if (tinymce.get('contenido')) {
             tinymce.get('contenido').setContent('');
         }
+
+        // Limpiar Choices
+        if (categoriaChoices) categoriaChoices.removeActiveItems();
+        if (tagsChoices) tagsChoices.removeActiveItems();
+
+        // Limpiar imagen
+        limpiarImagenPreview();
     } else {
         formularioTitulo.textContent = 'Editar Artículo';
         blogFetchArticleData(id);
     }
 }
 
+function limpiarImagenPreview() {
+    const imagenInput = document.getElementById('imagen');
+    if (imagenInput) {
+        const preview = imagenInput.parentNode.querySelector('.imagen-preview');
+        if (preview) preview.remove();
+    }
+}
+
+function mostrarImagenPreview(imagenUrl) {
+    if (!imagenUrl) return;
+
+    const imagenInput = document.getElementById('imagen');
+    const existingPreview = imagenInput.parentNode.querySelector('.imagen-preview');
+    if (existingPreview) existingPreview.remove();
+
+    const imagenPreview = document.createElement('div');
+    imagenPreview.className = 'mt-2 imagen-preview';
+    imagenPreview.innerHTML = `
+        <p class="mb-2">Imagen actual:</p>
+        <img src="${imagenUrl}" alt="Imagen actual" style="max-width: 200px; max-height: 200px;" class="mb-2">
+        <input type="hidden" name="imagen_actual" value="${imagenUrl}">
+    `;
+    
+    imagenInput.parentNode.appendChild(imagenPreview);
+}
+
+// Funciones de navegación
 function blogMostrarListado() {
     document.getElementById('formularioArticulo').style.display = 'none';
     document.getElementById('listadoArticulos').style.display = 'block';
@@ -756,18 +856,9 @@ function blogEditarArticulo(id) {
     blogMostrarFormulario('editar', id);
 }
 
-function blogConfirmarEliminar(id) {
-    if (confirm('¿Estás seguro de que deseas eliminar este artículo?')) {
-        const deleteForm = document.getElementById('deleteForm');
-        deleteForm.action = `/blogadmin/delete/${id}`;
-        deleteForm.submit();
-    }
-}
-
+// Función para cargar datos del artículo
 async function blogFetchArticleData(id) {
     try {
-        console.log('Intentando cargar datos del artículo:', id);
-
         const response = await fetch(`/blogadmin/edit/${id}`, {
             method: 'GET',
             headers: {
@@ -776,50 +867,56 @@ async function blogFetchArticleData(id) {
             }
         });
 
-        if (!response.ok) {
-            console.error('Respuesta no exitosa:', response.status);
-            throw new Error(`Error HTTP: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
         
         const data = await response.json();
         console.log('Datos recibidos:', data);
         
-        if (!data || data.error) {
-            throw new Error(data.error || 'Error al cargar los datos');
-        }
-
-        // Actualizar campos del formulario
+        // Actualizar campos básicos
         document.getElementById('articuloId').value = data.id;
         document.getElementById('titulo').value = data.titulo;
-        
-        // Actualizar TinyMCE
-        if (tinymce.get('contenido')) {
-            tinymce.get('contenido').setContent(data.contenido);
-        } else {
-            document.getElementById('contenido').value = data.contenido;
-        }
-        
-        document.getElementById('estado').value = data.estado;
-        document.getElementById('destacado').checked = data.destacado;
+        document.getElementById('estado').value = data.estado || 'borrador';
+        document.getElementById('destacado').checked = Boolean(data.destacado);
 
-        // Actualizar el formulario para edición
+        // Actualizar editor
+        if (tinymce.get('contenido')) {
+            tinymce.get('contenido').setContent(data.contenido || '');
+        }
+
+        // Actualizar categorías
+        if (categoriaChoices && data.categories) {
+            categoriaChoices.removeActiveItems();
+            const categoryIds = data.categories.map(cat => cat.id.toString());
+            categoriaChoices.setChoiceByValue(categoryIds);
+        }
+
+        // Actualizar tags
+        if (tagsChoices && data.tags) {
+            tagsChoices.removeActiveItems();
+            const tagIds = data.tags.map(tag => tag.id.toString());
+            tagsChoices.setChoiceByValue(tagIds);
+        }
+
+        // Actualizar formulario
         const form = document.getElementById('articuloForm');
         form.action = `/blogadmin/update/${data.id}`;
-        
-        const methodInput = document.getElementById('formMethod');
-        if (methodInput) {
-            methodInput.value = 'PUT';
-        } else {
-            const hiddenMethod = document.createElement('input');
-            hiddenMethod.type = 'hidden';
-            hiddenMethod.name = '_method';
-            hiddenMethod.value = 'PUT';
-            form.appendChild(hiddenMethod);
-        }
+        document.getElementById('formMethod').value = 'PUT';
+
+        // Mostrar imagen
+        mostrarImagenPreview(data.imagen);
 
     } catch (error) {
         console.error('Error completo:', error);
         alert(`Error al cargar los datos del artículo: ${error.message}`);
+    }
+}
+
+// Funciones de acciones
+function blogConfirmarEliminar(id) {
+    if (confirm('¿Estás seguro de que deseas eliminar este artículo?')) {
+        const deleteForm = document.getElementById('deleteForm');
+        deleteForm.action = `/blogadmin/delete/${id}`;
+        deleteForm.submit();
     }
 }
 
@@ -836,11 +933,13 @@ async function blogToggleDestacado(id) {
         if (!response.ok) throw new Error('Error al actualizar el estado destacado');
         
         const data = await response.json();
-        const button = document.querySelector(`button[data-article-id="${id}"]`);
+        const button = document.querySelector(`button[onclick="blogToggleDestacado(${id})"]`);
         
-        button.innerHTML = data.is_featured ? 
-            '<i class="fas fa-star"></i>' : 
-            '<i class="far fa-star"></i>';
+        if (button) {
+            button.innerHTML = data.destacado ? 
+                '<i class="fas fa-star"></i>' : 
+                '<i class="far fa-star-o"></i>';
+        }
             
         alert(data.message);
     } catch (error) {
@@ -849,47 +948,185 @@ async function blogToggleDestacado(id) {
     }
 }
 
-// Manejo del formulario
-document.addEventListener('DOMContentLoaded', function() {
+// Manejador del formulario
+function setupFormHandler() {
     const form = document.getElementById('articuloForm');
-    if (form) {
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            // Asegurarse de que TinyMCE actualice el textarea
+    if (!form) return;
+
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        try {
+            const formData = new FormData(this);
+            const method = document.getElementById('formMethod').value;
+
+            // Obtener y validar contenido del editor
             if (tinymce.get('contenido')) {
-                tinymce.get('contenido').save();
-            }
-
-            try {
-                const formData = new FormData(this);
-                const method = document.getElementById('formMethod').value;
-                const url = this.action;
-
-                const response = await fetch(url, {
-                    method: method === 'PUT' ? 'POST' : method,
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    }
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    alert(data.message);
-                    window.location.href = data.redirect;
-                } else {
-                    alert(data.message || 'Error al procesar el formulario');
+                const contenido = tinymce.get('contenido').getContent();
+                if (!contenido.trim()) {
+                    alert('El contenido es requerido');
+                    return;
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error al procesar el formulario');
+                formData.set('contenido', contenido);
             }
+
+            if (method === 'PUT') {
+                formData.append('_method', 'PUT');
+            }
+
+            const response = await fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert(data.message);
+                window.location.href = data.redirect;
+            } else {
+                alert(data.message || 'Error al procesar el formulario');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al procesar el formulario');
+        }
+    });
+}
+
+// Inicialización cuando el documento está listo
+document.addEventListener('DOMContentLoaded', async function() {
+    await initializeEditor();
+    initializeChoices();
+    setupFormHandler();
+});
+</script>
+
+<script>
+// Funciones para tags
+function mostrarFormularioTag(tipo, id = null) {
+    const form = document.getElementById('formularioTag');
+    const titulo = document.getElementById('formularioTagTitulo');
+    
+    form.style.display = 'block';
+    if (tipo === 'crear') {
+        titulo.textContent = 'Nuevo Tag';
+        document.getElementById('tagForm').reset();
+        document.getElementById('tagForm').action = '/blogadmin/tags/store';
+        document.getElementById('tagMergeMethod').value = 'POST';
+    } else {
+        titulo.textContent = 'Editar Tag';
+        cargarDatosTag(id);
+    }
+}
+
+function ocultarFormularioTag() {
+    document.getElementById('formularioTag').style.display = 'none';
+}
+
+function cargarDatosTag(id) {
+    fetch(`/blogadmin/tags/edit/${id}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('nombreTag').value = data.nombre;
+            document.getElementById('tagMergeMethod').value = 'PUT';
+            document.getElementById('tagForm').action = `/blogadmin/tags/update/${id}`;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al cargar los datos del tag');
+        });
+}
+
+function confirmarEliminarTag(id) {
+    if (confirm('¿Estás seguro de que deseas eliminar este tag?')) {
+        fetch(`/blogadmin/tags/delete/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert(data.message || 'Error al eliminar el tag');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al eliminar el tag');
         });
     }
-});
+}
+</script>
+
+<script>
+    // Funciones para categorías
+function mostrarFormularioCategoria(tipo, id = null) {
+    const form = document.getElementById('formularioCategoria');
+    const titulo = document.getElementById('formularioCategoriaTitulo');
+    
+    form.style.display = 'block';
+    if (tipo === 'crear') {
+        titulo.textContent = 'Nueva Categoría';
+        document.getElementById('categoriaForm').reset();
+        document.getElementById('categoriaForm').action = '/blogadmin/categories/store';
+        document.getElementById('categoriaMergeMethod').value = 'POST';
+    } else {
+        titulo.textContent = 'Editar Categoría';
+        cargarDatosCategoria(id);
+    }
+}
+
+function ocultarFormularioCategoria() {
+    document.getElementById('formularioCategoria').style.display = 'none';
+}
+
+function cargarDatosCategoria(id) {
+    fetch(`/blogadmin/categories/edit/${id}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('nombreCategoria').value = data.nombre;
+            document.getElementById('descripcionCategoria').value = data.descripcion;
+            document.getElementById('categoriaMergeMethod').value = 'PUT';
+            document.getElementById('categoriaForm').action = `/blogadmin/categories/update/${id}`;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al cargar los datos de la categoría');
+        });
+}
+
+function confirmarEliminarCategoria(id) {
+    if (confirm('¿Estás seguro de que deseas eliminar esta categoría?')) {
+        fetch(`/blogadmin/categories/delete/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert(data.message || 'Error al eliminar la categoría');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al eliminar la categoría');
+        });
+    }
+}
 </script>
 
     <!-- Justo antes de cerrar el </body> -->

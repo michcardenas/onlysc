@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Ciudad;
+use App\Models\BlogCategory;
+use App\Models\BlogArticle;
+use App\Models\BlogTag;
 use App\Models\Foro;
 use App\Models\Posts;
 use Illuminate\Support\Facades\Storage;
@@ -20,37 +23,32 @@ class ForoController extends Controller
             ->leftJoin('users', 'foro.id_usuario', '=', 'users.id')
             ->orderBy('posicion', 'asc')
             ->get();
-
-        // Obtenemos todas las ciudades
+    
+        // Solo obtenemos las ciudades que necesita el foro
         $ciudades = Ciudad::all();
-
+    
         return view('foro', [
             'foros' => $foros,
             'ciudades' => $ciudades
         ]);
     }
-
+    
     public function show_foro($categoria)
     {
-        // Agregar la consulta de ciudades aquí también
         $ciudades = Ciudad::all();
-
-        // Obtener todos los foros ordenados por fecha
+    
         $foros = DB::table('foro')
             ->select('foro.*', 'users.name as nombre_usuario')
             ->leftJoin('users', 'foro.id_usuario', '=', 'users.id')
             ->orderBy('fecha', 'desc')
             ->get();
-
-        // Agrupar los foros por id_blog
+    
         $categorias = $foros->groupBy('id_blog');
-
-        // Verificar si la categoría solicitada existe
+    
         if (!isset($categorias[$categoria])) {
             abort(404);
         }
-
-        // Obtener la categoría actual
+    
         $categoriaActual = (object)[
             'titulo' => $categorias[$categoria]->first()->titulo,
             'descripcion' => $categorias[$categoria]->first()->subtitulo,
@@ -58,7 +56,7 @@ class ForoController extends Controller
             'foto' => $categorias[$categoria]->first()->foto,
             'foros' => $categorias[$categoria]->sortBy('posicion')
         ];
-
+    
         return view('layouts.show_foro', [
             'categoria' => $categoriaActual,
             'ciudades' => $ciudades
