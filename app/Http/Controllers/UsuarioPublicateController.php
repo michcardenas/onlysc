@@ -77,6 +77,8 @@ class UsuarioPublicateController extends Controller
                 ];
             }
 
+            $usuarioAutenticado = auth()->user();
+
             // Obtener las posiciones de las fotos
             $positions = json_decode($usuario->foto_positions, true) ?? [];
 
@@ -89,7 +91,7 @@ class UsuarioPublicateController extends Controller
             }
 
             // Pasar a la vista incluyendo las posiciones
-            return view('admin.edit', compact('usuario', 'diasDisponibles', 'horarios', 'ciudades', 'positions'));
+            return view('admin.edit', compact('usuario', 'diasDisponibles', 'horarios', 'ciudades', 'positions', "usuarioAutenticado"));
         } catch (\Exception $e) {
             Log::error("Error al cargar el formulario de edición: " . $e->getMessage());
             return redirect()->back()->with('error', 'Error al cargar el formulario.');
