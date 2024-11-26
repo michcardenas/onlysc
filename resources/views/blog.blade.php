@@ -1,7 +1,7 @@
 @extends('layouts.app_foro')
 
 @section('content')
-{{-- Banner del Blog --}}
+{{-- El banner se mantiene igual --}}
 <div class="foro-banner">
     <div class="blog-banner-img" style="background-image: url('{{ asset('images/728160.jpg') }}');">
     </div>
@@ -14,76 +14,107 @@
     </div>
 </div>
 
-
 <div class="blog-container">
+    {{-- Sidebar se mantiene igual --}}
+    <div class="blog-blade-sidebar">
+        <div class="blog-search-container">
+            <input type="text" class="blog-search-input" placeholder="Search...">
+            <button class="blog-search-btn">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+
+        <div class="blog-categories">
+            <h3>TEMAS</h3>
+            @foreach($categorias as $categoria)
+            <div class="blog-category-item">
+                <a href="#{{ $categoria->id }}" class="blog-category-link">
+                    {{ $categoria->nombre }}
+                    <span class="category-count">
+                        ({{ $articulos->filter(function($articulo) use ($categoria) {
+                                return $articulo->categories->contains('id', $categoria->id);
+                            })->count() }})
+                    </span>
+                </a>
+            </div>
+            @endforeach
+        </div>
+
+        <div class="blog-popular-posts">
+            <h3>POSTS POPULARES</h3>
+            @foreach($articulos->sortByDesc('visitas')->take(5) as $articulo)
+            <a href="{{ route('blog.show_article', $articulo->id) }}" class="blog-popular-post-item">
+                {{ $articulo->titulo }}
+            </a>
+            @endforeach
+        </div>
+    </div>
+
+    {{-- Contenido principal con las modificaciones en las tarjetas --}}
     <div class="blog-main">
-        {{-- Artículos por categoría --}}
         @foreach($categorias as $categoria)
-        <div class="blog-section">
-            <h2>{{ $categoria->nombre }}</h2>
+        <div class="blog-section" id="{{ $categoria->id }}">
+            <a href="{{ route('blog.show_category', $categoria->id) }}" class="section-title-link">
+                <h2>{{ $categoria->nombre }}</h2>
+            </a>
             @php
-                $articulos_categoria = $articulos->filter(function($articulo) use ($categoria) {
-                    return $articulo->categories->contains('id', $categoria->id);
-                });
+            $articulos_categoria = $articulos->filter(function($articulo) use ($categoria) {
+            return $articulo->categories->contains('id', $categoria->id);
+            })->sortByDesc('destacado');
             @endphp
 
             @if($articulos_categoria->count() > 3)
-                <div class="blog-carousel-container">
-                    <div class="swiper blog-carousel-{{ $categoria->id }}">
-                        <div class="swiper-wrapper">
-                            @foreach($articulos_categoria as $articulo)
-                            <div class="swiper-slide">
-                                <a href="{{ route('blog.show_article', $articulo->id) }}" class="blog-card">
+            <div class="blog-carousel-container">
+                <div class="swiper blog-carousel-{{ $categoria->id }}">
+                    <div class="swiper-wrapper">
+                        @foreach($articulos_categoria as $articulo)
+                        <div class="swiper-slide">
+                            <div class="blog-card">
+                                <a href="{{ route('blog.show_article', $articulo->id) }}" class="blog-card-content">
                                     <div class="blog-card-image">
-                                        <div class="inicio-image" style="background-image: url('{{ Storage::url($articulo->imagen) }}')"></div>
-                                        <div class="blog-card-overlay">
-                                            <h3 class="blog-card-title">{{ $articulo->titulo }}</h3>
-                                            <div class="blog-card-meta">
-                                                <span>{{ $articulo->fecha_publicacion->format('d/m/Y') }}</span>
-                                            </div>
-                                        </div>
+                                        <div class="blog-image" style="background-image: url('{{ Storage::url($articulo->imagen) }}')"></div>
                                     </div>
                                 </a>
                             </div>
-                            @endforeach
-                        </div>
-                        <div class="swiper-button-next"></div>
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-pagination"></div>
-                    </div>
-                </div>
-            @else
-                <div class="blog-card-container">
-                    @foreach($articulos_categoria as $articulo)
-                    <a href="{{ route('blog.show_article', $articulo->id) }}" class="blog-card">
-                        <div class="blog-card-image">
-                            <div class="blog-image" style="background-image: url('{{ Storage::url($articulo->imagen) }}')"></div>
-                            <div class="blog-card-overlay">
-                                <h3 class="blog-card-title">{{ $articulo->titulo }}</h3>
-                                <div class="blog-card-meta">
-                                    <span>{{ $articulo->fecha_publicacion->format('d/m/Y') }}</span>
-                                </div>
+                            <div class="blog-card-category">
+                                <span>{{ $categoria->nombre }}</span>
+                            </div>
+                            <div class="blog-card-title-container">
+                                <a href="{{ route('blog.show_article', $articulo->id) }}" class="blog-card-title-link">
+                                    <h3 class="blog-card-title">{{ $articulo->titulo }}</h3>
+                                </a>
                             </div>
                         </div>
-                    </a>
-                    @endforeach
+                        @endforeach
+                    </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-pagination"></div>
                 </div>
-            @endif
-        </div>
-        @endforeach
-    </div>
-    
-    {{-- Sidebar --}}
-    <div class="blog-sidebar">
-        <h3>Más Leídos</h3>
-        @foreach($articulos->sortByDesc('visitas')->take(5) as $articulo)
-        <div class="blog-sidebar-post">
-            <h4>{{ $articulo->titulo }}</h4>
-            <p>{{ strip_tags(Str::limit($articulo->contenido, 100)) }}</p>
-            <div class="blog-sidebar-meta">
-                <span>{{ $articulo->visitas }} visitas</span>
-                <span>{{ $articulo->fecha_publicacion->diffForHumans() }}</span>
             </div>
+            @else
+            <div class="blog-grid">
+                @foreach($articulos_categoria as $articulo)
+                <div class="blog-card-wrapper">
+                    <div class="blog-card">
+                        <a href="{{ route('blog.show_article', $articulo->id) }}" class="blog-card-content">
+                            <div class="blog-card-image">
+                                <div class="blog-image" style="background-image: url('{{ Storage::url($articulo->imagen) }}')"></div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="blog-card-category">
+                        <span>{{ $categoria->nombre }}</span>
+                    </div>
+                    <div class="blog-card-title-container">
+                        <a href="{{ route('blog.show_article', $articulo->id) }}" class="blog-card-title-link">
+                            <h3 class="blog-card-title">{{ $articulo->titulo }}</h3>
+                        </a>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+            @endif
         </div>
         @endforeach
     </div>

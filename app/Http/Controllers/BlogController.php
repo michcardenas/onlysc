@@ -36,16 +36,16 @@ class BlogController extends Controller
     {
         $articulo = BlogArticle::with(['categories', 'tags'])->findOrFail($id);
         $articulo->increment('visitas');
-    
+
         $articulos = BlogArticle::with(['user', 'categories', 'tags'])
             ->where('estado', 'publicado')
             ->orderBy('fecha_publicacion', 'desc')
             ->get();
-    
+
         $ciudades = Ciudad::all();
         $categorias = BlogCategory::all();
         $tags = BlogTag::all();
-    
+
         return view('layouts.showblog', [
             'articulo' => $articulo,
             'articulos' => $articulos,
@@ -87,13 +87,13 @@ class BlogController extends Controller
                 'estado' => $articulo->estado,
                 'destacado' => (bool) $articulo->destacado,
                 'imagen' => $articulo->imagen ? Storage::url($articulo->imagen) : null,
-                'categories' => $articulo->categories->map(function($category) {
+                'categories' => $articulo->categories->map(function ($category) {
                     return [
                         'id' => $category->id,
                         'nombre' => $category->nombre
                     ];
                 }),
-                'tags' => $articulo->tags->map(function($tag) {
+                'tags' => $articulo->tags->map(function ($tag) {
                     return [
                         'id' => $tag->id,
                         'nombre' => $tag->nombre
@@ -351,5 +351,90 @@ class BlogController extends Controller
                 'message' => 'Error al eliminar el tag: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    public function toggleDestacado($id)
+    {
+        try {
+            $article = BlogArticle::findOrFail($id);
+            $article->destacado = !$article->destacado;
+            $article->save();
+
+            return response()->json([
+                'success' => true,
+                'destacado' => $article->destacado,
+                'message' => $article->destacado ?
+                    'Artículo marcado como destacado' :
+                    'Artículo desmarcado como destacado'
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error al cambiar estado destacado: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar el estado destacado'
+            ], 500);
+        }
+    }
+
+    public function editCategory($id)
+    {
+        try {
+            $categoria = BlogCategory::findOrFail($id);
+            return response()->json([
+                'nombre' => $categoria->nombre,
+                'descripcion' => $categoria->descripcion
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al cargar la categoría: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function editTag($id)
+    {
+        try {
+            $tag = BlogTag::findOrFail($id);
+            return response()->json([
+                'nombre' => $tag->nombre
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al cargar el tag: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function showCategory($id)
+    {
+        // Obtener la categoría específica con sus artículos relacionados
+        $categoria = BlogCategory::findOrFail($id);
+        
+        // Obtener los artículos de esta categoría
+        $articulos = BlogArticle::with(['user', 'categories', 'tags'])
+            ->whereHas('categories', function($query) use ($id) {
+                $query->where('blog_categories.id', $id);
+            })
+            ->where('estado', 'publicado')
+            ->orderBy('fecha_publicacion', 'desc')
+            ->get();
+    
+        // Obtener todas las categorías con el conteo de artículos
+        $categorias = BlogCategory::withCount(['articles' => function($query) {
+            $query->where('estado', 'publicado');
+        }])->get();
+    
+        $ciudades = Ciudad::all();
+        $tags = BlogTag::all();
+    
+        return view('layouts.showcategory', [
+            'articulos' => $articulos,
+            'ciudades' => $ciudades,
+            'categorias' => $categorias,
+            'tags' => $tags,
+            'categoria' => $categoria
+        ]);
     }
 }

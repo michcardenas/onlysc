@@ -48,7 +48,7 @@
                                 <td>{{ $categoria->nombre }}</td>
                                 <td>
                                     <div class="d-flex gap-1">
-                                        <button onclick="editarCategoria({{ $categoria->id }})" class="btn-icon" title="Editar">
+                                        <button onclick="mostrarFormularioCategoria('editar', {{ $categoria->id }})" class="btn-icon" title="Editar">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         <button onclick="confirmarEliminarCategoria({{ $categoria->id }})" class="btn-icon-danger" title="Eliminar">
@@ -74,6 +74,7 @@
                 <h4 id="formularioCategoriaTitulo">Nueva Categoría</h4>
                 <form id="categoriaForm" method="POST" class="mt-3">
                     @csrf
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="_method" id="categoriaMergeMethod" value="POST">
                     <div class="form-group">
                         <label for="nombreCategoria">Nombre</label>
@@ -203,7 +204,7 @@
                         <label for="categoria">Categorías</label>
                         <select name="categorias[]" id="categoria" class="form-control" multiple>
                             @foreach($categorias as $categoria)
-                                <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+                            <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -212,7 +213,7 @@
                         <label for="tags">Tags</label>
                         <select name="tags[]" id="tags" class="form-control" multiple>
                             @foreach($tags as $tag)
-                                <option value="{{ $tag->id }}">{{ $tag->nombre }}</option>
+                            <option value="{{ $tag->id }}">{{ $tag->nombre }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -276,7 +277,7 @@
                                 <td>{{ $tag->nombre }}</td>
                                 <td>
                                     <div class="d-flex gap-1">
-                                        <button onclick="editarTag({{ $tag->id }})" class="btn-icon" title="Editar">
+                                        <button onclick="mostrarFormularioTag('editar', {{ $tag->id }})" class="btn-icon" title="Editar">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         <button onclick="confirmarEliminarTag({{ $tag->id }})" class="btn-icon-danger" title="Eliminar">
@@ -296,12 +297,13 @@
                     </table>
                 </div>
             </div>
-
+            
             <!-- Formulario Tags -->
             <div id="formularioTag" class="section-content mt-4" style="display: none;">
                 <h4 id="formularioTagTitulo">Nuevo Tag</h4>
                 <form id="tagForm" method="POST" class="mt-3">
                     @csrf
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="_method" id="tagMergeMethod" value="POST">
                     <div class="form-group">
                         <label for="nombreTag">Nombre</label>

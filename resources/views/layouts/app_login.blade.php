@@ -763,7 +763,8 @@ function initializeChoices() {
                 maxItemCount: 5,
                 searchEnabled: true,
                 placeholder: true,
-                placeholderValue: 'Selecciona las categorías'
+                placeholderValue: 'Selecciona las categorías',
+                duplicateItemsAllowed: false // Evitar duplicados
             });
         }
 
@@ -775,7 +776,10 @@ function initializeChoices() {
                 maxItemCount: 10,
                 searchEnabled: true,
                 placeholder: true,
-                placeholderValue: 'Selecciona los tags'
+                placeholderValue: 'Selecciona los tags',
+                duplicateItemsAllowed: false, // Evitar duplicados
+                removeItems: true, // Asegurar que se pueden remover items
+                removeItemButton: true // Mostrar botón de eliminar
             });
         }
     } catch (error) {
@@ -856,6 +860,7 @@ function blogEditarArticulo(id) {
     blogMostrarFormulario('editar', id);
 }
 
+
 // Función para cargar datos del artículo
 async function blogFetchArticleData(id) {
     try {
@@ -894,7 +899,8 @@ async function blogFetchArticleData(id) {
         if (tagsChoices && data.tags) {
             tagsChoices.removeActiveItems();
             const tagIds = data.tags.map(tag => tag.id.toString());
-            tagsChoices.setChoiceByValue(tagIds);
+            console.log('Tags a establecer:', tagIds); // Debug
+            tagsChoices.setValue(tagIds); // Usar setValue en lugar de setChoiceByValue
         }
 
         // Actualizar formulario
@@ -922,29 +928,67 @@ function blogConfirmarEliminar(id) {
 
 async function blogToggleDestacado(id) {
     try {
-        const response = await fetch(`/blogadmin/articles/${id}/toggle-featured`, {
+        // Usar la URL definida en la vista
+        const url = toggleDestacadoUrl.replace(':id', id);
+        
+        const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
             }
         });
         
-        if (!response.ok) throw new Error('Error al actualizar el estado destacado');
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Error al actualizar el estado destacado');
+        }
         
         const data = await response.json();
         const button = document.querySelector(`button[onclick="blogToggleDestacado(${id})"]`);
         
         if (button) {
-            button.innerHTML = data.destacado ? 
-                '<i class="fas fa-star"></i>' : 
-                '<i class="far fa-star-o"></i>';
+            // Cambiar el ícono
+            if (data.destacado) {
+                button.innerHTML = '<i class="fas fa-star"></i>';
+                button.setAttribute('title', 'Quitar de destacados');
+            } else {
+                button.innerHTML = '<i class="fas fa-star-o"></i>';
+                button.setAttribute('title', 'Marcar como destacado');
+            }
         }
-            
-        alert(data.message);
+        
+        // Mostrar mensaje de éxito
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-success alert-dismissible fade show';
+        alertDiv.innerHTML = `
+            ${data.message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        
+        const container = document.querySelector('.section-content');
+        container.insertBefore(alertDiv, container.firstChild);
+        
+        // Remover la alerta después de 3 segundos
+        setTimeout(() => alertDiv.remove(), 3000);
+        
     } catch (error) {
         console.error('Error:', error);
-        alert('Error al actualizar el estado destacado');
+        
+        // Mostrar mensaje de error
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+        alertDiv.innerHTML = `
+            Error al actualizar el estado destacado
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        
+        const container = document.querySelector('.section-content');
+        container.insertBefore(alertDiv, container.firstChild);
+        
+        // Remover la alerta después de 3 segundos
+        setTimeout(() => alertDiv.remove(), 3000);
     }
 }
 
@@ -968,6 +1012,17 @@ function setupFormHandler() {
                     return;
                 }
                 formData.set('contenido', contenido);
+            }
+
+            // Asegurar que se recojan todos los tags seleccionados
+            if (tagsChoices) {
+                const selectedTags = tagsChoices.getValue();
+                // Limpiar tags anteriores del FormData
+                formData.delete('tags[]');
+                // Agregar cada tag seleccionado
+                selectedTags.forEach(tag => {
+                    formData.append('tags[]', tag.value);
+                });
             }
 
             if (method === 'PUT') {
@@ -998,6 +1053,7 @@ function setupFormHandler() {
     });
 }
 
+
 // Inicialización cuando el documento está listo
 document.addEventListener('DOMContentLoaded', async function() {
     await initializeEditor();
@@ -1005,18 +1061,22 @@ document.addEventListener('DOMContentLoaded', async function() {
     setupFormHandler();
 });
 </script>
+<script>
+    const toggleDestacadoUrl = "{{ route('blogadmin.toggle-destacado', ':id') }}";
+</script>
 
 <script>
 // Funciones para tags
 function mostrarFormularioTag(tipo, id = null) {
     const form = document.getElementById('formularioTag');
     const titulo = document.getElementById('formularioTagTitulo');
+    const tagForm = document.getElementById('tagForm');
     
     form.style.display = 'block';
     if (tipo === 'crear') {
         titulo.textContent = 'Nuevo Tag';
-        document.getElementById('tagForm').reset();
-        document.getElementById('tagForm').action = '/blogadmin/tags/store';
+        tagForm.reset();
+        tagForm.action = '/blogadmin/tags/store';
         document.getElementById('tagMergeMethod').value = 'POST';
     } else {
         titulo.textContent = 'Editar Tag';
@@ -1042,13 +1102,39 @@ function cargarDatosTag(id) {
         });
 }
 
+function manejarSubmitTag(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+        method: formData.get('_method') || 'POST',
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            window.location.reload();
+        } else {
+            alert(data.message || 'Error en la operación');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error en la operación');
+    });
+}
+
 function confirmarEliminarTag(id) {
     if (confirm('¿Estás seguro de que deseas eliminar este tag?')) {
         fetch(`/blogadmin/tags/delete/${id}`, {
             method: 'DELETE',
             headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                'Accept': 'application/json'
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
             }
         })
         .then(response => response.json())
@@ -1065,19 +1151,18 @@ function confirmarEliminarTag(id) {
         });
     }
 }
-</script>
 
-<script>
-    // Funciones para categorías
+// Funciones para categorías
 function mostrarFormularioCategoria(tipo, id = null) {
     const form = document.getElementById('formularioCategoria');
     const titulo = document.getElementById('formularioCategoriaTitulo');
+    const categoriaForm = document.getElementById('categoriaForm');
     
     form.style.display = 'block';
     if (tipo === 'crear') {
         titulo.textContent = 'Nueva Categoría';
-        document.getElementById('categoriaForm').reset();
-        document.getElementById('categoriaForm').action = '/blogadmin/categories/store';
+        categoriaForm.reset();
+        categoriaForm.action = '/blogadmin/categories/store';
         document.getElementById('categoriaMergeMethod').value = 'POST';
     } else {
         titulo.textContent = 'Editar Categoría';
@@ -1104,13 +1189,39 @@ function cargarDatosCategoria(id) {
         });
 }
 
+function manejarSubmitCategoria(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+        method: formData.get('_method') || 'POST',
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            window.location.reload();
+        } else {
+            alert(data.message || 'Error en la operación');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error en la operación');
+    });
+}
+
 function confirmarEliminarCategoria(id) {
     if (confirm('¿Estás seguro de que deseas eliminar esta categoría?')) {
         fetch(`/blogadmin/categories/delete/${id}`, {
             method: 'DELETE',
             headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                'Accept': 'application/json'
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
             }
         })
         .then(response => response.json())
@@ -1320,6 +1431,7 @@ tinymce.init({
     }
 });
 </script>
+
 </body>
 
 </html>
