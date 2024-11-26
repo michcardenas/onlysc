@@ -167,6 +167,369 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 
+<style>
+    /* Banner */
+.blog-banner {
+    position: relative;
+    width: calc(100% - 10rem);
+    height: 500px;
+    overflow: hidden;
+    margin: 0 auto 0;
+    z-index: -1;
+    font-family: 'Poppins', sans-serif;
+}
+
+.blog-banner-img {
+    width: 100%;
+    height: 12rem;
+    background-size: cover;
+    background-position: center -250px;
+    /* Ajusta este valor para mover la imagen */
+    font-family: 'Poppins', sans-serif;
+}
+
+.blog-banner-content {
+    position: relative;
+    bottom: 7.1rem;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    text-align: center;
+    width: 100%;
+    background: #00000047;
+    height: 12.5rem;
+    bottom: 100px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Contenedor principal */
+.blog-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    gap: 20px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.blog-main {
+    flex: 1;
+}
+
+/* Tarjetas heredadas del inicio pero con prefijo blog */
+.blog-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-content: flex-start;
+    justify-content: flex-start;
+    max-width: 1050px;
+    margin: 0 auto;
+    font-family: 'Poppins', sans-serif;
+}
+
+.blog-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #000;
+    height: 360px;
+    width: 229px;
+    color: inherit;
+    transition: transform 0.2s ease;
+}
+
+.blog-card-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+
+.blog-card-category {
+    position: relative;
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #ffebef;
+    border-radius: 10px;
+    z-index: 3;
+    margin-top: 8px;
+    width: 32%; /* Asegura que tome todo el ancho */
+    text-align: center; /* Centra el texto */
+}
+
+.blog-card-category span {
+    color: #e00037;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+
+/* Resto de estilos de tarjetas y responsive... */
+
+/* Buscador */
+.blog-search-container {
+    max-width: 200px;
+    margin: 28px 20px;
+    position: relative;
+}
+
+.blog-search-input {
+    width: 77%;
+    padding: 12px 40px 12px 15px;
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+.blog-search-btn {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+
+/* Overlay con degradado para texto */
+.blog-card-overlay {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0) 60%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+}
+
+
+.blog-card-category span {
+    color: #e00037;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+
+/* Estilos para el contenedor del carrusel */
+.blog-carousel-container {
+    width: 800px;
+    position: relative;
+    margin: 20px 0;
+}
+
+/* Ajustes para el carrusel */
+.swiper {
+    width: 140%;
+    padding: 0 0px;
+    /* Espacio para los botones de navegación */
+}
+
+.swiper-slide {
+    height: auto;
+    width: 348px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espacio entre la tarjeta y la categoría */
+}
+
+
+.swiper-slide .blog-card {
+    width: 100%;
+    height: 197px; /* Volvemos a la altura original */
+    margin: 0;
+    position: relative;
+}
+
+
+
+
+.swiper-slide .blog-card-content {
+    flex: 1;
+    position: relative;
+    height: calc(100% - 40px);
+    /* Reserva espacio para la categoría */
+}
+
+.swiper-slide .blog-card-image {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    /* Altura fija para las imágenes */
+    overflow: hidden;
+}
+
+.blog-card-image {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.swiper-slide .blog-image {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Botones de navegación */
+.swiper-button-next,
+.swiper-button-prev {
+    width: 35px;
+    height: 35px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
+    font-size: 18px;
+    color: #e00037;
+}
+
+
+/* Paginación */
+/* Ajuste para la paginación */
+.swiper-pagination {
+    position: relative;
+    bottom: -10px;
+    margin-top: 20px;
+    /* Reducido de 83px */
+}
+
+.swiper-pagination-bullet {
+    background: #333333;
+    opacity: 1;
+}
+
+.swiper-pagination-bullet-active {
+    background: #e00037;
+}
+
+/* Imagen de fondo con opacidad */
+.blog-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.7;
+    z-index: 1;
+    border-radius: 8px;
+}
+
+
+/* Estilos adicionales para las categorías */
+.blog-categories {
+    margin-bottom: 2rem;
+}
+
+.blog-category-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.blog-category-link {
+    display: flex;
+    justify-content: space-between;
+    color: #4a5568;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+}
+
+.blog-category-link:hover {
+    color: #e00037;
+}
+
+.category-count {
+    color: #333333;
+}
+
+.blog-popular-posts {
+    margin-top: 2rem;
+}
+
+.blog-popular-post-item {
+    display: block;
+    padding: 8px 0;
+    color: #4a5568;
+    text-decoration: none;
+    font-size: 14px;
+    border-bottom: 1px solid #edf2f7;
+    transition: color 0.2s;
+}
+
+.blog-popular-post-item:hover {
+    color: #e00037;
+}
+
+.blog-sidebar h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #333333;
+}
+
+/* Nuevos estilos para el título y meta información */
+.blog-card-title-container {
+    padding: 0px 0;
+    text-align: left;
+    margin-top: -12px;
+}
+
+.blog-card-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: -1px;
+    color: #333;
+}
+
+.blog-card-meta {
+    font-size: 12px;
+    color: #666;
+}
+
+.blog-card-title-link {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s ease;
+}
+
+.blog-card-title-link:hover .blog-card-title {
+    color: #e00037;
+}
+
+.section-title-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.section-title-link h2 {
+    transition: color 0.2s ease;
+}
+
+.section-title-link:hover h2 {
+    color: #e00037;
+}
+
+    </style>
+
 </head>
 
 <body>
