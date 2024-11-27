@@ -2,7 +2,6 @@
 body,
 html {
     overflow-x: hidden;
-    /* Asegura que no haya scroll horizontal en toda la página */
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -19,18 +18,15 @@ html {
     align-items: center;
     margin: 0;
     padding-top: 80px;
-    /* Ajusta la distancia desde la parte superior */
 }
 
 /* Contenedor para el logo y el título */
 .logo-title-container {
     display: flex;
     flex-direction: column;
-    /* Coloca el logo y el título uno debajo del otro */
     justify-content: center;
     align-items: center;
     margin-bottom: 20px;
-    /* Ajusta el espacio debajo del contenedor */
 }
 
 /* Logo */
@@ -39,7 +35,6 @@ html {
     justify-content: center;
     align-items: center;
     margin-bottom: 10px;
-    /* Espacio entre el logo y el título */
 }
 
 /* Estilos generales para títulos */
@@ -111,16 +106,13 @@ main section h2:hover {
     border-bottom: 2px solid #e00037;
     padding-bottom: 10px;
     width: 250px;
-    /* Ancho del título con la línea */
     margin: 0 auto;
-    /* Centra el título horizontalmente */
 }
 
 .login-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* Centra verticalmente */
     align-items: center;
 }
 
@@ -131,7 +123,6 @@ main section h2:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     max-width: 400px;
     width: 100%;
-
     color: white;
 }
 
@@ -164,7 +155,6 @@ main section h2:hover {
 .floating-label {
     position: absolute;
     top: 10px;
-    /* Inicialmente está dentro del input */
     left: 0;
     font-size: 16px;
     color: #cccccc;
@@ -176,17 +166,13 @@ main section h2:hover {
 .form-control:focus+.floating-label,
 .form-control:not(:placeholder-shown)+.floating-label {
     top: -20px;
-    /* Mueve la etiqueta hacia arriba */
     font-size: 12px;
-    /* Reduce el tamaño de la etiqueta */
     color: #f8f5f6;
-    /* Cambia el color de la etiqueta */
 }
 
 /* Cambiar el color del asterisco (*) */
 label .required {
     color: #e00037;
-    /* Cambiar este color al que desees */
 }
 
 
@@ -313,26 +299,18 @@ label .required {
 /* Estilo para el mensaje de error */
 .alert-danger {
     color: #ffffff;
-    /* Texto blanco */
     background-color: #e00037;
-    /* Fondo rojo */
     border: 1px solid #ff6699;
-    /* Borde rojo más claro */
     padding: 10px;
-    /* Espaciado interno */
     border-radius: 5px;
-    /* Bordes redondeados */
     margin-bottom: 3rem;
-    /* Espacio debajo del mensaje */
     text-align: center;
-    /* Centrar el texto */
 }
 
 
 /* Fondo de la página */
 .custom-background {
     background-image: url('../images/IMAGEN-scaled-e1727837771908.jpg');
-    /* Ruta de la imagen de fondo */
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -355,11 +333,8 @@ label .required {
 .selector-container {
     display: flex;
     justify-content: center;
-    /* Centrar horizontalmente */
     margin-top: 20px;
-    /* Espacio hacia el logo */
     margin-bottom: 20px;
-    /* Espacio antes de las tarjetas */
 }
 
 /* Contenedor del select y botón */
@@ -367,7 +342,6 @@ label .required {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Centra horizontalmente */
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -424,7 +398,6 @@ label .required {
     height: auto;
     padding: 20px 0;
     overflow: hidden;
-    /* Evita el desbordamiento horizontal */
 }
 
 .swiper-slide {
@@ -440,22 +413,17 @@ label .required {
     flex-wrap: wrap;
     padding: 20px;
     width: 100%;
-    /* Asegura que el contenedor ocupe el 100% del espacio disponible */
     max-width: 1200px;
-    /* Establece un ancho máximo para pantallas grandes */
     margin: 0 auto;
-    /* Centra el contenedor horizontalmente */
 }
 
 
 .card {
     width: 24rem;
-    /* Tamaño de las tarjetas */
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     position: relative;
-    /* Para posicionar el texto dentro de la tarjeta */
 }
 
 .card img {
@@ -465,31 +433,23 @@ label .required {
 
 .card-content {
     position: absolute;
-    /* Posiciona el contenido de la tarjeta de manera absoluta */
     top: 10px;
-    /* Ajusta la distancia desde la parte superior */
     left: 10px;
-    /* Ajusta la distancia desde la parte izquierda */
     color: white;
-    /* Texto en color blanco */
     z-index: 2;
-    /* Asegura que el texto esté sobre la imagen */
     text-align: left;
-    /* Alinea el texto a la izquierda */
 }
 
 .card h3 {
     margin: 0;
     font-size: 20px;
     font-weight: 700;
-    /* Negrita para el título */
 }
 
 .card p {
     margin: 5px 0 0;
     font-size: 14px;
     font-weight: 400;
-    /* Peso normal para el texto descriptivo */
 }
 
 .card-link {
@@ -503,28 +463,13 @@ label .required {
     padding: 10px 0;
     font-size: 14px;
     position: relative;
-    /* Fija el footer en la parte inferior de la ventana */
-    position: relative;
-    /* Fija el footer en la parte inferior de la ventana */
     bottom: 0;
     left: 0;
     width: 100%;
-    /* Asegura que ocupe todo el ancho */
     z-index: 100;
     background-color: #1a1a1a;
     font-family: "Work Sans", sans-serif;
-    padding: 20px 0;
-    /* Asegura que esté sobre otros elementos */
-    z-index: 100;
-    background-color: #1a1a1a;
-    font-family: "Work Sans", sans-serif;
-    padding: 20px 0;
-    /* Asegura que esté sobre otros elementos */
 }
-
-
-
-
 
 /* Estilos para la barra de navegación superior negra */
 .navbar-top {
@@ -563,10 +508,8 @@ label .required {
 
 .location-dropdown img.location-icon {
     width: 20px;
-    /* Ajusta el tamaño del icono */
     height: auto;
     margin-right: 5px;
-    /* Espaciado entre el icono y el select */
     color: #f8f5f6;
     filter: invert(100%);
 }
@@ -591,12 +534,9 @@ label .required {
     color: white;
     border: none;
     padding: 8px 15px;
-    /* Tamaño reducido del padding */
     font-size: 12px;
-    /* Tamaño de la fuente más pequeño */
     cursor: pointer;
     margin-left: 10px;
-    /* Espaciado entre los botones */
     border-radius: 5px;
     text-decoration: none;
     font-weight: bold;
@@ -621,7 +561,6 @@ label .required {
 .navbar-right {
     display: flex;
     align-items: center;
-    /* Alinea verticalmente todos los elementos */
     opacity: .75;
 }
 
@@ -635,9 +574,7 @@ label .required {
 .btn-login {
     background-color: white;
     color: #333;
-    /* Cambia el texto a oscuro cuando el fondo es blanco */
     outline: none;
-    /* Elimina el borde de enfoque predeterminado */
 }
 
 
@@ -650,7 +587,6 @@ label .required {
     background-color: #fff;
     color: #333;
     border-bottom: 2px solid #ccc;
-    /* Agrega un borde inferior */
     font-family: "Work Sans", sans-serif !important;
     font-size: .875rem;
     font-weight: normal;
@@ -677,10 +613,8 @@ label .required {
 /* Alinear el ícono SVG y el texto */
 .btn-filters .icon-filter {
     width: 16px;
-    /* Ajusta el tamaño del ícono */
     height: 16px;
     margin-right: 5px;
-    /* Espacio entre el ícono y el texto */
 }
 
 /* Cambiar el color del botón al hacer hover */
@@ -692,7 +626,6 @@ label .required {
 /* Cambiar el color del ícono SVG al hacer hover (opcional) */
 .btn-filters:hover .icon-filter {
     filter: invert(100%);
-    /* Cambia el ícono a blanco en hover */
 }
 
 .navbar-nav .dropdown-menu {
@@ -748,21 +681,16 @@ label .required {
     cursor: pointer;
     border-radius: 5px;
     height: 100%;
-    /* Asegurar que el botón esté alineado verticalmente */
-
 }
 
 .search-bar .btn-search .search-icon {
     width: 16px;
-    /* Ajusta el tamaño del ícono */
     height: 16px;
     filter: invert(100%);
-    /* Cambia el color del SVG de negro a blanco */
 }
 
 .search-bar .btn-search:hover .search-icon {
     filter: invert(50%) sepia(100%) saturate(500%) hue-rotate(-20deg);
-    /* Cambia el color en hover */
 }
 
 .search-bar .btn-search i {
@@ -781,35 +709,28 @@ label .required {
 .navbar-right select#categorias {
     border: none;
     background-color: transparent;
-    /* Elimina el fondo */
     font-weight: bold;
     color: #333;
     cursor: pointer;
     appearance: none;
-    /* Elimina la flecha por defecto del select */
     -webkit-appearance: none;
-    /* Compatibilidad con WebKit */
     -moz-appearance: none;
-    /* Compatibilidad con Firefox */
     padding: 5px 10px;
-    /* Ajusta el padding */
+
 }
 
 .navbar-right select#categorias:focus {
     outline: none;
-    /* Elimina el contorno al enfocarse */
 }
 
 /* Para agregar una flecha personalizada o eliminarla por completo */
 .navbar-right select#categorias::after {
     content: "";
-    /* Elimina la flecha nativa del select */
 }
 
 
 .logo img {
     height: 40px;
-    /* Ajusta el tamaño del logo */
     margin-right: 50px;
     margin-top: 4rem;
 }
@@ -848,16 +769,13 @@ label .required {
     letter-spacing: 0.5px;
     text-align: left;
     margin-left: 0;
-    /* Eliminamos márgenes adicionales */
     padding-left: 0;
-    /* Eliminamos el padding */
 }
 
 .container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    /* Alineamos el título y las ciudades a la izquierda */
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -866,13 +784,10 @@ label .required {
 .locations-grid {
     display: flex;
     justify-content: flex-start;
-    /* Alinear las columnas hacia la izquierda */
     flex-wrap: wrap;
     max-width: 1200px;
     padding-top: 10px;
-    /* Espacio entre el título y las ubicaciones */
     border-top: 1px solid #4e4e4e;
-    /* Línea debajo del título */
 }
 
 .locations-grid ul {
@@ -880,10 +795,7 @@ label .required {
     padding: 0;
     margin: 0 20px 0 0;
     flex-basis: auto;
-    /* Ajuste del ancho de cada columna */
     text-align: left;
-    /* Alineación del contenido dentro de la columna a la izquierda */
-
 }
 
 .locations-grid ul li {
@@ -893,9 +805,7 @@ label .required {
 .locations-grid ul li a {
     color: #fff;
     font-weight: 300;
-    /* Letra más fina */
     font-size: 0.875rem;
-    /* Letra más pequeña para las ubicaciones */
     text-decoration: none;
     transition: color 0.3s ease;
 }
@@ -934,19 +844,15 @@ label .required {
 
 .publicate-logo {
     width: 25%;
-    /* Ajusta el tamaño del logo */
     margin-bottom: 10px;
     display: block;
     margin-left: auto;
     margin-right: auto;
-    /* Centrar el logo horizontalmente */
 }
 
 .publicate-form-title {
     font-size: 32px;
-    /* Tamaño del texto del título */
     font-weight: bold;
-    /* Negrita */
     color: #333;
 }
 
@@ -1087,7 +993,6 @@ label .required {
 /* Estilos específicos para el campo de disponibilidad */
 .publicate-input-wrapper input[name="disponibilidad"]::placeholder {
     color: transparent;
-    /* Inicialmente transparente */
     font-style: italic;
     font-size: 14px;
     transition: color 0.2s ease;
@@ -1096,7 +1001,6 @@ label .required {
 /* Mostrar placeholder solo cuando el input está enfocado */
 .publicate-input-wrapper input[name="disponibilidad"]:focus::placeholder {
     color: #999;
-    /* Color del placeholder cuando está enfocado */
 }
 
 /* Mantener el comportamiento del label */
@@ -1125,9 +1029,7 @@ label .required {
 .publicate-services-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    /* Reducido de 200px a 160px */
     gap: 5px;
-    /* Reducido de 10px a 5px */
     margin-top: 8px;
 }
 
@@ -1135,10 +1037,8 @@ label .required {
     display: flex;
     align-items: center;
     font-size: 13px;
-    /* Reducido de 14px a 13px */
     color: #333;
     padding: 4px 6px;
-    /* Reducido de 8px a 4px 6px */
     border-radius: 3px;
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -1157,16 +1057,13 @@ label .required {
     appearance: none;
     -webkit-appearance: none;
     width: 15px;
-    /* Reducido de 18px a 15px */
     height: 15px;
-    /* Reducido de 18px a 15px */
     border: 1px solid #777771;
     border-radius: 2px;
     outline: none;
     cursor: pointer;
     position: relative;
     margin-right: 8px;
-    /* Reducido de 10px a 8px */
     background-color: white;
     transition: all 0.2s ease;
 }
@@ -1182,13 +1079,9 @@ label .required {
     content: '';
     position: absolute;
     left: 2px;
-    /* Ajustado para el nuevo tamaño */
     top: 0px;
-    /* Ajustado para el nuevo tamaño */
     width: 5px;
-    /* Reducido para el nuevo tamaño */
     height: 9px;
-    /* Ajustado para el nuevo tamaño */
     border: solid #e00037;
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
@@ -1349,7 +1242,6 @@ label .required {
 .publicate-textarea-label {
     flex-shrink: 0;
     padding-top: 10px;
-    /* Alinea con el borde superior del textarea */
 }
 
 .publicate-textarea-label label {
@@ -1499,7 +1391,6 @@ label .required {
     position: relative;
     z-index: 10;
     grid-template-columns: 1fr 300px;
-    /* Mantiene el sidebar */
 }
 
 .foro-search-input {
@@ -1565,7 +1456,6 @@ label .required {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
     grid-auto-flow: row;
-    /* Asegura que el flujo sea por filas */
 }
 
 
@@ -1665,13 +1555,9 @@ label .required {
     padding: 15px 0;
     margin-left: 190px;
     margin-top: 10px;
-    /* Mantener el margen superior */
     position: relative;
-    /* Asegura que se posicione correctamente dentro del flujo del documento */
     bottom: 0;
-    /* Alinear al fondo */
     width: 100%;
-    /* Asegura que el contenedor ocupe el ancho completo */
     font-family: 'Poppins', sans-serif;
 }
 
@@ -1679,16 +1565,11 @@ label .required {
     font-family: 'Poppins', sans-serif;
     font-size: 16px;
     color: #555;
-    /* Cambia el color según el diseño */
     line-height: 1.6;
     padding: 10px 0;
     margin-left: 190px;
-    /* Ajusta para espacio entre el título y la descripción */
-    /* Ajuste de alineación */
     width: 100%;
-    /* Asegura que ocupe el ancho completo del contenedor */
     max-width: 800px;
-    /* Limita el ancho para mejor lectura */
 }
 
 
@@ -1765,11 +1646,8 @@ label .required {
 
 .fixed-pin {
     color: #e00037;
-    /* Color del pin */
     font-size: 16px;
-    /* Tamaño del ícono */
     flex-shrink: 0;
-    /* Evitar que el pin cambie de tamaño */
 }
 
 /* Estadísticas de los comentarios */
@@ -2070,13 +1948,11 @@ label .required {
     justify-content: center;
     margin-top: 20px;
     padding: 0 15px;
-    /* Espaciado en los lados para pantallas pequeñas */
 }
 
 .foro-comentario-form {
     width: 100%;
     max-width: 600px;
-    /* Ancho máximo para que no se expanda demasiado */
     font-family: 'Poppins', sans-serif;
     background-color: #fff;
     padding: 20px;
@@ -2089,7 +1965,6 @@ label .required {
     font-weight: bold;
     color: #333;
     border-bottom: 2px solid #d9534f;
-    /* Color rojo para el subrayado */
     padding-bottom: 5px;
     margin-bottom: 15px;
 }
@@ -2116,7 +1991,6 @@ label .required {
 
 .foro-comentario-btn {
     background-color: #d9534f;
-    /* Color rojo */
     color: white;
     padding: 10px 20px;
     border: none;
@@ -2129,7 +2003,6 @@ label .required {
 
 .foro-comentario-btn:hover {
     background-color: #c9302c;
-    /* Un tono más oscuro de rojo */
 }
 
 
@@ -2154,9 +2027,7 @@ label .required {
     justify-content: space-around;
     width: 100%;
     max-width: 600px;
-    /* Controlamos el ancho máximo */
     margin-bottom: 10px;
-    /* Espacio entre las filas */
 }
 
 /* Estilo para el footer inferior */
@@ -2168,18 +2039,15 @@ label .required {
 /* Estilo para el logo centrado */
 .custom-footer-logo {
     margin-bottom: 20px;
-    /* Espacio entre el logo y los enlaces */
 }
 
 .custom-logo-footer {
     max-width: 150px;
-    /* Ajustar el tamaño del logo */
 }
 
 /* Enlaces distribuidos en tres filas */
 .custom-footer-middle {
     margin-bottom: 20px;
-    /* Espacio entre los enlaces y las redes sociales */
 }
 
 .custom-footer-middle .custom-links {
@@ -2262,7 +2130,7 @@ label .required {
     color: #ff3366;
 }
 
-/* Sección inferior: logo y redes sociales */
+
 .footer-bottom {
     padding: 20px 0;
     text-align: center;
@@ -2310,7 +2178,6 @@ label .required {
     width: 100%;
     overflow: hidden;
     margin-top: 0;
-    /* Para que esté pegado al borde superior */
     height: 13rem;
 
 }
@@ -2318,7 +2185,6 @@ label .required {
 .banner-img {
     width: 100%;
     object-fit: cover;
-    /* Hace que la imagen se ajuste sin distorsionar */
     height: 12rem;
 }
 
@@ -2337,13 +2203,10 @@ label .required {
 
 .banner-content h1 {
     font-size: 35px;
-    /* Ajusta el tamaño del texto si es necesario */
-
 }
 
 .banner-content .highlight {
     color: #f25555;
-    /* Color destacado */
 }
 
 .texto_banner {
@@ -2356,14 +2219,12 @@ label .required {
 
 .texto_banner .thin {
     font-weight: 100;
-    /* Esto hace que la fuente sea muy fina */
     font-family: 'Poppins', sans-serif;
 
 }
 
 .texto_banner .bold {
     font-weight: bold;
-    /* Esto aplica negrita */
     font-family: 'Poppins', sans-serif;
 
 }
@@ -2426,7 +2287,6 @@ label .required {
     align-items: center;
     padding: 15px 30px;
     background-color: #1e1e1e;
-    /* Color oscuro para la barra */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
@@ -2546,14 +2406,11 @@ h2 {
 
 .table-admin a {
     color: #e00037;
-    /* Cambia el color del enlace */
     text-decoration: none;
-    /* Quita la línea subrayada */
 }
 
 .table-admin a:hover {
     text-decoration: underline;
-    /* Opcional: puedes agregar un subrayado al pasar el cursor */
 }
 
 .required-asterisk {
@@ -2641,10 +2498,8 @@ h2 {
     display: flex;
     align-items: center;
     font-size: 13px;
-    /* Reducido de 14px a 13px */
     color: #fff;
     padding: 4px 6px;
-    /* Reducido de 8px a 4px 6px */
     border-radius: 3px;
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -2775,18 +2630,14 @@ h2 {
     height: 360px;
     width: 229px;
     text-decoration: none;
-    /* Quita el subrayado del enlace */
     color: inherit;
-    /* Hereda el color del texto del padre */
     display: block;
-    /* Hace que el enlace ocupe todo el espacio de la tarjeta */
     transition: transform 0.2s ease;
-    /* Suave transición para el efecto hover */
 }
 
 .inicio-card:hover {
     transform: translateY(-5px);
-    /* Efecto de elevación al pasar el mouse */
+
 }
 
 .inicio-card-category {
@@ -2811,8 +2662,6 @@ h2 {
     display: flex;
     align-items: flex-end;
 }
-
-
 
 /* Overlay con degradado para texto */
 .inicio-card-overlay {
@@ -2904,14 +2753,9 @@ h2 {
     background-color: #000;
     height: 325px;
     position: absolute;
-    /* Cambiado a absolute */
-    /* top: 392px; */
-    /* Ajusta según la distancia deseada desde el borde superior */
     right: 369px;
-    /* Ajusta según lo que necesites */
     font-family: 'Poppins', sans-serif;
     z-index: 10;
-    /* Asegúrate de que quede por encima de otros elementos */
 }
 
 /* Imagen de fondo de la tarjeta destacada */
@@ -2935,7 +2779,6 @@ h2 {
     justify-content: flex-end;
     border-radius: 0 0 8px 8px;
     height: 100%;
-    /* Asegura que el overlay ocupe toda la altura */
 }
 
 /* Título de la tarjeta destacada (nombre) y edad en la misma línea */
@@ -2946,7 +2789,6 @@ h2 {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* Alinea el nombre y la edad en extremos */
     color: #fff;
 }
 
@@ -2955,7 +2797,6 @@ h2 {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* Alinea la ubicación y el precio en extremos */
     font-size: 14px;
     color: #ccc;
     margin-top: 5px;
@@ -2980,7 +2821,6 @@ h2 {
     top: 10px;
     left: 10px;
     background-color: rgba(255, 0, 0, 0.8);
-    /* Fondo rojo para destacarla */
     color: #fff;
     padding: 5px 10px;
     border-radius: 5px;
@@ -2992,9 +2832,7 @@ h2 {
 
 .inicio-featured-label {
     background-color: #FF0050;
-    /* Color de fondo rosa */
     color: #fff;
-    /* Texto en blanco */
     text-align: center;
     font-weight: bold;
     padding: 10px 0;
@@ -3011,13 +2849,9 @@ h2 {
     padding: 10px;
     font-family: 'Work Sans', sans-serif;
     position: absolute;
-    /* Cambiado a absolute */
     top: 645px;
-    /* Ajusta según la distancia deseada desde el borde superior */
     right: 346px;
-    /* Ajusta según lo que necesites */
     z-index: 10;
-    /* Asegúrate de que quede por encima de otros elementos */
 }
 
 /* Título del panel */
@@ -3032,12 +2866,10 @@ h2 {
 
 /* Contador de chicas online */
 .online-count {
-    /* background-color: #f8f9fa; */
     border: 1px solid #7ed321;
     color: #000;
     padding: 5px 53px;
     font-size: 14px;
-    /* border-radius: 4px; */
     margin-bottom: 10px;
     display: inline-block;
     text-align: center;
@@ -3055,7 +2887,6 @@ h2 {
 .online-item {
     display: flex;
     padding: 8px 0;
-    /* border-bottom: 1px solid #e5e5e5; */
     position: relative;
 }
 
@@ -3077,7 +2908,6 @@ h2 {
     font-size: 14px;
     font-weight: 500;
     color: #000;
-    /* margin-bottom: 2px; */
     display: flex;
     align-items: center;
 }
@@ -3112,7 +2942,6 @@ h2 {
     background-color: #000;
     color: white;
     padding: 4px 12px;
-    /* border-radius: 4px; */
     font-size: 12px;
     text-decoration: none;
     display: inline-block;
@@ -3124,7 +2953,6 @@ h2 {
     width: 10px;
     height: 10px;
     background-color: #7ed321;
-    /* Cambia a red para mejor visibilidad */
     border-radius: 50%;
     margin-left: -40px;
     vertical-align: middle;
@@ -3133,7 +2961,6 @@ h2 {
 .escortperfil-container {
     max-width: 1200px;
     margin: 0 auto;
-    /* padding: 20px; */
     font-family: Poppins, sans-serif;
 }
 
@@ -3427,7 +3254,6 @@ h2 {
     border-radius: 10px;
     width: 290px;
     margin-top: 20px;
-    /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
 }
 
 /* Título del horario */
@@ -3711,19 +3537,7 @@ h2 {
 }
 
 /* Colores específicos de cada red social */
-.linkedin {
-    background-color: #e00037;
-}
-
-.twitter {
-    background-color: #e00037;
-}
-
-.github {
-    background-color: #e00037;
-}
-
-.email {
+.linkedin, .twitter, .github, .email {
     background-color: #e00037;
 }
 
@@ -3783,22 +3597,6 @@ h2 {
     font-weight: 600;
     margin-top: 20px;
     margin-bottom: 15px;
-}
-
-.blog-content h3 {
-    color: #333333;
-    font-size: 24px;
-    font-weight: 600;
-    margin-top: 18px;
-    margin-bottom: 12px;
-}
-
-.blog-content h4 {
-    color: #333333;
-    font-size: 20px;
-    font-weight: 600;
-    margin-top: 15px;
-    margin-bottom: 10px;
 }
 
 .blog-title {
@@ -3964,569 +3762,3 @@ h2 {
     border-radius: 4px;
 }
 
-/* Banner */
-.blog-banner {
-    position: relative;
-    width: calc(100% - 10rem);
-    height: 500px;
-    overflow: hidden;
-    margin: 0 auto 0;
-    z-index: -1;
-    font-family: 'Poppins', sans-serif;
-}
-
-.blog-banner-img {
-    width: 100%;
-    height: 12rem;
-    background-size: cover;
-    background-position: center -250px;
-    /* Ajusta este valor para mover la imagen */
-    font-family: 'Poppins', sans-serif;
-}
-
-.blog-banner-content {
-    position: relative;
-    bottom: 7.1rem;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #fff;
-    text-align: center;
-    width: 100%;
-    background: #00000047;
-    height: 12.5rem;
-    bottom: 100px;
-    font-family: 'Poppins', sans-serif;
-}
-
-/* Contenedor principal */
-.blog-container {
-    display: flex;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    gap: 20px;
-    font-family: 'Poppins', sans-serif;
-}
-
-.blog-main {
-    flex: 1;
-}
-
-/* Tarjetas heredadas del inicio pero con prefijo blog */
-.blog-card-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-content: flex-start;
-    justify-content: flex-start;
-    max-width: 1050px;
-    margin: 0 auto;
-    font-family: 'Poppins', sans-serif;
-}
-
-.blog-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    background-color: #000;
-    height: 360px;
-    width: 229px;
-    color: inherit;
-    transition: transform 0.2s ease;
-}
-
-.blog-card-content {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-
-.blog-card-category {
-    position: relative;
-    display: inline-block;
-    padding: 6px 12px;
-    background-color: #ffebef;
-    border-radius: 10px;
-    z-index: 3;
-    margin-top: 8px;
-    width: 32%; /* Asegura que tome todo el ancho */
-    text-align: center; /* Centra el texto */
-}
-
-.blog-card-category span {
-    color: #e00037;
-    font-size: 12px;
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
-
-
-/* Resto de estilos de tarjetas y responsive... */
-
-/* Buscador */
-.blog-search-container {
-    max-width: 200px;
-    margin: 28px 20px;
-    position: relative;
-}
-
-.blog-search-input {
-    width: 77%;
-    padding: 12px 40px 12px 15px;
-    border-radius: 25px;
-    border: 1px solid #ddd;
-    font-size: 16px;
-}
-
-.blog-search-btn {
-    position: absolute;
-    right: 5px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-
-/* Overlay con degradado para texto */
-.blog-card-overlay {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0) 60%);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 20px;
-}
-
-
-.blog-card-category span {
-    color: #e00037;
-    font-size: 12px;
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
-
-
-/* Estilos para el contenedor del carrusel */
-.blog-carousel-container {
-    width: 800px;
-    position: relative;
-    margin: 20px 0;
-}
-
-/* Ajustes para el carrusel */
-.swiper {
-    width: 140%;
-    padding: 0 0px;
-    /* Espacio para los botones de navegación */
-}
-
-.swiper-slide {
-    height: auto;
-    width: 348px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Espacio entre la tarjeta y la categoría */
-}
-
-
-.swiper-slide .blog-card {
-    width: 100%;
-    height: 197px; /* Volvemos a la altura original */
-    margin: 0;
-    position: relative;
-}
-
-
-
-
-.swiper-slide .blog-card-content {
-    flex: 1;
-    position: relative;
-    height: calc(100% - 40px);
-    /* Reserva espacio para la categoría */
-}
-
-.swiper-slide .blog-card-image {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    /* Altura fija para las imágenes */
-    overflow: hidden;
-}
-
-.blog-card-image {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-
-.swiper-slide .blog-image {
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-}
-
-/* Botones de navegación */
-.swiper-button-next,
-.swiper-button-prev {
-    width: 35px;
-    height: 35px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.swiper-button-next:after,
-.swiper-button-prev:after {
-    font-size: 18px;
-    color: #e00037;
-}
-
-
-/* Paginación */
-/* Ajuste para la paginación */
-.swiper-pagination {
-    position: relative;
-    bottom: -10px;
-    margin-top: 20px;
-    /* Reducido de 83px */
-}
-
-.swiper-pagination-bullet {
-    background: #333333;
-    opacity: 1;
-}
-
-.swiper-pagination-bullet-active {
-    background: #e00037;
-}
-
-/* Imagen de fondo con opacidad */
-.blog-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    opacity: 0.7;
-    z-index: 1;
-    border-radius: 8px;
-}
-
-
-/* Estilos adicionales para las categorías */
-.blog-categories {
-    margin-bottom: 2rem;
-}
-
-.blog-category-item {
-    padding: 8px 0;
-    border-bottom: 1px solid #edf2f7;
-}
-
-.blog-category-link {
-    display: flex;
-    justify-content: space-between;
-    color: #4a5568;
-    text-decoration: none;
-    font-size: 14px;
-    transition: color 0.2s;
-}
-
-.blog-category-link:hover {
-    color: #e00037;
-}
-
-.category-count {
-    color: #333333;
-}
-
-.blog-popular-posts {
-    margin-top: 2rem;
-}
-
-.blog-popular-post-item {
-    display: block;
-    padding: 8px 0;
-    color: #4a5568;
-    text-decoration: none;
-    font-size: 14px;
-    border-bottom: 1px solid #edf2f7;
-    transition: color 0.2s;
-}
-
-.blog-popular-post-item:hover {
-    color: #e00037;
-}
-
-.blog-sidebar h3 {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: #333333;
-}
-
-/* Nuevos estilos para el título y meta información */
-.blog-card-title-container {
-    padding: 0px 0;
-    text-align: left;
-    margin-top: -12px;
-}
-
-.blog-card-title {
-    font-size: 22px;
-    font-weight: 600;
-    margin-bottom: -1px;
-    color: #333;
-}
-
-.blog-card-meta {
-    font-size: 12px;
-    color: #666;
-}
-
-.blog-card-title-link {
-    text-decoration: none;
-    color: inherit;
-    transition: color 0.2s ease;
-}
-
-.blog-card-title-link:hover .blog-card-title {
-    color: #e00037;
-}
-
-.section-title-link {
-    text-decoration: none;
-    color: inherit;
-}
-
-.section-title-link h2 {
-    transition: color 0.2s ease;
-}
-
-.section-title-link:hover h2 {
-    color: #e00037;
-}
-
-/* Banner */
-.blogcategory-banner {
-    position: relative;
-    width: calc(100% - 10rem);
-    height: 500px;
-    overflow: hidden;
-    margin: 0 auto 0;
-    z-index: -1;
-    font-family: 'Poppins', sans-serif;
-}
-
-.blogcategory-banner-img {
-    width: 100%;
-    height: 12rem;
-    background-size: cover;
-    background-position: center -250px;
-    font-family: 'Poppins', sans-serif;
-}
-
-.blogcategory-banner-content {
-    position: relative;
-    bottom: 7.1rem;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #fff;
-    text-align: center;
-    width: 100%;
-    background: #00000047;
-    height: 12.5rem;
-    bottom: 100px;
-    font-family: 'Poppins', sans-serif;
-}
-
-/* Contenedor principal */
-.blogcategory-container {
-    display: flex;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    gap: 20px;
-    font-family: 'Poppins', sans-serif;
-}
-
-.blogcategory-main {
-    flex: 1;
-}
-
-/* Buscador */
-.blogcategory-search-container {
-    max-width: 200px;
-    margin: 28px 20px;
-    position: relative;
-}
-
-.blogcategory-search-input {
-    width: 77%;
-    padding: 12px 40px 12px 15px;
-    border-radius: 25px;
-    border: 1px solid #ddd;
-    font-size: 16px;
-}
-
-.blogcategory-search-btn {
-    position: absolute;
-    right: 5px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-/* Grid de tarjetas */
-.blogcategory-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 30px;
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-/* Card wrapper para contener la imagen y los contenedores de texto */
-.blogcategory-card-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-/* Tarjeta principal (contenedor de imagen) */
-.blogcategory-card {
-    position: relative;
-    border-radius: 10px;
-    overflow: hidden;
-    background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    height: 200px;
-    width: 100%;
-}
-
-.blogcategory-card-content {
-    width: 100%;
-    height: 100%;
-}
-
-.blogcategory-card-image {
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-
-.blogcategory-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    background-size: cover;
-    background-position: center;
-}
-
-/* Contenedor de tags */
-.blogcategory-card-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-/* Estilo individual para cada tag */
-.blogcategory-card-tag {
-    display: inline-block;
-    background-color: #ffebef;
-    padding: 4px 12px;
-    border-radius: 4px;
-}
-
-.blogcategory-card-tag span {
-    color: #e00037;
-    font-size: 12px;
-    text-transform: uppercase;
-    font-weight: 600;
-}
-
-/* Contenedor del título */
-.blogcategory-card-title-container {
-    padding: 5px 0;
-}
-
-.blogcategory-card-title {
-    color: #333;
-    font-size: 16px;
-    font-weight: 500;
-    margin-bottom: 5px;
-    line-height: 1.3;
-}
-
-.blogcategory-card-meta {
-    color: #666;
-    font-size: 12px;
-}
-
-/* Estilos adicionales para las categorías */
-.blogcategory-categories {
-    margin-bottom: 2rem;
-}
-
-.blogcategory-category-item {
-    padding: 8px 0;
-    border-bottom: 1px solid #edf2f7;
-}
-
-.blogcategory-category-link {
-    display: flex;
-    justify-content: space-between;
-    color: #4a5568;
-    text-decoration: none;
-    font-size: 14px;
-    transition: color 0.2s;
-}
-
-.blogcategory-category-link:hover {
-    color: #e00037;
-}
-
-.blogcategory-popular-posts {
-    margin-top: 2rem;
-}
-
-.blogcategory-popular-post-item {
-    display: block;
-    padding: 8px 0;
-    color: #4a5568;
-    text-decoration: none;
-    font-size: 14px;
-    border-bottom: 1px solid #edf2f7;
-    transition: color 0.2s;
-}
-
-.blogcategory-popular-post-item:hover {
-    color: #e00037;
-}
-
-.blogcategory-sidebar h3 {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: #333333;
-}
