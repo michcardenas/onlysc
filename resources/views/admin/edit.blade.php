@@ -32,6 +32,7 @@
         </div>
         <ul class="nav-links-admin">
             <li><a href="{{ route('home') }}">Inicio</a></li>
+            <li><a href="{{ route('admin.profile') }}">Perfil</a></li>
             <li><a href="{{ route('publicate.form') }}">Publicar</a></li>
             <li><a href="{{ route('foroadmin') }}">Foro</a></li>
             <li><a href="{{ route('blogadmin') }}">Blog</a></li>
@@ -43,7 +44,6 @@
         </div>
     </nav>
 </header>
-
 
 <main class="main-admin">
     <section class="form-section">

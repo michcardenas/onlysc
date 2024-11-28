@@ -244,9 +244,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     <option value="MASAJES">MASAJES</option>
                 </select>
 
-                <a href="#" class="nav-link">FAVORITOS</a>
-                <a href="#" class="nav-link">BLOG</a>
-                <a href="#" class="nav-link">FORO</a>
+                <a href="/favoritos/" class="nav-link">FAVORITOS</a>
+                <a href="/blog/" class="nav-link">BLOG</a>
+                <a href="/foro/" class="nav-link">FORO</a>
             </div>
         </div>
 

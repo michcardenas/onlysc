@@ -2,21 +2,14 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
@@ -24,21 +17,11 @@ class User extends Authenticatable
         'rol',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -47,15 +30,20 @@ class User extends Authenticatable
         ];
     }
 
-      // Relación con artículos del blog
-      public function blogArticles()
-      {
-          return $this->hasMany(BlogArticle::class);
-      }
-  
-      // Verificar si el usuario es admin (ajusta según tu lógica de roles)
-      public function isAdmin()
-      {
-          return $this->rol === '1'; // Ajusta según tu estructura de roles
-      }
-  }
+    // Añadimos la relación con comentarios
+    public function comentarios()
+    {
+        return $this->hasMany(Comentario::class, 'id_usuario');
+    }
+
+    // Relación con artículos del blog
+    public function blogArticles()
+    {
+        return $this->hasMany(BlogArticle::class);
+    }
+
+    public function isAdmin()
+    {
+        return $this->rol === '1';
+    }
+}

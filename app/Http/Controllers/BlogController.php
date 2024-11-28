@@ -20,6 +20,7 @@ class BlogController extends Controller
             ->orderBy('fecha_publicacion', 'desc')
             ->get();
 
+
         $ciudades = Ciudad::all();
         $categorias = BlogCategory::all();
         $tags = BlogTag::all();

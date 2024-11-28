@@ -83,6 +83,10 @@
                                 <a href="{{ route('blog.show_article', $articulo->id) }}" class="blog-card-title-link">
                                     <h3 class="blog-card-title">{{ $articulo->titulo }}</h3>
                                 </a>
+                                <div class="blog-card-meta">
+                                    <span class="blog-card-author">Por {{ $articulo->user->name }}</span>
+                                    <span class="blog-card-date">{{ \Carbon\Carbon::parse($articulo->fecha_publicacion)->format('d/m/Y') }}</span>
+                                </div>
                             </div>
                         </div>
                         @endforeach
@@ -110,6 +114,12 @@
                         <a href="{{ route('blog.show_article', $articulo->id) }}" class="blog-card-title-link">
                             <h3 class="blog-card-title">{{ $articulo->titulo }}</h3>
                         </a>
+                        <div class="blog-card-meta">
+                            <div class="blog-card-meta">
+                                <span class="blog-card-author">Por {{ $articulo->user->name }}</span>
+                                <span class="blog-card-date">{{ \Carbon\Carbon::parse($articulo->fecha_publicacion)->format('d/m/Y') }}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 @endforeach

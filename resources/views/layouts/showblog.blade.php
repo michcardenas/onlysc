@@ -36,26 +36,45 @@
             </div>
         </div>
     </div>
-    
+
     {{-- Contenido principal --}}
     <div class="blog-content">
         <h1 class="blog-title">{{ $articulo->titulo }}</h1>
         <div class="article-meta">
+            <span class="blog-author">Por {{ $articulo->user->name }}</span>
             <span class="blog-date">
-                {{ \Carbon\Carbon::parse($articulo->created_at)->format('F d, Y') }}
+                {{ \Carbon\Carbon::parse($articulo->fecha_publicacion)->format('F d, Y') }}
             </span>
         </div>
 
         @if($articulo->imagen)
         <div class="featured-image">
-            <img src="{{ asset('storage/' . $articulo->imagen) }}" 
-                 alt="{{ $articulo->titulo }}"
-                 class="rounded-lg shadow-lg">
+            <img src="{{ asset('storage/' . $articulo->imagen) }}"
+                alt="{{ $articulo->titulo }}"
+                class="rounded-lg shadow-lg">
         </div>
         @endif
 
         <div class="blog-text">
             {!! $articulo->contenido !!}
+        </div>
+
+        <div class="author-section">
+            <div class="author-card">
+                <div class="author-avatar">
+                    @if($articulo->user->foto)
+                    <img src="{{ Storage::url($articulo->user->foto) }}" alt="{{ $articulo->user->name }}">
+                    @else
+                    <img src="{{ asset('images/default-avatar.jpg') }}" alt="{{ $articulo->user->name }}">
+                    @endif
+                </div>
+                <div class="author-info">
+                    <h3 class="author-title">
+                        <span class="author-name">{{ $articulo->user->name }}</span>
+                    </h3>
+                    <p class="author-bio">{{ $articulo->user->descripcion ?? 'No hay descripción disponible' }}</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>

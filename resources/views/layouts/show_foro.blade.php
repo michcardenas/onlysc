@@ -30,7 +30,6 @@
     {!! $categoria->contenido !!}
 </div>
 
-{{-- Contenido Principal --}}
 @if(isset($categoria->foros) && count($categoria->foros) > 0)
 @foreach($categoria->foros as $foro)
 <div class="foro-comments-table">
@@ -41,16 +40,27 @@
             @php
             $posts = DB::table('posts as p')
             ->select(
-            'p.*',
-            'u.name as nombre_usuario',
-            DB::raw('(SELECT COUNT(*) FROM comentario WHERE id_post = p.id) as comentarios'),
-            'p.visitas'
+                'p.*',
+                'u.name as nombre_usuario',
+                'u.foto as user_foto', // Añadida la foto del usuario
+                'u.rol as user_rol',   // Añadido el rol del usuario
+                DB::raw('(SELECT COUNT(*) FROM comentario WHERE id_post = p.id) as comentarios'),
+                'p.visitas'
             )
             ->leftJoin('users as u', 'p.id_usuario', '=', 'u.id')
             ->where('p.id_blog', $foro->id_blog)
             ->orderBy('p.is_fixed', 'desc')
             ->orderBy('p.created_at', 'desc')
-            ->get();
+            ->get()
+            ->map(function($post) {
+                $post->usuario = new \stdClass();
+                $post->usuario->name = $post->nombre_usuario ?? 'Anónimo';
+                $post->usuario->foto = $post->user_foto;
+                $post->usuario->rol = $post->user_rol;
+                unset($post->user_foto);
+                unset($post->user_rol);
+                return $post;
+            });
             @endphp
 
             @if(count($posts) > 0)
@@ -59,7 +69,15 @@
                 {{-- Celda del Avatar --}}
                 <td class="foro-comments-avatar-cell" width="60">
                     <div class="foro-comments-avatar">
-                        {{ strtoupper(substr($post->nombre_usuario, 0, 1)) }}
+                        @if(isset($post->usuario) && $post->usuario->foto)
+                            <img src="{{ asset('storage/' . $post->usuario->foto) }}" 
+                                 alt="Avatar de {{ $post->usuario->name }}"
+                                 class="foro-comments-avatar-img">
+                        @else
+                            <div class="foro-comments-avatar-circle">
+                                {{ strtoupper(substr($post->usuario->name ?? 'A', 0, 1)) }}
+                            </div>
+                        @endif
                     </div>
                 </td>
 
@@ -67,14 +85,14 @@
                 <td class="foro-comments-topic">
                     <div class="foro-comments-content">
                         @if($post->is_fixed)
-                        <i class="fas fa-thumbtack fixed-pin"></i> <!-- Ícono del pin -->
+                        <i class="fas fa-thumbtack fixed-pin"></i>
                         @endif
                         <a href="{{ route('post.show', ['id_blog' => $post->id_blog, 'id' => $post->id]) }}">
                             {{ $post->titulo }}
                         </a>
                     </div>
                     <div class="foro-comments-author-date">
-                        {{ $post->nombre_usuario }} | {{ \Carbon\Carbon::parse($post->created_at)->format('d M Y') }}
+                        {{ $post->usuario->name }} | {{ \Carbon\Carbon::parse($post->created_at)->format('d M Y') }}
                     </div>
                 </td>
 
@@ -96,7 +114,7 @@
                 <td class="foro-comments-author-cell" width="200">
                     <div class="text-right">
                         <div class="post-date">{{ \Carbon\Carbon::parse($post->created_at)->format('M d, Y') }}</div>
-                        <div class="user-name">{{ $post->nombre_usuario }}</div>
+                        <div class="user-name">{{ $post->usuario->name }}</div>
                     </div>
                 </td>
             </tr>
@@ -118,17 +136,6 @@
     </table>
 </div>
 @endforeach
-@else
-{{-- Mensaje cuando no hay foros --}}
-<div class="text-center py-8">
-    <div class="flex flex-col items-center justify-center space-y-4">
-        <div class="text-gray-400">
-            <i class="fas fa-folder-open fa-3x"></i>
-        </div>
-        <p class="text-lg font-medium text-gray-500">No hay foros en esta categoría</p>
-        <p class="text-sm text-gray-400">Los foros se añadirán próximamente</p>
-    </div>
-</div>
 @endif
 
 @endsection

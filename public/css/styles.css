@@ -1561,6 +1561,25 @@ label .required {
     font-family: 'Poppins', sans-serif;
 }
 
+.foro-comments-avatar-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.foro-comments-avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #4a5568;
+}
+
 .foro-description {
     font-family: 'Poppins', sans-serif;
     font-size: 16px;
@@ -3750,10 +3769,6 @@ h2 {
     cursor: pointer;
 }
 
-/* Formularios en sidebars */
-.form-group {
-    margin-bottom: 15px;
-}
 
 .form-control {
     width: 100%;
@@ -3762,3 +3777,69 @@ h2 {
     border-radius: 4px;
 }
 
+.perfil-admin-section {
+    padding: 20px;
+    margin: 20px;
+}
+
+.perfil-container {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.foto-perfil {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.foto-perfil img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    position: relative;
+    margin: 10px 0;
+}
+
+.hidden-file-input {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+}
+
+.file-upload-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #e00037;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.file-upload-button:hover {
+    background-color: #e00037;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.file-upload-button i {
+    margin-right: 8px;
+}
+
+.selected-file-name {
+    margin-left: 10px;
+    font-size: 0.9em;
+    color: #666;
+}

@@ -70,7 +70,6 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-
 // Rutas para visualización pública
 Route::get('/blog', [BlogController::class, 'showBlog'])->name('blog');
 Route::get('/blog/{id}', [BlogController::class, 'show_article'])->name('blog.show_article');
@@ -92,7 +91,6 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/categories/delete/{id}', [BlogController::class, 'destroyCategory'])->name('blogadmin.categories.destroy');
         Route::get('/categories/edit/{id}', [BlogController::class, 'editCategory'])->name('blogadmin.categories.edit');
 
-
         // Rutas para tags
         Route::post('/tags/store', [BlogController::class, 'storeTag'])->name('blogadmin.tags.store');
         Route::put('/tags/update/{id}', [BlogController::class, 'updateTag'])->name('blogadmin.tags.update');
@@ -108,6 +106,13 @@ Route::get('/disponibilidad', [DisponibilidadController::class, 'index'])->name(
 //Perfil
 Route::get('/escorts/{id}', [PerfilController::class, 'show'])->name('escorts.show');
 
+// Perfil Admin (Nuevas rutas)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/perfil', [PerfilController::class, 'index'])->name('admin.profile');
+    Route::post('/perfil/update', [PerfilController::class, 'updateProfile'])->name('admin.updateProfile');
+    Route::post('/perfil/update-photo', [PerfilController::class, 'updatePhoto'])->name('admin.updatePhoto');
+});
+
 //ciudades
 Route::get('/ciudades', [CiudadController::class, 'index'])->name('ciudades.index');
 Route::get('/ciudades/{id}/edit', [CiudadController::class, 'edit'])->name('ciudades.edit');
@@ -117,6 +122,5 @@ Route::get('/ciudades/create', [CiudadController::class, 'create'])->name('ciuda
 Route::post('/ciudades', [CiudadController::class, 'store'])->name('ciudades.store');
 
 //SEO
-
 Route::get('/seo', [SEOController::class, 'index'])->name('seo');
 Route::get('/seo-paginas', [SEOPaginasController::class, 'index'])->name('seo.paginas');

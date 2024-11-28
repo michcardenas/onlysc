@@ -1,5 +1,6 @@
 @extends('layouts.app_foro')
 @section('content')
+
 <!-- Banner del foro -->
 @if(isset($foro))
 <div class="foro-banner">
@@ -15,29 +16,40 @@
 </div>
 @endif
 
-<!-- Lista de comentarios existentes -->
 @if(isset($comentarios) && $comentarios->count() > 0)
 <div class="foro-comentarios-lista">
     @foreach($comentarios as $comentario)
     <div class="foro-comentario-container">
         <div class="foro-comentario-card">
             <div class="foro-comentario-avatar">
-                <div class="foro-comentario-avatar-circle">
-                    {{ strtoupper(substr($comentario->usuario->name ?? 'A', 0, 1)) }}
-                </div>
+                @if(isset($comentario->usuario) && !empty($comentario->usuario->foto))
+                    <img src="{{ asset('storage/' . $comentario->usuario->foto) }}"
+                        alt="Avatar de {{ $comentario->usuario->name }}"
+                        class="foro-comentario-avatar-circle">
+                @else
+                    <div class="foro-comentario-avatar-circle">
+                        {{ isset($comentario->usuario->name) ? strtoupper(substr($comentario->usuario->name, 0, 1)) : 'A' }}
+                    </div>
+                @endif
                 <div class="foro-comentario-user-info">
-                    <strong>{{ $comentario->usuario->name ?? 'Anónimo' }}</strong>
-                    <p class="foro-comentario-role">Miembro del foro</p>
+                    <strong>
+                        {{ $comentario->usuario->name ?? 'Anónimo' }}
+                    </strong>
+                    <p class="foro-comentario-role">
+                        @if(isset($comentario->usuario->rol) && $comentario->usuario->rol == 1)
+                            Administrador
+                        @else
+                            Miembro del foro
+                        @endif
+                    </p>
                 </div>
             </div>
-
             <div class="foro-comentario-content-wrapper">
                 <div class="foro-comentario-header">
                     <span class="foro-comentario-date">
                         {{ \Carbon\Carbon::parse($comentario->created_at)->format('d/m/Y H:i') }}
                     </span>
                 </div>
-
                 <div class="foro-comentario-content">
                     {{ $comentario->comentario }}
                 </div>
@@ -52,8 +64,8 @@
 </div>
 @endif
 
-
 <!-- Formulario para nuevo comentario -->
+@if(isset($post))
 <div class="foro-comentario-container">
     <div class="foro-comentario-form">
         <h4 class="foro-comentario-form-title">Dejar un comentario</h4>
@@ -90,7 +102,7 @@
         @endauth
     </div>
 </div>
-
+@endif
 
 @if(session('success'))
 <div class="alert alert-success">
