@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/foro.css') }}">
     <link rel="stylesheet" href="{{ asset('css/blog.css') }}">
 
     <!-- Scripts -->
@@ -188,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <select name="location" id="location">
                         <option value="" disabled selected>Seleccionar ciudad</option>
                         @foreach($ciudades as $ciudad)
-                        <option value="{{ $ciudad->id }}">{{ ucfirst($ciudad->nombre) }}</option>
+                        <option value="{{ strtolower($ciudad->nombre) }}">{{ ucfirst($ciudad->nombre) }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -249,9 +250,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <a href="/foro/" class="nav-link">FORO</a>
             </div>
         </div>
-
-
-
     </header>
 
     <!-- Aquí se insertará el contenido de las vistas que extiendan este layout -->
@@ -317,16 +315,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="custom-footer-middle">
                     <div class="custom-links">
                         <div class="custom-link-row">
-                            <a href="#">FORO</a>
-                            <a href="#">BLOG</a>
+                            <a href="/foro/">FORO</a>
+                            <a href="/blog/">BLOG</a>
                         </div>
                         <div class="custom-link-row">
                             <a href="#">CONTACTO</a>
                             <a href="#">POLÍTICA DE PRIVACIDAD</a>
                         </div>
                         <div class="custom-link-row">
-                            <a href="#">REGISTRO</a>
-                            <a href="#">PUBLICATE</a>
+                            <a href="/register/">REGISTRO</a>
+                            <a href="/publicate/">PUBLICATE</a>
                         </div>
                     </div>
                 </div>

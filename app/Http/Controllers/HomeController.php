@@ -11,7 +11,6 @@ class HomeController extends Controller
     // {
     //     $this->middleware('auth');
     // }
-
     public function showHome()
     {
         // Obtener las ciudades desde la base de datos

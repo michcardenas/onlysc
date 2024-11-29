@@ -18,66 +18,69 @@
         <section class="inicio-usuarios-section">
             <div class="inicio-card-wrapper">
                 <div class="inicio-card-container">
-                    @foreach($usuarios as $usuario)
-                    @php
-                    $fotos = json_decode($usuario->fotos, true);
-                    $positions = json_decode($usuario->foto_positions, true) ?? [];
-                    $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
-                    $posicionFoto = in_array(($positions[$primeraFoto] ?? ''), ['left', 'right', 'center']) ? $positions[$primeraFoto] : 'center';
+                    @if($usuarios->isEmpty())
+                        <div class="no-results">No hay chicas disponibles</div>
+                    @else
+                        @foreach($usuarios as $usuario)
+                        @php
+                        $fotos = json_decode($usuario->fotos, true);
+                        $positions = json_decode($usuario->foto_positions, true) ?? [];
+                        $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
+                        $posicionFoto = in_array(($positions[$primeraFoto] ?? ''), ['left', 'right', 'center']) ? $positions[$primeraFoto] : 'center';
 
-                    $now = Carbon\Carbon::now();
-                    $currentDay = strtolower($now->locale('es')->dayName);
-                    $isAvailable = false;
+                        $now = Carbon\Carbon::now();
+                        $currentDay = strtolower($now->locale('es')->dayName);
+                        $isAvailable = false;
 
-                    foreach ($usuario->disponibilidad as $disponibilidad) {
-                        if (strtolower($disponibilidad->dia) === $currentDay) {
-                            $horaDesde = Carbon\Carbon::parse($disponibilidad->hora_desde);
-                            $horaHasta = Carbon\Carbon::parse($disponibilidad->hora_hasta);
+                        foreach ($usuario->disponibilidad as $disponibilidad) {
+                            if (strtolower($disponibilidad->dia) === $currentDay) {
+                                $horaDesde = Carbon\Carbon::parse($disponibilidad->hora_desde);
+                                $horaHasta = Carbon\Carbon::parse($disponibilidad->hora_hasta);
 
-                            if ($horaHasta->lessThan($horaDesde)) {
-                                if ($now->greaterThanOrEqualTo($horaDesde) || $now->lessThanOrEqualTo($horaHasta)) {
-                                    $isAvailable = true;
-                                    break;
-                                }
-                            } else {
-                                if ($now->between($horaDesde, $horaHasta)) {
-                                    $isAvailable = true;
-                                    break;
+                                if ($horaHasta->lessThan($horaDesde)) {
+                                    if ($now->greaterThanOrEqualTo($horaDesde) || $now->lessThanOrEqualTo($horaHasta)) {
+                                        $isAvailable = true;
+                                        break;
+                                    }
+                                } else {
+                                    if ($now->between($horaDesde, $horaHasta)) {
+                                        $isAvailable = true;
+                                        break;
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    $mostrarPuntoVerde = $usuario->estadop == 1 && $isAvailable;
-                    @endphp
+                        $mostrarPuntoVerde = $usuario->estadop == 1 && $isAvailable;
+                        @endphp
 
-                    <a href="{{ url('escorts/' . $usuario->id) }}" class="inicio-card">
-                        <div class="inicio-card-category">{{ strtoupper($usuario->categorias) }}</div>
-                        <div class="inicio-card-image">
-                            <div class="inicio-image" 
-                                 style="background-image: url('{{ $primeraFoto ? asset("storage/chicas/{$usuario->id}/{$primeraFoto}") : asset("images/default-avatar.png") }}');
-                                        background-position: {{ $posicionFoto }} center;">
-                            </div>
-                            <div class="inicio-card-overlay">
-                                <h3 class="inicio-card-title" style="display: flex; align-items: center;">
-                                    {{ $usuario->fantasia }}
-                                    @if($mostrarPuntoVerde)
-                                    <span class="online-dot"></span>
-                                    @endif
-                                    <span class="inicio-card-age">{{ $usuario->edad }}</span>
-                                </h3>
-                                <div class="inicio-card-location">
-                                    <i class="fa fa-map-marker"></i> {{ $usuario->ubicacion }}
-                                    <span class="inicio-card-price">${{ number_format($usuario->precio, 0, ',', '.') }}</span>
+                        <a href="{{ url('escorts/' . $usuario->id) }}" class="inicio-card">
+                            <div class="inicio-card-category">{{ strtoupper($usuario->categorias) }}</div>
+                            <div class="inicio-card-image">
+                                <div class="inicio-image" 
+                                     style="background-image: url('{{ $primeraFoto ? asset("storage/chicas/{$usuario->id}/{$primeraFoto}") : asset("images/default-avatar.png") }}');
+                                            background-position: {{ $posicionFoto }} center;">
+                                </div>
+                                <div class="inicio-card-overlay">
+                                    <h3 class="inicio-card-title" style="display: flex; align-items: center;">
+                                        {{ $usuario->fantasia }}
+                                        @if($mostrarPuntoVerde)
+                                        <span class="online-dot"></span>
+                                        @endif
+                                        <span class="inicio-card-age">{{ $usuario->edad }}</span>
+                                    </h3>
+                                    <div class="inicio-card-location">
+                                        <i class="fa fa-map-marker"></i> {{ $usuario->ubicacion }}
+                                        <span class="inicio-card-price">${{ number_format($usuario->precio, 0, ',', '.') }}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </a>
-                    @endforeach
+                        </a>
+                        @endforeach
+                    @endif
                 </div>
             </div>
 
-            <!-- Usuario destacado -->
             @if($usuarioDestacado)
             @php
             $fotosDestacado = json_decode($usuarioDestacado->fotos, true);

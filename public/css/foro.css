@@ -1,0 +1,696 @@
+/* Estilos del banner */
+.foro-banner {
+    position: relative;
+    width: calc(100% - 10rem);
+    height: 192px;
+    overflow: hidden;
+    margin: 0 auto 0;
+    z-index: -1;
+}
+
+.foro-banner video.banner-img {
+    width: 100%;
+    height: 12rem;
+    object-fit: cover;
+}
+
+.foro-banner-content {
+    position: relative;
+    bottom: 7.1rem;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    text-align: center;
+    width: 100%;
+    background: #00000047;
+    height: 12.5rem;
+    bottom: 100px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-banner-content h1 {
+    font-size: 35px;
+}
+
+.foro-banner-content .highlight {
+    color: #f25555;
+}
+
+.foro-texto_banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 10rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-texto_banner .thin {
+    font-weight: 100;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-texto_banner .bold {
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Estilos del buscador */
+.foro-search-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 2rem 0px 1rem 16rem;
+    position: relative;
+    z-index: 10;
+    grid-template-columns: 1fr 300px;
+}
+
+.foro-search-input {
+    width: 90%;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: 2px solid #e5e5e5;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    outline: none;
+    background-color: #ffffff;
+}
+
+.foro-search-input::placeholder {
+    color: #888;
+}
+
+.foro-search-input:hover {
+    border-color: #e00037;
+}
+
+.foro-search-input:focus {
+    border-color: #e00037;
+    box-shadow: 0 0 0 2px rgba(224, 0, 55, 0.1);
+}
+
+.foro-search-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #e00037;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.foro-search-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: #fff;
+    transition: fill 0.3s ease;
+}
+
+.foro-search-btn:hover svg {
+    fill: #e00037;
+}
+
+/* Layout principal y contenedores */
+.foro-container {
+    max-width: 1400px;
+    margin: 0.5rem auto;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Layout de la columna principal */
+.foro-main {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    grid-auto-flow: row;
+}
+
+
+/* Estilos de las tarjetas */
+.foro-card {
+    width: 100%;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+}
+
+
+/* Asegura que los elementos se ordenen correctamente */
+.foro-card:nth-child(odd) {
+    grid-column: 1;
+}
+
+.foro-card:nth-child(even) {
+    grid-column: 2;
+}
+
+/* Efecto hover */
+.foro-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.foro-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.foro-card-description {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+}
+
+.foro-card-image {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+}
+
+.foro-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.foro-card:hover .foro-card-image img {
+    transform: scale(1.05);
+}
+
+.foro-card:hover .foro-card-title {
+    color: #e00037;
+    transition: color 0.3s ease;
+}
+
+.foro-card-footer {
+    padding: 10px 15px;
+    border-top: 1px solid #eee;
+    text-align: right;
+}
+
+.foro-card-footer span {
+    font-size: 13px;
+    color: #666;
+}
+
+.foro-card-footer svg {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+
+.foro-sidebar1 {
+    width: 300px;
+    transform: translate(200px, -10px);
+}
+
+/* Estilos para el listado de foros */
+/* Estilos del breadcrumb */
+.foro-breadcrumb {
+    display: flex;
+    padding: 15px 0;
+    margin-left: 190px;
+    margin-top: 10px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comments-avatar-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.foro-comments-avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #4a5568;
+}
+
+.foro-description {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+    padding: 10px 0;
+    margin-left: 190px;
+    width: 100%;
+    max-width: 800px;
+}
+
+
+
+.foro-breadcrumb-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.foro-breadcrumb-item {
+    font-size: 14px;
+}
+
+.foro-breadcrumb-item:not(:last-child)::after {
+    content: "/";
+    margin: 0 8px;
+    color: #6c757d;
+}
+
+.foro-breadcrumb-item a {
+    color: #000;
+    text-decoration: none;
+}
+
+.foro-breadcrumb-item a:hover {
+    text-decoration: underline;
+}
+
+.foro-breadcrumb-item.active {
+    color: #000;
+}
+
+/* Estructura principal de la tabla */
+.foro-comments-table {
+    width: 80%;
+    margin: 0 auto;
+    font-family: 'Poppins', sans-serif;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+    display: table;
+    text-align: left;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+/* Estilos base de la tabla */
+.foro-comments-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.foro-comments-table th,
+.foro-comments-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.foro-comments-table th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+}
+
+/* Estilos para posts fijados */
+.foro-fixed-post {
+    position: relative;
+    border-left: 4px solid #e00037;
+    background-color: rgba(242, 139, 80, 0.03);
+}
+
+.fixed-pin {
+    color: #e00037;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+/* Estadísticas de los comentarios */
+.foro-comments-stats {
+    display: flex;
+    gap: 15px;
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.foro-stats-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.foro-stats-item i {
+    font-size: 0.9em;
+    color: #999;
+}
+
+/* Estilos del avatar */
+.foro-comments-avatar-cell {
+    text-align: center;
+}
+
+.foro-comments-avatar {
+    width: 40px;
+    height: 40px;
+    background: #F28B50;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 auto;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(242, 139, 80, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.foro-comments-avatar:hover {
+    transform: scale(1.05);
+}
+
+/* Información del autor y fecha */
+.foro-comments-author-date {
+    color: #6c757d;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+    line-height: 1.4;
+}
+
+/* Títulos y contenido */
+.foro-comments-title {
+    font-weight: 500;
+    color: #F28B50;
+    margin-bottom: 5px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comments-content {
+    display: flex;
+    align-items: center;
+    /* Alinear verticalmente */
+    gap: 10px;
+    /* Espacio entre el pin y el texto */
+}
+
+
+.foro-comments-content a {
+    text-decoration: none;
+    color: #495057;
+    transition: color 0.2s ease;
+}
+
+.foro-comments-content a:hover {
+    color: #e00037;
+}
+
+/* Autor y estadísticas */
+.foro-comments-author {
+    font-size: 14px;
+    color: #495057;
+}
+
+/* Última columna y fecha */
+.foro-comments-last {
+    text-align: center;
+}
+
+.foro-comments-date {
+    font-weight: 500;
+    color: #495057;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    display: inline-block;
+}
+
+.foro-comments-time {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+/* Efectos de hover en las filas */
+.foro-comments-table tr {
+    transition: background-color 0.2s ease;
+}
+
+.foro-comments-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Estilos para el estado sin posts */
+.text-center.py-8 {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 2rem;
+}
+
+/* Mejoras en el espaciado */
+.foro-comments-topic {
+    padding-right: 15px;
+}
+
+.stats-container {
+    display: flex;
+    flex-direction: column;
+    background: #f5f5f5;
+    border-radius: 4px;
+    padding: 8px 12px;
+    min-width: 120px;
+    border: 1px solid #f5f5f5;
+}
+
+/* Filas de estadísticas */
+.stats-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* Etiquetas */
+.stats-row label {
+    color: #6c757d;
+    font-weight: normal;
+}
+
+/* Valores */
+.stats-row .value {
+    color: #495057;
+    font-weight: 500;
+    min-width: 20px;
+    text-align: right;
+}
+
+/* Separación entre filas */
+.stats-row:not(:last-child) {
+    margin-bottom: 3px;
+}
+
+/* Ajustes para la celda contenedora */
+.foro-comments-stats-cell {
+    padding: 15px !important;
+    vertical-align: middle;
+}
+
+
+/* Post stats inline */
+.post-stats {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 10px;
+    gap: 8px;
+    color: #6c757d;
+    font-size: 13px;
+}
+
+.post-stats i {
+    color: #6c757d;
+    font-size: 12px;
+    margin-right: 2px;
+}
+
+/* Estilos del comentario */
+.foro-comentario-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-card {
+    display: flex;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 800px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-avatar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 20px;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-avatar-circle {
+    width: 50px;
+    height: 50px;
+    background-color: #f28b50;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-user-info {
+    margin-top: 8px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-user-info strong {
+    font-size: 16px;
+    color: #333;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-role {
+    font-size: 14px;
+    color: #6c757d;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-content-wrapper {
+    flex: 1;
+    background-color: #eeeeee;
+    padding: 15px;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #6c757d;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-date {
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-link a {
+    color: #ff6b6b;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-link a:hover {
+    text-decoration: underline;
+    font-family: 'Poppins', sans-serif;
+}
+
+.foro-comentario-content {
+    font-size: 16px;
+    color: #333;
+    padding: 10px;
+    background-color: white;
+    border-radius: 4px;
+    margin-top: 10px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Contenedor principal del formulario de comentarios */
+.foro-comentario-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    padding: 0 15px;
+}
+
+.foro-comentario-form {
+    width: 100%;
+    max-width: 600px;
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.foro-comentario-form-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 2px solid #d9534f;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.foro-comentario-form-group {
+    margin-bottom: 15px;
+}
+
+.foro-comentario-form-group label {
+    display: block;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.foro-comentario-textarea {
+    width: 100%;
+    padding: 10px;
+    font-family: 'Poppins', sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+.foro-comentario-btn {
+    background-color: #d9534f;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.foro-comentario-btn:hover {
+    background-color: #c9302c;
+}

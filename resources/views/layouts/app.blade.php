@@ -99,9 +99,9 @@
                     <option value="MASAJES">MASAJES</option>
                 </select>
 
-                <a href="#" class="nav-link">FAVORITOS</a>
-                <a href="#" class="nav-link">BLOG</a>
-                <a href="#" class="nav-link">FORO</a>
+                <a href="/favoritos/" class="nav-link">FAVORITOS</a>
+                <a href="/blog/" class="nav-link">BLOG</a>
+                <a href="/foro/" class="nav-link">FORO</a>
             </div>
         </div>
 
@@ -174,16 +174,16 @@
                 <div class="custom-footer-middle">
                     <div class="custom-links">
                         <div class="custom-link-row">
-                            <a href="#">FORO</a>
-                            <a href="#">BLOG</a>
+                            <a href="/foro/">FORO</a>
+                            <a href="/blog/">BLOG</a>
                         </div>
                         <div class="custom-link-row">
                             <a href="#">CONTACTO</a>
                             <a href="#">POLÍTICA DE PRIVACIDAD</a>
                         </div>
                         <div class="custom-link-row">
-                            <a href="#">REGISTRO</a>
-                            <a href="#">PUBLICATE</a>
+                            <a href="/register/">REGISTRO</a>
+                            <a href="/publicate/">PUBLICATE</a>
                         </div>
                     </div>
                 </div>
@@ -288,7 +288,15 @@ document.getElementById('location').addEventListener('change', function() {
     window.location.href = `${currentUrl}/${categoria}`;
 });
 
-
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.inicio-card');
+    if (cards.length < 12) {
+        const container = document.querySelector('.inicio-container');
+        if (container) {
+            container.style.marginBottom = '1200px';
+        }
+    }
+});
 </script>
 
 </body>

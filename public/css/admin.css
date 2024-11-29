@@ -1,0 +1,548 @@
+/* Estilos generales para títulos */
+.main-admin h2,
+.main-admin h3,
+.main-admin h4,
+.sidebar-section h3,
+.sidebar-section h4,
+.section-content h2,
+.section-content h3,
+.section-content h4,
+#formularioCategoriaTitulo,
+#formularioTagTitulo,
+#formularioTitulo,
+main h2,
+main section h2,
+.table-admin th {
+    color: #ffffff;
+}
+
+/* Estilos para los enlaces en la tabla */
+.table-admin a {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.table-admin a:hover {
+    color: #e00037;
+}
+
+/* Estilos para los encabezados de tabla */
+.table-admin th,
+.table-admin-sm th {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 12px;
+}
+
+/* Mantenemos el color blanco incluso al pasar el mouse */
+.main-admin h2:hover,
+.main-admin h3:hover,
+.main-admin h4:hover,
+main section h2:hover {
+    color: #ffffff;
+}
+
+/* Estilos para la navegación admin */
+.nav-links-admin a {
+    color: #ffffff;
+}
+
+/* Estilos para el texto de bienvenida */
+.user-info-admin p {
+    color: #ffffff;
+}
+
+.navbar-admin {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: #1e1e1e;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.logo-text-admin {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.nav-links-admin {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links-admin a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.nav-links-admin a:hover {
+    color: #4CAF50;
+    /* Color de hover (puedes ajustarlo) */
+}
+
+.user-info-admin {
+    background-color: #2e2e2e;
+    /* Fondo para destacar el nombre del usuario */
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+h2 {
+    color: #ffffff;
+    margin-top: 20px;
+}
+
+.admin-h2 {
+    color: #ffffff;
+    margin-top: 20px;
+}
+
+.table-admin {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background-color: #2e2e2e;
+    /* Color de fondo de la tabla */
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table-admin th,
+.table-admin td {
+    padding: 12px;
+    border-bottom: 1px solid #444;
+    color: #ffffff;
+    text-align: left;
+}
+
+.table-admin th {
+    background-color: #3a3a3a;
+    color: #e0e0e0;
+}
+
+.table-admin tr:hover {
+    background-color: #3a3a3a;
+    /* Color de fondo al pasar el ratón sobre las filas */
+}
+
+.footer-admin {
+    margin-top: 20px;
+    text-align: center;
+    padding: 10px;
+    background-color: #1e1e1e;
+    color: #888;
+}
+
+.form-admin {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #2e2e2e;
+    color: #ffffff;
+}
+
+.admin-form-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #333;
+}
+
+.table-admin a {
+    color: #e00037;
+    text-decoration: none;
+}
+
+.table-admin a:hover {
+    text-decoration: underline;
+}
+
+
+/* Sección del formulario */
+.admin-form-section {
+    width: 50%;
+    padding: 50px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-form-section h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.admin-form-section p {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 40px;
+}
+
+.admin-input-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+/* Estilos del input */
+.admin-input-wrapper input {
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    border-bottom: 1px solid #777771;
+    background: transparent;
+    outline: none;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+/* Estilos del label */
+.admin-input-wrapper label {
+    position: absolute;
+    top: 8px;
+    left: 0;
+    font-size: 16px;
+    color: #666;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+/* Animación del label */
+.admin-input-wrapper input:focus~label,
+.admin-input-wrapper input:not(:placeholder-shown)~label {
+    top: -20px;
+    font-size: 14px;
+    color: #e00037;
+}
+
+/* Estilo para el asterisco */
+.admin-input-wrapper label::after {
+    content: '*';
+    color: #e00037;
+    margin-left: 2px;
+    display: none;
+}
+
+.admin-input-wrapper input[required]~label::after {
+    display: inline;
+}
+
+/* Estado activo del input */
+.admin-input-wrapper input:focus {
+    border-bottom: 2px solid #e00037;
+}
+
+.admin-service-item {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    color: #fff;
+    padding: 4px 6px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-submit {
+    background-color: #4CAF50;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #45a049;
+}
+
+.fotos-actuales {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.foto-preview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.admin-checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.admin-checkbox-item {
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.admin-checkbox-item input[type="checkbox"] {
+    display: none;
+}
+
+.admin-checkbox-item label {
+    background-color: #d91e48;
+    color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+    min-width: 100px;
+    text-align: center;
+}
+
+.admin-checkbox-item input[type="checkbox"]:checked+label {
+    background-color: #83946e;
+}
+
+.time-inputs {
+    display: flex;
+    align-items: center;
+}
+
+.time-input-group {
+    display: flex;
+    align-items: center;
+}
+
+.time-input {
+    width: 100px;
+    padding: 5px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.time-separator {
+    color: #333;
+    font-size: 1rem;
+    margin: 0 5px;
+}
+
+.required-asterisk {
+    color: #e0456c;
+}
+
+/* Grid Layout */
+.admin-grid {
+    display: grid;
+    grid-template-columns: 250px 1fr 250px;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1800px;
+    margin: 0 auto;
+}
+
+/* Sidebar Sections */
+.sidebar-section {
+    background: #333333;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+}
+
+/* Tabla pequeña para sidebars */
+.table-admin-sm {
+    width: 100%;
+    font-size: 0.9rem;
+    color: #e0e0e0;
+}
+
+.table-admin-sm th,
+.table-admin-sm td {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Botones pequeños */
+.btn-submit-sm {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    background: #e00037;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-cancel-sm {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+.btn-icon {
+    padding: 4px 8px;
+    background: transparent;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+}
+
+.btn-icon-danger {
+    padding: 4px 8px;
+    background: transparent;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+}
+
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.perfil-admin-section {
+    padding: 20px;
+    margin: 20px;
+}
+
+.perfil-container {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.foto-perfil {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.foto-perfil img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    position: relative;
+    margin: 10px 0;
+}
+
+.hidden-file-input {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+}
+
+.file-upload-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #e00037;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.file-upload-button:hover {
+    background-color: #e00037;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.file-upload-button i {
+    margin-right: 8px;
+}
+
+.selected-file-name {
+    margin-left: 10px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.alert-danger ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.alert::before {
+    content: '✔';
+    font-size: 18px;
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.alert-danger::before {
+    content: '✖';
+}
