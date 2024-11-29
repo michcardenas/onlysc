@@ -23,23 +23,25 @@
         <div class="foro-comentario-card">
             <div class="foro-comentario-avatar">
                 @if(isset($comentario->usuario) && !empty($comentario->usuario->foto))
-                    <img src="{{ asset('storage/' . $comentario->usuario->foto) }}"
-                        alt="Avatar de {{ $comentario->usuario->name }}"
-                        class="foro-comentario-avatar-circle">
+                <img src="{{ asset('storage/' . $comentario->usuario->foto) }}"
+                    alt="Avatar de {{ $comentario->usuario->name }}"
+                    class="foro-comentario-avatar-circle">
                 @else
-                    <div class="foro-comentario-avatar-circle">
-                        {{ isset($comentario->usuario->name) ? strtoupper(substr($comentario->usuario->name, 0, 1)) : 'A' }}
-                    </div>
+                <div class="foro-comentario-avatar-circle">
+                    {{ isset($comentario->usuario->name) ? strtoupper(substr($comentario->usuario->name, 0, 1)) : 'A' }}
+                </div>
                 @endif
                 <div class="foro-comentario-user-info">
                     <strong>
                         {{ $comentario->usuario->name ?? 'Anónimo' }}
                     </strong>
                     <p class="foro-comentario-role">
-                        @if(isset($comentario->usuario->rol) && $comentario->usuario->rol == 1)
-                            Administrador
+                        @if(isset($comentario->usuario->rol))
+                        {{ $comentario->usuario->rol == 1 ? 'Administrador' : 
+           ($comentario->usuario->rol == 2 ? 'Chica' : 
+           ($comentario->usuario->rol == 3 ? 'Usuario' : 'Miembro del foro')) }}
                         @else
-                            Miembro del foro
+                        Miembro del foro
                         @endif
                     </p>
                 </div>

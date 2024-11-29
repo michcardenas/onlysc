@@ -175,13 +175,11 @@ document.addEventListener('DOMContentLoaded', function() {
 <body>
     <!-- Navbar original -->
     <header>
-        <nav class="navbar navbar-top">
-            <!-- Sección izquierda con el botón "PUBLICATE" -->
+    <nav class="navbar navbar-top">
             <div class="navbar-left">
                 <button class="btn-publish">PUBLICATE</button>
             </div>
 
-            <!-- Sección derecha con el selector de ubicación y botones de login/register -->
             <div class="navbar-right">
                 <div class="location-dropdown">
                     <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon">
@@ -193,11 +191,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     </select>
                 </div>
 
-
-
-                <!-- Verificamos si el usuario está autenticado -->
                 @if(Auth::check())
-                <a class="btn-user">{{ Auth::user()->name }}</a>
+                @if(Auth::user()->rol === '1')
+                <a href="{{ route('admin.profile') }}" class="btn-user">{{ Auth::user()->name }}</a>
+                @elseif(Auth::user()->rol === '2')
+                <a href="{{ route('admin.profile') }}" class="btn-user">{{ Auth::user()->name }}</a>
+                @else
+                <a href="{{ route('admin.profile') }}" class="btn-user">{{ Auth::user()->name }}</a>
+                @endif
                 <form action="{{ route('logout') }}" method="POST" class="logout-form">
                     @csrf
                     <button class="btn-logout">SALIR</button>
@@ -207,8 +208,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <a href="{{ route('register') }}" class="btn-register">REGISTRARSE</a>
                 @endif
             </div>
-
-
         </nav>
         <div class="navbar-bottom">
             <!-- Logo, barra de búsqueda y botón de filtros -->

@@ -105,8 +105,39 @@
     letter-spacing: 0.5px;
 }
 
+.social-icons {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
 
-/* Resto de estilos de tarjetas y responsive... */
+.social-button {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.social-button:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+.social-button i {
+    font-size: 16px;
+}
+
+/* Colores específicos de cada red social */
+.linkedin, .twitter, .github, .email {
+    background-color: #e00037;
+}
+
+
 
 /* Buscador */
 .blog-search-container {

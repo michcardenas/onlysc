@@ -1,21 +1,16 @@
 @extends('layouts.app_blog')
 
 @section('content')
-{{-- El banner se mantiene igual --}}
 <div class="blog-banner">
-    <div class="blog-banner-img" style="background-image: url('{{ asset('images/728160.jpg') }}');">
-    </div>
+    <div class="blog-banner-img" style="background-image: url('{{ asset('images/728160.jpg') }}');"></div>
     <div class="blog-banner-content">
         <div class="blog-texto_banner">
-            <h1>
-                <span class="700">Blog</span>
-            </h1>
+            <h1><span class="700">Blog</span></h1>
         </div>
     </div>
 </div>
 
 <div class="blog-container">
-    {{-- Sidebar se mantiene igual --}}
     <div class="blog-blade-sidebar">
         <div class="blog-search-container">
             <input type="text" class="blog-search-input" placeholder="Search...">
@@ -32,8 +27,8 @@
                     {{ $categoria->nombre }}
                     <span class="category-count">
                         ({{ $articulos->filter(function($articulo) use ($categoria) {
-                                return $articulo->categories->contains('id', $categoria->id);
-                            })->count() }})
+                            return $articulo->categories->contains('id', $categoria->id);
+                        })->count() }})
                     </span>
                 </a>
             </div>
@@ -50,7 +45,6 @@
         </div>
     </div>
 
-    {{-- Contenido principal con las modificaciones en las tarjetas --}}
     <div class="blog-main">
         @foreach($categorias as $categoria)
         <div class="blog-section" id="{{ $categoria->id }}">
@@ -59,11 +53,11 @@
             </a>
             @php
             $articulos_categoria = $articulos->filter(function($articulo) use ($categoria) {
-            return $articulo->categories->contains('id', $categoria->id);
+                return $articulo->categories->contains('id', $categoria->id);
             })->sortByDesc('destacado');
             @endphp
 
-            @if($articulos_categoria->count() > 3)
+            @if($articulos_categoria->count() >= 1)
             <div class="blog-carousel-container">
                 <div class="swiper blog-carousel-{{ $categoria->id }}">
                     <div class="swiper-wrapper">

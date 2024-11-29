@@ -11,21 +11,32 @@
         <ul class="nav-links-admin">
             <li><a href="{{ route('home') }}">Inicio</a></li>
             <li><a href="{{ route('admin.profile') }}">Perfil</a></li>
-            <li><a href="{{ route('publicate.form') }}">Publicar</a></li>
-            <li><a href="{{ route('foroadmin') }}">Foro</a></li>
-            <li><a href="{{ route('blogadmin') }}">Blog</a></li>
-            <li><a href="{{ route('seo') }}">SEO</a></li>
+            @if($usuarioAutenticado->rol == 1)
+                <li><a href="{{ route('publicate.form') }}">Publicar</a></li>
+                <li><a href="{{ route('foroadmin') }}">Foro</a></li>
+                <li><a href="{{ route('blogadmin') }}">Blog</a></li>
+                <li><a href="{{ route('seo') }}">SEO</a></li>
+            @endif
             <li><a href="{{ route('logout') }}">Cerrar Sesión</a></li>
         </ul>
         <div class="user-info-admin">
-            <p style="color:white;">Bienvenido, {{ $usuarioAutenticado->name }} ({{ $usuarioAutenticado->role == 2 ? 'Administrador' : 'Administrador' }})</p>
+            <p style="color:white;">Bienvenido, {{ $usuarioAutenticado->name }} 
+                ({{ $usuarioAutenticado->rol == 1 ? 'Administrador' : 
+                    ($usuarioAutenticado->rol == 2 ? 'Chica' : 'Usuario') }})
+            </p>
         </div>
     </nav>
 </header>
 
 <main>
     <section class="perfil-admin-section">
-        <h2 style="color:white;">Perfil de Administrador</h2>
+        @if($usuarioAutenticado->rol == 1)
+            <h2 style="color:white;">Perfil de Administrador</h2>
+        @elseif($usuarioAutenticado->rol == 2)
+            <h2 style="color:white;">Perfil de Chica</h2>
+        @else
+            <h2 style="color:white;">Perfil de Usuario</h2>
+        @endif
 
         <div class="perfil-container">
             <div class="foto-perfil">

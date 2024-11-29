@@ -10,147 +10,12 @@
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="stylesheet" href="{{ asset('css/blog.css') }}">
-
-    <!-- Scripts -->
-    <script src="https://cdn.tiny.cloud/1/z94ao1xzansr93pi0qe5kfxgddo1f4ltb8q7qa8pw9g52txs/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-
-    <script>
-    tinymce.init({
-        selector: '#comentario',
-        plugins: 'emoticons',
-        toolbar: 'undo redo | bold italic underline | emoticons',
-        menubar: false,
-        height: 200,
-        forced_root_block: false,
-        verify_html: false,
-        cleanup: true,
-        paste_as_text: true,
-
-        setup: function (editor) {
-            editor.on('change', function () {
-                let contenidoLimpio = editor.getBody().innerText;
-                editor.targetElm.value = contenidoLimpio;
-            });
-
-            editor.getElement().form.addEventListener('submit', function(e) {
-                let contenidoLimpio = editor.getBody().innerText;
-                editor.setContent(contenidoLimpio);
-            });
-        },
-
-        skin: 'oxide',
-        content_css: false,
-        content_style: `
-            body {
-                background-color: #fffff;
-                color: #000;
-                font-family: 'Poppins', sans-serif;
-                padding: 10px;
-                border-radius: 4px;
-            }
-        `,
-
-        init_instance_callback: function (editor) {
-            let elementsToUpdate = editor.getContainer().querySelectorAll(
-                '.tox-tinymce, .tox-editor-header, .tox-toolbar, .tox-toolbar__primary, ' +
-                '.tox-toolbar__group, .tox-button, .tox-statusbar, .tox-editor-container, ' +
-                '.tox-edit-area'
-            );
-
-            elementsToUpdate.forEach(function(element) {
-                element.style.backgroundColor = '#fffff';
-                element.style.border = 'none';
-                element.style.boxShadow = 'none';
-            });
-
-            let mainContainer = editor.getContainer();
-            mainContainer.style.border = '1px solid #fffff';
-            mainContainer.style.boxShadow = 'none';
-
-            editor.on('blur', function() {
-                if (editor.getContent().trim().length === 0) {
-                    editor.targetElm.classList.add('is-invalid');
-                } else {
-                    editor.targetElm.classList.remove('is-invalid');
-                }
-            });
-        }
-    });
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const contenido = document.querySelector('.blog-text');
-    const contenidosDinamicos = document.getElementById('contenidos-dinamicos');
-
-    if (!contenido || !contenidosDinamicos) {
-        console.log('No se encontraron los elementos necesarios');
-        return;
-    }
-
-    function slugify(text) {
-        return text.toString().toLowerCase()
-            .replace(/\s+/g, '-')
-            .replace(/[^\w\-]+/g, '')
-            .replace(/\-\-+/g, '-')
-            .replace(/^-+/, '')
-            .replace(/-+$/, '');
-    }
-
-    const headings = contenido.querySelectorAll('h1, h2');
-
-    if (headings.length === 0) {
-        contenidosDinamicos.innerHTML = '<p>No hay secciones disponibles</p>';
-        return;
-    }
-
-    const ul = document.createElement('ul');
-    ul.className = 'contents-list';
-    
-    headings.forEach((heading, index) => {
-        if (!heading.id) {
-            heading.id = `heading-${slugify(heading.textContent)}-${index}`;
-        }
-
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        
-        if (heading.tagName === 'H2') {
-            li.style.paddingLeft = '1rem';
-        }
-
-        a.href = `#${heading.id}`;
-        a.textContent = heading.textContent;
-        a.className = 'table-link';
-        
-        li.appendChild(a);
-        ul.appendChild(li);
-    });
-
-    contenidosDinamicos.innerHTML = '';
-    contenidosDinamicos.appendChild(ul);
-
-    document.querySelectorAll('.table-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href').substring(1);
-            const targetElement = document.getElementById(targetId);
-            if (targetElement) {
-                targetElement.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-});
-</script>
 </head>
 
 <body>
-    <!-- Navbar original -->
     <header>
         <nav class="navbar navbar-top">
             <div class="navbar-left">
@@ -169,7 +34,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
 
                 @if(Auth::check())
-                <a class="btn-user">{{ Auth::user()->name }}</a>
+                @if(Auth::user()->rol === '1')
+                <a href="{{ route('admin.profile') }}" class="btn-user">{{ Auth::user()->name }}</a>
+                @elseif(Auth::user()->rol === '2')
+                <a href="{{ route('admin.profile') }}" class="btn-user">{{ Auth::user()->name }}</a>
+                @else
+                <a href="{{ route('admin.profile') }}" class="btn-user">{{ Auth::user()->name }}</a>
+                @endif
                 <form action="{{ route('logout') }}" method="POST" class="logout-form">
                     @csrf
                     <button class="btn-logout">SALIR</button>
@@ -299,49 +170,115 @@ document.addEventListener('DOMContentLoaded', function() {
             <p>© 2024 Only Escorts | Todos los derechos reservados</p>
         </div>
     </footer>
-</body>
 
-<script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
-@stack('scripts')
-    
-@if(request()->is('blog*'))
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    @if(isset($categorias))
-        @foreach($categorias as $categoria)
-            @php
-                $articulos_count = $categoria->articles()->where('estado', 'publicado')->count();
-            @endphp
-            
-            @if($articulos_count > 3)
-                new Swiper('.blog-carousel-{{ $categoria->id }}', {
-                    slidesPerView: 'auto',
-                    spaceBetween: 20,
-                    navigation: {
-                        nextEl: '.swiper-button-next',
-                        prevEl: '.swiper-button-prev',
-                    },
-                    pagination: {
-                        el: '.swiper-pagination',
-                        clickable: true,
-                    },
-                    grabCursor: true,
-                    breakpoints: {
-                        640: {
-                            slidesPerView: 'auto',
-                            spaceBetween: 20,
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/z94ao1xzansr93pi0qe5kfxgddo1f4ltb8q7qa8pw9g52txs/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <script>
+        const categorias = @json($categorias);
+        const articulos = @json($articulos);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            categorias.forEach(categoria => {
+                const articulosCount = articulos.filter(articulo =>
+                    articulo.categories.some(cat => cat.id === categoria.id)
+                ).length;
+
+                if (articulosCount >= 1) {
+                    new Swiper(`.blog-carousel-${categoria.id}`, {
+                        slidesPerView: 'auto',
+                        spaceBetween: 20,
+                        navigation: {
+                            nextEl: '.swiper-button-next',
+                            prevEl: '.swiper-button-prev',
                         },
-                        1024: {
-                            slidesPerView: 'auto',
-                            spaceBetween: 30,
+                        pagination: {
+                            el: '.swiper-pagination',
+                            clickable: true,
+                        },
+                        grabCursor: true,
+                        breakpoints: {
+                            640: {
+                                slidesPerView: 'auto',
+                                spaceBetween: 20
+                            },
+                            1024: {
+                                slidesPerView: 'auto',
+                                spaceBetween: 30
+                            }
                         }
+                    });
+                }
+            });
+        });
+    </script>
+
+    <script>
+        tinymce.init({
+            selector: '#comentario',
+            plugins: 'emoticons',
+            toolbar: 'undo redo | bold italic underline | emoticons',
+            menubar: false,
+            height: 200,
+            forced_root_block: false,
+            verify_html: false,
+            cleanup: true,
+            paste_as_text: true,
+
+            setup: function(editor) {
+                editor.on('change', function() {
+                    let contenidoLimpio = editor.getBody().innerText;
+                    editor.targetElm.value = contenidoLimpio;
+                });
+
+                editor.getElement().form.addEventListener('submit', function(e) {
+                    let contenidoLimpio = editor.getBody().innerText;
+                    editor.setContent(contenidoLimpio);
+                });
+            },
+
+            skin: 'oxide',
+            content_css: false,
+            content_style: `
+                body {
+                    background-color: #fffff;
+                    color: #000;
+                    font-family: 'Poppins', sans-serif;
+                    padding: 10px;
+                    border-radius: 4px;
+                }
+            `,
+
+            init_instance_callback: function(editor) {
+                let elementsToUpdate = editor.getContainer().querySelectorAll(
+                    '.tox-tinymce, .tox-editor-header, .tox-toolbar, .tox-toolbar__primary, ' +
+                    '.tox-toolbar__group, .tox-button, .tox-statusbar, .tox-editor-container, ' +
+                    '.tox-edit-area'
+                );
+
+                elementsToUpdate.forEach(function(element) {
+                    element.style.backgroundColor = '#fffff';
+                    element.style.border = 'none';
+                    element.style.boxShadow = 'none';
+                });
+
+                let mainContainer = editor.getContainer();
+                mainContainer.style.border = '1px solid #fffff';
+                mainContainer.style.boxShadow = 'none';
+
+                editor.on('blur', function() {
+                    if (editor.getContent().trim().length === 0) {
+                        editor.targetElm.classList.add('is-invalid');
+                    } else {
+                        editor.targetElm.classList.remove('is-invalid');
                     }
                 });
-            @endif
-        @endforeach
-    @endif
-});
-</script>
-@endif
+            }
+        });
+    </script>
+
+    @stack('scripts')
+</body>
 
 </html>
