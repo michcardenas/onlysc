@@ -1,12 +1,12 @@
-@extends('layouts.app_foro')
+@extends('layouts.app_blog')
 
 @section('content')
 {{-- El banner se mantiene igual --}}
-<div class="foro-banner">
+<div class="blog-banner">
     <div class="blog-banner-img" style="background-image: url('{{ asset('images/728160.jpg') }}');">
     </div>
-    <div class="foro-banner-content">
-        <div class="foro-texto_banner">
+    <div class="blog-banner-content">
+        <div class="blog-texto_banner">
             <h1>
                 <span class="700">Blog</span>
             </h1>

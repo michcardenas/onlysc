@@ -2,7 +2,7 @@
 .blog-banner {
     position: relative;
     width: calc(100% - 10rem);
-    height: 500px;
+    height: 192px;
     overflow: hidden;
     margin: 0 auto 0;
     z-index: -1;
@@ -14,8 +14,6 @@
     height: 12rem;
     background-size: cover;
     background-position: center -250px;
-    /* Ajusta este valor para mover la imagen */
-    font-family: 'Poppins', sans-serif;
 }
 
 .blog-banner-content {
@@ -29,6 +27,14 @@
     background: #00000047;
     height: 12.5rem;
     bottom: 100px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.blog-texto_banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 10rem;
     font-family: 'Poppins', sans-serif;
 }
 
