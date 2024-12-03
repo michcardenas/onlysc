@@ -13,6 +13,30 @@
     body {
         color: #ff0f58; /* Color para el texto general */
     }
+
+    .form-control {
+        border: 1px solid #ff0f58; /* Borde de los inputs */
+        color: #333; /* Color del texto dentro de los inputs */
+    }
+
+    .btn-primary {
+        background-color: #ff0f58;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #e5094f;
+    }
+
+    .url-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .url-container span {
+        margin-right: 10px;
+        color: #ff0f58;
+    }
 </style>
 
 <div class="container">
@@ -47,6 +71,22 @@
                 class="form-control" 
                 value="{{ old('nombre', $ciudad->nombre) }}" 
                 required>
+        </div>
+
+        <div class="form-group">
+            <label for="url">URL de la Ciudad</label>
+            <div class="url-container">
+                <span>https://onlyescorts.cl/</span>
+                <input 
+                    type="text" 
+                    name="url" 
+                    id="url" 
+                    class="form-control" 
+                    style="width: auto;" 
+                    value="{{ old('url', $ciudad->url) }}" 
+                    placeholder="Ejemplo: santiago" 
+                    required>
+            </div>
         </div>
 
         <button type="submit" class="btn btn-primary mt-3">Guardar Cambios</button>

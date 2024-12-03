@@ -9,7 +9,7 @@
         <select id="ciudad" name="ciudad" required>
             <option value="" disabled selected>Seleccionar ubicación</option>
             @foreach($ciudades as $ciudad)
-                <option value="{{ strtolower($ciudad->nombre) }}">{{ ucfirst($ciudad->nombre) }}</option>
+            <option value="{{ strtolower($ciudad->url) }}">{{ ucfirst($ciudad->nombre) }}</option>
             @endforeach
         </select>
         <button type="submit" class="btn-location">ENTRAR</button>

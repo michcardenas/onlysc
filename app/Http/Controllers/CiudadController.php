@@ -31,18 +31,28 @@ class CiudadController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Validar los datos del formulario
         $request->validate([
             'nombre' => 'required|string|max:255',
+            'url' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[^\s.,\/]+$/', 
+            ],
+        ], [
+            // Mensajes personalizados para la validación de 'regex'
+            'url.regex' => 'El campo URL no puede contener espacios, puntos, comas ni barras (/).',
         ]);
-
+    
         // Buscar la ciudad por su ID y actualizar
         $ciudad = Ciudad::findOrFail($id);
-        $ciudad->update($request->only('nombre'));
-
+        $ciudad->update($request->only('nombre', 'url'));
+    
         // Redirigir con un mensaje de éxito
         return redirect()->route('ciudades.index')->with('success', 'Ciudad actualizada con éxito.');
     }
+    
+    
 
         public function create()
         {
@@ -55,16 +65,26 @@ class CiudadController extends Controller
             // Validar los datos del formulario
             $request->validate([
                 'nombre' => 'required|string|max:255',
+                'url' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    'regex:/^[^\s.,\/]+$/', // No permite espacios, puntos, comas ni barras
+                ],
+            ], [
+                // Mensajes personalizados para la validación de 'regex'
+                'url.regex' => 'El campo URL no puede contener espacios, puntos, comas ni barras (/).',
             ]);
-
+        
             // Crear la nueva ciudad
-            Ciudad::create([
-                'nombre' => $request->input('nombre'),
-            ]);
-
+            Ciudad::create($request->only('nombre', 'url'));
+        
             // Redirigir a la lista de ciudades con un mensaje de éxito
             return redirect()->route('ciudades.index')->with('success', 'Ciudad agregada con éxito.');
         }
+        
+        
+        
         public function destroy($id)
         {
             // Buscar la ciudad por su ID

@@ -13,7 +13,7 @@ class InicioController extends Controller
     public function show($nombreCiudad)
     {
         // Buscar la ciudad por nombre
-        $ciudadSeleccionada = Ciudad::where('nombre', $nombreCiudad)->first();
+        $ciudadSeleccionada = Ciudad::where('url', $nombreCiudad)->first();
     
         if (!$ciudadSeleccionada) {
             abort(404, 'Ciudad no encontrada');

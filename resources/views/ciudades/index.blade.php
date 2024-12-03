@@ -32,19 +32,18 @@
     </nav>
 </header>
 
-
-
 <div class="container">
     <h1 style="color:white;">Lista de Ciudades</h1>
     <div class="mb-3">
-    <a href="{{ route('ciudades.create') }}" class="btn" style="background-color: #ff0f58; color: white;">
-        Agregar Ciudad
-    </a>
-</div>
+        <a href="{{ route('ciudades.create') }}" class="btn" style="background-color: #ff0f58; color: white;">
+            Agregar Ciudad
+        </a>
+    </div>
     <table class="table-admin">
         <thead>
             <tr>
                 <th>Nombre</th>
+                <th>URL</th> <!-- Nueva columna -->
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -52,6 +51,10 @@
             @foreach($ciudades as $index => $ciudad)
             <tr>
                 <td>{{ $ciudad->nombre }}</td>
+                <td>
+                    <!-- Mostrar la URL fija concatenada -->
+                    <span>https://onlyescorts.cl/{{ $ciudad->url }}</span>
+                </td>
                 <td>
                     <!-- Botón Editar -->
                     <a href="{{ route('ciudades.edit', $ciudad->id) }}" class="btn btn-warning btn-sm">
