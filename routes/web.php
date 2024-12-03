@@ -111,6 +111,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/perfil', [PerfilController::class, 'index'])->name('admin.profile');
     Route::post('/perfil/update', [PerfilController::class, 'updateProfile'])->name('admin.updateProfile');
     Route::post('/perfil/update-photo', [PerfilController::class, 'updatePhoto'])->name('admin.updatePhoto');
+    Route::post('/perfil/crear-estado', [PerfilController::class, 'crearEstado'])->name('admin.crear-estado');
+    Route::delete('/perfil/eliminar-estado/{id}', [PerfilController::class, 'eliminarEstado'])->name('admin.eliminar-estado');
+    Route::post('/estados/marcar-visto', [InicioController::class, 'marcarComoVisto'])->name('estados.marcar-visto');
 });
 
 //ciudades

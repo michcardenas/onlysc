@@ -2144,3 +2144,234 @@ label .required {
     color: #ffffff !important;
     /* Texto blanco */
 }
+
+.estados-historias {
+    padding: 15px 350px;
+    background: #fff;
+    font-family: 'Poppins', sans-serif;
+}
+
+.historias-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.historias-titulos {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.historias-titulos h4 {
+    color: #ff0066;
+    font-size: 0.875rem;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.ver-todas {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.75rem;
+}
+
+.historias-container {
+    flex-grow: 1;
+}
+
+.historias-scroll {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 5px 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.historias-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.historia-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 62px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.historia-item:hover {
+    transform: scale(1.05);
+}
+
+.historia-circle {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    padding: 2px;
+    background: linear-gradient(45deg, #ff0066, #ff6b00);
+    margin-bottom: 6px;
+    position: relative;
+}
+
+.historia-vista {
+    background: #666;
+}
+
+.historia-circle img,
+.historia-circle video {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 0px solid #1a1a1a;
+}
+
+.historia-nombre {
+    color: #8e8e8e;
+    font-size: 0.75rem;
+    text-align: center;
+    max-width: 62px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 2px;
+}
+
+.historia-tiempo {
+    color: #666;
+    font-size: 0.688rem;
+}
+
+/* Modal Styles */
+.historia-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.modal-contenido {
+    position: relative;
+    margin: auto;
+    max-width: 90%;
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s;
+}
+
+.modal-contenido.dimmed {
+    opacity: 0.5;
+}
+
+.cerrar-modal {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #fff;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.modal-navigation {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1001;
+}
+
+.nav-btn {
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 18px;
+    transition: background-color 0.3s;
+}
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.historia-indicators {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    padding: 0 20px;
+}
+
+.indicator {
+    height: 3px;
+    flex-grow: 1;
+    background: rgba(255, 255, 255, 0.3);
+    margin: 0 2px;
+    border-radius: 3px;
+    max-width: 100px;
+}
+
+.indicator.active {
+    background: #fff;
+}
+
+.indicator.viewed {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.historia-final {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    display: none;
+    z-index: 1002;
+}
+
+.final-content {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.final-content p {
+    margin: 0 0 15px 0;
+    font-size: 1rem;
+}
+
+.replay-btn {
+    background: linear-gradient(45deg, #ff0066, #ff6b00);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: transform 0.2s;
+}
+
+.replay-btn:hover {
+    transform: scale(1.05);
+}

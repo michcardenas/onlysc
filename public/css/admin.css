@@ -546,3 +546,140 @@ h2 {
 .alert-danger::before {
     content: '✖';
 }
+
+.estados-historias {
+    padding: 15px 20px;
+    background: #1a1a1a;
+}
+
+.historias-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.historias-header h4 {
+    color: #ff0066;
+    font-size: 0.875rem;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.form-estados {
+    margin-bottom: 20px;
+}
+
+.custom-file-upload {
+    margin-bottom: 15px;
+}
+
+.hidden-file-input {
+    display: none;
+}
+
+.file-upload-button {
+    display: inline-block;
+    padding: 8px 16px;
+    background: linear-gradient(45deg, #ff0066, #e00037);
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.3s;
+    font-size: 0.875rem;
+}
+
+.file-upload-button:hover {
+    opacity: 0.9;
+}
+
+.historias-container {
+    position: relative;
+}
+
+.historias-scroll {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 5px 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.historias-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.historia-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 62px;
+    position: relative;
+}
+
+.historia-circle {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    padding: 2px;
+    background: linear-gradient(45deg, #ff0066, #e00037);
+    margin-bottom: 6px;
+}
+
+.historia-circle img,
+.historia-circle video {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #1a1a1a;
+}
+
+.historia-tiempo {
+    color: #666;
+    font-size: 0.688rem;
+}
+
+.btn-publicar {
+    padding: 8px 16px;
+    background: linear-gradient(45deg, #ff0066, #e00037);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: opacity 0.3s;
+}
+
+.btn-publicar:hover {
+    opacity: 0.9;
+}
+
+.btn-eliminar {
+    padding: 4px 8px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    margin-top: 4px;
+}
+
+.btn-eliminar:hover {
+    background: #c82333;
+}
+
+.selected-file-name {
+    margin-left: 10px;
+    color: #8e8e8e;
+    font-size: 0.75rem;
+}
+
+.no-historias {
+    color: #666;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 0.875rem;
+}

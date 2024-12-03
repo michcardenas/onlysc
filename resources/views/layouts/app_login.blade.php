@@ -1439,6 +1439,14 @@ function previewImage(input) {
 }
 </script>
 
+
+<script>
+            document.getElementById('fotos').addEventListener('change', function(e) {
+                const fileCount = e.target.files.length;
+                document.getElementById('fotosFileNameDisplay').textContent = 
+                    fileCount > 0 ? `${fileCount} ${fileCount === 1 ? 'archivo seleccionado' : 'archivos seleccionados'}` : '';
+            });
+            </script>
 </body>
 
 </html>

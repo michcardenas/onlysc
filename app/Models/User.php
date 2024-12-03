@@ -46,4 +46,10 @@ class User extends Authenticatable
     {
         return $this->rol === '1';
     }
+
+    public function estados()
+    {
+        return $this->hasMany(Estado::class);
+    }
+
 }

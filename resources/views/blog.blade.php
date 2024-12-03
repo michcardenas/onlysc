@@ -13,10 +13,6 @@
 <div class="blog-container">
     <div class="blog-blade-sidebar">
         <div class="blog-search-container">
-            <input type="text" class="blog-search-input" placeholder="Search...">
-            <button class="blog-search-btn">
-                <i class="fas fa-search"></i>
-            </button>
         </div>
 
         <div class="blog-categories">

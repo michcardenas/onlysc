@@ -297,7 +297,217 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+<script>
+let currentHistorias = [];
+let currentIndex = 0;
+let timer;
+let currentUserId = null;
 
+function mostrarHistorias(estado, userId) {
+    currentHistorias = Array.isArray(estado) ? estado : [estado];
+    currentIndex = 0;
+    currentUserId = userId;
+    const modal = document.getElementById('historiaModal');
+    modal.style.display = 'flex';
+    
+    // Crear indicadores
+    const indicatorsContainer = document.querySelector('.historia-indicators');
+    indicatorsContainer.innerHTML = currentHistorias.map((_, i) => 
+        `<div class="indicator ${i === 0 ? 'active' : ''}" data-index="${i}"></div>`
+    ).join('');
+    
+    mostrarHistoriaActual();
+
+    // Marcar como visto el estado actual
+    if (currentHistorias[currentIndex].id) {
+        marcarComoVisto(currentHistorias[currentIndex].id);
+    }
+}
+
+function mostrarHistoriaActual() {
+    clearTimeout(timer);
+    const contenido = document.getElementById('historia-contenido');
+    const estado = currentHistorias[currentIndex];
+    
+    try {
+        const mediaFiles = typeof estado.fotos === 'string' ? 
+            JSON.parse(estado.fotos) : estado.fotos;
+
+        // Actualizar indicadores
+        document.querySelectorAll('.indicator').forEach((ind, i) => {
+            if (i < currentIndex) ind.classList.add('viewed');
+            else if (i === currentIndex) {
+                ind.classList.add('active');
+                ind.classList.remove('viewed');
+            }
+            else {
+                ind.classList.remove('active', 'viewed');
+            }
+        });
+
+        contenido.innerHTML = '';
+
+        if (mediaFiles.imagenes && mediaFiles.imagenes.length > 0) {
+            const img = document.createElement('img');
+            const imagePath = mediaFiles.imagenes[0].replace(/\\/g, '/');
+            img.src = `/storage/${imagePath}`;
+            img.className = 'historia-media';
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '80vh';
+            img.style.objectFit = 'contain';
+            contenido.appendChild(img);
+            timer = setTimeout(() => {
+                if (estado.id) {
+                    marcarComoVisto(estado.id);
+                }
+                nextHistoria();
+            }, 5000);
+        } else if (mediaFiles.videos && mediaFiles.videos.length > 0) {
+            const video = document.createElement('video');
+            video.className = 'historia-media';
+            video.controls = true;
+            video.autoplay = true;
+            video.style.maxWidth = '100%';
+            video.style.maxHeight = '80vh';
+            video.style.objectFit = 'contain';
+            
+            const videoPath = mediaFiles.videos[0].replace(/\\/g, '/');
+            const source = document.createElement('source');
+            source.src = `/storage/${videoPath}`;
+            source.type = `video/${videoPath.split('.').pop()}`;
+            video.appendChild(source);
+            contenido.appendChild(video);
+            
+            video.onended = () => {
+                if (estado.id) {
+                    marcarComoVisto(estado.id);
+                }
+                nextHistoria();
+            };
+        }
+    } catch (error) {
+        console.error('Error al procesar los media files:', error);
+        contenido.innerHTML = '<p style="color: white;">Error al cargar el contenido</p>';
+    }
+}
+
+function nextHistoria() {
+    if (currentIndex < currentHistorias.length - 1) {
+        currentIndex++;
+        mostrarHistoriaActual();
+        if (currentHistorias[currentIndex].id) {
+            marcarComoVisto(currentHistorias[currentIndex].id);
+        }
+    } else {
+        const modal = document.getElementById('historiaModal');
+        modal.style.display = 'none';
+        const final = document.getElementById('historiaFinal');
+        final.style.display = 'flex';
+        
+        // Actualizar el estilo del círculo del usuario actual
+        actualizarEstiloHistoriaCompleta(currentHistorias[0].usuarios_publicate_id);
+        
+        setTimeout(() => {
+            final.style.display = 'none';
+        }, 3000);
+    }
+}
+
+function previousHistoria() {
+    if (currentIndex > 0) {
+        currentIndex--;
+        mostrarHistoriaActual();
+    }
+}
+
+function actualizarEstiloHistoriaCompleta(usuarioPublicateId) {
+    document.querySelectorAll('.historia-item').forEach(item => {
+        if (item.dataset.usuarioId == usuarioPublicateId) {
+            const circulo = item.querySelector('.historia-circle');
+            if (circulo) {
+                circulo.classList.add('historia-vista');
+                // Verificar si todas las historias están vistas
+                const todasVistas = currentHistorias.every(historia => historia.visto);
+                if (todasVistas) {
+                    circulo.style.background = '#808080'; // Color gris
+                }
+            }
+        }
+    });
+}
+
+function marcarComoVisto(estadoId) {
+    fetch('/estados/marcar-visto', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+            estado_id: estadoId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Actualizar el estado local
+            const historia = currentHistorias.find(h => h.id === estadoId);
+            if (historia) {
+                historia.visto = true;
+            }
+        } else {
+            console.error('Error al marcar como visto:', data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+// Cerrar modal
+document.querySelector('.cerrar-modal').onclick = function() {
+    document.getElementById('historiaModal').style.display = 'none';
+    clearTimeout(timer);
+}
+
+// Cerrar al hacer clic fuera
+document.getElementById('historiaModal').onclick = function(e) {
+    if(e.target === this) {
+        this.style.display = 'none';
+        clearTimeout(timer);
+    }
+}
+
+// Controles de teclado
+document.addEventListener('keydown', function(e) {
+    if (document.getElementById('historiaModal').style.display === 'flex') {
+        if (e.key === 'ArrowRight') nextHistoria();
+        else if (e.key === 'ArrowLeft') previousHistoria();
+        else if (e.key === 'Escape') {
+            document.getElementById('historiaModal').style.display = 'none';
+            clearTimeout(timer);
+        }
+    }
+});
+
+// Controles táctiles para móviles
+let touchstartX = 0;
+let touchendX = 0;
+
+document.getElementById('historiaModal').addEventListener('touchstart', e => {
+    touchstartX = e.changedTouches[0].screenX;
+});
+
+document.getElementById('historiaModal').addEventListener('touchend', e => {
+    touchendX = e.changedTouches[0].screenX;
+    handleGesture();
+});
+
+function handleGesture() {
+    if (touchendX < touchstartX) nextHistoria();
+    if (touchendX > touchstartX) previousHistoria();
+}
+</script>
 </body>
 
 </html>

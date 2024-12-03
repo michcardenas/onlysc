@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -42,6 +43,11 @@ class UsuarioPublicate extends Model
     public function disponibilidad()
     {
         return $this->hasMany(Disponibilidad::class, 'publicate_id');
+    }
+
+    public function estados()
+    {
+        return $this->hasMany(Estado::class, 'user_id');
     }
 
     // /**
