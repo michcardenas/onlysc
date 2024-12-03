@@ -75,6 +75,11 @@
                     <textarea id="descripcion" name="descripcion" rows="4">{{ $usuario->descripcion }}</textarea>
                 </div>
 
+                <div class="form-group">
+                    <label for="linkedin">LinkedIn URL: (se vera en foro)</label>
+                    <input type="text" id="linkedin" name="linkedin" value="{{ $usuario->linkedin }}" placeholder="www.linkedin.com/in/usuario">
+                </div>
+
                 <div class="button-group">
                     <button type="submit" class="btn btn-secondary">Guardar Cambios</button>
                     <a href="/password/reset" class="btn btn-secondary">Restablecer Contraseña</a>

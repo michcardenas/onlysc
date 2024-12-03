@@ -13,6 +13,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'linkedin',
         'password',
         'rol',
     ];
@@ -52,4 +53,9 @@ class User extends Authenticatable
         return $this->hasMany(Estado::class);
     }
 
+    public function profileImage()
+    {
+        // Assuming profile images are stored in storage/app/public/profile-images
+        return $this->avatar ? Storage::url('profile-images/' . $this->avatar) : '/default-avatar.png';
+    }
 }

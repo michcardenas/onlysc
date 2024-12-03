@@ -71,6 +71,11 @@
                 <div class="author-info">
                     <h3 class="author-title">
                         <span class="author-name">{{ $articulo->user->name }}</span>
+                        @if($articulo->user->linkedin)
+                        <a href="https://{{ $articulo->user->linkedin }}" target="_blank" class="linkedin-icon">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        @endif
                     </h3>
                     <p class="author-bio">{{ $articulo->user->descripcion ?? 'No hay descripción disponible' }}</p>
                 </div>

@@ -71,6 +71,17 @@
 <div id="historiaModal" class="historia-modal">
     <div class="modal-contenido">
         <span class="cerrar-modal">&times;</span>
+        <div class="modal-header">
+            <div class="usuario-info">
+                <div class="usuario-avatar">
+                    <img id="modal-profile-image" src="" alt="Perfil">
+                </div>
+                <div class="usuario-detalles">
+                <a id="modal-usuario-nombre" href="#" class="nombre-link"></a>
+                    <span id="modal-historia-tiempo"></span>
+                </div>
+            </div>
+        </div>
         <div class="modal-navigation">
             <button class="nav-btn prev-btn" onclick="previousHistoria()">&lt;</button>
             <button class="nav-btn next-btn" onclick="nextHistoria()">&gt;</button>
@@ -80,12 +91,6 @@
     </div>
 </div>
 
-<div id="historiaFinal" class="historia-final">
-    <div class="final-content">
-        <p>Has visto todas las historias</p>
-        <button class="replay-btn" onclick="reiniciarHistorias()">Volver a ver</button>
-    </div>
-</div>
 
 <main class="inicio-container">
     <div class="main-content-wrapper">

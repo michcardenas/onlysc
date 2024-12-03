@@ -26,11 +26,14 @@
     <!-- Scripts -->
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/es.js"></script>
+
 </head>
 
 <body>
     <header>
-    <nav class="navbar navbar-top">
+        <nav class="navbar navbar-top">
             <div class="navbar-left">
                 <button class="btn-publish">PUBLICATE</button>
             </div>
@@ -204,165 +207,327 @@
         </div>
     </footer>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const slider = document.querySelector('.escortperfil-banner-slider');
-    const slides = document.querySelectorAll('.escortperfil-banner-img');
-    const prevBtn = document.querySelector('.carousel-control.prev');
-    const nextBtn = document.querySelector('.carousel-control.next');
-    const indicators = document.querySelectorAll('.carousel-indicator');
-    let currentSlide = 0;
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slider = document.querySelector('.escortperfil-banner-slider');
+            const slides = document.querySelectorAll('.escortperfil-banner-img');
+            const prevBtn = document.querySelector('.carousel-control.prev');
+            const nextBtn = document.querySelector('.carousel-control.next');
+            const indicators = document.querySelectorAll('.carousel-indicator');
+            let currentSlide = 0;
 
-    // Función para actualizar las clases active
-    function updateActiveClasses() {
-        slides.forEach((slide, index) => {
-            slide.classList.toggle('active', index === currentSlide);
-        });
-        
-        indicators.forEach((indicator, index) => {
-            indicator.classList.toggle('active', index === currentSlide);
-        });
-    }
+            // Función para actualizar las clases active
+            function updateActiveClasses() {
+                slides.forEach((slide, index) => {
+                    slide.classList.toggle('active', index === currentSlide);
+                });
 
-    // Función para ir a un slide específico
-    function goToSlide(index) {
-        currentSlide = index;
-        const offset = -(currentSlide * (100 / 3)); // Ajustado para el nuevo layout
-        slider.style.transform = `translateX(${offset}vw)`;
-        updateActiveClasses();
-    }
-
-    // Inicializar el primer slide como activo
-    updateActiveClasses();
-
-    // Event listeners
-    prevBtn.addEventListener('click', () => {
-        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-        goToSlide(currentSlide);
-    });
-
-    nextBtn.addEventListener('click', () => {
-        currentSlide = (currentSlide + 1) % slides.length;
-        goToSlide(currentSlide);
-    });
-
-    indicators.forEach((indicator, index) => {
-        indicator.addEventListener('click', () => {
-            goToSlide(index);
-        });
-    });
-});
-
-
-document.getElementById('location').addEventListener('change', function() {
-        const ciudadNombre = this.value;
-
-        if (!ciudadNombre) {
-            alert('Por favor selecciona una ciudad.');
-            return;
-        }
-
-        // Redirigir a la ruta dinámica
-        window.location.href = `/escorts-${ciudadNombre}`;
-    });
-    
-   document.getElementById('categorias').addEventListener('change', function () {
-    const categoria = this.value.toLowerCase(); // Convertir a minúsculas
-    let currentUrl = window.location.pathname;
-
-    if (!categoria) {
-        alert('Por favor selecciona una categoría.');
-        return;
-    }
-
-    // Eliminar cualquier categoría existente en la URL
-    currentUrl = currentUrl.replace(/\/(deluxe|vip|premium|masajes)$/i, ''); // Ignorar mayúsculas y eliminar categoría existente
-
-    // Asegurarse de que la URL no termine con '/'
-    if (currentUrl.endsWith('/')) {
-        currentUrl = currentUrl.slice(0, -1);
-    }
-
-    // Construir la nueva URL con la categoría en minúsculas
-    window.location.href = `${currentUrl}/${categoria}`;
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const cards = document.querySelectorAll('.inicio-card');
-    if (cards.length < 12) {
-        const container = document.querySelector('.inicio-container');
-        if (container) {
-            container.style.marginBottom = '1200px';
-        }
-    }
-});
-</script>
-<script>
-let currentHistorias = [];
-let currentIndex = 0;
-let timer;
-let currentUserId = null;
-
-function mostrarHistorias(estado, userId) {
-    currentHistorias = Array.isArray(estado) ? estado : [estado];
-    currentIndex = 0;
-    currentUserId = userId;
-    const modal = document.getElementById('historiaModal');
-    modal.style.display = 'flex';
-    
-    // Crear indicadores
-    const indicatorsContainer = document.querySelector('.historia-indicators');
-    indicatorsContainer.innerHTML = currentHistorias.map((_, i) => 
-        `<div class="indicator ${i === 0 ? 'active' : ''}" data-index="${i}"></div>`
-    ).join('');
-    
-    mostrarHistoriaActual();
-
-    // Marcar como visto el estado actual
-    if (currentHistorias[currentIndex].id) {
-        marcarComoVisto(currentHistorias[currentIndex].id);
-    }
-}
-
-function mostrarHistoriaActual() {
-    clearTimeout(timer);
-    const contenido = document.getElementById('historia-contenido');
-    const estado = currentHistorias[currentIndex];
-    
-    try {
-        const mediaFiles = typeof estado.fotos === 'string' ? 
-            JSON.parse(estado.fotos) : estado.fotos;
-
-        // Actualizar indicadores
-        document.querySelectorAll('.indicator').forEach((ind, i) => {
-            if (i < currentIndex) ind.classList.add('viewed');
-            else if (i === currentIndex) {
-                ind.classList.add('active');
-                ind.classList.remove('viewed');
+                indicators.forEach((indicator, index) => {
+                    indicator.classList.toggle('active', index === currentSlide);
+                });
             }
-            else {
-                ind.classList.remove('active', 'viewed');
+
+            // Función para ir a un slide específico
+            function goToSlide(index) {
+                currentSlide = index;
+                const offset = -(currentSlide * (100 / 3)); // Ajustado para el nuevo layout
+                slider.style.transform = `translateX(${offset}vw)`;
+                updateActiveClasses();
+            }
+
+            // Inicializar el primer slide como activo
+            updateActiveClasses();
+
+            // Event listeners
+            prevBtn.addEventListener('click', () => {
+                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                goToSlide(currentSlide);
+            });
+
+            nextBtn.addEventListener('click', () => {
+                currentSlide = (currentSlide + 1) % slides.length;
+                goToSlide(currentSlide);
+            });
+
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => {
+                    goToSlide(index);
+                });
+            });
+        });
+
+
+        document.getElementById('location').addEventListener('change', function() {
+            const ciudadNombre = this.value;
+
+            if (!ciudadNombre) {
+                alert('Por favor selecciona una ciudad.');
+                return;
+            }
+
+            // Redirigir a la ruta dinámica
+            window.location.href = `/escorts-${ciudadNombre}`;
+        });
+
+        document.getElementById('categorias').addEventListener('change', function() {
+            const categoria = this.value.toLowerCase(); // Convertir a minúsculas
+            let currentUrl = window.location.pathname;
+
+            if (!categoria) {
+                alert('Por favor selecciona una categoría.');
+                return;
+            }
+
+            // Eliminar cualquier categoría existente en la URL
+            currentUrl = currentUrl.replace(/\/(deluxe|vip|premium|masajes)$/i, ''); // Ignorar mayúsculas y eliminar categoría existente
+
+            // Asegurarse de que la URL no termine con '/'
+            if (currentUrl.endsWith('/')) {
+                currentUrl = currentUrl.slice(0, -1);
+            }
+
+            // Construir la nueva URL con la categoría en minúsculas
+            window.location.href = `${currentUrl}/${categoria}`;
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.inicio-card');
+            if (cards.length < 12) {
+                const container = document.querySelector('.inicio-container');
+                if (container) {
+                    container.style.marginBottom = '1200px';
+                }
             }
         });
+    </script>
+    <script>
+        // Variables globales existentes
+        let currentHistorias = [];
+        let currentIndex = 0;
+        let timer;
+        let currentUserId = null;
 
-        contenido.innerHTML = '';
+        // Esperar a que el DOM esté completamente cargado
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar los event listeners para controles táctiles
+            const historiaModal = document.getElementById('historiaModal');
+            if (historiaModal) {
+                let touchstartX = 0;
+                let touchendX = 0;
 
-        if (mediaFiles.imagenes && mediaFiles.imagenes.length > 0) {
+                historiaModal.addEventListener('touchstart', e => {
+                    touchstartX = e.changedTouches[0].screenX;
+                });
+
+                historiaModal.addEventListener('touchend', e => {
+                    touchendX = e.changedTouches[0].screenX;
+                    handleGesture();
+                });
+
+                // Configurar el cierre del modal
+                historiaModal.onclick = function(e) {
+                    if (e.target === this) {
+                        this.style.display = 'none';
+                        clearTimeout(timer);
+                    }
+                }
+            }
+
+            // Configurar el botón de cerrar
+            const cerrarModal = document.querySelector('.cerrar-modal');
+            if (cerrarModal) {
+                cerrarModal.onclick = function() {
+                    const modal = document.getElementById('historiaModal');
+                    if (modal) {
+                        modal.style.display = 'none';
+                        clearTimeout(timer);
+                    }
+                }
+            }
+
+            // Configurar controles de teclado
+            document.addEventListener('keydown', function(e) {
+                const modal = document.getElementById('historiaModal');
+                if (modal && modal.style.display === 'flex') {
+                    if (e.key === 'ArrowRight') nextHistoria();
+                    else if (e.key === 'ArrowLeft') previousHistoria();
+                    else if (e.key === 'Escape') {
+                        modal.style.display = 'none';
+                        clearTimeout(timer);
+                    }
+                }
+            });
+        });
+
+        function mostrarHistorias(estado, userId) {
+            currentHistorias = Array.isArray(estado) ? estado : [estado];
+            currentIndex = 0;
+            currentUserId = userId;
+
+            const modal = document.getElementById('historiaModal');
+            if (!modal) {
+                console.error('Modal no encontrado');
+                return;
+            }
+            modal.style.display = 'flex';
+
+            // Actualizar la información del usuario en el modal
+            const profileImage = document.getElementById('modal-profile-image');
+            const usuarioNombre = document.getElementById('modal-usuario-nombre');
+
+            if (!currentHistorias[0] || !currentHistorias[0].usuarios_publicate_id) {
+                console.error('ID de usuario no válido');
+                return;
+            }
+
+            // Obtener la información del usuario
+            fetch(`/usuario/${currentHistorias[0].usuarios_publicate_id}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error HTTP: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(usuario => {
+                    console.log('Datos del usuario recibidos:', usuario);
+
+                    // Manejar la foto del usuario
+                    if (profileImage) {
+                        if (usuario.foto) {
+                            const fotoUrl = `/storage/${usuario.foto}`;
+                            profileImage.src = fotoUrl;
+                            profileImage.onerror = () => {
+                                console.log('Error al cargar la imagen, usando imagen por defecto');
+                                profileImage.src = '/img/default-avatar.png';
+                            };
+                        } else {
+                            profileImage.src = '/img/default-avatar.png';
+                        }
+                    }
+
+                    // Actualizar nombre y hacerlo clickeable
+                    if (usuarioNombre) {
+                        usuarioNombre.textContent = usuario.fantasia || usuario.name || 'Usuario';
+                        usuarioNombre.href = `/escorts/${currentHistorias[0].usuarios_publicate_id}`;
+
+                        // Agregar estilos al enlace
+                        usuarioNombre.style.color = 'white';
+                        usuarioNombre.style.textDecoration = 'none';
+                        usuarioNombre.style.fontWeight = 'bold';
+
+                        // Opcional: añadir hover effect
+                        usuarioNombre.onmouseover = function() {
+                            this.style.textDecoration = 'underline';
+                        };
+                        usuarioNombre.onmouseout = function() {
+                            this.style.textDecoration = 'none';
+                        };
+                    }
+
+                    // El tiempo se actualizará en mostrarHistoriaActual()
+                })
+                .catch(error => {
+                    console.error('Error al obtener datos del usuario:', error);
+                    if (profileImage) profileImage.src = '/img/default-avatar.png';
+                    if (usuarioNombre) {
+                        usuarioNombre.textContent = 'Usuario';
+                        usuarioNombre.href = '#';
+                    }
+                });
+
+            // Crear indicadores
+            const indicatorsContainer = document.querySelector('.historia-indicators');
+            if (indicatorsContainer) {
+                indicatorsContainer.innerHTML = currentHistorias.map((_, i) =>
+                    `<div class="indicator ${i === 0 ? 'active' : ''}" data-index="${i}"></div>`
+                ).join('');
+            }
+
+            mostrarHistoriaActual();
+
+            // Marcar como visto el estado actual
+            if (currentHistorias[currentIndex] && currentHistorias[currentIndex].id) {
+                marcarComoVisto(currentHistorias[currentIndex].id);
+            }
+        }
+
+        function mostrarHistoriaActual() {
+            clearTimeout(timer);
+            const contenido = document.getElementById('historia-contenido');
+            const historiaTiempo = document.getElementById('modal-historia-tiempo');
+
+            if (!contenido || !currentHistorias[currentIndex]) {
+                console.error('Contenido no encontrado o historia no válida');
+                return;
+            }
+
+            const estado = currentHistorias[currentIndex];
+
+            // Actualizar el tiempo de la historia actual
+            if (historiaTiempo && typeof moment !== 'undefined') {
+                console.log('Actualizando tiempo para historia:', {
+                    index: currentIndex,
+                    created_at: estado.created_at
+                });
+                historiaTiempo.textContent = `hace ${moment(estado.created_at).fromNow(true)}`;
+            } else if (historiaTiempo) {
+                historiaTiempo.textContent = 'hace un momento';
+            }
+
+            try {
+                const mediaFiles = typeof estado.fotos === 'string' ?
+                    JSON.parse(estado.fotos) : estado.fotos;
+
+                // Actualizar indicadores
+                document.querySelectorAll('.indicator').forEach((ind, i) => {
+                    if (i < currentIndex) ind.classList.add('viewed');
+                    else if (i === currentIndex) {
+                        ind.classList.add('active');
+                        ind.classList.remove('viewed');
+                    } else {
+                        ind.classList.remove('active', 'viewed');
+                    }
+                });
+
+                contenido.innerHTML = '';
+
+                if (mediaFiles.imagenes && mediaFiles.imagenes.length > 0) {
+                    mostrarImagen(contenido, mediaFiles.imagenes[0], estado);
+                } else if (mediaFiles.videos && mediaFiles.videos.length > 0) {
+                    mostrarVideo(contenido, mediaFiles.videos[0], estado);
+                }
+            } catch (error) {
+                console.error('Error al procesar los media files:', error);
+                contenido.innerHTML = '<p style="color: white;">Error al cargar el contenido</p>';
+            }
+        }
+
+        function mostrarImagen(contenido, imagePath, estado) {
             const img = document.createElement('img');
-            const imagePath = mediaFiles.imagenes[0].replace(/\\/g, '/');
+            imagePath = imagePath.replace(/\\/g, '/');
             img.src = `/storage/${imagePath}`;
             img.className = 'historia-media';
             img.style.maxWidth = '100%';
             img.style.maxHeight = '80vh';
             img.style.objectFit = 'contain';
             contenido.appendChild(img);
-            timer = setTimeout(() => {
-                if (estado.id) {
-                    marcarComoVisto(estado.id);
-                }
-                nextHistoria();
-            }, 5000);
-        } else if (mediaFiles.videos && mediaFiles.videos.length > 0) {
+
+            img.onload = () => {
+                timer = setTimeout(() => {
+                    if (estado.id) {
+                        marcarComoVisto(estado.id);
+                    }
+                    nextHistoria();
+                }, 5000);
+            };
+
+            img.onerror = () => {
+                console.error('Error al cargar la imagen:', imagePath);
+                contenido.innerHTML = '<p style="color: white;">Error al cargar la imagen</p>';
+            };
+        }
+
+        function mostrarVideo(contenido, videoPath, estado) {
             const video = document.createElement('video');
             video.className = 'historia-media';
             video.controls = true;
@@ -370,144 +535,111 @@ function mostrarHistoriaActual() {
             video.style.maxWidth = '100%';
             video.style.maxHeight = '80vh';
             video.style.objectFit = 'contain';
-            
-            const videoPath = mediaFiles.videos[0].replace(/\\/g, '/');
+
+            videoPath = videoPath.replace(/\\/g, '/');
             const source = document.createElement('source');
             source.src = `/storage/${videoPath}`;
             source.type = `video/${videoPath.split('.').pop()}`;
             video.appendChild(source);
             contenido.appendChild(video);
-            
+
             video.onended = () => {
                 if (estado.id) {
                     marcarComoVisto(estado.id);
                 }
                 nextHistoria();
             };
+
+            video.onerror = () => {
+                console.error('Error al cargar el video:', videoPath);
+                contenido.innerHTML = '<p style="color: white;">Error al cargar el video</p>';
+            };
         }
-    } catch (error) {
-        console.error('Error al procesar los media files:', error);
-        contenido.innerHTML = '<p style="color: white;">Error al cargar el contenido</p>';
-    }
-}
 
-function nextHistoria() {
-    if (currentIndex < currentHistorias.length - 1) {
-        currentIndex++;
-        mostrarHistoriaActual();
-        if (currentHistorias[currentIndex].id) {
-            marcarComoVisto(currentHistorias[currentIndex].id);
-        }
-    } else {
-        const modal = document.getElementById('historiaModal');
-        modal.style.display = 'none';
-        const final = document.getElementById('historiaFinal');
-        final.style.display = 'flex';
-        
-        // Actualizar el estilo del círculo del usuario actual
-        actualizarEstiloHistoriaCompleta(currentHistorias[0].usuarios_publicate_id);
-        
-        setTimeout(() => {
-            final.style.display = 'none';
-        }, 3000);
-    }
-}
-
-function previousHistoria() {
-    if (currentIndex > 0) {
-        currentIndex--;
-        mostrarHistoriaActual();
-    }
-}
-
-function actualizarEstiloHistoriaCompleta(usuarioPublicateId) {
-    document.querySelectorAll('.historia-item').forEach(item => {
-        if (item.dataset.usuarioId == usuarioPublicateId) {
-            const circulo = item.querySelector('.historia-circle');
-            if (circulo) {
-                circulo.classList.add('historia-vista');
-                // Verificar si todas las historias están vistas
-                const todasVistas = currentHistorias.every(historia => historia.visto);
-                if (todasVistas) {
-                    circulo.style.background = '#808080'; // Color gris
+        function nextHistoria() {
+            if (currentIndex < currentHistorias.length - 1) {
+                currentIndex++;
+                mostrarHistoriaActual();
+                if (currentHistorias[currentIndex].id) {
+                    marcarComoVisto(currentHistorias[currentIndex].id);
                 }
+            } else {
+                cerrarHistoria();
             }
         }
-    });
-}
 
-function marcarComoVisto(estadoId) {
-    fetch('/estados/marcar-visto', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({
-            estado_id: estadoId
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Actualizar el estado local
-            const historia = currentHistorias.find(h => h.id === estadoId);
-            if (historia) {
-                historia.visto = true;
+        function previousHistoria() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                mostrarHistoriaActual();
             }
-        } else {
-            console.error('Error al marcar como visto:', data.error);
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
 
-// Cerrar modal
-document.querySelector('.cerrar-modal').onclick = function() {
-    document.getElementById('historiaModal').style.display = 'none';
-    clearTimeout(timer);
-}
+        function cerrarHistoria() {
+            const modal = document.getElementById('historiaModal');
+            const final = document.getElementById('historiaFinal');
 
-// Cerrar al hacer clic fuera
-document.getElementById('historiaModal').onclick = function(e) {
-    if(e.target === this) {
-        this.style.display = 'none';
-        clearTimeout(timer);
-    }
-}
+            if (modal) modal.style.display = 'none';
+            if (final) {
+                final.style.display = 'flex';
+                setTimeout(() => {
+                    final.style.display = 'none';
+                }, 3000);
+            }
 
-// Controles de teclado
-document.addEventListener('keydown', function(e) {
-    if (document.getElementById('historiaModal').style.display === 'flex') {
-        if (e.key === 'ArrowRight') nextHistoria();
-        else if (e.key === 'ArrowLeft') previousHistoria();
-        else if (e.key === 'Escape') {
-            document.getElementById('historiaModal').style.display = 'none';
-            clearTimeout(timer);
+            // Actualizar el estilo del círculo del usuario actual
+            if (currentHistorias[0] && currentHistorias[0].usuarios_publicate_id) {
+                actualizarEstiloHistoriaCompleta(currentHistorias[0].usuarios_publicate_id);
+            }
         }
-    }
-});
 
-// Controles táctiles para móviles
-let touchstartX = 0;
-let touchendX = 0;
+        function actualizarEstiloHistoriaCompleta(usuarioPublicateId) {
+            document.querySelectorAll('.historia-item').forEach(item => {
+                if (item.dataset.usuarioId == usuarioPublicateId) {
+                    const circulo = item.querySelector('.historia-circle');
+                    if (circulo) {
+                        circulo.classList.add('historia-vista');
+                        const todasVistas = currentHistorias.every(historia => historia.visto);
+                        if (todasVistas) {
+                            circulo.style.background = '#808080';
+                        }
+                    }
+                }
+            });
+        }
 
-document.getElementById('historiaModal').addEventListener('touchstart', e => {
-    touchstartX = e.changedTouches[0].screenX;
-});
+        function marcarComoVisto(estadoId) {
+            fetch('/estados/marcar-visto', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        estado_id: estadoId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const historia = currentHistorias.find(h => h.id === estadoId);
+                        if (historia) {
+                            historia.visto = true;
+                        }
+                    } else {
+                        console.error('Error al marcar como visto:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al marcar como visto:', error);
+                });
+        }
 
-document.getElementById('historiaModal').addEventListener('touchend', e => {
-    touchendX = e.changedTouches[0].screenX;
-    handleGesture();
-});
-
-function handleGesture() {
-    if (touchendX < touchstartX) nextHistoria();
-    if (touchendX > touchstartX) previousHistoria();
-}
-</script>
+        function handleGesture() {
+            if (touchendX < touchstartX) nextHistoria();
+            if (touchendX > touchstartX) previousHistoria();
+        }
+    </script>
 </body>
 
 </html>

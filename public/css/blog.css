@@ -659,3 +659,25 @@
     margin: 0;
     line-height: 1.5;
 }
+
+.destacado-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #e00037;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    z-index: 10;
+}
+
+.destacado {
+    border: 2px solid #e00037;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.linkedin-icon {
+    color: #0077b5;
+ }

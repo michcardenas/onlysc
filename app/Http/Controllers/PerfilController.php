@@ -30,24 +30,48 @@ class PerfilController extends Controller
 
     public function updateProfile(Request $request)
     {
-        $usuario = auth()->user();
+        try {
+            $usuario = auth()->user();
 
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $usuario->id,
-            'password' => 'nullable|string|min:8|confirmed',
-            'descripcion' => 'nullable|string'
-        ]);
+            $request->validate([
+                'nombre' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users,email,' . $usuario->id,
+                'password' => 'nullable|string|min:8|confirmed',
+                'descripcion' => 'nullable|string',
+                'linkedin' => 'nullable|string'
+            ]);
 
-        $usuario->name = $request->nombre;
-        $usuario->email = $request->email;
-        if ($request->filled('password')) {
-            $usuario->password = Hash::make($request->password);
+            $usuario->name = $request->nombre;
+            $usuario->email = $request->email;
+            $usuario->linkedin = $request->linkedin;
+            if ($request->filled('password')) {
+                $usuario->password = Hash::make($request->password);
+            }
+            $usuario->descripcion = $request->descripcion;
+
+            Log::info('Intentando actualizar usuario', [
+                'user_id' => $usuario->id,
+                'data' => $request->all(),
+                'linkedin' => $request->linkedin
+            ]);
+
+            $saved = $usuario->save();
+
+            Log::info('Resultado de guardado', [
+                'success' => $saved,
+                'user' => $usuario->toArray()
+            ]);
+
+            return redirect()->route('admin.profile')->with('success', 'Perfil actualizado correctamente');
+        } catch (\Exception $e) {
+            Log::error('Error actualizando perfil', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
+
+            return redirect()->back()->with('error', 'Error al actualizar perfil');
         }
-        $usuario->descripcion = $request->descripcion;
-        $usuario->save();
-
-        return redirect()->route('admin.profile')->with('success', 'Perfil actualizado correctamente');
     }
 
     public function updatePhoto(Request $request)
@@ -110,7 +134,6 @@ class PerfilController extends Controller
             }
 
             return redirect()->back()->with('error', 'No se han proporcionado archivos multimedia');
-
         } catch (\Exception $e) {
             Log::error('Error al crear estado', [
                 'error' => $e->getMessage(),
@@ -141,10 +164,10 @@ class PerfilController extends Controller
             $extension = strtolower($archivo->getClientOriginalExtension());
             $isVideo = in_array($extension, ['mp4', 'mov', 'avi', 'wmv']);
             $carpeta = $isVideo ? 'estados_videos' : 'estados_fotos';
-            
+
             // Generar un nombre único para el archivo
             $nombreArchivo = uniqid() . '_' . time() . '.' . $extension;
-            
+
             // Guardar el archivo con el nombre personalizado
             $filePath = $archivo->storeAs($carpeta, $nombreArchivo, 'public');
 
@@ -213,7 +236,7 @@ class PerfilController extends Controller
             foreach ($expiredEstados as $estado) {
                 $this->eliminarArchivosMultimedia($estado);
                 $estado->delete();
-                
+
                 Log::info('Estado expirado eliminado', [
                     'estado_id' => $estado->id,
                     'created_at' => $estado->created_at
@@ -228,4 +251,44 @@ class PerfilController extends Controller
             return response()->json(['error' => 'Error al eliminar estados'], 500);
         }
     }
+
+    public function getUsuario($id) 
+{         
+    Log::info('Solicitud recibida para usuario ID: ' . $id);
+    
+    try {
+        // Obtenemos el usuario_publicate
+        Log::info('Buscando UsuarioPublicate con ID: ' . $id);
+        $usuarioPublicate = UsuarioPublicate::findOrFail($id);
+        Log::info('UsuarioPublicate encontrado:', ['usuario' => $usuarioPublicate]);
+
+        // Buscamos el usuario relacionado en la tabla users
+        Log::info('Buscando User con email: ' . $usuarioPublicate->email);
+        $user = User::where('email', $usuarioPublicate->email)
+            ->first();
+        Log::info('User encontrado:', ['user' => $user]);
+
+        $response = [
+            'id' => $usuarioPublicate->id,
+            'fantasia' => $usuarioPublicate->fantasia,
+            'foto' => $user ? $user->foto : null,
+            'created_at' => $usuarioPublicate->created_at
+        ];
+        
+        Log::info('Respuesta preparada:', $response);
+
+        return response()->json($response, 200, ['Content-Type' => 'application/json']);
+    } catch (\Exception $e) {
+        Log::error('Error al obtener usuario', [
+            'error' => $e->getMessage(),
+            'stack_trace' => $e->getTraceAsString(),
+            'usuario_publicate_id' => $id
+        ]);
+
+        return response()->json([
+            'error' => 'Usuario no encontrado',
+            'message' => $e->getMessage()
+        ], 404);
+    }
+}
 }

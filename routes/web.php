@@ -116,6 +116,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/estados/marcar-visto', [InicioController::class, 'marcarComoVisto'])->name('estados.marcar-visto');
 });
 
+Route::get('/usuario/{id}', [PerfilController::class, 'getUsuario'])->name('usuario.get');
+
 //ciudades
 Route::get('/ciudades', [CiudadController::class, 'index'])->name('ciudades.index');
 Route::get('/ciudades/{id}/edit', [CiudadController::class, 'edit'])->name('ciudades.edit');
