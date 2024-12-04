@@ -47,7 +47,7 @@ class BlogController extends Controller
         $categorias = BlogCategory::all();
         $tags = BlogTag::all();
 
-        return view('layouts.showblog', [
+        return view('showblog', [
             'articulo' => $articulo,
             'articulos' => $articulos,
             'ciudades' => $ciudades,
@@ -430,7 +430,7 @@ class BlogController extends Controller
         $ciudades = Ciudad::all();
         $tags = BlogTag::all();
     
-        return view('layouts.showcategory', [
+        return view('showcategory', [
             'articulos' => $articulos,
             'ciudades' => $ciudades,
             'categorias' => $categorias,

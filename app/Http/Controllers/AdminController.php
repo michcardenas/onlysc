@@ -18,6 +18,7 @@ class AdminController extends Controller
         // Obtener usuarios con estadop = 1
         $usuariosActivos = UsuarioPublicate::whereIn('estadop', [1, 3])
         ->select('id', 'fantasia', 'nombre', 'edad', 'ubicacion', 'categorias', 'estadop', 'posicion', 'precio')
+        ->orderBy('posicion', 'asc')  // Esto ordenará por posición de mayor a menor
         ->get();
         
         // Obtener el usuario autenticado

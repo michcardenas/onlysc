@@ -319,7 +319,7 @@ label .required {
 
 /* Botón de "Entrar" */
 .location-selector .btn-location {
-    background-color: #ff4757;
+    background-color: #e00037;
     color: white;
     border: none;
     border-radius: 5px;
@@ -533,7 +533,6 @@ label .required {
     font-weight: normal;
     color: #000;
     height: 3rem;
-
 }
 
 /* Botón de Filtros */
@@ -688,11 +687,18 @@ label .required {
 
 
 /* Estilo general del footer */
-.footer {
+.footerhome {
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
     background-color: #1a1a1a;
-    color: #fff;
     font-family: "Work Sans", sans-serif;
-    padding: 0px 0;
 }
 
 /* Sección superior: enlaces de ubicación */
@@ -1213,6 +1219,7 @@ label .required {
     right: 369px;
     font-family: 'Poppins', sans-serif;
     z-index: 10;
+    text-decoration: none;
 }
 
 /* Imagen de fondo de la tarjeta destacada */
@@ -1236,6 +1243,7 @@ label .required {
     justify-content: flex-end;
     border-radius: 0 0 8px 8px;
     height: 100%;
+    text-decoration: none;
 }
 
 /* Título de la tarjeta destacada (nombre) y edad en la misma línea */
@@ -1264,7 +1272,7 @@ label .required {
     justify-content: space-between;
     font-size: 14px;
     color: #ccc;
-    margin-top: 5px;
+    margin-top: 15px;
 }
 
 /* Ubicación de la tarjeta destacada */
@@ -1304,6 +1312,7 @@ label .required {
     font-size: 14px;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
+    text-decoration: none;
 }
 
 /* Panel de chicas online */
@@ -1314,7 +1323,7 @@ label .required {
     padding: 10px;
     font-family: 'Work Sans', sans-serif;
     position: absolute;
-    top: 645px;
+    top: 810px;
     right: 346px;
     z-index: 10;
 }
@@ -2002,7 +2011,10 @@ label .required {
 }
 
 /* Colores específicos de cada red social */
-.linkedin, .twitter, .github, .email {
+.linkedin,
+.twitter,
+.github,
+.email {
     background-color: #e00037;
 }
 
@@ -2384,7 +2396,7 @@ label .required {
     right: 0;
     padding: 1rem;
     z-index: 10;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
 }
 
 .usuario-info {
@@ -2438,4 +2450,263 @@ label .required {
     font-size: 0.8rem;
     opacity: 0.8;
     font-family: 'Poppins', sans-serif;
+}
+
+/* Media Queries para Responsividad */
+@media screen and (max-width: 768px) {
+
+    .inicio-featured-card {
+        position: relative; /* Cambia el posicionamiento a relativo */
+        margin: 0 auto; /* Centra la tarjeta */
+        width: 100%; /* Ajusta el ancho */
+        max-width: 300px; /* Ancho máximo */
+        right: 0; /* Reinicia la posición */
+        z-index: 1; /* Ajusta la prioridad */
+        margin-bottom: 20px; /* Espaciado con el resto del contenido */
+        margin-top: 20px;
+        text-decoration: none;
+    }
+
+    .location-price {
+        margin-top: 15px;
+    }
+
+    .inicio-featured-overlay {
+        padding: 10px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0) 60%);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        border-radius: 0 0 8px 8px;
+        height: 100%;
+        width: 500px;
+        text-decoration: none;
+    }
+
+    .inicio-usuarios-section {
+        display: flex;
+        flex-direction: column; /* Coloca los elementos en una columna */
+        align-items: center; /* Centra el contenido */
+    }
+
+    .pagination-container {
+        order: 1; /* Mantén la paginación al final */
+    }
+    /* Navbar Superior */
+    .navbar-top {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    .inicio-card-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        padding: 0 10px;
+    }
+
+    /* Ocultar elementos en móvil */
+    .navbar-top .navbar-left,
+    .navbar-top .navbar-right .btn-login,
+    .navbar-top .navbar-right .btn-register,
+    .navbar-top .navbar-right .btn-user,
+    .navbar-top .navbar-right .logout-form {
+        display: none;
+    }
+
+    /* Mantener solo el selector de ubicación */
+    .navbar-top .navbar-right {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .navbar-top .navbar-right .location-dropdown {
+        margin: 0;
+    }
+
+    /* Navbar bottom fijo debajo del navbar-top */
+    .navbar-bottom {
+        position: fixed;
+        top: 40px; /* Altura del navbar-top */
+        left: 0;
+        width: 100%;
+        z-index: 999;
+        background: white;
+    }
+
+    /* Agregar padding al contenido principal para compensar los navbars fijos */
+    main {
+        padding-top: calc(40px + 3rem); /* navbar-top + navbar-bottom */
+    }
+
+    .navbar-bottom .navbar-left {
+        justify-content: center;
+        width: auto;
+    }
+
+    /* Ocultar elementos del navbar inferior */
+    .navbar-bottom .search-bar,
+    .navbar-bottom .btn-filters,
+    .navbar-bottom .navbar-right {
+        display: none;
+    }
+
+    /* Ajustar logo */
+    .logo {
+        text-align: center;
+    }
+
+    .logo img {
+        height: 32px;
+        margin-top: 10px;
+        margin-right: 0rem;
+    }
+
+    .logo1 {
+        height: 70px;
+        margin: 0;
+    }
+
+    /* Estilos para estados-historias */
+    .estados-historias {
+        padding: 10px;
+        background: #fff;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Estilos para inicio-card */
+    .inicio-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        background-color: #000;
+        height: 360px;
+        width: 184px;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        transition: transform 0.2s ease;
+    }
+
+    /* Estilos para inicio-card-title */
+    .inicio-card-title {
+        font-size: 15px;
+        font-weight: bold;
+        margin: 0;
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    /* Edad del usuario */
+    .inicio-card-age {
+        font-size: 16px;
+        color: #fff;
+        font-weight: bold;
+        margin-right: 15px;
+    }
+
+    /* Ubicación y precio en la misma línea */
+    .inicio-card-location,
+    .inicio-card-price {
+        font-size: 12px;
+        color: #ccc;
+        display: flex;
+        align-items: center;
+        margin-top: 4px;
+        gap: 5px;
+    }
+
+    /* Precio alineado a la derecha */
+    .inicio-card-price {
+        color: #fff;
+        font-weight: bold;
+        margin-left: auto;
+    }
+
+    .online-panel {
+        display: none;
+    }
+
+    .online-dot{
+        margin-left: -25px;
+    }
+
+    .custom-footer-bottom {
+        display: none;
+    }
+
+    .cards-container{
+        display: none;
+    }
+    
+}
+
+@media screen and (max-width: 480px) {
+    .logo img {
+        height: 32px;
+        margin-top: 10px;
+        margin-right: 0rem;
+    }
+
+    .location-dropdown select {
+        background: #333;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+    }
+
+    /* Ocultar la flecha en IE */
+    .location-dropdown select::-ms-expand {
+        display: none;
+    }
+
+    /* Ajustar espaciado del navbar */
+    .navbar-top {
+        padding: 8px;
+    }
+
+    .banner-content h1 {
+        font-size: 25px;
+    }
+
+    .online-panel {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .location-dropdown select {
+        max-width: 130px;
+        font-size: 12px;
+    }
+
+    .navbar-top {
+        padding: 6px;
+    }
+
+    .logo1 {
+        height: 22px;
+    }
+}
+
+/* Ajustes para el banner después de los cambios en navegación */
+@media screen and (max-width: 768px) {
+    .banner {
+        margin-top: 0;
+    }
+
+    .inicio-container {
+        padding: 0;
+    }
 }

@@ -56,7 +56,7 @@
                                         </video>
                                     @endif
                                 </div>
-                                <span class="historia-nombre">{{ Str::lower($primerEstado->usuarioPublicate->fantasia) }}</span>
+                                <span class="historia-nombre">{{ Str::lower($primerEstado->usuarioPublicate->nombre) }}</span>
                                 <span class="historia-tiempo">hace {{ $primerEstado->created_at->diffForHumans(null, true) }}</span>
                             </div>
                         @endif

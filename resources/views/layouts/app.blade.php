@@ -639,6 +639,23 @@
             if (touchendX < touchstartX) nextHistoria();
             if (touchendX > touchstartX) previousHistoria();
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+    const navbar = document.querySelector('.navbar-bottom');
+    const navbarPosition = navbar.offsetTop; // Guarda la posición original
+
+    window.addEventListener('scroll', function() {
+        const scrollPosition = window.scrollY;
+        
+        if (window.innerWidth <= 768) { // Solo en móviles
+            if (scrollPosition > navbarPosition) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        }
+    });
+});
     </script>
 </body>
 

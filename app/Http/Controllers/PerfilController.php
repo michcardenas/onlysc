@@ -18,7 +18,7 @@ class PerfilController extends Controller
     {
         $ciudades = Ciudad::all();
         $usuarioPublicate = UsuarioPublicate::findOrFail($id);
-        return view('layouts.showescort', compact('usuarioPublicate', 'ciudades'));
+        return view('showescort', compact('usuarioPublicate', 'ciudades'));
     }
 
     public function index()

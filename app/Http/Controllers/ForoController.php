@@ -57,7 +57,7 @@ class ForoController extends Controller
             'foros' => $categorias[$categoria]->sortBy('posicion')
         ];
     
-        return view('layouts.show_foro', [
+        return view('show_foro', [
             'categoria' => $categoriaActual,
             'ciudades' => $ciudades
         ]);

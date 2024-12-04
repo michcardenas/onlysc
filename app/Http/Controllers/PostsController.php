@@ -100,7 +100,7 @@ class PostsController extends Controller
         'foros' => $categorias[$id_blog]
     ];
 
-    return view('layouts.showcomentario', compact('post', 'categoria', 'ciudades', 'comentarios', 'foro'));
+    return view('showcomentario', compact('post', 'categoria', 'ciudades', 'comentarios', 'foro'));
 }
     public function update(Request $request, $id)
     {

@@ -46,7 +46,7 @@
             @yield('content')
         </div>
     </main>
-    <footer class="footer">
+    <footer class="footerhome">
     <p>© 2024 Only Escorts | Todos los derechos reservados</p>
 </footer>
 
