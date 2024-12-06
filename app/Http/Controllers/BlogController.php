@@ -121,7 +121,7 @@ class BlogController extends Controller
                 'tags' => 'array'
             ]);
 
-            $allowedTags = '<h1><h2><p><br><strong><em><ul><ol><li><a><span><div><img><table><tr><td><th><tbody><thead>';
+            $allowedTags = '<h1><h2><p><br><strong><em><ul><ol><li><a><span><div><img><table><tr><td><th><tbody><thead><iframe><video><source>';
             $contenidoFiltrado = strip_tags($request->contenido, $allowedTags);
             $imagenPath = $request->file('imagen')->store('blog', 'public');
 
@@ -170,7 +170,7 @@ class BlogController extends Controller
                 'tags' => 'array'
             ]);
 
-            $allowedTags = '<h1><h2><p><br><strong><em><ul><ol><li><a><span><div><img><table><tr><td><th><tbody><thead>';
+            $allowedTags = '<h1><h2><p><br><strong><em><ul><ol><li><a><span><div><img><table><tr><td><th><tbody><thead><iframe><video><source>';
             $contenidoFiltrado = strip_tags($request->contenido, $allowedTags);
 
             if ($request->hasFile('imagen')) {
@@ -211,6 +211,24 @@ class BlogController extends Controller
                 'success' => false,
                 'message' => 'Error al actualizar el artículo: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $article = BlogArticle::findOrFail($id);
+            
+            if ($article->imagen) {
+                Storage::disk('public')->delete($article->imagen);
+            }
+            
+            $article->delete();
+            
+            return back();
+        } catch (\Exception $e) {
+            \Log::error('Error al eliminar artículo: ' . $e->getMessage());
+            return back()->with('error', 'Error al eliminar el artículo');
         }
     }
 

@@ -684,7 +684,15 @@ label .required {
     padding: 10px;
 }
 
-
+iframe, video {
+    background-color: transparent;
+    width: 100%;
+    max-width: 560px;
+    height: 315px;
+    border: none;
+    margin: 1rem auto;
+    display: block;
+}
 
 /* Estilo general del footer */
 .footerhome {
@@ -2642,8 +2650,14 @@ label .required {
         display: none;
     }
 
-    .cards-container{
-        display: none;
+    .cards-container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 20px;
+        width: 92%;
+        max-width: 1200px;
+        margin: 0 auto;
     }
     
 }

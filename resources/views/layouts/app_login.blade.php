@@ -729,24 +729,27 @@ function initializeEditor() {
     if (!contenidoTextarea) return;
 
     return tinymce.init({
-        selector: '#contenido',
-        height: 500,
-        menubar: true,
-        plugins: [
-            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'help', 'wordcount'
-        ],
-        toolbar: 'undo redo | formatselect | ' +
-            'bold italic backcolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist outdent indent | ' +
-            'removeformat | help',
-        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-    }).catch(error => {
-        console.error('Error al inicializar TinyMCE:', error);
-    });
-}
+    selector: '#contenido',
+    height: 500,
+    menubar: true,
+    plugins: [
+        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+        'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+        'insertdatetime', 'media', 'table', 'help', 'wordcount'
+    ],
+    toolbar: [
+        'undo redo | formatselect | styles | bold italic | alignleft aligncenter alignright alignjustify',
+        'bullist numlist outdent indent | media image link | removeformat'
+    ],
+    media_live_embeds: true, // Habilita vistas previas en vivo
+    media_alt_source: false,
+    media_poster: false,
+    convert_urls: false,
+    extended_valid_elements: 'iframe[src|frameborder|style|scrolling|class|width|height|name|align|allowfullscreen]',
+    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+});
 
+}
 function initializeChoices() {
     try {
         // Inicializar categorías
@@ -1241,10 +1244,10 @@ function confirmarEliminarCategoria(id) {
 <script>
 tinymce.init({
     selector: '#contenido',
-    plugins: 'emoticons lists',
+    plugins: 'emoticons lists media',
     toolbar: [
         'undo redo | blocks | formatselect | bold italic underline',
-        'alignleft aligncenter alignright | bullist numlist | emoticons'
+        'alignleft aligncenter alignright | bullist numlist | emoticons | media'
     ],
     menubar: false,
     height: 300,
@@ -1284,6 +1287,9 @@ tinymce.init({
     verify_html: true,
     cleanup: true,
     paste_as_text: true,
+    
+    media_live_embeds: true,
+    extended_valid_elements: 'iframe[src|frameborder|style|scrolling|class|width|height|name|align|allowfullscreen]',
     
     setup: function (editor) {
         editor.on('init', function () {
@@ -1380,6 +1386,15 @@ tinymce.init({
             font-size: 1.2em;
             vertical-align: middle;
         }
+        iframe {
+            background-color: transparent;
+            width: 100%;
+            max-width: 560px;
+            height: 315px;
+            border: none;
+            margin: 0 auto;
+            display: block;
+        }
     `,
     
     init_instance_callback: function (editor) {
@@ -1395,7 +1410,6 @@ tinymce.init({
             element.style.boxShadow = 'none';
         });
 
-        // Ajustar específicamente el selector de formato
         let formatSelect = editor.getContainer().querySelector('.tox-tbtn[aria-label="Blocks"]');
         if (formatSelect) {
             formatSelect.style.backgroundColor = '#2b2b2b';
@@ -1424,6 +1438,7 @@ tinymce.init({
         });
     }
 });
+
 </script>
 <script>
 function previewImage(input) {

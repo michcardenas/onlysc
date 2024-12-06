@@ -22,9 +22,9 @@
                     class="social-button github">
                     <i class="fab fa-github"></i>
                 </a>
-                <a href="mailto:?subject={{ urlencode($articulo->titulo) }}&body={{ urlencode(Request::url()) }}"
+                <a href="https://wa.me/?text={{ urlencode($articulo->titulo . ' ' . Request::url()) }}"
                     class="social-button email">
-                    <i class="fas fa-envelope"></i>
+                    <i class="fab fa-whatsapp"></i>
                 </a>
             </div>
         </div>

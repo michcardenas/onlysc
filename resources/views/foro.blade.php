@@ -86,8 +86,6 @@
         </div>
     </div>
 
-
-
 <div class="foro-sidebar1">
     <div class="foro-comments">
         <h3 class="foro-comments__title">Últimas Publicaciones</h3>
@@ -95,7 +93,7 @@
         @foreach($foros->take(3) as $foro)
         <div class="foro-comment">
             <h4>{{ $foro->titulo }}</h4>
-            <p>{{ Str::limit($foro->contenido, 150) }}</p>
+            <p>{!! Str::limit($foro->contenido, 150) !!}</p>
             <div class="foro-comment__footer">
                 <span>Por: {{ $foro->nombre_usuario }}</span>
                 <span>{{ \Carbon\Carbon::parse($foro->fecha)->diffForHumans() }}</span>

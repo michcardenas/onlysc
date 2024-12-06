@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 spaceBetween: 20
             },
             // Cuando la pantalla es de 640px o más
-            640: {
+            320: {
                 slidesPerView: 1,
                 spaceBetween: 10
             }
