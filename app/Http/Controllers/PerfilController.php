@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\UsuarioPublicate;
 use App\Models\Ciudad;
+use App\Models\Favorite;
 use App\Models\User;
 use App\Models\Estado;
 use Illuminate\Http\Request;
@@ -19,6 +20,32 @@ class PerfilController extends Controller
         $ciudades = Ciudad::all();
         $usuarioPublicate = UsuarioPublicate::findOrFail($id);
         return view('showescort', compact('usuarioPublicate', 'ciudades'));
+    }
+
+    public function showFavorites()
+    {
+        try {
+            $user = auth()->user();
+            
+            $favorites = Favorite::with('usuarioPublicate')
+                ->where('user_id', $user->id)
+                ->paginate(12);
+    
+            $ciudades = Ciudad::all(); // Añadimos esta línea
+    
+            return view('showfavorites', compact('favorites', 'ciudades'));
+            
+        } catch (\Exception $e) {
+            Log::error('Error al mostrar favoritos', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
+            
+            return redirect()
+                ->route('home')
+                ->with('error', 'Hubo un error al cargar tus favoritos');
+        }
     }
 
     public function index()
@@ -252,43 +279,94 @@ class PerfilController extends Controller
         }
     }
 
-    public function getUsuario($id) 
-{         
-    Log::info('Solicitud recibida para usuario ID: ' . $id);
-    
-    try {
-        // Obtenemos el usuario_publicate
-        Log::info('Buscando UsuarioPublicate con ID: ' . $id);
-        $usuarioPublicate = UsuarioPublicate::findOrFail($id);
-        Log::info('UsuarioPublicate encontrado:', ['usuario' => $usuarioPublicate]);
+    public function getUsuario($id)
+    {
+        Log::info('Solicitud recibida para usuario ID: ' . $id);
 
-        // Buscamos el usuario relacionado en la tabla users
-        Log::info('Buscando User con email: ' . $usuarioPublicate->email);
-        $user = User::where('email', $usuarioPublicate->email)
-            ->first();
-        Log::info('User encontrado:', ['user' => $user]);
+        try {
+            // Obtenemos el usuario_publicate
+            Log::info('Buscando UsuarioPublicate con ID: ' . $id);
+            $usuarioPublicate = UsuarioPublicate::findOrFail($id);
+            Log::info('UsuarioPublicate encontrado:', ['usuario' => $usuarioPublicate]);
 
-        $response = [
-            'id' => $usuarioPublicate->id,
-            'fantasia' => $usuarioPublicate->fantasia,
-            'foto' => $user ? $user->foto : null,
-            'created_at' => $usuarioPublicate->created_at
-        ];
-        
-        Log::info('Respuesta preparada:', $response);
+            // Buscamos el usuario relacionado en la tabla users
+            Log::info('Buscando User con email: ' . $usuarioPublicate->email);
+            $user = User::where('email', $usuarioPublicate->email)
+                ->first();
+            Log::info('User encontrado:', ['user' => $user]);
 
-        return response()->json($response, 200, ['Content-Type' => 'application/json']);
-    } catch (\Exception $e) {
-        Log::error('Error al obtener usuario', [
-            'error' => $e->getMessage(),
-            'stack_trace' => $e->getTraceAsString(),
-            'usuario_publicate_id' => $id
-        ]);
+            $response = [
+                'id' => $usuarioPublicate->id,
+                'fantasia' => $usuarioPublicate->fantasia,
+                'foto' => $user ? $user->foto : null,
+                'created_at' => $usuarioPublicate->created_at
+            ];
 
-        return response()->json([
-            'error' => 'Usuario no encontrado',
-            'message' => $e->getMessage()
-        ], 404);
+            Log::info('Respuesta preparada:', $response);
+
+            return response()->json($response, 200, ['Content-Type' => 'application/json']);
+        } catch (\Exception $e) {
+            Log::error('Error al obtener usuario', [
+                'error' => $e->getMessage(),
+                'stack_trace' => $e->getTraceAsString(),
+                'usuario_publicate_id' => $id
+            ]);
+
+            return response()->json([
+                'error' => 'Usuario no encontrado',
+                'message' => $e->getMessage()
+            ], 404);
+        }
     }
-}
+
+    // En PerfilController.php
+    public function toggleFavorite($id)
+    {
+        try {
+            $user = auth()->user();
+            $usuarioPublicate = UsuarioPublicate::findOrFail($id);
+
+            $favorite = Favorite::where([
+                'user_id' => $user->id,
+                'usuario_publicate_id' => $id
+            ])->first();
+
+            if ($favorite) {
+                $favorite->delete();
+                $status = 'removed';
+            } else {
+                Favorite::create([
+                    'user_id' => $user->id,
+                    'usuario_publicate_id' => $id
+                ]);
+                $status = 'added';
+            }
+
+            Log::info('Favorito actualizado', [
+                'user_id' => $user->id,
+                'usuario_publicate_id' => $id,
+                'action' => $status
+            ]);
+
+            return response()->json(['status' => $status]);
+        } catch (\Exception $e) {
+            Log::error('Error en toggle favorito', [
+                'error' => $e->getMessage(),
+                'user_id' => auth()->id(),
+                'usuario_publicate_id' => $id
+            ]);
+
+            return response()->json(['error' => 'Error al procesar la solicitud'], 500);
+        }
+    }
+
+    // Método para listar favoritos
+    public function myFavorites()
+    {
+        $favorites = auth()->user()->favorites()
+            ->with('usuarioPublicate')
+            ->get();
+
+        return view('favorites.index', compact('favorites'));
+    }
 }

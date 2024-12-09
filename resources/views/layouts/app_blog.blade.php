@@ -80,7 +80,7 @@
                     <option value="MASAJES">MASAJES</option>
                 </select>
 
-                <a href="/favoritos/" class="nav-link">FAVORITOS</a>
+                <a href="/mis-favoritos/" class="nav-link">FAVORITOS</a>
                 <a href="/blog/" class="nav-link">BLOG</a>
                 <a href="/foro/" class="nav-link">FORO</a>
             </div>

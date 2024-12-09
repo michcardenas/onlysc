@@ -58,4 +58,9 @@ class User extends Authenticatable
         // Assuming profile images are stored in storage/app/public/profile-images
         return $this->avatar ? Storage::url('profile-images/' . $this->avatar) : '/default-avatar.png';
     }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
 }

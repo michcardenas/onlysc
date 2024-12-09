@@ -74,10 +74,13 @@
         </div>
     </div>
 
-    <div class="favorite-button">
+    @auth
+    <button class="favorite-button {{ $usuarioPublicate->isFavoritedByUser(auth()->id()) ? 'active' : '' }}"
+        data-id="{{ $usuarioPublicate->id }}">
         <i class="far fa-heart"></i>
         <span>AÑADIR A<br>FAVORITOS</span>
-    </div>
+    </button>
+    @endauth
 
     <!-- Breadcrumb -->
     <div class="escortperfil-breadcrumb">

@@ -114,6 +114,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/perfil/crear-estado', [PerfilController::class, 'crearEstado'])->name('admin.crear-estado');
     Route::delete('/perfil/eliminar-estado/{id}', [PerfilController::class, 'eliminarEstado'])->name('admin.eliminar-estado');
     Route::post('/estados/marcar-visto', [InicioController::class, 'marcarComoVisto'])->name('estados.marcar-visto');
+    Route::post('/favorite/{id}', [PerfilController::class, 'toggleFavorite'])->name('favorite.toggle');
+    Route::get('/mis-favoritos', [PerfilController::class, 'showFavorites'])->name('favoritos.show');
 });
 
 Route::get('/usuario/{id}', [PerfilController::class, 'getUsuario'])->name('usuario.get');

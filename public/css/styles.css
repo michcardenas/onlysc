@@ -993,7 +993,6 @@ iframe, video {
     align-items: center;
     justify-content: space-around;
     height: 10rem;
-
 }
 
 .texto_banner .thin {
@@ -1232,6 +1231,15 @@ iframe, video {
     text-decoration: none;
 }
 
+.inicio-featured-price {
+    font-size: 14px;
+    color: #ccc;
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+    /* top: 10px; */
+    gap: 5px;
+}
 /* Imagen de fondo de la tarjeta destacada */
 .inicio-featured-image {
     width: 100%;
@@ -1265,6 +1273,7 @@ iframe, video {
     align-items: center;
     justify-content: space-between;
     color: #fff;
+    margin-bottom: 1rem;
 }
 
 .no-results {
@@ -1282,14 +1291,17 @@ iframe, video {
     justify-content: space-between;
     font-size: 14px;
     color: #ccc;
-    margin-top: 15px;
+    margin-top: -12px;
 }
 
 /* Ubicación de la tarjeta destacada */
 .inicio-featured-location {
+    font-size: 14px;
+    color: #ccc;
     display: flex;
     align-items: center;
-    color: #ccc;
+    margin-top: -40px;
+    gap: 2px;
 }
 
 /* Precio en la tarjeta destacada */
@@ -1809,6 +1821,9 @@ iframe, video {
 }
 
 .favorite-button {
+    border: none; /* Quita el marco/borde */
+    outline: none; /* Quita el contorno */
+    background: transparent;
     position: absolute;
     top: 413px;
     right: 360px;

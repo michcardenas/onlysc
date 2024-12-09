@@ -182,7 +182,7 @@
                             <span class="inicio-featured-location">
                                 <i class="fa fa-map-marker" aria-hidden="true"></i> {{ $usuarioDestacado->ubicacion }}
                             </span>
-                            <span class="price">${{ number_format($usuarioDestacado->precio, 0, ',', '.') }}</span>
+                            <span class="inicio-featured-price">${{ number_format($usuarioDestacado->precio, 0, ',', '.') }}</span>
                         </div>
                     </div>
                 </div>

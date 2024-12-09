@@ -101,7 +101,7 @@
                     <option value="MASAJES">MASAJES</option>
                 </select>
 
-                <a href="/favoritos/" class="nav-link">FAVORITOS</a>
+                <a href="/mis-favoritos/" class="nav-link">FAVORITOS</a>
                 <a href="/blog/" class="nav-link">BLOG</a>
                 <a href="/foro/" class="nav-link">FORO</a>
             </div>
@@ -657,6 +657,30 @@
     });
 });
     </script>
+    <script>
+document.querySelectorAll('.favorite-button').forEach(button => {
+    button.addEventListener('click', function() {
+        const id = this.dataset.id;
+        
+        fetch(`/favorite/${id}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'added') {
+                this.classList.add('active');
+            } else {
+                this.classList.remove('active');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+</script>
 </body>
 
 </html>

@@ -50,6 +50,16 @@ class UsuarioPublicate extends Model
         return $this->hasMany(Estado::class, 'user_id');
     }
 
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function isFavoritedByUser($userId)
+    {
+        return $this->favorites()->where('user_id', $userId)->exists();
+    }
+
     // /**
     //  * Get the route key for the model.
     //  * Esto le dice a Laravel que use 'fantasia' en lugar de 'id' para las rutas
