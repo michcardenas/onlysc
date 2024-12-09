@@ -138,9 +138,13 @@
         <div class="custom-footer-bottom">
             <div class="custom-container">
                 <div class="custom-footer-logo">
-                    <img src="{{ asset('images/logo_XL-2.png') }}" alt="OnlyEscorts Logo" class="custom-logo-footer">
+                    <a href="/">
+                        <img src="{{ asset('images/logo_XL-2.png') }}" alt="OnlyEscorts Logo" class="custom-logo-footer">
+                    </a>
+                    <a href="https://www.rtalabel.org/">
+                        <img src="{{ asset('images/RTA.jpg') }}" alt="OnlyEscorts Logo" class="custom-logo-footer">
+                    </a>
                 </div>
-
                 <div class="custom-footer-middle">
                     <div class="custom-links">
                         <div class="custom-link-row">
@@ -162,6 +166,7 @@
                     <a href="#"><img src="{{ asset('images/facebook.svg') }}" alt="Facebook" class="custom-social-icon"></a>
                     <a href="#"><img src="{{ asset('images/instagram.svg') }}" alt="Instagram" class="custom-social-icon"></a>
                     <a href="#"><img src="{{ asset('images/x.svg') }}" alt="X" class="custom-social-icon"></a>
+                    <a href="#"><img src="{{ asset('images/YouTube1.svg') }}" alt="Youtube" class="custom-social-icon"></a>
                 </div>
             </div>
         </div>

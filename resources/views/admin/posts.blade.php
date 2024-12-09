@@ -15,7 +15,14 @@
             <li><a href="{{ route('foroadmin') }}">Foro</a></li>
             <li><a href="{{ route('blogadmin') }}">Blog</a></li>
             <li><a href="{{ route('seo') }}">SEO</a></li>
-            <li><a href="{{ route('logout') }}">Cerrar Sesión</a></li>
+            <li>
+                <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                    @csrf
+                    <button type="submit" style="background: none; border: none; padding: 0; color: white; font: inherit; cursor: pointer; text-decoration: none;">
+                        Cerrar Sesión
+                    </button>
+                </form>
+            </li>
         </ul>
         <div class="user-info-admin">
             <p style="color:white;">Bienvenido, {{ $usuarioAutenticado->name }} ({{ $usuarioAutenticado->role == 2 ? 'Administrador' : 'Administrador' }})</p>

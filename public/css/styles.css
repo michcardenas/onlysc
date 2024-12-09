@@ -820,6 +820,8 @@ iframe, video {
 
 .custom-logo-footer {
     max-width: 150px;
+    display: flex;
+    margin-top: 20px;
 }
 
 /* Enlaces distribuidos en tres filas */

@@ -295,7 +295,7 @@
             if (cards.length < 12) {
                 const container = document.querySelector('.inicio-container');
                 if (container) {
-                    container.style.marginBottom = '1200px';
+                    container.style.marginBottom = '500px';
                 }
             }
         });

@@ -17,7 +17,14 @@
             <li><a href="{{ route('blogadmin') }}">Blog</a></li>
             <li><a href="{{ route('seo') }}">SEO</a></li>
             @endif
-            <li><a href="{{ route('logout') }}">Cerrar Sesión</a></li>
+            <li>
+                <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                    @csrf
+                    <button type="submit" style="background: none; border: none; padding: 0; color: white; font: inherit; cursor: pointer; text-decoration: none;">
+                        Cerrar Sesión
+                    </button>
+                </form>
+            </li>
         </ul>
         <div class="user-info-admin">
             <p style="color:white;">Bienvenido, {{ $usuarioAutenticado->name }}
@@ -31,11 +38,11 @@
 <main>
     <section class="perfil-admin-section">
         @if($usuarioAutenticado->rol == 1)
-        <h2 style="color:white;">Perfil de Administrador</h2>
+        <h2 style="color:white;">Administrador</h2>
         @elseif($usuarioAutenticado->rol == 2)
-        <h2 style="color:white;">Perfil de Chica</h2>
+        <h2 style="color:white;">Perfil</h2>
         @else
-        <h2 style="color:white;">Perfil de Usuario</h2>
+        <h2 style="color:white;">Perfil</h2>
         @endif
 
         <div class="perfil-container">
