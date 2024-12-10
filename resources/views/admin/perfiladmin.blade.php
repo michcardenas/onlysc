@@ -1,6 +1,20 @@
 @extends('layouts.app_login')
 
 @section('content')
+@if(session()->has('admin_original_id'))
+<div class="alert alert-warning alert-dismissible fade show" style="margin: 20px; border-radius: 8px;">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <i class="fas fa-user-shield"></i>
+            <strong>Modo Administrador:</strong> Estás editando el perfil de {{ $usuario->name }}
+        </div>
+        <a href="{{ route('admin.return') }}" class="btn btn-warning" style="white-space: nowrap;">
+            <i class="fas fa-arrow-left"></i>
+            Volver a modo administrador
+        </a>
+    </div>
+</div>
+@endif
 <header>
     <nav class="navbar-admin">
         <div class="logo-admin">
@@ -12,6 +26,7 @@
             <li><a href="{{ route('home') }}">Inicio</a></li>
             <li><a href="{{ route('admin.profile') }}">Perfil</a></li>
             @if($usuarioAutenticado->rol == 1)
+            <li><a href="{{ route('admin.perfiles') }}">Perfiles</a></li>
             <li><a href="{{ route('publicate.form') }}">Publicar</a></li>
             <li><a href="{{ route('foroadmin') }}">Foro</a></li>
             <li><a href="{{ route('blogadmin') }}">Blog</a></li>

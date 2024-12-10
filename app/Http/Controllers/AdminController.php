@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use App\Models\UsuarioPublicate; 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
@@ -28,5 +31,94 @@ class AdminController extends Controller
         return view('admin.dashboard', compact('usuariosInactivos', 'usuariosActivos', 'usuarioAutenticado'));
     }
     
+    public function Perfiles()
+    {
+        $perfilesRol2 = User::select('users.*', 'usuarios_publicate.estadop as publicate_estado')
+            ->leftJoin('usuarios_publicate', function($join) {
+                $join->on('users.email', '=', 'usuarios_publicate.email')
+                    ->orWhere('users.name', '=', 'usuarios_publicate.nombre')
+                    ->orWhere('usuarios_publicate.email', 'LIKE', DB::raw('CONCAT("%", users.email, "%")'));
+            })
+            ->where('users.rol', 2)
+            ->paginate(10);
+    
+            $usuarioAutenticado = Auth::user();
+
+        $perfilesRol3 = User::where('rol', 3)->paginate(10);
+        
+        return view('admin.perfiles', compact('perfilesRol2', 'perfilesRol3', 'usuarioAutenticado'));
+    }
+
+public function loginAsUser($id)
+{
+    try {
+        $usuario = User::findOrFail($id);
+        
+        // Guardamos el ID del admin original en la sesión
+        session(['admin_original_id' => auth()->id()]);
+        
+        // Hacemos logout del admin
+        auth()->logout();
+        
+        // Hacemos login como el usuario seleccionado
+        auth()->login($usuario);
+        
+        Log::info('Admin logueado como usuario', [
+            'admin_id' => session('admin_original_id'),
+            'user_id' => $usuario->id
+        ]);
+
+        // Redirigir al perfil del usuario
+        return redirect()->route('admin.profile')->with('success', 'Ahora estás editando el perfil de ' . $usuario->name);
+
+    } catch (\Exception $e) {
+        Log::error('Error al hacer login como usuario', [
+            'error' => $e->getMessage(),
+            'line' => $e->getLine(),
+            'file' => $e->getFile()
+        ]);
+
+        return redirect()->back()->with('error', 'Error al acceder al perfil del usuario');
+    }
+}
+
+public function returnToAdmin()
+{
+    try {
+        // Verificamos si hay un ID de admin guardado
+        if (!session()->has('admin_original_id')) {
+            return redirect()->route('admin.perfiles')
+                ->with('error', 'No hay sesión de administrador para restaurar');
+        }
+
+        $adminId = session('admin_original_id');
+        $admin = User::findOrFail($adminId);
+
+        // Hacemos logout del usuario actual
+        auth()->logout();
+        
+        // Hacemos login como admin
+        auth()->login($admin);
+        
+        // Limpiamos la sesión
+        session()->forget('admin_original_id');
+
+        Log::info('Admin retornó a su cuenta', [
+            'admin_id' => $adminId
+        ]);
+
+        return redirect()->route('admin.perfiles')
+            ->with('success', 'Has vuelto a tu cuenta de administrador');
+
+    } catch (\Exception $e) {
+        Log::error('Error al retornar a cuenta admin', [
+            'error' => $e->getMessage(),
+            'line' => $e->getLine(),
+            'file' => $e->getFile()
+        ]);
+
+        return redirect()->back()->with('error', 'Error al volver a la cuenta de administrador');
+    }
+}
     
 }

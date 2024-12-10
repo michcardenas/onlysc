@@ -48,6 +48,11 @@ Route::post('/usuarios-publicate/eliminar-foto', [UsuarioPublicateController::cl
 Route::post('/validate-fantasia', [UsuarioPublicateController::class, 'validateFantasia']);
 Route::post('/actualizar-posicion-foto', [UsuarioPublicateController::class, 'actualizarPosicionFoto'])->name('actualizar.posicion.foto');
 
+//Perfiles en general
+Route::get('/perfiles', [AdminController::class, 'Perfiles'])->name('admin.perfiles');
+Route::get('/perfiles/login-as/{id}', [AdminController::class, 'loginAsUser'])->name('admin.login.as.user');
+Route::get('/perfiles/return-to-admin', [AdminController::class, 'returnToAdmin'])->name('admin.return');
+
 //Foro Admin y Posts
 Route::middleware(['auth'])->group(function () {
     // Rutas para CRUD de foros

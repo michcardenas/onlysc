@@ -8,13 +8,13 @@
             </a>
         </div>
         <ul class="nav-links-admin">
-            <li><a href="{{ route('home') }}">Inicio</a></li>
+        <li><a href="{{ route('home') }}">Inicio</a></li>
             <li><a href="{{ route('admin.profile') }}">Perfil</a></li>
+            <li><a href="{{ route('admin.perfiles') }}">Perfiles</a></li>
             <li><a href="{{ route('publicate.form') }}">Publicar</a></li>
             <li><a href="{{ route('foroadmin') }}">Foro</a></li>
             <li><a href="{{ route('blogadmin') }}">Blog</a></li>
             <li><a href="{{ route('seo') }}">SEO</a></li>
-            <li><a href="{{ route('logout') }}">Cerrar Sesión</a></li>
         </ul>
         <div class="user-info-admin">
             <p style="color:white;">Bienvenido, {{ $usuarioAutenticado->name }} ({{ $usuarioAutenticado->role == 2 ? 'Administrador' : 'Administrador' }})</p>

@@ -1821,8 +1821,8 @@ iframe, video {
 }
 
 .favorite-button {
-    border: none; /* Quita el marco/borde */
-    outline: none; /* Quita el contorno */
+    border: none;
+    outline: none;
     background: transparent;
     position: absolute;
     top: 413px;
@@ -1835,11 +1835,13 @@ iframe, video {
     cursor: pointer;
     z-index: 10;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s ease;
 }
 
 .favorite-button i {
     font-size: 24px;
     margin-bottom: 5px;
+    transition: color 0.2s ease;
 }
 
 .favorite-button span {
@@ -1850,15 +1852,12 @@ iframe, video {
     letter-spacing: 0.5px;
 }
 
-/* Opcional: Efecto hover */
 .favorite-button:hover {
     transform: scale(1.05);
 }
 
-/* Opcional: Efecto cuando está en favoritos */
 .favorite-button.active i {
-    font-weight: 900;
-    /* Cambia a corazón sólido cuando está en favoritos */
+    color: #e00037;
 }
 
 /* Añade estos estilos a tu archivo CSS */

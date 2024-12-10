@@ -658,9 +658,123 @@
 });
     </script>
     <script>
+// Primero definimos los estilos de la animación
+const styleSheet = document.createElement('style');
+styleSheet.textContent = `
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideOut {
+        from {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+    }
+
+    .login-alert {
+        animation: slideIn 0.3s ease forwards;
+    }
+
+    .login-alert.hiding {
+        animation: slideOut 0.3s ease forwards;
+    }
+`;
+document.head.appendChild(styleSheet);
+
+function showLoginAlert() {
+    // Eliminar alerta existente si hay alguna
+    const existingAlert = document.querySelector('.login-alert');
+    if (existingAlert) {
+        existingAlert.remove();
+    }
+
+    // Crear la alerta
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'login-alert';
+    alertDiv.style.cssText = `
+        position: fixed;
+        top: 895px;
+        right: 688px;
+        background: rgb(42, 42, 42);
+        padding: 10px 15px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        z-index: 1000;
+        white-space: nowrap;
+    `;
+    
+    alertDiv.innerHTML = `
+        <span style="color: white; font-size: 14px;">Para agregar a favoritos debes tener una cuenta</span>
+        <a href="/login" 
+           style="background: #e00037; 
+                  color: white; 
+                  padding: 8px 16px; 
+                  text-decoration: none; 
+                  text-transform: uppercase; 
+                  font-weight: bold; 
+                  font-size: 14px;">
+            ACCEDER
+        </a>
+    `;
+    
+    // Encontrar el botón de favoritos y añadir la alerta después de él
+    const favoriteButton = document.querySelector('.favorite-button');
+    if (favoriteButton && favoriteButton.parentNode) {
+        favoriteButton.parentNode.insertBefore(alertDiv, favoriteButton.nextSibling);
+    } else {
+        document.body.appendChild(alertDiv);
+    }
+
+    // Remover con animación después de 2.7 segundos
+    setTimeout(() => {
+        alertDiv.classList.add('hiding');
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 300); // Duración de la animación
+    }, 2700);
+}
+
+// Función para manejar el estado del botón
+function setButtonState(button, isFavorited) {
+    const textSpan = button.querySelector('span');
+    const heartIcon = button.querySelector('i');
+    
+    if (isFavorited) {
+        button.classList.add('active');
+        textSpan.innerHTML = 'ELIMINAR DE<br>FAVORITOS';
+        heartIcon.classList.remove('far');
+        heartIcon.classList.add('fas');
+        heartIcon.style.color = '#e00037';
+    } else {
+        button.classList.remove('active');
+        textSpan.innerHTML = 'AÑADIR A<br>FAVORITOS';
+        heartIcon.classList.remove('fas');
+        heartIcon.classList.add('far');
+        heartIcon.style.color = 'white';
+    }
+}
+
+// Inicializar el comportamiento del botón
 document.querySelectorAll('.favorite-button').forEach(button => {
-    button.addEventListener('click', function() {
+    const isInitiallyFavorited = button.classList.contains('active');
+    setButtonState(button, isInitiallyFavorited);
+
+    button.addEventListener('click', function(e) {
         const id = this.dataset.id;
+        const currentState = this.classList.contains('active');
         
         fetch(`/favorite/${id}`, {
             method: 'POST',
@@ -669,15 +783,23 @@ document.querySelectorAll('.favorite-button').forEach(button => {
                 'Accept': 'application/json'
             }
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'added') {
-                this.classList.add('active');
-            } else {
-                this.classList.remove('active');
+        .then(response => {
+            if (response.status === 401) {
+                // Usuario no autenticado
+                showLoginAlert();
+                throw new Error('User not authenticated');
             }
+            return response.json();
         })
-        .catch(error => console.error('Error:', error));
+        .then(data => {
+            setButtonState(this, data.status === 'added');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            if (error.message !== 'User not authenticated') {
+                setButtonState(this, currentState);
+            }
+        });
     });
 });
 </script>
