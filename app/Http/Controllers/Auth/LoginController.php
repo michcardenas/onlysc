@@ -51,7 +51,7 @@ class LoginController extends Controller
     }
 
     // Si el rol no es 1, redirigimos al inicio
-    return redirect('inicio');
+    return redirect('/');
 }
 
 public function login(Request $request)
