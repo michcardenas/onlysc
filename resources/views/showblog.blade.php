@@ -1,5 +1,9 @@
 @extends('layouts.app_blog')
 
+@section('title')
+{{ $articulo->titulo }}
+@endsection
+
 @section('content')
 <div class="blog-container">
     {{-- Sección de compartir y tabla de contenidos --}}

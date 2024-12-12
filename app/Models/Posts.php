@@ -9,6 +9,7 @@ class Posts extends Model
     protected $table = 'posts';
     
     protected $fillable = [
+        'titulo',
         'id_blog',
         'id_usuario',
         'comentario',

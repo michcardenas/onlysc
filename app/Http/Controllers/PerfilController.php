@@ -10,6 +10,7 @@ use App\Models\Estado;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
@@ -122,29 +123,110 @@ class PerfilController extends Controller
     }
 
     public function crearEstado(Request $request)
-    {
-        try {
-            if (auth()->user()->rol != 2) {
-                Log::warning('Intento de crear estado por usuario no autorizado', [
-                    'user_id' => auth()->id(),
-                    'rol' => auth()->user()->rol
-                ]);
-                return redirect()->back()->with('error', 'No tienes permiso para crear estados');
-            }
+{
+    Log::info('Iniciando creación de estado', [
+        'user_id' => auth()->id(),
+        'request_data' => $request->all()
+    ]);
 
-            $request->validate([
-                'fotos.*' => 'required|mimes:jpeg,png,jpg,gif,mp4,mov,avi,wmv|max:20480'
+    try {
+        // Verificar autenticación
+        if (!auth()->check()) {
+            Log::error('Usuario no autenticado intentando crear estado');
+            return redirect()->back()->with('error', 'Debes iniciar sesión');
+        }
+
+        // Log detallado del usuario
+        Log::info('Datos del usuario actual', [
+            'user_id' => auth()->id(),
+            'rol' => auth()->user()->rol,
+            'email' => auth()->user()->email
+        ]);
+
+        // Verificar rol
+        if (auth()->user()->rol != 2) {
+            Log::warning('Intento de crear estado por usuario no autorizado', [
+                'user_id' => auth()->id(),
+                'rol' => auth()->user()->rol,
+                'expected_rol' => 2
+            ]);
+            return redirect()->back()->with('error', 'No tienes permiso para crear estados');
+        }
+
+        // Log de archivos recibidos
+        if ($request->hasFile('fotos')) {
+            foreach ($request->file('fotos') as $index => $file) {
+                Log::info('Archivo recibido', [
+                    'index' => $index,
+                    'original_name' => $file->getClientOriginalName(),
+                    'size' => $file->getSize(),
+                    'mime_type' => $file->getMimeType(),
+                    'extension' => $file->getClientOriginalExtension()
+                ]);
+            }
+        } else {
+            Log::warning('No se recibieron archivos en la solicitud');
+        }
+
+        // Validación con logging detallado
+        try {
+            $validator = \Validator::make($request->all(), [
+                'fotos.*' => 'required|mimes:jpeg,png,jpg,gif,mp4,mov,avi,wmv|max:100000'
             ]);
 
-            $user = auth()->user();
-            $usuarioPublicate = $this->encontrarUsuarioPublicate($user);
-
-            if (!$usuarioPublicate) {
-                return redirect()->back()->with('error', 'No se encontró tu perfil de publicación.');
+            if ($validator->fails()) {
+                Log::error('Error de validación', [
+                    'errors' => $validator->errors()->toArray()
+                ]);
+                return redirect()->back()->withErrors($validator)->withInput();
             }
+        } catch (\Exception $e) {
+            Log::error('Error en la validación', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
+            return redirect()->back()->with('error', 'Error en la validación de archivos');
+        }
 
-            if ($request->hasFile('fotos')) {
+        $user = auth()->user();
+        
+        // Log de búsqueda de usuario publicate
+        Log::info('Buscando usuario publicate', [
+            'user_id' => $user->id
+        ]);
+
+        $usuarioPublicate = $this->encontrarUsuarioPublicate($user);
+
+        if (!$usuarioPublicate) {
+            Log::error('No se encontró usuario publicate', [
+                'user_id' => $user->id
+            ]);
+            return redirect()->back()->with('error', 'No se encontró tu perfil de publicación.');
+        }
+
+        Log::info('Usuario publicate encontrado', [
+            'usuario_publicate_id' => $usuarioPublicate->id
+        ]);
+
+        if ($request->hasFile('fotos')) {
+            try {
+                // Log antes de procesar archivos
+                Log::info('Iniciando procesamiento de archivos multimedia');
+                
                 $mediaFiles = $this->procesarArchivosMultimedia($request->file('fotos'));
+                
+                // Log después de procesar archivos
+                Log::info('Archivos multimedia procesados', [
+                    'processed_files' => $mediaFiles
+                ]);
+
+                // Log antes de crear el estado
+                Log::info('Intentando crear estado en la base de datos', [
+                    'user_id' => $user->id,
+                    'usuarios_publicate_id' => $usuarioPublicate->id,
+                    'media_files' => $mediaFiles
+                ]);
 
                 $estado = Estado::create([
                     'user_id' => $user->id,
@@ -154,23 +236,37 @@ class PerfilController extends Controller
 
                 Log::info('Estado creado exitosamente', [
                     'estado_id' => $estado->id,
+                    'estado_data' => $estado->toArray(),
                     'archivos' => $mediaFiles
                 ]);
 
                 return redirect()->back()->with('success', 'Estado creado correctamente');
+            } catch (\Exception $e) {
+                Log::error('Error al procesar archivos o crear estado', [
+                    'error' => $e->getMessage(),
+                    'line' => $e->getLine(),
+                    'file' => $e->getFile(),
+                    'trace' => $e->getTraceAsString()
+                ]);
+                return redirect()->back()->with('error', 'Error al procesar los archivos multimedia');
             }
-
-            return redirect()->back()->with('error', 'No se han proporcionado archivos multimedia');
-        } catch (\Exception $e) {
-            Log::error('Error al crear estado', [
-                'error' => $e->getMessage(),
-                'line' => $e->getLine(),
-                'file' => $e->getFile()
-            ]);
-
-            return redirect()->back()->with('error', 'Ocurrió un error al crear el estado');
         }
+
+        Log::warning('No se proporcionaron archivos multimedia');
+        return redirect()->back()->with('error', 'No se han proporcionado archivos multimedia');
+
+    } catch (\Exception $e) {
+        Log::error('Error general al crear estado', [
+            'error' => $e->getMessage(),
+            'line' => $e->getLine(),
+            'file' => $e->getFile(),
+            'trace' => $e->getTraceAsString(),
+            'request_data' => $request->all()
+        ]);
+
+        return redirect()->back()->with('error', 'Ocurrió un error al crear el estado');
     }
+}
 
     private function encontrarUsuarioPublicate($user)
     {
@@ -255,29 +351,25 @@ class PerfilController extends Controller
         }
     }
 
-    public function deleteExpiredEstados()
+    // Método que ejecuta el comando delete-expired
+    public function ejecutarEliminarEstadosExpirados()
     {
         try {
-            $expiredEstados = Estado::where('created_at', '<=', Carbon::now()->subHours(24))->get();
+            // Ejecutar el comando de Artisan
+            Artisan::call('estados:delete-expired');
 
-            foreach ($expiredEstados as $estado) {
-                $this->eliminarArchivosMultimedia($estado);
-                $estado->delete();
+            // Registrar en los logs que se ejecutó correctamente
+            Log::info('El comando delete-expired ejecutado exitosamente.');
 
-                Log::info('Estado expirado eliminado', [
-                    'estado_id' => $estado->id,
-                    'created_at' => $estado->created_at
-                ]);
-            }
-
-            return response()->json(['message' => 'Estados expirados eliminados']);
+            return response()->json(['message' => 'Estados expirados eliminados correctamente.']);
         } catch (\Exception $e) {
-            Log::error('Error eliminando estados expirados', [
-                'error' => $e->getMessage()
-            ]);
-            return response()->json(['error' => 'Error al eliminar estados'], 500);
+            // Capturar cualquier error y registrar en el log
+            Log::error('Error al ejecutar el comando delete-expired: ' . $e->getMessage());
+
+            return response()->json(['error' => 'Hubo un error al eliminar los estados expirados'], 500);
         }
     }
+    
 
     public function getUsuario($id)
     {

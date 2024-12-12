@@ -11,17 +11,19 @@ use Carbon\Carbon;
 class DeleteExpiredStates extends Command
 {
     protected $signature = 'estados:delete-expired';
-    protected $description = 'Delete estados older than 24 hours';
+    protected $description = 'Delete estados older than 1 week';
 
     public function handle()
     {
         $this->info('Iniciando eliminación de estados expirados...');
 
         try {
-            $expiredEstados = Estado::where('created_at', '<=', Carbon::now()->subHours(24))->get();
+            // Cambiar subHours(24) por subWeeks(1) para eliminar estados de más de 1 semana
+            $expiredEstados = Estado::where('created_at', '<=', Carbon::now()->subWeeks(1))->get();
 
             $count = 0;
             foreach ($expiredEstados as $estado) {
+                // Si el estado tiene fotos, las eliminamos de storage
                 if ($estado->fotos) {
                     Storage::disk('public')->delete($estado->fotos);
                     Log::info('Foto del estado eliminada', [
@@ -29,9 +31,11 @@ class DeleteExpiredStates extends Command
                     ]);
                 }
                 
+                // Eliminamos el estado
                 $estado->delete();
                 $count++;
                 
+                // Log de eliminación de estado
                 Log::info('Estado expirado eliminado', [
                     'estado_id' => $estado->id,
                     'created_at' => $estado->created_at

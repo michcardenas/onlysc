@@ -9,7 +9,7 @@
             </a>
         </div>
         <ul class="nav-links-admin">
-        <li><a href="{{ route('home') }}">Inicio</a></li>
+            <li><a href="{{ route('home') }}">Inicio</a></li>
             <li><a href="{{ route('admin.profile') }}">Perfil</a></li>
             <li><a href="{{ route('admin.perfiles') }}">Perfiles</a></li>
             <li><a href="{{ route('publicate.form') }}">Publicar</a></li>
@@ -125,7 +125,17 @@
 
                 <div class="form-group mb-4">
                     <label for="titulo" class="block text-sm font-medium text-gray-700">Título</label>
-                    <input type="text" name="titulo" id="titulo" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+                    <input
+                        type="text"
+                        name="titulo"
+                        id="titulo"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        pattern="^(?!.*www)(?!.*https).*$"
+                        oninvalid="this.setCustomValidity('El título no puede contener www ni https')"
+                        oninput="this.setCustomValidity('')"
+                        title="El título no puede contener www ni https"
+                        value="{{ old('titulo') }}"
+                        required>
                     @error('titulo')
                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                     @enderror

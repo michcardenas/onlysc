@@ -40,6 +40,12 @@ Route::get('/foros/{categoria}', [ForoController::class, 'show_foro'])->name('fo
 Route::get('/foros/{id_blog}/{id}', [PostsController::class, 'showPost'])->name('post.show');
 Route::post('/comentarios', [ComentarioController::class, 'store'])->name('comentario.store');
 
+// Ruta GET para mostrar la vista
+Route::get('/rta', [InicioController::class, 'RTA'])->name('rta');
+
+// Ruta POST si necesitas procesar algún formulario (mantén la que ya tienes)
+Route::post('/rta', [InicioController::class, 'rta'])->name('rta.store');
+
 //panel
 Route::get('/panel-control', [AdminController::class, 'index'])->name('panel_control');
 Route::get('/usuarios-publicate/{id}/edit', [UsuarioPublicateController::class, 'edit'])->name('usuarios_publicate.edit');

@@ -19,49 +19,49 @@
             <h4>ÚLTIMAS HISTORIAS</h4>
             <a href="#" class="ver-todas">Ver todas</a>
         </div>
-        
+
         <div class="historias-container">
             @if($estados->isEmpty())
-                <p class="no-historias">No hay historias disponibles</p>
+            <p class="no-historias">No hay historias disponibles</p>
             @else
-                <div class="historias-scroll">
-                    @php
-                        $estadosAgrupados = $estados->groupBy('usuarios_publicate_id');
-                    @endphp
+            <div class="historias-scroll">
+                @php
+                $estadosAgrupados = $estados->groupBy('usuarios_publicate_id');
+                @endphp
 
-                    @foreach($estadosAgrupados as $usuarioId => $estadosUsuario)
-                        @php
-                            $primerEstado = $estadosUsuario->first();
-                            $vistoPorUsuarioActual = $primerEstado->vistoPor
-                                ->where('id', auth()->id())
-                                ->isNotEmpty();
-                            $todasVistas = $estadosUsuario->every(function($estado) {
-                                return $estado->vistoPor->where('id', auth()->id())->isNotEmpty();
-                            });
-                            $mediaFiles = json_decode($primerEstado->fotos, true);
-                        @endphp
-                        
-                        @if($primerEstado->usuarioPublicate)
-                            <div class="historia-item" 
-                                 data-usuario-id="{{ $usuarioId }}"
-                                 onclick="mostrarHistorias({{ json_encode($estadosUsuario) }}, {{ auth()->id() }})">
-                                <div class="historia-circle {{ $todasVistas ? 'historia-vista todas-vistas' : ($vistoPorUsuarioActual ? 'historia-vista' : '') }}">
-                                    @if(!empty($mediaFiles['imagenes']))
-                                        <img src="{{ Storage::url($mediaFiles['imagenes'][0]) }}" 
-                                             alt="{{ $primerEstado->usuarioPublicate->fantasia }}">
-                                    @elseif(!empty($mediaFiles['videos']))
-                                        <video>
-                                            <source src="{{ Storage::url($mediaFiles['videos'][0]) }}" 
-                                                    type="video/{{ pathinfo($mediaFiles['videos'][0], PATHINFO_EXTENSION) }}">
-                                        </video>
-                                    @endif
-                                </div>
-                                <span class="historia-nombre">{{ Str::lower($primerEstado->usuarioPublicate->nombre) }}</span>
-                                <span class="historia-tiempo">hace {{ $primerEstado->created_at->diffForHumans(null, true) }}</span>
-                            </div>
+                @foreach($estadosAgrupados as $usuarioId => $estadosUsuario)
+                @php
+                $primerEstado = $estadosUsuario->first();
+                $vistoPorUsuarioActual = $primerEstado->vistoPor
+                ->where('id', auth()->id())
+                ->isNotEmpty();
+                $todasVistas = $estadosUsuario->every(function($estado) {
+                return $estado->vistoPor->where('id', auth()->id())->isNotEmpty();
+                });
+                $mediaFiles = json_decode($primerEstado->fotos, true);
+                @endphp
+
+                @if($primerEstado->usuarioPublicate)
+                <div class="historia-item"
+                    data-usuario-id="{{ $usuarioId }}"
+                    onclick="mostrarHistorias({{ json_encode($estadosUsuario) }}, {{ auth()->id() }})">
+                    <div class="historia-circle {{ $todasVistas ? 'historia-vista todas-vistas' : ($vistoPorUsuarioActual ? 'historia-vista' : '') }}">
+                        @if(!empty($mediaFiles['imagenes']))
+                        <img src="{{ Storage::url($mediaFiles['imagenes'][0]) }}"
+                            alt="{{ $primerEstado->usuarioPublicate->fantasia }}">
+                        @elseif(!empty($mediaFiles['videos']))
+                        <video>
+                            <source src="{{ Storage::url($mediaFiles['videos'][0]) }}"
+                                type="video/{{ pathinfo($mediaFiles['videos'][0], PATHINFO_EXTENSION) }}">
+                        </video>
                         @endif
-                    @endforeach
+                    </div>
+                    <span class="historia-nombre">{{ Str::lower($primerEstado->usuarioPublicate->nombre) }}</span>
+                    <span class="historia-tiempo">hace {{ $primerEstado->created_at->diffForHumans(null, true) }}</span>
                 </div>
+                @endif
+                @endforeach
+            </div>
             @endif
         </div>
     </div>
@@ -77,7 +77,7 @@
                     <img id="modal-profile-image" src="" alt="Perfil">
                 </div>
                 <div class="usuario-detalles">
-                <a id="modal-usuario-nombre" href="#" class="nombre-link"></a>
+                    <a id="modal-usuario-nombre" href="#" class="nombre-link"></a>
                     <span id="modal-historia-tiempo"></span>
                 </div>
             </div>
@@ -229,6 +229,166 @@
             {{ $usuarios->links('layouts.pagination') }}
         </div>
     </div>
+
+    <div class="sections-container">
+        <!-- Volvieron Section -->
+        <section class="volvieronyprimera-section">
+            <div class="volvieronyprimera-header">
+                <h2>Volvieron</h2>
+            </div>
+
+            <div class="swiper-container2">
+                <div class="swiper-wrapper" style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem;">
+                    @foreach($volvieron as $usuario)
+                    @php
+                    $fotos = json_decode($usuario->fotos, true);
+                    $positions = json_decode($usuario->foto_positions, true) ?? [];
+                    $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
+                    $posicionFoto = in_array(($positions[$primeraFoto] ?? ''), ['left', 'right', 'center']) ?
+                    $positions[$primeraFoto] : 'center';
+
+                    $isAvailable = false;
+                    if ($usuario->disponibilidad) {
+                    foreach ($usuario->disponibilidad as $disponibilidad) {
+                    if (strtolower($disponibilidad->dia) === $currentDay) {
+                    $horaDesde = Carbon\Carbon::parse($disponibilidad->hora_desde);
+                    $horaHasta = Carbon\Carbon::parse($disponibilidad->hora_hasta);
+
+                    if ($horaHasta->lessThan($horaDesde)) {
+                    if ($now->greaterThanOrEqualTo($horaDesde) || $now->lessThanOrEqualTo($horaHasta)) {
+                    $isAvailable = true;
+                    break;
+                    }
+                    } else {
+                    if ($now->between($horaDesde, $horaHasta)) {
+                    $isAvailable = true;
+                    break;
+                    }
+                    }
+                    }
+                    }
+                    }
+
+                    $mostrarPuntoVerde = $usuario->estadop == 1 && $isAvailable;
+                    @endphp
+                    <a href="{{ url('escorts/' . $usuario->id) }}" class="swiper-slide2" style="flex: 0 0 auto; margin-right: 0;">
+                        <div class="volvieronyprimera-card">
+                            <div class="volvieronyprimera-vip-tag">{{ $usuario->estadop == 3 ? 'DELUXE' : 'VIP' }}</div>
+                            @php
+                            $fotos = json_decode($usuario->fotos, true);
+                            $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
+                            @endphp
+                            <div class="volvieronyprimera-image"
+                                style="background-image: url('{{ $primeraFoto ? asset("storage/chicas/{$usuario->id}/{$primeraFoto}") : asset("images/default-avatar.png") }}');">
+                            </div>
+                            <div class="volvieronyprimera-content">
+                                <div class="volvieronyprimera-user-info">
+                                    <div class="volvieronyprimera-user-main">
+                                        <h3 style="display: flex; align-items: center; gap: 0.5rem;">
+                                            {{ $usuario->fantasia }}
+                                            @if($mostrarPuntoVerde)
+                                            <span class="online-dot1"></span>
+                                            @endif
+                                        </h3>
+                                        <span class="volvieronyprimera-age">{{ $usuario->edad }}</span>
+                                    </div>
+                                    <div class="volvieronyprimera-location-price">
+                                        <div class="location-container">
+                                            <i class="fa fa-map-marker"></i>
+                                            <span class="volvieronyprimera-location">{{ $usuario->ubicacion }}</span>
+                                        </div>
+                                        <span class="volvieronyprimera-price">${{ number_format($usuario->precio, 0, ',', '.') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+
+        <!-- Primera vez Section - Misma estructura pero con $primeraVez -->
+        <section class="volvieronyprimera-section">
+            <div class="volvieronyprimera-header">
+                <h2>Primera vez</h2>
+            </div>
+
+            <div class="swiper-container2">
+                <div class="swiper-wrapper" style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem;">
+                    @foreach($primeraVez as $usuario)
+                    @php
+                    $fotos = json_decode($usuario->fotos, true);
+                    $positions = json_decode($usuario->foto_positions, true) ?? [];
+                    $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
+                    $posicionFoto = in_array(($positions[$primeraFoto] ?? ''), ['left', 'right', 'center']) ?
+                    $positions[$primeraFoto] : 'center';
+
+                    $isAvailable = false;
+                    if ($usuario->disponibilidad) {
+                    foreach ($usuario->disponibilidad as $disponibilidad) {
+                    if (strtolower($disponibilidad->dia) === $currentDay) {
+                    $horaDesde = Carbon\Carbon::parse($disponibilidad->hora_desde);
+                    $horaHasta = Carbon\Carbon::parse($disponibilidad->hora_hasta);
+
+                    if ($horaHasta->lessThan($horaDesde)) {
+                    if ($now->greaterThanOrEqualTo($horaDesde) || $now->lessThanOrEqualTo($horaHasta)) {
+                    $isAvailable = true;
+                    break;
+                    }
+                    } else {
+                    if ($now->between($horaDesde, $horaHasta)) {
+                    $isAvailable = true;
+                    break;
+                    }
+                    }
+                    }
+                    }
+                    }
+
+                    $mostrarPuntoVerde = $usuario->estadop == 1 && $isAvailable;
+                    @endphp
+                    <a href="{{ url('escorts/' . $usuario->id) }}" class="swiper-slide2" style="flex: 0 0 auto; margin-right: 0;">
+                        <div class="volvieronyprimera-card">
+                            <div class="volvieronyprimera-vip-tag">{{ $usuario->estadop == 3 ? 'DELUXE' : 'VIP' }}</div>
+                            @php
+                            $fotos = json_decode($usuario->fotos, true);
+                            $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
+                            @endphp
+                            <div class="volvieronyprimera-image"
+                                style="background-image: url('{{ $primeraFoto ? asset("storage/chicas/{$usuario->id}/{$primeraFoto}") : asset("images/default-avatar.png") }}');">
+                            </div>
+                            <div class="volvieronyprimera-content">
+                                <div class="volvieronyprimera-user-info">
+                                    <div class="volvieronyprimera-user-main">
+                                        <h3 style="display: flex; align-items: center; gap: 0.5rem;">
+                                            {{ $usuario->fantasia }}
+                                            @if($mostrarPuntoVerde)
+                                            <span class="online-dot1"></span>
+                                            @endif
+
+                                        </h3>
+                                        <span class="volvieronyprimera-age">{{ $usuario->edad }}</span>
+                                    </div>
+                                    <div class="volvieronyprimera-location-price">
+                                        <div class="location-container">
+                                            <i class="fa fa-map-marker"></i>
+                                            <span class="volvieronyprimera-location">{{ $usuario->ubicacion }}</span>
+                                        </div>
+                                        <span class="volvieronyprimera-price">${{ number_format($usuario->precio, 0, ',', '.') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+
+
+
+
 </main>
 
 @endsection

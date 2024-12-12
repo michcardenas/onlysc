@@ -55,31 +55,39 @@
     <script>
 document.addEventListener("DOMContentLoaded", function() {
     var swiper = new Swiper('.swiper-container', {
-        slidesPerView: 3,   // Mostrar 3 tarjetas al mismo tiempo en pantallas grandes
-        spaceBetween: 20,   // Espacio entre las tarjetas
-        loop: true,        // Desactiva el loop si no deseas que se repitan las tarjetas
-        grabCursor: true,   // Cambia el cursor a "mano" cuando el usuario pasa sobre las tarjetas
+        slidesPerView: 3,
+        spaceBetween: 20,
+        loop: true,
+        grabCursor: true,
+
 
         breakpoints: {
-            // Cuando la pantalla es de 1024px o más
             1024: {
                 slidesPerView: 3,
-                spaceBetween: 30
+                spaceBetween: 30,
+                centeredSlides: false
             },
-            // Cuando la pantalla es de 768px o más
             768: {
                 slidesPerView: 2,
-                spaceBetween: 20
+                spaceBetween: 15,
+                centeredSlides: false
             },
-            // Cuando la pantalla es de 640px o más
             320: {
                 slidesPerView: 1,
-                spaceBetween: 10
+                spaceBetween: 1,
+                effect: "coverflow", // Solo aquí aplicamos coverflow
+                coverflowEffect: {
+                    rotate: 0,
+                    stretch: 0,
+                    depth: 100,
+                    modifier: 1,
+                    slideShadows: false,
+                },
+                centeredSlides: true
             }
         }
     });
 });
-
 document.getElementById('location-form').addEventListener('submit', function(e) {
         const ciudadSelect = document.getElementById('ciudad');
         const ciudadNombre = ciudadSelect.value;

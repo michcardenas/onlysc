@@ -684,7 +684,9 @@ label .required {
     padding: 10px;
 }
 
-iframe, video {
+/* Estilo general para videos */
+iframe,
+video:not(.banner-img):not(.historia-circle video) {
     background-color: transparent;
     width: 100%;
     max-width: 560px;
@@ -693,6 +695,7 @@ iframe, video {
     margin: 1rem auto;
     display: block;
 }
+
 
 /* Estilo general del footer */
 .footerhome {
@@ -819,8 +822,14 @@ iframe, video {
 }
 
 .custom-logo-footer {
-    max-width: 150px;
+    max-width: 149px;
     display: flex;
+    margin-top: 20px;
+}
+
+.custom-logo-footer1 {
+    max-width: 120px;
+    /* display: flex; */
     margin-top: 20px;
 }
 
@@ -1240,6 +1249,7 @@ iframe, video {
     /* top: 10px; */
     gap: 5px;
 }
+
 /* Imagen de fondo de la tarjeta destacada */
 .inicio-featured-image {
     width: 100%;
@@ -1480,7 +1490,7 @@ iframe, video {
 .escortperfil-banner {
     position: relative;
     width: 100vw;
-    height: 400px;
+    /* height: 440px; */
     overflow: hidden;
     margin-bottom: 20px;
     margin-left: calc(-50vw + 50%);
@@ -1508,8 +1518,8 @@ iframe, video {
 }
 
 .escortperfil-banner-slider img {
-    width: 400px;
-    height: 400px;
+    width: 601px;
+    height: 600px;
     object-fit: cover;
     /* Ajuste para que las imágenes se vean bien */
     flex-shrink: 0;
@@ -1641,7 +1651,7 @@ iframe, video {
     gap: 10px;
     position: absolute;
     right: 355px;
-    top: 570px;
+    top: 763px;
     /* Ajusta según necesites */
     z-index: 3;
     width: auto;
@@ -1744,7 +1754,7 @@ iframe, video {
 .escortperfil-schedule {
     position: absolute;
     right: 330px;
-    top: 621px;
+    top: 810px;
     background-color: #fff;
     padding: 25px;
     border-radius: 10px;
@@ -1825,7 +1835,7 @@ iframe, video {
     outline: none;
     background: transparent;
     position: absolute;
-    top: 413px;
+    top: 614px;
     right: 360px;
     display: flex;
     flex-direction: column;
@@ -2476,17 +2486,184 @@ iframe, video {
     font-family: 'Poppins', sans-serif;
 }
 
+.sections-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 0 1rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.volvieronyprimera-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.volvieronyprimera-header {
+    background-color: #E00037;
+    padding: 0.5rem 1.25rem;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem 0.5rem 0 0;
+    width: 93%;
+}
+
+.volvieronyprimera-header h2 {
+    color: white;
+    margin: 0;
+    font-weight: 500;
+}
+
+.swiper-container2 {
+    width: 100%;
+}
+
+.swiper-slide2 {
+    display: inline-block;
+    width: auto;
+}
+
+.volvieronyprimera-card {
+    position: relative;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    height: 204px;
+    background: #000;
+    width: 286px;
+}
+
+.volvieronyprimera-image {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.volvieronyprimera-vip-tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 2px 3px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    z-index: 2;
+}
+
+.volvieronyprimera-image::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+}
+
+.volvieronyprimera-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0.75rem;
+    color: white;
+    z-index: 1;
+}
+
+.volvieronyprimera-user-main {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 6.7rem;
+    margin-bottom: 0.25rem;
+}
+
+.volvieronyprimera-user-main h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+.volvieronyprimera-age {
+    font-size: 1.25rem;
+}
+
+.volvieronyprimera-location-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+}
+
+.location-container {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.fa-map-marker {
+    font-size: 0.875rem;
+}
+
+.volvieronyprimera-location {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.volvieronyprimera-price {
+    font-weight: 500;
+}
+
+/* Estilos para la barra de desplazamiento */
+.swiper-wrapper::-webkit-scrollbar {
+    height: 6px;
+}
+
+.swiper-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.swiper-wrapper::-webkit-scrollbar-thumb {
+    background: #E91E63;
+    border-radius: 3px;
+}
+
+.swiper-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #d81557;
+}
+
+.online-dot1 {
+    width: 10px;
+    height: 10px;
+    background-color: #7ed321;
+    border-radius: 50%;
+    margin-left: -3px;
+    /* vertical-align: middle; */
+    flex-shrink: 0;
+}
+
 /* Media Queries para Responsividad */
 @media screen and (max-width: 768px) {
 
     .inicio-featured-card {
-        position: relative; /* Cambia el posicionamiento a relativo */
-        margin: 0 auto; /* Centra la tarjeta */
-        width: 100%; /* Ajusta el ancho */
-        max-width: 300px; /* Ancho máximo */
-        right: 0; /* Reinicia la posición */
-        z-index: 1; /* Ajusta la prioridad */
-        margin-bottom: 20px; /* Espaciado con el resto del contenido */
+        position: relative;
+        /* Cambia el posicionamiento a relativo */
+        margin: 0 auto;
+        /* Centra la tarjeta */
+        width: 100%;
+        /* Ajusta el ancho */
+        max-width: 300px;
+        /* Ancho máximo */
+        right: 0;
+        /* Reinicia la posición */
+        z-index: 1;
+        /* Ajusta la prioridad */
+        margin-bottom: 20px;
+        /* Espaciado con el resto del contenido */
         margin-top: 20px;
         text-decoration: none;
     }
@@ -2510,13 +2687,17 @@ iframe, video {
 
     .inicio-usuarios-section {
         display: flex;
-        flex-direction: column; /* Coloca los elementos en una columna */
-        align-items: center; /* Centra el contenido */
+        flex-direction: column;
+        /* Coloca los elementos en una columna */
+        align-items: center;
+        /* Centra el contenido */
     }
 
     .pagination-container {
-        order: 1; /* Mantén la paginación al final */
+        order: 1;
+        /* Mantén la paginación al final */
     }
+
     /* Navbar Superior */
     .navbar-top {
         position: fixed;
@@ -2556,7 +2737,8 @@ iframe, video {
     /* Navbar bottom fijo debajo del navbar-top */
     .navbar-bottom {
         position: fixed;
-        top: 40px; /* Altura del navbar-top */
+        top: 40px;
+        /* Altura del navbar-top */
         left: 0;
         width: 100%;
         z-index: 999;
@@ -2565,7 +2747,8 @@ iframe, video {
 
     /* Agregar padding al contenido principal para compensar los navbars fijos */
     main {
-        padding-top: calc(40px + 3rem); /* navbar-top + navbar-bottom */
+        padding-top: calc(40px + 3rem);
+        /* navbar-top + navbar-bottom */
     }
 
     .navbar-bottom .navbar-left {
@@ -2658,7 +2841,7 @@ iframe, video {
         display: none;
     }
 
-    .online-dot{
+    .online-dot {
         margin-left: -25px;
     }
 
@@ -2675,7 +2858,27 @@ iframe, video {
         max-width: 1200px;
         margin: 0 auto;
     }
+
+
+    .swiper-container {
+        overflow: visible !important;
+    }
+
+    .card {
+        width: 22rem;
+    }
+
+
+    .swiper-slide {
+        transform: scale(1.05) !important; /* Tarjetas más pequeñas */
+        transition: transform 0.3s ease !important; /* Transición suave */
+    }
     
+    /* Estilo para la tarjeta activa */
+    .swiper-slide-active {
+        transform: scale(0.95) !important; /* Hace la tarjeta activa más grande */
+    }
+
 }
 
 @media screen and (max-width: 480px) {

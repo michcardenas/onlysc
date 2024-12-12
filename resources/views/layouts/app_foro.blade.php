@@ -19,74 +19,94 @@
     <script src="https://cdn.tiny.cloud/1/z94ao1xzansr93pi0qe5kfxgddo1f4ltb8q7qa8pw9g52txs/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
     <script>
-    tinymce.init({
-        selector: '#comentario', // Cambiado para coincidir con tu ID de textarea
-        plugins: 'emoticons',
-        toolbar: 'undo redo | bold italic underline | emoticons',
-        menubar: false,
-        height: 200,
-        forced_root_block: false,
+          tinymce.init({
+    selector: '#comentario',
+    plugins: 'emoticons',
+    toolbar: 'undo redo | bold italic underline | emoticons',
+    menubar: false,
+    height: 200,
+    forced_root_block: false,
+    verify_html: true,
+    cleanup: true,
+    paste_as_text: true,
 
-        // Configuración para prevenir etiquetas HTML
-        verify_html: false,
-        cleanup: true,
-        paste_as_text: true, // Pega todo como texto plano
-
-        // Evento para limpiar el contenido antes de enviar
-        setup: function (editor) {
-            editor.on('change', function () {
-                // Obtener el texto plano y actualizar el textarea
-                let contenidoLimpio = editor.getBody().innerText;
-                editor.targetElm.value = contenidoLimpio;
-            });
-
-            // Antes de enviar el formulario
-            editor.getElement().form.addEventListener('submit', function(e) {
-                let contenidoLimpio = editor.getBody().innerText;
+    setup: function(editor) {
+        // Validar el contenido mientras se escribe
+        editor.on('keyup', function(e) {
+            let contenido = editor.getContent();
+            let contenidoLimpio = contenido.replace(/(https?:\/\/[^\s]+)|(www\.[^\s]+)/gi, '');
+            if (contenido !== contenidoLimpio) {
                 editor.setContent(contenidoLimpio);
-            });
-        },
-
-        // Estilo visual para coincidir con tu diseño
-        skin: 'oxide',
-        content_css: false,
-        content_style: `
-            body {
-                background-color: #fffff;
-                color: #000;
-                font-family: 'Poppins', sans-serif;
-                padding: 10px;
-                border-radius: 4px;
+                editor.selection.select(editor.getBody(), true);
+                editor.selection.collapse(false);
             }
-        `,
+        });
 
-        init_instance_callback: function (editor) {
-            let elementsToUpdate = editor.getContainer().querySelectorAll(
-                '.tox-tinymce, .tox-editor-header, .tox-toolbar, .tox-toolbar__primary, ' +
-                '.tox-toolbar__group, .tox-button, .tox-statusbar, .tox-editor-container, ' +
-                '.tox-edit-area'
-            );
+        // Validar al pegar contenido
+        editor.on('paste', function(e) {
+            let contenido = e.clipboardData.getData('text');
+            let contenidoLimpio = contenido.replace(/(https?:\/\/[^\s]+)|(www\.[^\s]+)/gi, '');
+            if (contenido !== contenidoLimpio) {
+                e.preventDefault();
+                editor.insertContent(contenidoLimpio);
+            }
+        });
 
-            elementsToUpdate.forEach(function(element) {
-                element.style.backgroundColor = '#fffff';
-                element.style.border = 'none';
-                element.style.boxShadow = 'none';
-            });
+        editor.on('change', function() {
+            let contenido = editor.getBody().innerText;
+            let contenidoLimpio = contenido.replace(/(https?:\/\/[^\s]+)|(www\.[^\s]+)/gi, '');
+            editor.targetElm.value = contenidoLimpio;
+        });
 
-            let mainContainer = editor.getContainer();
-            mainContainer.style.border = '1px solid #fffff';
-            mainContainer.style.boxShadow = 'none';
+        editor.getElement().form.addEventListener('submit', function(e) {
+            let contenido = editor.getBody().innerText;
+            let contenidoLimpio = contenido.replace(/(https?:\/\/[^\s]+)|(www\.[^\s]+)/gi, '');
+            editor.setContent(contenidoLimpio);
+        });
+    },
 
-            // Mantener la validación de Laravel
-            editor.on('blur', function() {
-                if (editor.getContent().trim().length === 0) {
-                    editor.targetElm.classList.add('is-invalid');
-                } else {
-                    editor.targetElm.classList.remove('is-invalid');
-                }
-            });
+    // Validar antes de insertar contenido
+    valid_elements: '-p,-span,-b,-i,-u,br,em,strong',
+    invalid_elements: 'a,script,iframe,link,img',
+
+    skin: 'oxide',
+    content_css: false,
+    content_style: `
+        body {
+            background-color: #fffff;
+            color: #000;
+            font-family: 'Poppins', sans-serif;
+            padding: 10px;
+            border-radius: 4px;
         }
-    });
+    `,
+
+    init_instance_callback: function(editor) {
+        let elementsToUpdate = editor.getContainer().querySelectorAll(
+            '.tox-tinymce, .tox-editor-header, .tox-toolbar, .tox-toolbar__primary, ' +
+            '.tox-toolbar__group, .tox-button, .tox-statusbar, .tox-editor-container, ' +
+            '.tox-edit-area'
+        );
+
+        elementsToUpdate.forEach(function(element) {
+            element.style.backgroundColor = '#fffff';
+            element.style.border = 'none';
+            element.style.boxShadow = 'none';
+        });
+
+        let mainContainer = editor.getContainer();
+        mainContainer.style.border = '1px solid #fffff';
+        mainContainer.style.boxShadow = 'none';
+
+        editor.on('blur', function() {
+            if (editor.getContent().trim().length === 0) {
+                editor.targetElm.classList.add('is-invalid');
+            } else {
+                editor.targetElm.classList.remove('is-invalid');
+            }
+        });
+    }
+});
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -173,9 +193,8 @@ document.addEventListener('DOMContentLoaded', function() {
 </head>
 
 <body>
-    <!-- Navbar original -->
     <header>
-    <nav class="navbar navbar-top">
+        <nav class="navbar navbar-top">
             <div class="navbar-left">
                 <button class="btn-publish">PUBLICATE</button>
             </div>
@@ -210,13 +229,11 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </nav>
         <div class="navbar-bottom">
-            <!-- Logo, barra de búsqueda y botón de filtros -->
             <div class="navbar-left">
                 <a href="/" class="logo">
                     <img src="{{ asset('images/logo_v2.png') }}" alt="Logo" class="logo1">
                 </a>
 
-                <!-- Barra de búsqueda -->
                 <div class="search-bar">
                     <input type="text" placeholder="Buscar por nombre, servicio o atributo...">
                     <button type="submit" class="btn-search">
@@ -224,17 +241,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     </button>
                 </div>
 
-                <!-- Botón de Filtros -->
                 <button class="btn-filters">
                     <img src="{{ asset('images/filtro.svg') }}" alt="Filtros" class="icon-filter"> Filtros
                 </button>
             </div>
 
-            <!-- Enlaces de navegación con Select de CATEGORÍAS -->
             <div class="navbar-right">
                 <a href="/" class="nav-link">INICIO</a>
 
-                <!-- Select de categorías -->
                 <select name="categorias" id="categorias" class="nav-link">
                     <option value="" disabled selected>CATEGORÍAS</option>
                     <option value="DELUXE">DELUXE</option>
@@ -250,15 +264,11 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </header>
 
-    <!-- Aquí se insertará el contenido de las vistas que extiendan este layout -->
     <main>
         @yield('content')
     </main>
 
-
-    <!-- Footer original -->
     <footer class="footer">
-
         <div class="footer-top">
             <div class="container">
                 <h3 class="footer-title">Escorts disponibles por ubicación</h3>
@@ -301,15 +311,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
         </div>
-        <!-- Sección del logo, enlaces y redes sociales -->
+
         <div class="custom-footer-bottom">
             <div class="custom-container">
-                <!-- Logo centrado -->
                 <div class="custom-footer-logo">
-                    <img src="{{ asset('images/logo_XL-2.png') }}" alt="OnlyEscorts Logo" class="custom-logo-footer">
+                    <a href="/">
+                        <img src="{{ asset('images/logo_XL-2.png') }}" alt="OnlyEscorts Logo" class="custom-logo-footer">
+                    </a>
+                    <a href="/rta/">
+                        <img src="{{ asset('images/RTA-removebg-preview1.png') }}" alt="RTA" class="custom-logo-footer1">
+                    </a>
                 </div>
-
-                <!-- Enlaces en tres filas -->
                 <div class="custom-footer-middle">
                     <div class="custom-links">
                         <div class="custom-link-row">
@@ -327,20 +339,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </div>
 
-                <!-- Redes sociales centradas -->
                 <div class="custom-social-links">
                     <a href="#"><img src="{{ asset('images/facebook.svg') }}" alt="Facebook" class="custom-social-icon"></a>
                     <a href="#"><img src="{{ asset('images/instagram.svg') }}" alt="Instagram" class="custom-social-icon"></a>
                     <a href="#"><img src="{{ asset('images/x.svg') }}" alt="X" class="custom-social-icon"></a>
+                    <a href="#"><img src="{{ asset('images/YouTube1.svg') }}" alt="Youtube" class="custom-social-icon"></a>
                 </div>
             </div>
         </div>
 
-
-        <!-- Derechos reservados y aviso -->
         <div class="footer-info">
             <p>© 2024 Only Escorts | Todos los derechos reservados</p>
-        </div>
         </div>
     </footer>
 </body>

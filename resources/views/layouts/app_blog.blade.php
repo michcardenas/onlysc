@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Blog - Escorts</title>
+    <title>@yield('title', 'Blog') - Escorts</title>
     <link rel="icon" href="{{ asset('images/icono.png') }}" type="image/png">
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -141,8 +141,8 @@
                     <a href="/">
                         <img src="{{ asset('images/logo_XL-2.png') }}" alt="OnlyEscorts Logo" class="custom-logo-footer">
                     </a>
-                    <a href="https://www.rtalabel.org/">
-                        <img src="{{ asset('images/RTA.jpg') }}" alt="OnlyEscorts Logo" class="custom-logo-footer">
+                    <a href="/rta/">
+                        <img src="{{ asset('images/RTA-removebg-preview1.png') }}" alt="RTA" class="custom-logo-footer1">
                     </a>
                 </div>
                 <div class="custom-footer-middle">
@@ -220,67 +220,94 @@
     </script>
 
     <script>
-        tinymce.init({
-            selector: '#comentario',
-            plugins: 'emoticons',
-            toolbar: 'undo redo | bold italic underline | emoticons',
-            menubar: false,
-            height: 200,
-            forced_root_block: false,
-            verify_html: false,
-            cleanup: true,
-            paste_as_text: true,
+       tinymce.init({
+    selector: '#comentario',
+    plugins: 'emoticons',
+    toolbar: 'undo redo | bold italic underline | emoticons',
+    menubar: false,
+    height: 200,
+    forced_root_block: false,
+    verify_html: true,
+    cleanup: true,
+    paste_as_text: true,
 
-            setup: function(editor) {
-                editor.on('change', function() {
-                    let contenidoLimpio = editor.getBody().innerText;
-                    editor.targetElm.value = contenidoLimpio;
-                });
-
-                editor.getElement().form.addEventListener('submit', function(e) {
-                    let contenidoLimpio = editor.getBody().innerText;
-                    editor.setContent(contenidoLimpio);
-                });
-            },
-
-            skin: 'oxide',
-            content_css: false,
-            content_style: `
-                body {
-                    background-color: #fffff;
-                    color: #000;
-                    font-family: 'Poppins', sans-serif;
-                    padding: 10px;
-                    border-radius: 4px;
-                }
-            `,
-
-            init_instance_callback: function(editor) {
-                let elementsToUpdate = editor.getContainer().querySelectorAll(
-                    '.tox-tinymce, .tox-editor-header, .tox-toolbar, .tox-toolbar__primary, ' +
-                    '.tox-toolbar__group, .tox-button, .tox-statusbar, .tox-editor-container, ' +
-                    '.tox-edit-area'
-                );
-
-                elementsToUpdate.forEach(function(element) {
-                    element.style.backgroundColor = '#fffff';
-                    element.style.border = 'none';
-                    element.style.boxShadow = 'none';
-                });
-
-                let mainContainer = editor.getContainer();
-                mainContainer.style.border = '1px solid #fffff';
-                mainContainer.style.boxShadow = 'none';
-
-                editor.on('blur', function() {
-                    if (editor.getContent().trim().length === 0) {
-                        editor.targetElm.classList.add('is-invalid');
-                    } else {
-                        editor.targetElm.classList.remove('is-invalid');
-                    }
-                });
+    setup: function(editor) {
+        // Validar el contenido mientras se escribe
+        editor.on('keyup', function(e) {
+            let contenido = editor.getContent();
+            let contenidoLimpio = contenido.replace(/(https?:\/\/[^\s]+)|(www\.[^\s]+)/gi, '');
+            if (contenido !== contenidoLimpio) {
+                editor.setContent(contenidoLimpio);
+                editor.selection.select(editor.getBody(), true);
+                editor.selection.collapse(false);
             }
         });
+
+        // Validar al pegar contenido
+        editor.on('paste', function(e) {
+            let contenido = e.clipboardData.getData('text');
+            let contenidoLimpio = contenido.replace(/(https?:\/\/[^\s]+)|(www\.[^\s]+)/gi, '');
+            if (contenido !== contenidoLimpio) {
+                e.preventDefault();
+                editor.insertContent(contenidoLimpio);
+            }
+        });
+
+        editor.on('change', function() {
+            let contenido = editor.getBody().innerText;
+            let contenidoLimpio = contenido.replace(/(https?:\/\/[^\s]+)|(www\.[^\s]+)/gi, '');
+            editor.targetElm.value = contenidoLimpio;
+        });
+
+        editor.getElement().form.addEventListener('submit', function(e) {
+            let contenido = editor.getBody().innerText;
+            let contenidoLimpio = contenido.replace(/(https?:\/\/[^\s]+)|(www\.[^\s]+)/gi, '');
+            editor.setContent(contenidoLimpio);
+        });
+    },
+
+    // Validar antes de insertar contenido
+    valid_elements: '-p,-span,-b,-i,-u,br,em,strong',
+    invalid_elements: 'a,script,iframe,link,img',
+
+    skin: 'oxide',
+    content_css: false,
+    content_style: `
+        body {
+            background-color: #fffff;
+            color: #000;
+            font-family: 'Poppins', sans-serif;
+            padding: 10px;
+            border-radius: 4px;
+        }
+    `,
+
+    init_instance_callback: function(editor) {
+        let elementsToUpdate = editor.getContainer().querySelectorAll(
+            '.tox-tinymce, .tox-editor-header, .tox-toolbar, .tox-toolbar__primary, ' +
+            '.tox-toolbar__group, .tox-button, .tox-statusbar, .tox-editor-container, ' +
+            '.tox-edit-area'
+        );
+
+        elementsToUpdate.forEach(function(element) {
+            element.style.backgroundColor = '#fffff';
+            element.style.border = 'none';
+            element.style.boxShadow = 'none';
+        });
+
+        let mainContainer = editor.getContainer();
+        mainContainer.style.border = '1px solid #fffff';
+        mainContainer.style.boxShadow = 'none';
+
+        editor.on('blur', function() {
+            if (editor.getContent().trim().length === 0) {
+                editor.targetElm.classList.add('is-invalid');
+            } else {
+                editor.targetElm.classList.remove('is-invalid');
+            }
+        });
+    }
+});
     </script>
 
     @stack('scripts')

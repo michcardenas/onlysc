@@ -111,8 +111,65 @@ class InicioController extends Controller
             })
             ->select('id', 'fantasia', 'edad', 'fotos', 'foto_positions', 'estadop')
             ->take(11)
+
             ->get();
-    
+            $primeraVez = UsuarioPublicate::with([
+                'disponibilidad' => function ($query) use ($currentDay, $currentTime) {
+                    $query->where('dia', 'LIKE', $currentDay)
+                        ->where(function ($q) use ($currentTime) {
+                            $q->whereRaw("(hora_hasta < hora_desde AND ('$currentTime' >= hora_desde OR '$currentTime' <= hora_hasta))")
+                                ->orWhereRaw("(hora_hasta >= hora_desde AND '$currentTime' BETWEEN hora_desde AND hora_hasta)");
+                        });
+                }
+            ])
+            ->select( // Especificamos exactamente qué columnas queremos
+                'id',
+                'fantasia',
+                'nombre',
+                'edad',
+                'ubicacion',
+                'fotos',
+                'foto_positions',
+                'categorias',
+                'posicion',
+                'precio',
+                'estadop'
+            ) // No incluimos la columna 'disponibilidad'
+            ->whereIn('estadop', [1, 3])
+            ->where('ubicacion', $ciudadSeleccionada->nombre)
+            ->orderBy('created_at', 'desc')
+            ->take(2)
+            ->get();
+
+            $volvieron = UsuarioPublicate::with([
+                'disponibilidad' => function ($query) use ($currentDay, $currentTime) {
+                    $query->where('dia', 'LIKE', $currentDay)
+                        ->where(function ($q) use ($currentTime) {
+                            $q->whereRaw("(hora_hasta < hora_desde AND ('$currentTime' >= hora_desde OR '$currentTime' <= hora_hasta))")
+                                ->orWhereRaw("(hora_hasta >= hora_desde AND '$currentTime' BETWEEN hora_desde AND hora_hasta)");
+                        });
+                }
+            ])
+            ->select(
+                'id',
+                'fantasia',
+                'nombre',
+                'edad',
+                'ubicacion',
+                'fotos',
+                'foto_positions',
+                'categorias',
+                'posicion',
+                'precio',
+                'estadop'
+            )
+            ->whereIn('estadop', [1, 3])
+            ->where('ubicacion', $ciudadSeleccionada->nombre)
+            ->whereRaw('DATE(updated_at) != DATE(created_at)')
+            ->orderBy('updated_at', 'desc')
+            ->take(2)
+            ->get();
+            
         return view('inicio', [
             'ciudades' => $ciudades,
             'ciudadSeleccionada' => $ciudadSeleccionada,
@@ -122,7 +179,9 @@ class InicioController extends Controller
             'totalOnline' => $usuariosOnline->count(),
             'currentTime' => $currentTime,
             'currentDay' => $currentDay,
-            'estados' => $estados
+            'estados' => $estados,
+            'primeraVez' => $primeraVez,  // Agregar al array de retorno
+            'volvieron' => $volvieron     // Agregar al array de retorno
         ]);
     }
 
@@ -291,5 +350,16 @@ class InicioController extends Controller
         ])->findOrFail($id);
         
         return view('perfil', ['usuario' => $usuario]);
+    }
+
+
+    public function RTA()
+    {
+        // Obtener todas las ciudades
+        $ciudades = Ciudad::all();
+        
+        return view('rta', [
+            'ciudades' => $ciudades,
+        ]);
     }
 }

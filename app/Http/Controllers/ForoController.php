@@ -208,7 +208,7 @@ class ForoController extends Controller
                     'id' => $post->id,
                     'titulo' => $post->titulo,
                     'id_blog' => $post->id_blog,
-                    'is_fixed' => $post->is_fixed // Agregar el estado is_fixed
+                    'is_fixed' => $post->is_fixed
                 ]);
             }
             
@@ -225,16 +225,22 @@ class ForoController extends Controller
     {
         try {
             $validated = $request->validate([
-                'titulo' => 'required|max:255',
+                'titulo' => [
+                    'required',
+                    'max:255',
+                    'regex:/^(?!.*www)(?!.*https).*$/i'  // Validación para www y https
+                ],
                 'id_blog' => 'required|exists:foro,id',
-                'is_fixed' => 'nullable|boolean' // Agregar validación para is_fixed
+                'is_fixed' => 'nullable|boolean'
+            ], [
+                'titulo.regex' => 'El título no puede contener www ni https'
             ]);
     
             $post = Posts::create([
                 'titulo' => strip_tags($request->titulo),
                 'id_blog' => $request->id_blog,
                 'id_usuario' => Auth::id(),
-                'is_fixed' => $request->has('is_fixed') // Procesar el checkbox
+                'is_fixed' => $request->has('is_fixed')
             ]);
     
             if ($request->ajax()) {
@@ -257,12 +263,18 @@ class ForoController extends Controller
             $post = Posts::findOrFail($id);
     
             $validated = $request->validate([
-                'titulo' => 'required|max:255',
-                'is_fixed' => 'nullable|boolean' // Agregar validación para is_fixed
+                'titulo' => [
+                    'required',
+                    'max:255',
+                    'regex:/^(?!.*www)(?!.*https).*$/i'  // Validación para www y https
+                ],
+                'is_fixed' => 'nullable|boolean'
+            ], [
+                'titulo.regex' => 'El título no puede contener www ni https'
             ]);
     
             $post->titulo = strip_tags($request->titulo);
-            $post->is_fixed = $request->has('is_fixed'); // Procesar el checkbox
+            $post->is_fixed = $request->has('is_fixed');
             $post->save();
     
             if ($request->ajax()) {
