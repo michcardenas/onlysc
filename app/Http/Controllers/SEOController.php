@@ -15,4 +15,23 @@ class SEOController extends Controller
         // Pasa el usuario a la vista
         return view('seo.index', compact('usuarioAutenticado'));
     }
+    public function home()
+    {
+        return view('seo.home'); // Vista para el inicio
+    }
+
+    public function foroadmin()
+    {
+        return view('seo.foroadmin'); // Vista para el foro
+    }
+
+    public function blogadmin()
+    {
+        return view('seo.blogadmin'); // Vista para el blog
+    }
+
+    public function publicateForm()
+    {
+        return view('seo.publicate'); // Vista para publicar
+    }
 }

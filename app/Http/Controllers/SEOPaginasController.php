@@ -9,10 +9,9 @@ class SEOPaginasController extends Controller
 {
     public function index()
     {
-        // Obtener todas las páginas SEO
-        $seoPaginas = SEOPagina::all();
+        // Supongamos que el usuario autenticado ya está disponible en la sesión
+        $usuarioAutenticado = auth()->user(); // Obtiene el usuario autenticado
 
-        // Pasar los datos a la vista
-        return view('seo.paginas', compact('seoPaginas'));
+        return view('seo.paginas', compact('usuarioAutenticado'));
     }
 }
