@@ -32,7 +32,7 @@
         </div>
         <ul class="nav-links-admin">
             <li><a href="{{ route('home') }}">Inicio</a></li>
-            <li><a href="{{ route('panel_control') }}">chicas</a></li>
+            <li><a href="{{ route('panel_control') }}">Chicas</a></li>
 
             <li><a href="{{ route('admin.profile') }}">Perfil</a></li>
             <li><a href="{{ route('admin.perfiles') }}">Perfiles</a></li>
@@ -108,6 +108,54 @@
             <div class="mt-3">
                 <a href="{{ route('ciudades.index') }}" class="btn btn-primary">Agregar ciudad</a>
             </div>
+
+            <div class="form-group">
+                <label>Ubicación en Mapa</label>
+                <div class="map-tools mb-2">
+                    <input type="text"
+                        id="search-input"
+                        class="form-control"
+                        placeholder="Buscar ubicación..."
+                        style="margin-bottom: 10px;">
+                </div>
+                <div id="map-container" style="height: 400px; width: 50%; border-radius: 8px; margin-bottom: 15px;"></div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="latitud">Latitud</label>
+                            <input type="text"
+                                name="latitud"
+                                id="latitud"
+                                class="form-control"
+                                readonly
+                                value="{{ old('latitud', $usuario->location->latitud ?? '') }}">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="longitud">Longitud</label>
+                            <input type="text"
+                                name="longitud"
+                                id="longitud"
+                                class="form-control"
+                                readonly
+                                value="{{ old('longitud', $usuario->location->longitud ?? '') }}">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="direccion_mapa">Dirección de Referencia</label>
+                            <input type="text"
+                                name="direccion_mapa"
+                                id="direccion_mapa"
+                                class="form-control"
+                                value="{{ old('direccion_mapa', $usuario->location->direccion ?? '') }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label for="nacionalidad">Nacionalidad</label>
                 <input type="text" name="nacionalidad" value="{{ old('nacionalidad', $usuario->nacionalidad) }}" required>

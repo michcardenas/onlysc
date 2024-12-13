@@ -401,7 +401,7 @@ label .required {
 .footer {
     color: #ffffff;
     text-align: center;
-    padding: 10px 0;
+    /* padding: 10px 0; */
     font-size: 14px;
     position: relative;
     bottom: 0;
@@ -696,6 +696,22 @@ video:not(.banner-img):not(.historia-circle video) {
     display: block;
 }
 
+/* Agregar en tu archivo CSS */
+.escortperfil-map-section {
+    margin: 20px 0;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
+    margin-top: -16px;
+}
+
+.escort-map {
+    width: 100%;
+    height: 300px;
+    border-radius: 8px;
+    overflow: hidden;
+}
 
 /* Estilo general del footer */
 .footerhome {
@@ -1466,6 +1482,7 @@ video:not(.banner-img):not(.historia-circle video) {
 
 .escortperfil-container {
     max-width: 1200px;
+    height: 1664px;
     margin: 0 auto;
     font-family: Poppins, sans-serif;
 }
@@ -1490,44 +1507,36 @@ video:not(.banner-img):not(.historia-circle video) {
 .escortperfil-banner {
     position: relative;
     width: 100vw;
-    /* height: 440px; */
     overflow: hidden;
     margin-bottom: 20px;
     margin-left: calc(-50vw + 50%);
     margin-right: calc(-50vw + 50%);
 }
 
-/* Contenedor del slider */
-.escortperfil-banner-slider {
+.escortperfil-swiper {
+    width: 100%;
+}
+
+/* Quitamos márgenes y espaciados del wrapper */
+.escortperfil-swiper-wrapper {
     display: flex;
-    transition: transform 0.5s ease;
-    width: 100%;
 }
 
-
-/* Contenedor que envuelve el slider */
-.escortperfil-banner-wrapper {
-    width: 100%;
-    overflow: hidden;
-    /* Oculta cualquier parte desbordada del slider */
-}
-
-.escortperfil-banner-slider,
-.escortperfil-banner-slider img {
-    box-sizing: border-box;
-}
-
-.escortperfil-banner-slider img {
+.escortperfil-banner-img {
     width: 601px;
     height: 600px;
     object-fit: cover;
-    /* Ajuste para que las imágenes se vean bien */
-    flex-shrink: 0;
-    /* Para evitar que las imágenes se compriman */
+    display: block; /* Evita espacios debajo de la imagen */
 }
 
-/* Controles del carrusel */
-.carousel-control {
+/* Ocultar flechas por defecto de Swiper */
+.escortperfil-swiper .swiper-button-next::after,
+.escortperfil-swiper .swiper-button-prev::after {
+    display: none;
+}
+
+/* Estilo de los botones como en tu diseño original */
+.escortperfil-swiper .carousel-control {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -1535,7 +1544,6 @@ video:not(.banner-img):not(.historia-circle video) {
     height: 60px;
     background-color: rgba(0, 0, 0, 0.5);
     border: none;
-    /* border-radius: 50%; */
     color: white;
     font-size: 24px;
     cursor: pointer;
@@ -1546,20 +1554,20 @@ video:not(.banner-img):not(.historia-circle video) {
     transition: background-color 0.3s ease;
 }
 
-.carousel-control:hover {
+.escortperfil-swiper .carousel-control:hover {
     background-color: rgba(0, 0, 0, 0.8);
 }
 
-.carousel-control.prev {
+.escortperfil-swiper .carousel-control.prev {
     left: 20px;
 }
 
-.carousel-control.next {
+.escortperfil-swiper .carousel-control.next {
     right: 20px;
 }
 
-/* Indicadores del carrusel */
-.carousel-indicators {
+/* Indicadores como en tu diseño original */
+.escortperfil-swiper .carousel-indicators {
     position: absolute;
     bottom: 20px;
     left: 50%;
@@ -1569,25 +1577,25 @@ video:not(.banner-img):not(.historia-circle video) {
     z-index: 3;
 }
 
-.carousel-indicator {
+.escortperfil-swiper .swiper-pagination-bullet {
     width: 10px;
     height: 10px;
     border-radius: 50%;
     background-color: rgba(255, 255, 255, 0.5);
     cursor: pointer;
     transition: background-color 0.3s ease;
+    opacity: 1;
 }
 
-.carousel-indicator.active {
+.escortperfil-swiper .swiper-pagination-bullet-active {
     background-color: white;
 }
 
-.escortperfil-banner-img {
-    width: 100%;
-    height: 450px;
-    object-fit: cover;
-    scroll-snap-align: start;
+/* Ajustamos el slide para que no tenga espacios */
+.escortperfil-swiper-slide {
+    flex-shrink: 0;
 }
+
 
 .escortperfil-nombre {
     position: absolute;
@@ -1605,11 +1613,12 @@ video:not(.banner-img):not(.historia-circle video) {
 .escortperfil-info-bar {
     display: flex;
     align-items: center;
+    width: 69%;
     justify-content: space-between;
     background-color: #fff;
-    border-radius: 10px;
+    border-radius: 5px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 15px 30px;
+    padding: 12px 10px;
     margin-top: -50px;
     position: relative;
     z-index: 2;
@@ -1620,12 +1629,14 @@ video:not(.banner-img):not(.historia-circle video) {
     align-items: center;
     gap: 15px;
     flex: 1;
-    min-width: 150px;
+    width: 36%;
 }
 
 .escortperfil-info-icon {
-    color: #e00037;
-    font-size: 1.8em;
+    width: 30px;  /* o el tamaño que prefieras */
+    height: 30px;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .escortperfil-info-text {
@@ -1651,7 +1662,7 @@ video:not(.banner-img):not(.historia-circle video) {
     gap: 10px;
     position: absolute;
     right: 355px;
-    top: 763px;
+    top: 718px;
     /* Ajusta según necesites */
     z-index: 3;
     width: auto;
@@ -1685,8 +1696,7 @@ video:not(.banner-img):not(.historia-circle video) {
 .escortperfil-content {
     display: flex;
     justify-content: flex-start;
-    gap: px;
-    margin: 40px 0;
+    margin: 0px 0;
 }
 
 .escortperfil-section {
@@ -1750,11 +1760,186 @@ video:not(.banner-img):not(.historia-circle video) {
     transform: translateY(-1px);
 }
 
+.share-button {
+    padding: 12px 20px;
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    transition: transform 0.2s;
+    position:absolute;
+    top: 604px;
+    right: 531px;
+    flex-direction: column;
+    min-width: 8px;
+}
+
+.share-button:hover {
+    transform: scale(1.05);
+}
+
+.share-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.share-modal.active {
+    opacity: 1;
+}
+
+.share-modal-content {
+    position: relative;
+    background: white;
+    width: 90%;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+}
+
+.share-modal.active .share-modal-content {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.share-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.share-modal-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    padding: 4px;
+    transition: transform 0.2s;
+}
+
+.close-button:hover {
+    transform: rotate(90deg);
+}
+
+.share-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.share-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-size: 20px;
+}
+
+.icon-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    line-height: 1;
+}
+
+.text-wrapper {
+    font-size: 12px;
+    text-align: center;
+    line-height: 1.2;
+    width: 100%;
+    font-weight: bold;
+}
+
+.share-icon:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.facebook { background: #1877f2; }
+.x { background: #000000; }
+.telegram { background: #0088cc; }
+.whatsapp { background: #25D366; }
+
+
+.share-icon.x {
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-icon-img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    filter: invert(100%);
+}
+
+.share-url {
+    display: flex;
+    gap: 10px;
+}
+
+.share-url input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    background: #f5f5f5;
+}
+
+.copy-button {
+    padding: 12px 20px;
+    background: #2d3748;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.copy-button:hover {
+    background: #1a202c;
+}
+
 /* Contenedor del horario */
 .escortperfil-schedule {
     position: absolute;
     right: 330px;
-    top: 810px;
+    top: 784px;
     background-color: #fff;
     padding: 25px;
     border-radius: 10px;
@@ -2644,6 +2829,13 @@ video:not(.banner-img):not(.historia-circle video) {
     margin-left: -3px;
     /* vertical-align: middle; */
     flex-shrink: 0;
+}
+
+.pac-container {
+    width: 1400px;
+    position: absolute;
+    left: 251px;
+    top: 146px;  /* Cambiado de 948px a 146px como en tu ejemplo */
 }
 
 /* Media Queries para Responsividad */

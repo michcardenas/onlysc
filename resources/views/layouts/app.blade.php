@@ -192,56 +192,25 @@
             <p>© 2024 Only Escorts | Todos los derechos reservados</p>
         </div>
     </footer>
-
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCE-YA3ZXTQ0uMGWjENmAG274nUWOM7-Kc"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const slider = document.querySelector('.escortperfil-banner-slider');
-            const slides = document.querySelectorAll('.escortperfil-banner-img');
-            const prevBtn = document.querySelector('.carousel-control.prev');
-            const nextBtn = document.querySelector('.carousel-control.next');
-            const indicators = document.querySelectorAll('.carousel-indicator');
-            let currentSlide = 0;
-
-            // Función para actualizar las clases active
-            function updateActiveClasses() {
-                slides.forEach((slide, index) => {
-                    slide.classList.toggle('active', index === currentSlide);
-                });
-
-                indicators.forEach((indicator, index) => {
-                    indicator.classList.toggle('active', index === currentSlide);
-                });
-            }
-
-            // Función para ir a un slide específico
-            function goToSlide(index) {
-                currentSlide = index;
-                const offset = -(currentSlide * (100 / 3)); // Ajustado para el nuevo layout
-                slider.style.transform = `translateX(${offset}vw)`;
-                updateActiveClasses();
-            }
-
-            // Inicializar el primer slide como activo
-            updateActiveClasses();
-
-            // Event listeners
-            prevBtn.addEventListener('click', () => {
-                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-                goToSlide(currentSlide);
-            });
-
-            nextBtn.addEventListener('click', () => {
-                currentSlide = (currentSlide + 1) % slides.length;
-                goToSlide(currentSlide);
-            });
-
-            indicators.forEach((indicator, index) => {
-                indicator.addEventListener('click', () => {
-                    goToSlide(index);
-                });
-            });
-        });
-
+document.addEventListener('DOMContentLoaded', function() {
+    const escortperfilSwiper = new Swiper('.escortperfil-swiper', {
+        slidesPerView: 'auto', // Cambiado para respetar el ancho definido
+        spaceBetween: 0, // Sin espacio entre slides
+        loop: true,
+        centeredSlides: false, // Quitamos el centrado
+        effect: "slide",
+        navigation: {
+            nextEl: '.escortperfil-swiper-button-next',
+            prevEl: '.escortperfil-swiper-button-prev',
+        },
+        pagination: {
+            el: '.escortperfil-swiper-pagination',
+            clickable: true
+        },
+    });
+});
 
         document.getElementById('location').addEventListener('change', function() {
             const ciudadNombre = this.value;
@@ -669,6 +638,75 @@ function handleGesture() {
     if (touchendX > touchstartX) previousHistoria();
 }
     </script>
+   @if(Route::currentRouteName() !== 'inicio' && Route::currentRouteName() !== 'favoritos.show')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Obtener la ubicación del modelo
+    const ubicacionData = {
+        direccion: "{{ $usuarioPublicate->location->direccion ?? $usuarioPublicate->ubicacion }}",
+        lat: {{ $usuarioPublicate->location->latitud ?? -33.4489 }},
+        lng: {{ $usuarioPublicate->location->longitud ?? -70.6693 }}
+    };
+
+    function initMap() {
+        // Crear el mapa con las coordenadas
+        const map = new google.maps.Map(document.getElementById('escort-map'), {
+            zoom: 15,
+            center: { lat: ubicacionData.lat, lng: ubicacionData.lng },
+            mapTypeControl: false,
+            streetViewControl: false,
+            styles: [
+                {
+                    featureType: "poi",
+                    elementType: "labels",
+                    stylers: [{ visibility: "off" }]
+                }
+            ]
+        });
+
+        // Crear el marcador
+        const marker = new google.maps.Marker({
+            map: map,
+            position: { lat: ubicacionData.lat, lng: ubicacionData.lng }
+        });
+
+        // Agregar círculo para área aproximada
+        const circle = new google.maps.Circle({
+            map: map,
+            center: { lat: ubicacionData.lat, lng: ubicacionData.lng },
+            radius: 500,  // Radio en metros
+            fillColor: '#FF0000',
+            fillOpacity: 0.1,
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 1
+        });
+
+        // Si no tenemos coordenadas guardadas, geocodificar la dirección
+        if (ubicacionData.lat === -33.4489 && ubicacionData.lng === -70.6693) {
+            const geocoder = new google.maps.Geocoder();
+            
+            geocoder.geocode({ 
+                address: ubicacionData.direccion + ', Chile' 
+            }, function(results, status) {
+                if (status === 'OK') {
+                    const location = results[0].geometry.location;
+                    
+                    // Actualizar el mapa
+                    map.setCenter(location);
+                    marker.setPosition(location);
+                    circle.setCenter(location);
+                }
+            });
+        }
+    }
+
+    // Cargar el mapa
+    initMap();
+});
+</script>
+@endif
+
     <script>
 // Primero definimos los estilos de la animación
 const styleSheet = document.createElement('style');
@@ -837,7 +875,65 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar un único Swiper para ambas secciones
     const combinedSwiper = new Swiper('.sections-container .swiper-container2', swiperConfig);
 });
-</script>   
+</script>  
+<script>
+function openShareModal() {
+    const modal = document.getElementById('shareModal');
+    modal.style.display = 'block';
+    document.getElementById('shareUrl').value = window.location.href;
+    // Agregar clase active después de un pequeño delay para activar la animación
+    setTimeout(() => {
+        modal.classList.add('active');
+    }, 10);
+}
+
+function closeShareModal() {
+    const modal = document.getElementById('shareModal');
+    modal.classList.remove('active');
+    // Esperar a que termine la animación antes de ocultar el modal
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 300);
+}
+
+function copyUrl() {
+    const urlInput = document.getElementById('shareUrl');
+    urlInput.select();
+    document.execCommand('copy');
+    
+    // Cambiar el texto del botón temporalmente para dar feedback
+    const copyButton = document.querySelector('.copy-button');
+    const originalText = copyButton.textContent;
+    copyButton.textContent = '¡COPIADO!';
+    setTimeout(() => {
+        copyButton.textContent = originalText;
+    }, 2000);
+}
+
+function shareOnFacebook() {
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+}
+
+function shareOnX() {
+    window.open(`https://x.com/intent/tweet?url=${encodeURIComponent(window.location.href)}`, '_blank');
+}
+
+function shareOnTelegram() {
+    window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}`, '_blank');
+}
+
+function shareOnWhatsapp() {
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(window.location.href)}`, '_blank');
+}
+
+// Cerrar modal al hacer clic fuera
+window.onclick = function(event) {
+    const modal = document.getElementById('shareModal');
+    if (event.target == modal) {
+        closeShareModal();
+    }
+}
+</script>
 </body>
 
 </html>

@@ -60,6 +60,23 @@ class UsuarioPublicate extends Model
         return $this->favorites()->where('user_id', $userId)->exists();
     }
 
+    public function location()
+    {
+        return $this->hasOne(EscortLocation::class, 'usuario_publicate_id');
+    }
+
+    // Método helper para obtener coordenadas
+    public function getCoordinates()
+    {
+        if ($this->location) {
+            return [
+                'lat' => $this->location->latitud,
+                'lng' => $this->location->longitud
+            ];
+        }
+        return null;
+    }
+
     // /**
     //  * Get the route key for the model.
     //  * Esto le dice a Laravel que use 'fantasia' en lugar de 'id' para las rutas

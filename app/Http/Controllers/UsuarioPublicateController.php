@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\UsuarioPublicate;
+use App\Models\EscortLocation;
 use App\Models\Disponibilidad;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -102,13 +103,13 @@ class UsuarioPublicateController extends Controller
     {
         try {
             Log::info("Iniciando actualización del usuario con ID: $id");
-
+    
             $usuario = UsuarioPublicate::findOrFail($id);
             Log::info("Usuario encontrado: {$usuario->id}");
-
+    
             // Validación personalizada para nombre de fantasía único por ciudad
             $normalizedFantasia = $this->normalizeString($request->fantasia);
-
+    
             $fantasiaExists = UsuarioPublicate::where(function ($query) use ($normalizedFantasia, $request) {
                 $query->whereRaw('LOWER(fantasia) COLLATE utf8mb4_unicode_ci = ?', [mb_strtolower($request->fantasia)])
                     ->orWhereRaw('? = ?', [$normalizedFantasia, $this->normalizeString(DB::raw('fantasia'))]);
@@ -116,31 +117,30 @@ class UsuarioPublicateController extends Controller
                 ->where('ubicacion', $request->ubicacion)
                 ->where('id', '!=', $id)
                 ->exists();
-
+    
             if ($fantasiaExists) {
                 return redirect()->back()
                     ->withInput()
                     ->withErrors(['fantasia' => 'Ya existe una persona con este nombre de fantasía en esta ciudad.']);
             }
-
+    
             // Verificar si está marcado como Chica del Mes
             if ($request->has('chica_del_mes')) {
-                // Verificar si ya existe una Chica del Mes en la misma ciudad
                 $existingChicaDelMes = UsuarioPublicate::where('ubicacion', $request->ubicacion)
                     ->where('estadop', 3)
                     ->where('id', '!=', $id)
                     ->first();
-
+    
                 if ($existingChicaDelMes) {
                     return redirect()->back()
                         ->withInput()
                         ->withErrors(['chica_del_mes' => 'Ya existe una Chica del Mes en esta ciudad.']);
                 }
-
+    
                 $request->merge(['estadop' => 3]);
             }
-
-            // Validar los datos del formulario
+    
+            // Agregar validaciones para los campos del mapa
             $request->validate([
                 'fantasia' => 'required|string|max:255',
                 'nombre' => 'required|string|max:255',
@@ -170,13 +170,17 @@ class UsuarioPublicateController extends Controller
                 'dias_disponibles.*' => 'string',
                 'horario' => 'array',
                 'horario.*' => 'array',
+                // Validaciones para el mapa
+                'latitud' => 'required|numeric|between:-90,90',
+                'longitud' => 'required|numeric|between:-180,180',
+                'direccion_mapa' => 'required|string|max:255',
             ]);
-
+    
             Log::info("Validación completada para el usuario con ID: $id");
-
+    
             // Iniciar transacción de base de datos
             DB::beginTransaction();
-
+    
             try {
                 // Actualizar los datos del usuario
                 $usuario->update([
@@ -200,9 +204,21 @@ class UsuarioPublicateController extends Controller
                     'posicion' => $request->posicion,
                     'precio' => $request->precio,
                 ]);
-
-                Log::info("Datos básicos del usuario actualizados");
-
+    
+                // Actualizar o crear la ubicación en el mapa
+                EscortLocation::updateOrCreate(
+                    ['usuario_publicate_id' => $usuario->id],
+                    [
+                        'direccion' => $request->direccion_mapa,
+                        'ciudad' => $request->ubicacion,
+                        'latitud' => $request->latitud,
+                        'longitud' => $request->longitud,
+                        'is_approximate' => true
+                    ]
+                );
+    
+                Log::info("Datos básicos y ubicación del usuario actualizados");
+    
                 // Actualizar disponibilidad usando el controlador dedicado
                 if ($request->has('dias_disponibles') && $request->has('horario')) {
                     $this->disponibilidadController->updateDisponibilidad(

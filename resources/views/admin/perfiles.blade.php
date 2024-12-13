@@ -180,15 +180,4 @@
     @csrf
     @method('DELETE')
 </form>
-
-<!-- Scripts -->
-<script>
-function confirmarEliminarPerfil(id) {
-    if (confirm('¿Estás seguro de que deseas eliminar este perfil? Esta acción no se puede deshacer.')) {
-        const form = document.getElementById('deleteForm');
-        form.action = `/perfil/${id}/eliminar`;
-        form.submit();
-    }
-}
-</script>
 @endsection

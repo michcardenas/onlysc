@@ -2,38 +2,28 @@
 
 @section('content')
 
-
 <div class="escortperfil-container">
     <!-- Sección del Banner con nombre superpuesto -->
     <header class="escortperfil-banner">
-        <div class="escortperfil-banner-wrapper">
-            <div class="escortperfil-banner-slider">
+        <div class="escortperfil-swiper">
+            <div class="escortperfil-swiper-wrapper swiper-wrapper">
                 @php
                 $fotos = json_decode($usuarioPublicate->fotos, true);
                 $fotos = is_array($fotos) ? $fotos : [];
                 @endphp
                 @foreach($fotos as $foto)
-                <img src="{{ asset("storage/chicas/{$usuarioPublicate->id}/{$foto}") }}"
-                    alt="Foto de {{ $usuarioPublicate->fantasia }}"
-                    class="escortperfil-banner-img">
+                <div class="escortperfil-swiper-slide swiper-slide">
+                    <img src="{{ asset("storage/chicas/{$usuarioPublicate->id}/{$foto}") }}"
+                        alt="Foto de {{ $usuarioPublicate->fantasia }}"
+                        class="escortperfil-banner-img">
+                </div>
                 @endforeach
             </div>
-        </div>
-
-        <!-- Controles del carrusel -->
-        <button class="carousel-control prev">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="carousel-control next">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-
-        <!-- Indicadores -->
-        <div class="carousel-indicators">
-            @foreach($fotos as $index => $foto)
-            <div class="carousel-indicator {{ $index === 0 ? 'active' : '' }}"
-                data-index="{{ $index }}"></div>
-            @endforeach
+            <!-- Botones de navegación -->
+            <div class="escortperfil-swiper-button-prev carousel-control prev">&lt;</div>
+            <div class="escortperfil-swiper-button-next carousel-control next">&gt;</div>
+            <!-- Paginación -->
+            <div class="escortperfil-swiper-pagination carousel-indicators"></div>
         </div>
 
         <h1 class="escortperfil-nombre">
@@ -45,28 +35,28 @@
 
     <div class="escortperfil-info-bar">
         <div class="escortperfil-info-item">
-            <i class="fa fa-flag escortperfil-info-icon"></i>
+            <img src="{{ asset('images/pais.svg') }}" alt="Nacionalidad" class="escortperfil-info-icon">
             <div class="escortperfil-info-text">
                 <span class="escortperfil-info-label">Nacionalidad</span>
                 <span class="escortperfil-info-value">{{ $usuarioPublicate->nacionalidad ?? 'N/A' }}</span>
             </div>
         </div>
         <div class="escortperfil-info-item">
-            <i class="fa fa-calendar escortperfil-info-icon"></i>
+            <img src="{{ asset('images/calendar.svg') }}" alt="Edad" class="escortperfil-info-icon">
             <div class="escortperfil-info-text">
                 <span class="escortperfil-info-label">Edad</span>
                 <span class="escortperfil-info-value">{{ $usuarioPublicate->edad }}</span>
             </div>
         </div>
         <div class="escortperfil-info-item">
-            <i class="fa fa-money-bill escortperfil-info-icon"></i>
+            <img src="{{ asset('images/precio.svg') }}" alt="Precio" class="escortperfil-info-icon">
             <div class="escortperfil-info-text">
                 <span class="escortperfil-info-label">Precio</span>
                 <span class="escortperfil-info-value">${{ number_format($usuarioPublicate->precio, 0, ',', '.') }}</span>
             </div>
         </div>
         <div class="escortperfil-info-item">
-            <i class="fa fa-map-marker-alt escortperfil-info-icon"></i>
+            <img src="{{ asset('images/ubicacion.svg') }}" alt="Ubicación" class="escortperfil-info-icon">
             <div class="escortperfil-info-text">
                 <span class="escortperfil-info-label">Ubicación</span>
                 <span class="escortperfil-info-value">{{ $usuarioPublicate->ubicacion }}</span>
@@ -80,6 +70,46 @@
         <i class="far fa-heart"></i>
         <span>AÑADIR A<br>FAVORITOS</span>
     </button>
+
+    <!-- Botón que abre el modal -->
+    <button class="share-button" onclick="openShareModal()">
+        <div class="icon-wrapper">
+            <i class="fas fa-share-alt"></i>
+        </div>
+        <div class="text-wrapper">
+            COMPARTIR<br>PERFIL
+        </div>
+    </button>
+
+
+    <!-- Modal de compartir -->
+    <div id="shareModal" class="share-modal">
+        <div class="share-modal-content">
+            <div class="share-modal-header">
+                <h3>Compartir</h3>
+                <button onclick="closeShareModal()" class="close-button">&times;</button>
+            </div>
+
+            <div class="share-buttons">
+                <a href="#" onclick="shareOnFacebook()" class="share-icon facebook">
+                    <i class="fab fa-facebook"></i>
+                </a>
+                <a href="#" onclick="shareOnX()" class="share-icon x">
+                    <img src="{{ asset('images/x.svg') }}" alt="Compartir en X" class="social-icon-img">
+                </a>
+
+                <a href="#" onclick="shareOnTelegram()" class="share-icon telegram">
+                    <i class="fab fa-telegram"></i>
+                </a>
+            </div>
+
+            <div class="share-url">
+                <input type="text" id="shareUrl" readonly>
+                <button onclick="copyUrl()" class="copy-button">COPIAR</button>
+            </div>
+        </div>
+    </div>
+
 
 
     <!-- Breadcrumb -->
@@ -145,6 +175,12 @@
                 </div>
                 @endforeach
             </div>
+
+            <div class="escortperfil-map-section">
+                <h2 class="escortperfil-section-title">Ubicación</h2>
+                <div id="escort-map" class="escort-map"></div>
+            </div>
+
         </aside>
         <div class="escortperfil-content">
             <div class="escortperfil-section">

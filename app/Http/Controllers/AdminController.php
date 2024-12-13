@@ -120,5 +120,51 @@ public function returnToAdmin()
         return redirect()->back()->with('error', 'Error al volver a la cuenta de administrador');
     }
 }
-    
+
+public function eliminarPerfil($id)
+{
+    try {
+        // Buscar el usuario
+        $usuario = User::findOrFail($id);
+        
+        // Verificar si el usuario tiene un perfil en usuarios_publicate
+        $usuarioPublicate = UsuarioPublicate::where('email', $usuario->email)
+            ->orWhere('nombre', $usuario->name)
+            ->orWhere('email', 'LIKE', '%' . $usuario->email . '%')
+            ->first();
+
+        DB::beginTransaction();
+        
+        // Eliminar el perfil de usuarios_publicate si existe
+        if ($usuarioPublicate) {
+            $usuarioPublicate->delete();
+        }
+
+        // Eliminar el usuario
+        $usuario->delete();
+
+        DB::commit();
+
+        Log::info('Perfil eliminado exitosamente', [
+            'user_id' => $id,
+            'admin_id' => auth()->id()
+        ]);
+
+        return redirect()->route('admin.perfiles')
+            ->with('success', 'Perfil eliminado exitosamente');
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        
+        Log::error('Error al eliminar perfil', [
+            'error' => $e->getMessage(),
+            'line' => $e->getLine(),
+            'file' => $e->getFile()
+        ]);
+
+        return redirect()->back()
+            ->with('error', 'Error al eliminar el perfil: ' . $e->getMessage());
+    }
+}
+
 }

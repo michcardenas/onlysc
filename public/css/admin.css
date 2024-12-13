@@ -638,6 +638,22 @@ h2 {
     border: 2px solid #1a1a1a;
 }
 
+.publicate-services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 5px;
+    margin-top: 8px;
+}
+
+.row input[name="latitud"],
+.row input[name="longitud"],
+.row input[name="direccion_mapa"],
+.row label[for="latitud"],
+.row label[for="longitud"],
+.row label[for="direccion_mapa"] {
+    display: none;
+}
+
 .historia-tiempo {
     color: #666;
     font-size: 0.688rem;

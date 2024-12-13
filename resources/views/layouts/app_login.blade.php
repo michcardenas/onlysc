@@ -1454,6 +1454,125 @@ function previewImage(input) {
 }
 </script>
 
+<script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCE-YA3ZXTQ0uMGWjENmAG274nUWOM7-Kc&libraries=places&callback=initMap">
+</script>
+<script>
+let map;
+let marker;
+let searchBox;
+
+// Agregar el estilo directamente
+const style = document.createElement('style');
+style.textContent = `
+    .pac-container {
+        position: fixed !important;
+        top: 345px !important;
+        width: 1400px !important;
+    }
+`;
+document.head.appendChild(style);
+
+function initMap() {
+    try {
+        // Coordenadas iniciales (centro de Santiago de Chile si no hay ubicación)
+        const initialLocation = {
+            lat: {{ old('latitud', $usuario->location->latitud ?? -33.4489) }},
+            lng: {{ old('longitud', $usuario->location->longitud ?? -70.6693) }}
+        };
+
+        // Opciones del mapa
+        const mapOptions = {
+            zoom: 15,
+            center: initialLocation,
+            mapTypeControl: true,
+            streetViewControl: false,
+            fullscreenControl: true,
+            zoomControl: true,
+            styles: [
+                {
+                    featureType: "poi",
+                    elementType: "labels",
+                    stylers: [{ visibility: "off" }]
+                }
+            ]
+        };
+
+        // Crear el mapa
+        map = new google.maps.Map(document.getElementById('map-container'), mapOptions);
+
+        // Crear el marcador 
+        marker = new google.maps.Marker({
+            position: initialLocation,
+            map: map,
+            draggable: true,
+            animation: google.maps.Animation.DROP
+        });
+
+        // Configurar búsqueda
+        const input = document.getElementById('search-input');
+        searchBox = new google.maps.places.SearchBox(input);
+        
+        // Bias hacia la vista actual del mapa
+        map.addListener('bounds_changed', function() {
+            searchBox.setBounds(map.getBounds());
+        });
+
+        // Escuchar eventos de la búsqueda
+        searchBox.addListener('places_changed', function() {
+            const places = searchBox.getPlaces();
+            if (places.length === 0) return;
+
+            const place = places[0];
+            if (!place.geometry) return;
+
+            // Centrar mapa en la ubicación seleccionada
+            map.setCenter(place.geometry.location);
+            marker.setPosition(place.geometry.location);
+
+            // Actualizar campos
+            updateFields(place.geometry.location, place.formatted_address);
+        });
+
+        // Actualizar campos cuando se mueve el marcador
+        marker.addListener('dragend', function() {
+            const position = marker.getPosition();
+            const geocoder = new google.maps.Geocoder();
+            
+            geocoder.geocode({ location: position }, function(results, status) {
+                if (status === 'OK' && results[0]) {
+                    updateFields(position, results[0].formatted_address);
+                }
+            });
+        });
+
+        // Click en el mapa para mover el marcador
+        map.addListener('click', function(e) {
+            marker.setPosition(e.latLng);
+            
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ location: e.latLng }, function(results, status) {
+                if (status === 'OK' && results[0]) {
+                    updateFields(e.latLng, results[0].formatted_address);
+                }
+            });
+        });
+
+    } catch (error) {
+        console.error('Error al inicializar el mapa:', error);
+    }
+}
+
+function updateFields(location, address) {
+    document.getElementById('latitud').value = location.lat().toFixed(6);
+    document.getElementById('longitud').value = location.lng().toFixed(6);
+    document.getElementById('direccion_mapa').value = address;
+}
+
+// Cargar el mapa cuando Google Maps esté listo
+window.initMap = initMap;
+</script>
+
 
 <script>
             document.getElementById('fotos').addEventListener('change', function(e) {
@@ -1463,5 +1582,16 @@ function previewImage(input) {
             });
             </script>
 </body>
+
+<!-- Scripts -->
+<script>
+function confirmarEliminarPerfil(id) {
+    if (confirm('¿Estás seguro de que deseas eliminar este perfil? Esta acción no se puede deshacer.')) {
+        const form = document.getElementById('deleteForm');
+        form.action = `/perfil/${id}/eliminar`;
+        form.submit();
+    }
+}
+</script>
 
 </html>

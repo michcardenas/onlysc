@@ -24,7 +24,7 @@
         </div>
         <ul class="nav-links-admin">
             <li><a href="{{ route('home') }}">Inicio</a></li>
-            <li><a href="{{ route('panel_control') }}">chicas</a></li>
+            <li><a href="{{ route('panel_control') }}">Chicas</a></li>
 
             <li><a href="{{ route('admin.profile') }}">Perfil</a></li>
             @if($usuarioAutenticado->rol == 1)

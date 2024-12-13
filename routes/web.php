@@ -58,6 +58,7 @@ Route::post('/actualizar-posicion-foto', [UsuarioPublicateController::class, 'ac
 Route::get('/perfiles', [AdminController::class, 'Perfiles'])->name('admin.perfiles');
 Route::get('/perfiles/login-as/{id}', [AdminController::class, 'loginAsUser'])->name('admin.login.as.user');
 Route::get('/perfiles/return-to-admin', [AdminController::class, 'returnToAdmin'])->name('admin.return');
+Route::delete('/perfil/{id}/eliminar', [AdminController::class, 'eliminarPerfil'])->name('admin.perfil.eliminar');
 
 //Foro Admin y Posts
 Route::middleware(['auth'])->group(function () {

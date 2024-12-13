@@ -18,9 +18,17 @@ class PerfilController extends Controller
 {
     public function show($id)
     {
+        $usuarioPublicate = UsuarioPublicate::with(['location'])->findOrFail($id);
         $ciudades = Ciudad::all();
-        $usuarioPublicate = UsuarioPublicate::findOrFail($id);
-        return view('showescort', compact('usuarioPublicate', 'ciudades'));
+        
+        // Obtener la ubicación del mapa o valores por defecto para Santiago
+        $ubicacion = [
+            'direccion' => $usuarioPublicate->location->direccion ?? $usuarioPublicate->ubicacion,
+            'lat' => $usuarioPublicate->location->latitud ?? -33.4489,
+            'lng' => $usuarioPublicate->location->longitud ?? -70.6693,
+        ];
+        
+        return view('showescort', compact('usuarioPublicate', 'ciudades', 'ubicacion'));
     }
 
     public function showFavorites()
