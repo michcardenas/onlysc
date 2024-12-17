@@ -139,3 +139,4 @@
 @endif
 
 @endsection
+@include('layouts.navigation')

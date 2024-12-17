@@ -71,3 +71,4 @@
     </div>
 </main>
 @endsection
+@include('layouts.navigation')

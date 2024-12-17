@@ -20,14 +20,14 @@ class PerfilController extends Controller
     {
         $usuarioPublicate = UsuarioPublicate::with(['location'])->findOrFail($id);
         $ciudades = Ciudad::all();
-        
+
         // Obtener la ubicación del mapa o valores por defecto para Santiago
         $ubicacion = [
             'direccion' => $usuarioPublicate->location->direccion ?? $usuarioPublicate->ubicacion,
             'lat' => $usuarioPublicate->location->latitud ?? -33.4489,
             'lng' => $usuarioPublicate->location->longitud ?? -70.6693,
         ];
-        
+
         return view('showescort', compact('usuarioPublicate', 'ciudades', 'ubicacion'));
     }
 
@@ -35,22 +35,21 @@ class PerfilController extends Controller
     {
         try {
             $user = auth()->user();
-            
+
             $favorites = Favorite::with('usuarioPublicate')
                 ->where('user_id', $user->id)
                 ->paginate(12);
-    
+
             $ciudades = Ciudad::all(); // Añadimos esta línea
-    
+
             return view('showfavorites', compact('favorites', 'ciudades'));
-            
         } catch (\Exception $e) {
             Log::error('Error al mostrar favoritos', [
                 'error' => $e->getMessage(),
                 'line' => $e->getLine(),
                 'file' => $e->getFile()
             ]);
-            
+
             return redirect()
                 ->route('home')
                 ->with('error', 'Hubo un error al cargar tus favoritos');
@@ -112,169 +111,212 @@ class PerfilController extends Controller
 
     public function updatePhoto(Request $request)
     {
-        $request->validate([
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
-        ]);
-
-        $usuario = auth()->user();
-
-        if ($request->hasFile('foto')) {
-            if ($usuario->foto) {
-                Storage::disk('public')->delete($usuario->foto);
-            }
-            $imagenPath = $request->file('foto')->store('profile_photos', 'public');
-            $usuario->foto = $imagenPath;
-            $usuario->save();
-        }
-
-        return redirect()->route('admin.profile')->with('success', 'Foto de perfil actualizada correctamente');
-    }
-
-    public function crearEstado(Request $request)
-{
-    Log::info('Iniciando creación de estado', [
-        'user_id' => auth()->id(),
-        'request_data' => $request->all()
-    ]);
-
-    try {
-        // Verificar autenticación
-        if (!auth()->check()) {
-            Log::error('Usuario no autenticado intentando crear estado');
-            return redirect()->back()->with('error', 'Debes iniciar sesión');
-        }
-
-        // Log detallado del usuario
-        Log::info('Datos del usuario actual', [
-            'user_id' => auth()->id(),
-            'rol' => auth()->user()->rol,
-            'email' => auth()->user()->email
-        ]);
-
-        // Verificar rol
-        if (auth()->user()->rol != 2) {
-            Log::warning('Intento de crear estado por usuario no autorizado', [
-                'user_id' => auth()->id(),
-                'rol' => auth()->user()->rol,
-                'expected_rol' => 2
-            ]);
-            return redirect()->back()->with('error', 'No tienes permiso para crear estados');
-        }
-
-        // Log de archivos recibidos
-        if ($request->hasFile('fotos')) {
-            foreach ($request->file('fotos') as $index => $file) {
-                Log::info('Archivo recibido', [
-                    'index' => $index,
-                    'original_name' => $file->getClientOriginalName(),
-                    'size' => $file->getSize(),
-                    'mime_type' => $file->getMimeType(),
-                    'extension' => $file->getClientOriginalExtension()
-                ]);
-            }
-        } else {
-            Log::warning('No se recibieron archivos en la solicitud');
-        }
-
-        // Validación con logging detallado
         try {
-            $validator = \Validator::make($request->all(), [
-                'fotos.*' => 'required|mimes:jpeg,png,jpg,gif,mp4,mov,avi,wmv|max:100000'
+            Log::info('Iniciando actualización de foto de perfil', [
+                'user_id' => auth()->id(),
+                'has_file' => $request->hasFile('foto')
             ]);
 
-            if ($validator->fails()) {
-                Log::error('Error de validación', [
-                    'errors' => $validator->errors()->toArray()
+            $request->validate([
+                'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:100000'
+            ]);
+
+            $usuario = auth()->user();
+
+            if ($request->hasFile('foto')) {
+                Log::info('Procesando archivo de foto', [
+                    'original_name' => $request->file('foto')->getClientOriginalName(),
+                    'size' => $request->file('foto')->getSize(),
+                    'mime_type' => $request->file('foto')->getMimeType()
                 ]);
-                return redirect()->back()->withErrors($validator)->withInput();
+
+                // Si existe una foto anterior, eliminarla
+                if ($usuario->foto) {
+                    Log::info('Eliminando foto anterior', ['path' => $usuario->foto]);
+                    Storage::disk('public')->delete($usuario->foto);
+                }
+
+                // Guardar nueva foto
+                $imagenPath = $request->file('foto')->store('profile_photos', 'public');
+
+                Log::info('Nueva foto guardada', ['path' => $imagenPath]);
+
+                // Actualizar usuario
+                $usuario->foto = $imagenPath;
+                $saved = $usuario->save();
+
+                Log::info('Resultado de actualización de foto', [
+                    'success' => $saved,
+                    'user' => $usuario->toArray()
+                ]);
+
+                if (!$saved) {
+                    throw new \Exception('No se pudo guardar la foto en la base de datos');
+                }
+
+                return redirect()
+                    ->route('admin.profile')
+                    ->with('success', 'Foto de perfil actualizada correctamente');
             }
+
+            throw new \Exception('No se recibió ningún archivo');
         } catch (\Exception $e) {
-            Log::error('Error en la validación', [
+            Log::error('Error actualizando foto de perfil', [
                 'error' => $e->getMessage(),
                 'line' => $e->getLine(),
                 'file' => $e->getFile()
             ]);
-            return redirect()->back()->with('error', 'Error en la validación de archivos');
+
+            return redirect()
+                ->route('admin.profile')
+                ->with('error', 'Error al actualizar la foto de perfil: ' . $e->getMessage());
         }
+    }
 
-        $user = auth()->user();
-        
-        // Log de búsqueda de usuario publicate
-        Log::info('Buscando usuario publicate', [
-            'user_id' => $user->id
-        ]);
-
-        $usuarioPublicate = $this->encontrarUsuarioPublicate($user);
-
-        if (!$usuarioPublicate) {
-            Log::error('No se encontró usuario publicate', [
-                'user_id' => $user->id
-            ]);
-            return redirect()->back()->with('error', 'No se encontró tu perfil de publicación.');
-        }
-
-        Log::info('Usuario publicate encontrado', [
-            'usuario_publicate_id' => $usuarioPublicate->id
-        ]);
-
-        if ($request->hasFile('fotos')) {
-            try {
-                // Log antes de procesar archivos
-                Log::info('Iniciando procesamiento de archivos multimedia');
-                
-                $mediaFiles = $this->procesarArchivosMultimedia($request->file('fotos'));
-                
-                // Log después de procesar archivos
-                Log::info('Archivos multimedia procesados', [
-                    'processed_files' => $mediaFiles
-                ]);
-
-                // Log antes de crear el estado
-                Log::info('Intentando crear estado en la base de datos', [
-                    'user_id' => $user->id,
-                    'usuarios_publicate_id' => $usuarioPublicate->id,
-                    'media_files' => $mediaFiles
-                ]);
-
-                $estado = Estado::create([
-                    'user_id' => $user->id,
-                    'usuarios_publicate_id' => $usuarioPublicate->id,
-                    'fotos' => json_encode($mediaFiles)
-                ]);
-
-                Log::info('Estado creado exitosamente', [
-                    'estado_id' => $estado->id,
-                    'estado_data' => $estado->toArray(),
-                    'archivos' => $mediaFiles
-                ]);
-
-                return redirect()->back()->with('success', 'Estado creado correctamente');
-            } catch (\Exception $e) {
-                Log::error('Error al procesar archivos o crear estado', [
-                    'error' => $e->getMessage(),
-                    'line' => $e->getLine(),
-                    'file' => $e->getFile(),
-                    'trace' => $e->getTraceAsString()
-                ]);
-                return redirect()->back()->with('error', 'Error al procesar los archivos multimedia');
-            }
-        }
-
-        Log::warning('No se proporcionaron archivos multimedia');
-        return redirect()->back()->with('error', 'No se han proporcionado archivos multimedia');
-
-    } catch (\Exception $e) {
-        Log::error('Error general al crear estado', [
-            'error' => $e->getMessage(),
-            'line' => $e->getLine(),
-            'file' => $e->getFile(),
-            'trace' => $e->getTraceAsString(),
+    public function crearEstado(Request $request)
+    {
+        Log::info('Iniciando creación de estado', [
+            'user_id' => auth()->id(),
             'request_data' => $request->all()
         ]);
 
-        return redirect()->back()->with('error', 'Ocurrió un error al crear el estado');
+        try {
+            // Verificar autenticación
+            if (!auth()->check()) {
+                Log::error('Usuario no autenticado intentando crear estado');
+                return redirect()->back()->with('error', 'Debes iniciar sesión');
+            }
+
+            // Log detallado del usuario
+            Log::info('Datos del usuario actual', [
+                'user_id' => auth()->id(),
+                'rol' => auth()->user()->rol,
+                'email' => auth()->user()->email
+            ]);
+
+            // Verificar rol
+            if (auth()->user()->rol != 2) {
+                Log::warning('Intento de crear estado por usuario no autorizado', [
+                    'user_id' => auth()->id(),
+                    'rol' => auth()->user()->rol,
+                    'expected_rol' => 2
+                ]);
+                return redirect()->back()->with('error', 'No tienes permiso para crear estados');
+            }
+
+            // Log de archivos recibidos
+            if ($request->hasFile('fotos')) {
+                foreach ($request->file('fotos') as $index => $file) {
+                    Log::info('Archivo recibido', [
+                        'index' => $index,
+                        'original_name' => $file->getClientOriginalName(),
+                        'size' => $file->getSize(),
+                        'mime_type' => $file->getMimeType(),
+                        'extension' => $file->getClientOriginalExtension()
+                    ]);
+                }
+            } else {
+                Log::warning('No se recibieron archivos en la solicitud');
+            }
+
+            // Validación con logging detallado
+            try {
+                $validator = \Validator::make($request->all(), [
+                    'fotos.*' => 'required|mimes:jpeg,png,jpg,gif,mp4,mov,avi,wmv|max:100000'
+                ]);
+
+                if ($validator->fails()) {
+                    Log::error('Error de validación', [
+                        'errors' => $validator->errors()->toArray()
+                    ]);
+                    return redirect()->back()->withErrors($validator)->withInput();
+                }
+            } catch (\Exception $e) {
+                Log::error('Error en la validación', [
+                    'error' => $e->getMessage(),
+                    'line' => $e->getLine(),
+                    'file' => $e->getFile()
+                ]);
+                return redirect()->back()->with('error', 'Error en la validación de archivos');
+            }
+
+            $user = auth()->user();
+
+            // Log de búsqueda de usuario publicate
+            Log::info('Buscando usuario publicate', [
+                'user_id' => $user->id
+            ]);
+
+            $usuarioPublicate = $this->encontrarUsuarioPublicate($user);
+
+            if (!$usuarioPublicate) {
+                Log::error('No se encontró usuario publicate', [
+                    'user_id' => $user->id
+                ]);
+                return redirect()->back()->with('error', 'No se encontró tu perfil de publicación.');
+            }
+
+            Log::info('Usuario publicate encontrado', [
+                'usuario_publicate_id' => $usuarioPublicate->id
+            ]);
+
+            if ($request->hasFile('fotos')) {
+                try {
+                    // Log antes de procesar archivos
+                    Log::info('Iniciando procesamiento de archivos multimedia');
+
+                    $mediaFiles = $this->procesarArchivosMultimedia($request->file('fotos'));
+
+                    // Log después de procesar archivos
+                    Log::info('Archivos multimedia procesados', [
+                        'processed_files' => $mediaFiles
+                    ]);
+
+                    // Log antes de crear el estado
+                    Log::info('Intentando crear estado en la base de datos', [
+                        'user_id' => $user->id,
+                        'usuarios_publicate_id' => $usuarioPublicate->id,
+                        'media_files' => $mediaFiles
+                    ]);
+
+                    $estado = Estado::create([
+                        'user_id' => $user->id,
+                        'usuarios_publicate_id' => $usuarioPublicate->id,
+                        'fotos' => json_encode($mediaFiles)
+                    ]);
+
+                    Log::info('Estado creado exitosamente', [
+                        'estado_id' => $estado->id,
+                        'estado_data' => $estado->toArray(),
+                        'archivos' => $mediaFiles
+                    ]);
+
+                    return redirect()->back()->with('success', 'Estado creado correctamente');
+                } catch (\Exception $e) {
+                    Log::error('Error al procesar archivos o crear estado', [
+                        'error' => $e->getMessage(),
+                        'line' => $e->getLine(),
+                        'file' => $e->getFile(),
+                        'trace' => $e->getTraceAsString()
+                    ]);
+                    return redirect()->back()->with('error', 'Error al procesar los archivos multimedia');
+                }
+            }
+
+            Log::warning('No se proporcionaron archivos multimedia');
+            return redirect()->back()->with('error', 'No se han proporcionado archivos multimedia');
+        } catch (\Exception $e) {
+            Log::error('Error general al crear estado', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'trace' => $e->getTraceAsString(),
+                'request_data' => $request->all()
+            ]);
+
+            return redirect()->back()->with('error', 'Ocurrió un error al crear el estado');
+        }
     }
-}
 
     private function encontrarUsuarioPublicate($user)
     {
@@ -377,7 +419,7 @@ class PerfilController extends Controller
             return response()->json(['error' => 'Hubo un error al eliminar los estados expirados'], 500);
         }
     }
-    
+
 
     public function getUsuario($id)
     {

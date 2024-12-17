@@ -107,3 +107,4 @@
 </div>
 <!-- Aquí iría el resto del contenido del foro -->
 @endsection
+@include('layouts.navigation')

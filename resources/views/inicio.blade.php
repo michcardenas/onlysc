@@ -38,7 +38,6 @@
                 $todasVistas = $estadosUsuario->every(function($estado) {
                 return $estado->vistoPor->where('id', auth()->id())->isNotEmpty();
                 });
-                $mediaFiles = json_decode($primerEstado->fotos, true);
                 @endphp
 
                 @if($primerEstado->usuarioPublicate)
@@ -46,17 +45,15 @@
                     data-usuario-id="{{ $usuarioId }}"
                     onclick="mostrarHistorias({{ json_encode($estadosUsuario) }}, {{ auth()->id() }})">
                     <div class="historia-circle {{ $todasVistas ? 'historia-vista todas-vistas' : ($vistoPorUsuarioActual ? 'historia-vista' : '') }}">
-                        @if(!empty($mediaFiles['imagenes']))
-                        <img src="{{ Storage::url($mediaFiles['imagenes'][0]) }}"
+                        @if($primerEstado->user_foto)
+                        <img src="{{ asset('storage/' . $primerEstado->user_foto) }}"
                             alt="{{ $primerEstado->usuarioPublicate->fantasia }}">
-                        @elseif(!empty($mediaFiles['videos']))
-                        <video>
-                            <source src="{{ Storage::url($mediaFiles['videos'][0]) }}"
-                                type="video/{{ pathinfo($mediaFiles['videos'][0], PATHINFO_EXTENSION) }}">
-                        </video>
+                        @else
+                        <img src="{{ asset('storage/profile_photos/default-avatar.jpg') }}"
+                            alt="{{ $primerEstado->usuarioPublicate->fantasia }}">
                         @endif
                     </div>
-                    <span class="historia-nombre">{{ Str::lower($primerEstado->usuarioPublicate->nombre) }}</span>
+                    <span class="historia-nombre">{{ Str::lower($primerEstado->usuarioPublicate->fantasia) }}</span>
                     <span class="historia-tiempo">hace {{ $primerEstado->created_at->diffForHumans(null, true) }}</span>
                 </div>
                 @endif
@@ -392,3 +389,4 @@
 </main>
 
 @endsection
+@include('layouts.navigation')

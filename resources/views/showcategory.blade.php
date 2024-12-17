@@ -114,3 +114,4 @@
 
 
 @endsection
+@include('layouts.navigation')

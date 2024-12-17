@@ -1112,7 +1112,7 @@ video:not(.banner-img):not(.historia-circle video) {
     gap: 10px;
     align-content: flex-start;
     justify-content: flex-start;
-    max-width: 1050px;
+    max-width: 1100px;
     margin: 0 auto;
     font-family: 'Poppins', sans-serif;
 }
@@ -1124,8 +1124,8 @@ video:not(.banner-img):not(.historia-circle video) {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     background-color: #000;
-    height: 360px;
-    width: 229px;
+    height: 450px;
+    width: 265px;
     text-decoration: none;
     color: inherit;
     display: block;
@@ -1141,10 +1141,10 @@ video:not(.banner-img):not(.historia-circle video) {
     position: absolute;
     top: 10px;
     left: 10px;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: #313131;
     color: #fff;
-    padding: 2px 3px;
-    border-radius: 5px;
+    padding: 3px 10px;
+    border-radius: 2px;
     font-size: 12px;
     font-weight: bold;
     text-transform: uppercase;
@@ -1250,7 +1250,7 @@ video:not(.banner-img):not(.historia-circle video) {
     background-color: #000;
     height: 325px;
     position: absolute;
-    right: 369px;
+    right: 246px;
     font-family: 'Poppins', sans-serif;
     z-index: 10;
     text-decoration: none;
@@ -1371,8 +1371,8 @@ video:not(.banner-img):not(.historia-circle video) {
     padding: 10px;
     font-family: 'Work Sans', sans-serif;
     position: absolute;
-    top: 810px;
-    right: 346px;
+    top: 824px;
+    right: 225px;
     z-index: 10;
 }
 
@@ -1526,7 +1526,8 @@ video:not(.banner-img):not(.historia-circle video) {
     width: 601px;
     height: 600px;
     object-fit: cover;
-    display: block; /* Evita espacios debajo de la imagen */
+    display: block;
+    /* Evita espacios debajo de la imagen */
 }
 
 /* Ocultar flechas por defecto de Swiper */
@@ -1633,7 +1634,8 @@ video:not(.banner-img):not(.historia-circle video) {
 }
 
 .escortperfil-info-icon {
-    width: 30px;  /* o el tamaño que prefieras */
+    width: 30px;
+    /* o el tamaño que prefieras */
     height: 30px;
     display: inline-block;
     vertical-align: middle;
@@ -1771,7 +1773,7 @@ video:not(.banner-img):not(.historia-circle video) {
     gap: 8px;
     font-size: 14px;
     transition: transform 0.2s;
-    position:absolute;
+    position: absolute;
     top: 604px;
     right: 531px;
     flex-direction: column;
@@ -1886,10 +1888,21 @@ video:not(.banner-img):not(.historia-circle video) {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.facebook { background: #1877f2; }
-.x { background: #000000; }
-.telegram { background: #0088cc; }
-.whatsapp { background: #25D366; }
+.facebook {
+    background: #1877f2;
+}
+
+.x {
+    background: #000000;
+}
+
+.telegram {
+    background: #0088cc;
+}
+
+.whatsapp {
+    background: #25D366;
+}
 
 
 .share-icon.x {
@@ -2378,9 +2391,10 @@ video:not(.banner-img):not(.historia-circle video) {
 }
 
 .estados-historias {
-    padding: 15px 350px;
+    padding: 15px 355px;
     background: #fff;
     font-family: 'Poppins', sans-serif;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .historias-wrapper {
@@ -2398,15 +2412,17 @@ video:not(.banner-img):not(.historia-circle video) {
 
 .historias-titulos h4 {
     color: #ff0066;
-    font-size: 0.875rem;
+    font-size: 1rem;
     margin: 0;
     text-transform: uppercase;
+    font-weight: bolder;
 }
 
 .ver-todas {
-    color: #666;
+    color: #000;
     text-decoration: none;
-    font-size: 0.75rem;
+    font-size: 0.95rem;
+    font-weight: bolder;
 }
 
 .historias-container {
@@ -2675,7 +2691,6 @@ video:not(.banner-img):not(.historia-circle video) {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
-    padding: 0 1rem;
     font-family: 'Poppins', sans-serif;
 }
 
@@ -2687,7 +2702,7 @@ video:not(.banner-img):not(.historia-circle video) {
 
 .volvieronyprimera-header {
     background-color: #E00037;
-    padding: 0.5rem 1.25rem;
+    padding: 0.5rem 0.95rem;
     margin-bottom: 1rem;
     border-radius: 0.5rem 0.5rem 0 0;
     width: 93%;
@@ -2835,29 +2850,57 @@ video:not(.banner-img):not(.historia-circle video) {
     width: 1400px;
     position: absolute;
     left: 251px;
-    top: 146px;  /* Cambiado de 948px a 146px como en tu ejemplo */
+    top: 146px;
+    /* Cambiado de 948px a 146px como en tu ejemplo */
 }
 
-/* Media Queries para Responsividad */
+
+/* Large screens (1280px y menor) */
+@media screen and (max-width: 1280px) {
+    .inicio-card {
+        height: 398px;
+        width: 254px;
+    }
+    
+    .inicio-featured-card {
+        width: 189px;
+        margin-left: -60px;
+        right: 8px;
+    }
+
+    .online-panel {
+        width: 200px;
+        top: 838px;
+        right: -13px;
+    }
+
+    .inicio-container {
+        max-width: 1200px;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .estados-historias {
+        padding: 15px 42px;
+    }
+}
+
+/* Tablets y pantallas medianas (768px y menor) */
 @media screen and (max-width: 768px) {
+    .inicio-card {
+        height: 360px;
+        width: 190px;
+    }
 
     .inicio-featured-card {
         position: relative;
-        /* Cambia el posicionamiento a relativo */
         margin: 0 auto;
-        /* Centra la tarjeta */
         width: 100%;
-        /* Ajusta el ancho */
         max-width: 300px;
-        /* Ancho máximo */
         right: 0;
-        /* Reinicia la posición */
         z-index: 1;
-        /* Ajusta la prioridad */
         margin-bottom: 20px;
-        /* Espaciado con el resto del contenido */
         margin-top: 20px;
-        text-decoration: none;
     }
 
     .location-price {
@@ -2873,21 +2916,18 @@ video:not(.banner-img):not(.historia-circle video) {
         justify-content: flex-end;
         border-radius: 0 0 8px 8px;
         height: 100%;
-        width: 500px;
-        text-decoration: none;
+        width: 100%;
+        max-width: 500px;
     }
 
     .inicio-usuarios-section {
         display: flex;
         flex-direction: column;
-        /* Coloca los elementos en una columna */
         align-items: center;
-        /* Centra el contenido */
     }
 
     .pagination-container {
         order: 1;
-        /* Mantén la paginación al final */
     }
 
     /* Navbar Superior */
@@ -2915,7 +2955,6 @@ video:not(.banner-img):not(.historia-circle video) {
         display: none;
     }
 
-    /* Mantener solo el selector de ubicación */
     .navbar-top .navbar-right {
         display: flex;
         justify-content: center;
@@ -2926,21 +2965,17 @@ video:not(.banner-img):not(.historia-circle video) {
         margin: 0;
     }
 
-    /* Navbar bottom fijo debajo del navbar-top */
     .navbar-bottom {
         position: fixed;
         top: 40px;
-        /* Altura del navbar-top */
         left: 0;
         width: 100%;
         z-index: 999;
         background: white;
     }
 
-    /* Agregar padding al contenido principal para compensar los navbars fijos */
     main {
         padding-top: calc(40px + 3rem);
-        /* navbar-top + navbar-bottom */
     }
 
     .navbar-bottom .navbar-left {
@@ -2948,14 +2983,12 @@ video:not(.banner-img):not(.historia-circle video) {
         width: auto;
     }
 
-    /* Ocultar elementos del navbar inferior */
     .navbar-bottom .search-bar,
     .navbar-bottom .btn-filters,
     .navbar-bottom .navbar-right {
         display: none;
     }
 
-    /* Ajustar logo */
     .logo {
         text-align: center;
     }
@@ -2963,7 +2996,7 @@ video:not(.banner-img):not(.historia-circle video) {
     .logo img {
         height: 32px;
         margin-top: 10px;
-        margin-right: 0rem;
+        margin-right: 0;
     }
 
     .logo1 {
@@ -2971,29 +3004,14 @@ video:not(.banner-img):not(.historia-circle video) {
         margin: 0;
     }
 
-    /* Estilos para estados-historias */
     .estados-historias {
         padding: 10px;
         background: #fff;
         font-family: 'Poppins', sans-serif;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+        margin-bottom: 10px;
     }
 
-    /* Estilos para inicio-card */
-    .inicio-card {
-        position: relative;
-        overflow: hidden;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        background-color: #000;
-        height: 360px;
-        width: 184px;
-        text-decoration: none;
-        color: inherit;
-        display: block;
-        transition: transform 0.2s ease;
-    }
-
-    /* Estilos para inicio-card-title */
     .inicio-card-title {
         font-size: 15px;
         font-weight: bold;
@@ -3003,7 +3021,6 @@ video:not(.banner-img):not(.historia-circle video) {
         justify-content: space-between;
     }
 
-    /* Edad del usuario */
     .inicio-card-age {
         font-size: 16px;
         color: #fff;
@@ -3011,7 +3028,6 @@ video:not(.banner-img):not(.historia-circle video) {
         margin-right: 15px;
     }
 
-    /* Ubicación y precio en la misma línea */
     .inicio-card-location,
     .inicio-card-price {
         font-size: 12px;
@@ -3022,7 +3038,6 @@ video:not(.banner-img):not(.historia-circle video) {
         gap: 5px;
     }
 
-    /* Precio alineado a la derecha */
     .inicio-card-price {
         color: #fff;
         font-weight: bold;
@@ -3051,7 +3066,6 @@ video:not(.banner-img):not(.historia-circle video) {
         margin: 0 auto;
     }
 
-
     .swiper-container {
         overflow: visible !important;
     }
@@ -3060,24 +3074,36 @@ video:not(.banner-img):not(.historia-circle video) {
         width: 22rem;
     }
 
-
     .swiper-slide {
-        transform: scale(1.05) !important; /* Tarjetas más pequeñas */
-        transition: transform 0.3s ease !important; /* Transición suave */
-    }
-    
-    /* Estilo para la tarjeta activa */
-    .swiper-slide-active {
-        transform: scale(0.95) !important; /* Hace la tarjeta activa más grande */
+        transform: scale(1.05) !important;
+        transition: transform 0.3s ease !important;
     }
 
+    .swiper-slide-active {
+        transform: scale(0.95) !important;
+    }
+
+    .inicio-container {
+        padding: 0;
+    }
+
+    .banner {
+        margin-top: 0;
+    }
 }
 
+/* Móviles (480px y menor) */
 @media screen and (max-width: 480px) {
+    .inicio-card {
+        width: 100%;
+        max-width: 190px;
+        margin: 0 auto;
+    }
+
     .logo img {
         height: 32px;
         margin-top: 10px;
-        margin-right: 0rem;
+        margin-right: 0;
     }
 
     .location-dropdown select {
@@ -3091,12 +3117,10 @@ video:not(.banner-img):not(.historia-circle video) {
         appearance: none;
     }
 
-    /* Ocultar la flecha en IE */
     .location-dropdown select::-ms-expand {
         display: none;
     }
 
-    /* Ajustar espaciado del navbar */
     .navbar-top {
         padding: 8px;
     }
@@ -3110,7 +3134,13 @@ video:not(.banner-img):not(.historia-circle video) {
     }
 }
 
+/* Móviles muy pequeños (320px y menor) */
 @media screen and (max-width: 320px) {
+    .inicio-card {
+        height: 340px;
+        width: 160px;
+    }
+
     .location-dropdown select {
         max-width: 130px;
         font-size: 12px;
@@ -3122,16 +3152,5 @@ video:not(.banner-img):not(.historia-circle video) {
 
     .logo1 {
         height: 22px;
-    }
-}
-
-/* Ajustes para el banner después de los cambios en navegación */
-@media screen and (max-width: 768px) {
-    .banner {
-        margin-top: 0;
-    }
-
-    .inicio-container {
-        padding: 0;
     }
 }

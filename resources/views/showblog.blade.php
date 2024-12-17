@@ -90,3 +90,4 @@
 </div>
 
 @endsection
+@include('layouts.navigation')
