@@ -358,11 +358,34 @@ class InicioController extends Controller
 
     public function RTA()
     {
-        // Obtener todas las ciudades
         $ciudades = Ciudad::all();
-
+        
+        // Obtener un usuario específico o todos los usuarios que necesites
+        $usuarioPublicate = UsuarioPublicate::with([
+            'disponibilidad',
+            'estados' => function ($query) {
+                $query->where('created_at', '>=', now()->subHours(24));
+            }
+        ])
+        ->whereIn('estadop', [1, 3]) // Si necesitas filtrar por estado
+        ->select(
+            'id',
+            'fantasia',
+            'nombre',
+            'edad',
+            'ubicacion',
+            'fotos',
+            'foto_positions',
+            'categorias',
+            'posicion',
+            'precio',
+            'estadop'
+        )
+        ->first(); // o ->get() si necesitas varios usuarios
+    
         return view('rta', [
             'ciudades' => $ciudades,
+            'usuarioPublicate' => $usuarioPublicate
         ]);
     }
 }

@@ -3141,21 +3141,21 @@ video:not(.banner-img):not(.historia-circle video) {
         margin: 0 auto;
     }
 
-    .swiper-container {
-        /* overflow: visible !important; */
-    }
-
     .card {
         width: 22rem;
     }
 
-    .swiper-slide {
-        /* transform: scale(1.05); */
-        /* transition: transform 0.3s ease; */
+    .home-swiper {
+        overflow: visible !important;
     }
 
-    .swiper-slide-active {
-        /* transform: scale(0.95); */
+    .home-swiper .swiper-slide {
+        transform: scale(1.05) !important;
+        transition: transform 0.3s ease !important;
+    }
+
+    .home-swiper .swiper-slide-active {
+        transform: scale(0.95) !important;
     }
 
     .inicio-container {

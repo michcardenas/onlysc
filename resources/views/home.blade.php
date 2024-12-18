@@ -20,7 +20,7 @@
 
 @section('content')
     <!-- Swiper Container -->
-    <div class="swiper-container">
+    <div class="swiper-container home-swiper">
     <div class="swiper-wrapper" style="display: flex;">
     <!-- Tarjeta 1 -->
             <div class="swiper-slide">
