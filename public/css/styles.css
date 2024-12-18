@@ -1699,6 +1699,7 @@ video:not(.banner-img):not(.historia-circle video) {
     display: flex;
     justify-content: flex-start;
     margin: 0px 0;
+    gap: 10px;
 }
 
 .escortperfil-section {
@@ -1711,15 +1712,21 @@ video:not(.banner-img):not(.historia-circle video) {
     font-size: 1.5em;
     font-weight: 600;
     color: #333;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #e00037;
+    margin-bottom: 10px;
+    padding-bottom: 1px;
+    border-bottom: 1.8px solid;
+    border-image: linear-gradient(to right, #e00037 0%, #cccccc 40%) 2;
+    /* Transición entre 20% y 50% */
     display: inline-block;
+    width: 100%;
+    /* Ajusta este valor para hacer la línea más larga */
 }
 
 .escortperfil-description-text {
     line-height: 1.6;
     color: #666;
+    WIDTH: 90%;
+    margin-top: 5px;
 }
 
 .escortperfil-attributes-list {
@@ -1760,6 +1767,55 @@ video:not(.banner-img):not(.historia-circle video) {
 .escortperfil-service-item:hover {
     background-color: #c40030;
     transform: translateY(-1px);
+}
+
+.escortperfil-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* background: white; */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+/* Fondo oscuro */
+.escortperfil-modal-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+/* Botón de cerrar */
+.escortperfil-modal-close {
+    position: absolute;
+    top: -5px;
+    right: -20px;
+    font-size: 42px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: #fff;
+}
+
+/* Imagen dentro del modal */
+.escortperfil-modal-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Hacer las imágenes clickeables */
+.escortperfil-banner-img {
+    cursor: pointer;
 }
 
 .share-button {
@@ -1967,7 +2023,7 @@ video:not(.banner-img):not(.historia-circle video) {
     color: #333;
     margin-bottom: 20px;
     padding-bottom: 10px;
-    border-bottom: 2px solid #e00037;
+    border-bottom: 1.8px solid #e00037;
     display: inline-block;
 }
 
@@ -2577,14 +2633,32 @@ video:not(.banner-img):not(.historia-circle video) {
     margin: 0 2px;
     border-radius: 3px;
     max-width: 100px;
+    position: relative;
+    overflow: hidden;
 }
 
-.indicator.active {
+.indicator.active::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
     background: #fff;
 }
 
 .indicator.viewed {
     background: rgba(255, 255, 255, 0.8);
+}
+
+@keyframes progress {
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
 }
 
 .historia-final {
@@ -2861,7 +2935,7 @@ video:not(.banner-img):not(.historia-circle video) {
         height: 398px;
         width: 254px;
     }
-    
+
     .inicio-featured-card {
         width: 189px;
         margin-left: -60px;
@@ -2885,6 +2959,7 @@ video:not(.banner-img):not(.historia-circle video) {
     }
 }
 
+/* Tablets y pantallas medianas (768px y menor) */
 /* Tablets y pantallas medianas (768px y menor) */
 @media screen and (max-width: 768px) {
     .inicio-card {
@@ -3067,7 +3142,7 @@ video:not(.banner-img):not(.historia-circle video) {
     }
 
     .swiper-container {
-        overflow: visible !important;
+        /* overflow: visible !important; */
     }
 
     .card {
@@ -3075,12 +3150,12 @@ video:not(.banner-img):not(.historia-circle video) {
     }
 
     .swiper-slide {
-        transform: scale(1.05) !important;
-        transition: transform 0.3s ease !important;
+        /* transform: scale(1.05); */
+        /* transition: transform 0.3s ease; */
     }
 
     .swiper-slide-active {
-        transform: scale(0.95) !important;
+        /* transform: scale(0.95); */
     }
 
     .inicio-container {
@@ -3089,6 +3164,197 @@ video:not(.banner-img):not(.historia-circle video) {
 
     .banner {
         margin-top: 0;
+    }
+
+    .escortperfil-btn {
+        text-decoration: none;
+        /* Elimina la línea del enlace */
+        width: 371px;
+        padding: 12px 0;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: bold;
+        text-align: center;
+        border-radius: 5px;
+        text-transform: uppercase;
+        /* height: 40px; */
+        position: absolute;
+        right: -349px;
+        top: -29px;
+    }
+
+    .escortperfil-info-bar {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        height: 4%;
+        width: 90%;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 12px 10px;
+        margin-top: 61px;
+        position: relative;
+        z-index: 2;
+        margin: 13px;
+        top: 47px;
+    }
+
+    .escortperfil-section {
+        width: 367px;
+        /* O el ancho que prefieras */
+        /* margin-bottom: 40px; */
+        margin: 13px;
+    }
+
+    .escortperfil-schedule {
+        position: absolute;
+        right: 67px;
+        top: 1780px;
+        /* background-color: #fff; */
+        padding: 25px;
+        border-radius: 10px;
+        width: 73%;
+        /* margin-top: 20px; */
+        margin: 12px 12px;
+    }
+
+    .escortperfil-container {
+        max-width: 1200px;
+        height: 2727px;
+        margin: 0 auto;
+        font-family: Poppins, sans-serif;
+    }
+
+    .escortperfil-map-section {
+        margin: 5px -21px;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
+        margin-top: -16px;
+    }
+
+    .escortperfil-section-title {
+        font-size: 1.5em;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 12px;
+        padding-bottom: 1px;
+        border-bottom: 1.8px solid;
+        border-image: linear-gradient(to right, #e00037 0%, #cccccc 40%) 2;
+        /* Transición entre 20% y 50% */
+        display: inline-block;
+        width: 139%;
+        /* Ajusta este valor para hacer la línea más larga */
+    }
+
+    .favorite-button {
+        border: none;
+        outline: none;
+        background: transparent;
+        position: absolute;
+        top: 608px;
+        right: 65px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: white;
+        text-align: center;
+        cursor: pointer;
+        z-index: 10;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        transition: transform 0.2s ease;
+    }
+
+    .share-button {
+        padding: 12px 20px;
+        border: none;
+        background: transparent;
+        color: #ffffff;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        transition: transform 0.2s;
+        position: absolute;
+        top: 597px;
+        right: 219px;
+        flex-direction: column;
+        min-width: 8px;
+    }
+
+    .escortperfil-nombre {
+        position: absolute;
+        bottom: 80px;
+        left: 19px;
+        color: #fff;
+        font-size: 3em;
+        font-weight: bold;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        z-index: 2;
+        margin: 0;
+        padding: 0;
+    }
+
+    .escortperfil-breadcrumb {
+        display: none;
+    }
+
+    .escortperfil-btn.contactar {
+        background-color: #e00037;
+        display: none;
+    }
+
+    .escortperfil-swiper .swiper-pagination-bullet {
+        display: none;
+    }
+
+    .escortperfil-content {
+        flex-direction: column;
+        margin-top: 30px;
+    }
+
+    .escort-map {
+        width: 133%;
+        height: 350px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .escortperfil-schedule-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 10px;
+        background-color: #f5f5f5;
+        border-radius: 5px;
+        font-size: 0.95em;
+        width: 125%;
+    }
+
+    .escortperfil-schedule .escortperfil-section-title {
+        font-size: 1.5em;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1.8px solid #e00037;
+        display: inline-block;
+    }
+
+    /* También es recomendable ajustar el contenedor padre */
+    .escortperfil-swiper-slide {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .escortperfil-banner-img {
+        width: 450px;
     }
 }
 

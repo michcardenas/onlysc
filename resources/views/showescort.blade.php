@@ -13,10 +13,11 @@
                 @endphp
                 @foreach($fotos as $foto)
                 <div class="escortperfil-swiper-slide swiper-slide">
-                    <img src="{{ asset("storage/chicas/{$usuarioPublicate->id}/{$foto}") }}"
-                        alt="Foto de {{ $usuarioPublicate->fantasia }}"
-                        class="escortperfil-banner-img">
-                </div>
+                <img src="{{ asset("storage/chicas/{$usuarioPublicate->id}/{$foto}") }}"
+                    alt="Foto de {{ $usuarioPublicate->fantasia }}"
+                    class="escortperfil-banner-img"
+                    onclick="openEscortModal(this.src)">
+            </div>
                 @endforeach
             </div>
             <!-- Botones de navegación -->
@@ -32,6 +33,12 @@
     </header>
 
 
+
+    <div class="escortperfil-modal-backdrop" id="escortperfilModalBackdrop" onclick="closeEscortModal()"></div>
+<div class="escortperfil-modal" id="escortperfilImageModal">
+    <button class="escortperfil-modal-close" onclick="closeEscortModal()">×</button>
+    <img class="escortperfil-modal-image" id="escortperfilModalImage" src="" alt="Imagen ampliada">
+</div>
 
     <div class="escortperfil-info-bar">
         <div class="escortperfil-info-item">
@@ -116,7 +123,6 @@
     <div class="escortperfil-breadcrumb">
         <a href="/">Inicio</a> /
         <a href="{{ strtolower($usuarioPublicate->ubicacion) }}">Escorts en {{ $usuarioPublicate->ubicacion }}</a> /
-        <a href="/{{ strtolower($usuarioPublicate->categorias) }}">{{ $usuarioPublicate->categorias }}</a> /
         <span>{{ $usuarioPublicate->fantasia }}</span>
     </div>
     <div class="escortperfil-side-section">

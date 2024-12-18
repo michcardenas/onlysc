@@ -933,6 +933,25 @@ window.onclick = function(event) {
         closeShareModal();
     }
 }
+
+function openEscortModal(imageSrc) {
+    document.getElementById('escortperfilModalImage').src = imageSrc;
+    document.getElementById('escortperfilImageModal').style.display = 'block';
+    document.getElementById('escortperfilModalBackdrop').style.display = 'block';
+}
+
+function closeEscortModal() {
+    document.getElementById('escortperfilImageModal').style.display = 'none';
+    document.getElementById('escortperfilModalBackdrop').style.display = 'none';
+}
+
+// Cerrar el modal con la tecla ESC
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeEscortModal();
+    }
+});
+
 </script>
 </body>
 
