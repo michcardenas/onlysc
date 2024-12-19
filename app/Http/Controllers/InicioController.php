@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Ciudad;
 use App\Models\UsuarioPublicate;
+use App\Models\BlogArticle;
+use App\Models\Posts;
+use App\Models\Foro;
 use App\Models\Estado;
 use Carbon\Carbon;
 
@@ -28,22 +31,22 @@ class InicioController extends Controller
         $currentTime = $now->format('H:i:s');
 
         $estados = Estado::select('estados.*', 'u.foto as user_foto')
-        ->leftJoin('users as u', 'estados.user_id', '=', 'u.id')
-        ->with(['usuarioPublicate', 'vistoPor' => function($query) {
-            $query->where('user_id', auth()->id());
-        }])
-        ->whereHas('usuarioPublicate', function($query) use ($ciudadSeleccionada) {
-            $query->where('ubicacion', $ciudadSeleccionada->nombre)
-                  ->whereIn('estadop', [1, 3]);
-        })
-        ->where('estados.created_at', '>=', now()->subHours(24))
-        ->orderByRaw('CASE WHEN EXISTS (
+            ->leftJoin('users as u', 'estados.user_id', '=', 'u.id')
+            ->with(['usuarioPublicate', 'vistoPor' => function ($query) {
+                $query->where('user_id', auth()->id());
+            }])
+            ->whereHas('usuarioPublicate', function ($query) use ($ciudadSeleccionada) {
+                $query->where('ubicacion', $ciudadSeleccionada->nombre)
+                    ->whereIn('estadop', [1, 3]);
+            })
+            ->where('estados.created_at', '>=', now()->subHours(24))
+            ->orderByRaw('CASE WHEN EXISTS (
             SELECT 1 FROM estado_visto 
             WHERE estado_visto.estado_id = estados.id 
             AND estado_visto.user_id = ?) 
             THEN 1 ELSE 0 END', [auth()->id()])
-        ->orderBy('estados.created_at', 'desc')
-        ->get();
+            ->orderBy('estados.created_at', 'desc')
+            ->get();
 
 
 
@@ -173,6 +176,40 @@ class InicioController extends Controller
             ->take(2)
             ->get();
 
+        $blogArticles = BlogArticle::where('estado', 'publicado')
+            ->whereNotNull('fecha_publicacion')
+            ->orderBy('fecha_publicacion', 'desc')
+            ->select(
+                'id',
+                'titulo',
+                'slug',
+                'extracto',
+                'imagen',
+                'destacado',
+                'fecha_publicacion'
+            )
+            ->take(4)
+            ->get();
+
+        // Dentro del método show, antes del return view:
+        $experiencias = Posts::select(
+            'posts.id',
+            'posts.titulo',
+            'posts.created_at',
+            'posts.visitas',
+            'posts.is_fixed',
+            'users.name as autor_nombre',
+            'blog_articles.imagen as blog_imagen',
+            'foro.id as foro_id'  // Agregamos el ID del foro para el enlace
+        )
+            ->leftJoin('users', 'posts.id_usuario', '=', 'users.id')
+            ->leftJoin('blog_articles', 'posts.id_blog', '=', 'blog_articles.id')
+            ->leftJoin('foro', 'posts.id_blog', '=', 'foro.id_blog')
+            ->orderBy('posts.created_at', 'desc')
+            ->take(4)
+            ->get();
+
+
         return view('inicio', [
             'ciudades' => $ciudades,
             'ciudadSeleccionada' => $ciudadSeleccionada,
@@ -183,8 +220,10 @@ class InicioController extends Controller
             'currentTime' => $currentTime,
             'currentDay' => $currentDay,
             'estados' => $estados,
-            'primeraVez' => $primeraVez,  // Agregar al array de retorno
-            'volvieron' => $volvieron     // Agregar al array de retorno
+            'primeraVez' => $primeraVez,    // Agregar al array de retorno
+            'blogArticles' => $blogArticles, // Agregar al array de retorno  
+            'volvieron' => $volvieron,     // Agregar al array de retorno
+            'experiencias' => $experiencias
         ]);
     }
 
@@ -359,7 +398,7 @@ class InicioController extends Controller
     public function RTA()
     {
         $ciudades = Ciudad::all();
-        
+
         // Obtener un usuario específico o todos los usuarios que necesites
         $usuarioPublicate = UsuarioPublicate::with([
             'disponibilidad',
@@ -367,22 +406,22 @@ class InicioController extends Controller
                 $query->where('created_at', '>=', now()->subHours(24));
             }
         ])
-        ->whereIn('estadop', [1, 3]) // Si necesitas filtrar por estado
-        ->select(
-            'id',
-            'fantasia',
-            'nombre',
-            'edad',
-            'ubicacion',
-            'fotos',
-            'foto_positions',
-            'categorias',
-            'posicion',
-            'precio',
-            'estadop'
-        )
-        ->first(); // o ->get() si necesitas varios usuarios
-    
+            ->whereIn('estadop', [1, 3]) // Si necesitas filtrar por estado
+            ->select(
+                'id',
+                'fantasia',
+                'nombre',
+                'edad',
+                'ubicacion',
+                'fotos',
+                'foto_positions',
+                'categorias',
+                'posicion',
+                'precio',
+                'estadop'
+            )
+            ->first(); // o ->get() si necesitas varios usuarios
+
         return view('rta', [
             'ciudades' => $ciudades,
             'usuarioPublicate' => $usuarioPublicate

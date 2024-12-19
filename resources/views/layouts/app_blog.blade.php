@@ -92,49 +92,6 @@
     </main>
 
     <footer class="footer">
-        <div class="footer-top">
-            <div class="container">
-                <h3 class="footer-title">Escorts disponibles por ubicación</h3>
-
-                <div class="locations-grid">
-                    <ul>
-                        <li><a href="#">Escorts en Santiago</a></li>
-                        <li><a href="#">Escorts en Antofagasta</a></li>
-                        <li><a href="#">Escorts en Calama</a></li>
-                        <li><a href="#">Escorts en Chillan</a></li>
-                    </ul>
-                    <ul>
-                        <li><a href="#">Escorts en Concepcion</a></li>
-                        <li><a href="#">Escorts en Copiapo</a></li>
-                        <li><a href="#">Escorts en Curico</a></li>
-                        <li><a href="#">Escorts en Iquique</a></li>
-                    </ul>
-                    <ul>
-                        <li><a href="#">Escorts en La Serena</a></li>
-                        <li><a href="#">Escorts en Linares</a></li>
-                        <li><a href="#">Escorts en Los Angeles</a></li>
-                        <li><a href="#">Escorts en Osorno</a></li>
-                    </ul>
-                    <ul>
-                        <li><a href="#">Escorts en Pucon</a></li>
-                        <li><a href="#">Escorts en Puerto Montt</a></li>
-                        <li><a href="#">Escorts en Punta Arenas</a></li>
-                        <li><a href="#">Escorts en Quillque</a></li>
-                    </ul>
-                    <ul>
-                        <li><a href="#">Escorts en Rancagua</a></li>
-                        <li><a href="#">Escorts en San Fernando</a></li>
-                        <li><a href="#">Escorts en Talca</a></li>
-                        <li><a href="#">Escorts en Temuco</a></li>
-                    </ul>
-                    <ul>
-                        <li><a href="#">Escorts en Valdivia</a></li>
-                        <li><a href="#">Escorts en Viña del Mar</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
         <div class="custom-footer-bottom">
             <div class="custom-container">
                 <div class="custom-footer-logo">

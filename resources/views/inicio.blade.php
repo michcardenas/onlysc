@@ -381,11 +381,64 @@
                     @endforeach
                 </div>
             </div>
+
+
+
         </section>
+        <section class="UEInicio">
+            <div class="UEInicio-header">
+                <h2>Últimas experiencias</h2>
+            </div>
 
+            <div class="UEInicio-grid">
+                @foreach($experiencias as $experiencia)
+                <a href="{{ route('foro.show_foro', $experiencia->foro_id) }}" class="UEInicio-card">
+                    <div class="UEInicio-image-container">
+                        <img src="{{ $experiencia->blog_imagen ? asset('storage/' . $experiencia->blog_imagen) : asset('images/default-experiencia.png') }}"
+                            alt="{{ $experiencia->titulo }}"
+                            class="UEInicio-image">
+                    </div>
+                    <div class="UEInicio-content">
+                        <span class="UEInicio-date">
+                            {{ \Carbon\Carbon::parse($experiencia->created_at)->format('d F, Y') }}
+                        </span>
+                        <h3 class="UEInicio-title">{{ $experiencia->titulo }}</h3>
+                        <span class="UEInicio-author">{{ $experiencia->autor_nombre }}</span>
+                    </div>
+                </a>
+                @endforeach
+            </div>
+        </section>
+        <!-- Blog -->
+        <section class="BlogInicio">
+            <div class="BlogInicio-header">
+                <h2>Blog</h2>
+            </div>
 
-
-
+            <div class="BlogInicio-grid">
+                @foreach($blogArticles as $article)
+                <a href="{{ route('blog.show_article', $article->slug) }}" class="BlogInicio-card">
+                    <div class="BlogInicio-image-container">
+                        <img src="{{ $article->imagen ? asset('storage/' . $article->imagen) : asset('images/default-blog.png') }}"
+                            alt="{{ $article->titulo }}"
+                            class="BlogInicio-image">
+                        @if($article->destacado)
+                        <div class="BlogInicio-destacado">Destacado</div>
+                        @endif
+                    </div>
+                    <div class="BlogInicio-content">
+                        <span class="BlogInicio-date">
+                            {{ $article->fecha_publicacion ? \Carbon\Carbon::parse($article->fecha_publicacion)->format('d F, Y') : '' }}
+                        </span>
+                        <h3 class="BlogInicio-title">{{ $article->titulo }}</h3>
+                        @if($article->extracto)
+                        <p class="BlogInicio-excerpt">{{ Str::limit($article->extracto, 100) }}</p>
+                        @endif
+                    </div>
+                </a>
+                @endforeach
+            </div>
+        </section>
 </main>
 
 @endsection
