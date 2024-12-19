@@ -386,29 +386,29 @@
 
         </section>
         <section class="UEInicio">
-            <div class="UEInicio-header">
-                <h2>Últimas experiencias</h2>
-            </div>
+    <div class="UEInicio-header">
+        <h2>Últimas experiencias</h2>
+    </div>
 
-            <div class="UEInicio-grid">
-                @foreach($experiencias as $experiencia)
-                <a href="{{ route('foro.show_foro', $experiencia->foro_id) }}" class="UEInicio-card">
-                    <div class="UEInicio-image-container">
-                        <img src="{{ $experiencia->blog_imagen ? asset('storage/' . $experiencia->blog_imagen) : asset('images/default-experiencia.png') }}"
-                            alt="{{ $experiencia->titulo }}"
-                            class="UEInicio-image">
-                    </div>
-                    <div class="UEInicio-content">
-                        <span class="UEInicio-date">
-                            {{ \Carbon\Carbon::parse($experiencia->created_at)->format('d F, Y') }}
-                        </span>
-                        <h3 class="UEInicio-title">{{ $experiencia->titulo }}</h3>
-                        <span class="UEInicio-author">{{ $experiencia->autor_nombre }}</span>
-                    </div>
-                </a>
-                @endforeach
-            </div>
-        </section>
+    <div class="UEInicio-grid">
+        @foreach($experiencias as $experiencia)
+            <a href="{{ route('post.show', ['id_blog' => $experiencia->id_blog, 'id' => $experiencia->id]) }}" class="UEInicio-card">
+                <div class="UEInicio-image-container">
+                    <img src="{{ $experiencia->blog_imagen ? asset('storage/' . $experiencia->blog_imagen) : asset('images/default-experiencia.png') }}" 
+                         alt="{{ $experiencia->titulo }}" 
+                         class="UEInicio-image">
+                </div>
+                <div class="UEInicio-content">
+                    <span class="UEInicio-date">
+                        {{ \Carbon\Carbon::parse($experiencia->created_at)->format('d F, Y') }}
+                    </span>
+                    <h3 class="UEInicio-title">{{ $experiencia->titulo }}</h3>
+                    <span class="UEInicio-author">{{ $experiencia->autor_nombre }}</span>
+                </div>
+            </a>
+        @endforeach
+    </div>
+</section>
         <!-- Blog -->
         <section class="BlogInicio">
             <div class="BlogInicio-header">

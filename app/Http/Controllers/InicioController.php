@@ -200,14 +200,14 @@ class InicioController extends Controller
             'posts.is_fixed',
             'users.name as autor_nombre',
             'blog_articles.imagen as blog_imagen',
-            'foro.id as foro_id'  // Agregamos el ID del foro para el enlace
+            'posts.id_blog'  // Necesitamos el id_blog para la ruta
         )
-            ->leftJoin('users', 'posts.id_usuario', '=', 'users.id')
-            ->leftJoin('blog_articles', 'posts.id_blog', '=', 'blog_articles.id')
-            ->leftJoin('foro', 'posts.id_blog', '=', 'foro.id_blog')
-            ->orderBy('posts.created_at', 'desc')
-            ->take(4)
-            ->get();
+        ->leftJoin('users', 'posts.id_usuario', '=', 'users.id')
+        ->leftJoin('blog_articles', 'posts.id_blog', '=', 'blog_articles.id')
+        ->leftJoin('foro', 'posts.id_blog', '=', 'foro.id_blog')
+        ->orderBy('posts.created_at', 'desc')
+        ->take(4)
+        ->get();
 
 
         return view('inicio', [
