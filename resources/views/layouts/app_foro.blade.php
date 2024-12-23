@@ -9,7 +9,7 @@
     <link rel="icon" href="{{ asset('images/icono.png') }}" type="image/png">
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/foro.css') }}">
@@ -75,7 +75,7 @@
         body {
             background-color: #fffff;
             color: #000;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             padding: 10px;
             border-radius: 4px;
         }

@@ -21,7 +21,9 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    <link href="https://fonts.bunny.net/css?family=Poppins" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Scripts -->
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
@@ -29,6 +31,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/es.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/9.3.2/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </head>
 
@@ -103,6 +107,63 @@
             </div>
         </div>
     </header>
+
+<!-- Modal -->
+<div class="modal fade" id="filterModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title">Filtros</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            
+            <form id="filterForm" method="POST" action="{{ route('inicio', ['nombreCiudad' => $ciudadSeleccionada->url ?? '']) }}">
+                @csrf
+                <div class="modal-body">
+                    <!-- Rango de edad -->
+                    <div class="mb-4">
+                        <label class="form-label">Edad</label>
+                        <div id="edadRange"></div>
+                        <div class="text-center mt-2">
+                            <span id="edadLabel"></span>
+                        </div>
+                        <input type="hidden" name="edadMin" id="edadMin">
+                        <input type="hidden" name="edadMax" id="edadMax">
+                    </div>
+
+                    <!-- Rango de precio -->
+                    <div class="mb-4">
+                        <label class="form-label">Precio</label>
+                        <div id="precioRange"></div>
+                        <div class="text-center mt-2">
+                            <span id="precioLabel"></span>
+                        </div>
+                        <input type="hidden" name="precioMin" id="precioMin">
+                        <input type="hidden" name="precioMax" id="precioMax">
+                    </div>
+
+                    <!-- Contenedores para checkboxes -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Atributos</label>
+                            <div id="atributosContainer" class="filtro-checkbox-grid"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Servicios</label>
+                            <div id="serviciosContainer" class="filtro-checkbox-grid"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-secondary" id="resetFilters">Resetear</button>
+                    <button type="submit" class="btn" style="background-color: #e00037; color: white;">Aplicar filtros</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 
     <main>
         @yield('content')
@@ -909,7 +970,149 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const swiperContainers = document.querySelectorAll('.swiper-container2');
+    
+    swiperContainers.forEach(container => {
+        const wrapper = container.querySelector('.swiper-wrapper');
+        const pagination = container.querySelector('.swiper-pagination2');
+        const slides = wrapper.querySelectorAll('.swiper-slide2');
+        
+        // Crear puntos de paginación
+        slides.forEach((_, index) => {
+            const bullet = document.createElement('span');
+            bullet.className = 'swiper-pagination-bullet' + (index === 0 ? ' swiper-pagination-bullet-active' : '');
+            pagination.appendChild(bullet);
+        });
+        
+        // Actualizar paginación al hacer scroll
+        wrapper.addEventListener('scroll', () => {
+            const scrollLeft = wrapper.scrollLeft;
+            const slideWidth = slides[0].offsetWidth;
+            const activeIndex = Math.round(scrollLeft / slideWidth);
+            
+            pagination.querySelectorAll('.swiper-pagination-bullet').forEach((bullet, index) => {
+                bullet.classList.toggle('swiper-pagination-bullet-active', index === activeIndex);
+            });
+        });
+    });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+   const modal = new bootstrap.Modal(document.getElementById('filterModal'));
+   const form = document.getElementById('filterForm');
+   
+   // Rangos
+   const edadRange = document.getElementById('edadRange');
+   noUiSlider.create(edadRange, {
+       start: [18, 50],
+       connect: true,
+       range: {
+           'min': 18,
+           'max': 50
+       }
+   });
+
+   const precioRange = document.getElementById('precioRange');
+   noUiSlider.create(precioRange, {
+       start: [50000, 300000],
+       connect: true,
+       step: 1000,
+       range: {
+           'min': 50000,
+           'max': 300000
+       }
+   });
+
+   // Actualizar etiquetas y campos
+   edadRange.noUiSlider.on('update', (values) => {
+       const [min, max] = values.map(x => Math.round(Number(x)));
+       document.getElementById('edadLabel').textContent = `${min} - ${max} años`;
+       document.getElementById('edadMin').value = min;
+       document.getElementById('edadMax').value = max;
+   });
+
+   precioRange.noUiSlider.on('update', (values) => {
+       const [min, max] = values.map(x => Math.round(Number(x)));
+       document.getElementById('precioLabel').textContent = `$${min.toLocaleString()} - $${max.toLocaleString()}`;
+       document.getElementById('precioMin').value = min;
+       document.getElementById('precioMax').value = max;
+   });
+
+   const atributos = ["Busto Grande","Busto Mediano","Busto Pequeño","Cara Visible","Cola Grande","Cola Mediana","Cola Pequeña","Con Video","Contextura Delgada","Contextura Grande","Contextura Mediana","Depilación Full","Depto Propio","En Promoción","English","Escort Independiente","Español","Estatura Alta","Estatura Mediana","Estatura Pequeña","Hentai","Morena","Mulata","No fuma","Ojos Claros","Ojos Oscuros","Peliroja","Portugues","Relato Erotico","Rubia","Tatuajes","Trigueña"];
+   const servicios = ["Anal","Atención a domicilio","Atención en hoteles","Baile Erotico","Besos","Cambio de rol","Departamento Propio","Disfraces","Ducha Erotica","Eventos y Cenas","Eyaculación Cuerpo","Eyaculación Facial","Hetero","Juguetes","Lesbico","Lluvia dorada","Masaje Erotico","Masaje prostatico","Masaje Tantrico","Masaje Thai","Masajes con final feliz","Masajes desnudos","Masajes Eroticos","Masajes para hombres","Masajes sensitivos","Masajes sexuales","Masturbación Rusa","Oral Americana","Oral con preservativo","Oral sin preservativo","Orgias","Parejas","Trio"];
+
+   const createCheckboxes = (items, containerId, name) => {
+       const container = document.getElementById(containerId);
+       items.forEach(item => {
+           const div = document.createElement('div');
+           div.className = 'form-check';
+           div.innerHTML = `
+               <input class="form-check-input" type="checkbox" id="${name}-${item}" 
+                      name="${name}[]" value="${item}">
+               <label class="form-check-label" for="${name}-${item}">${item}</label>
+           `;
+           container.appendChild(div);
+       });
+   };
+
+   createCheckboxes(atributos, 'atributosContainer', 'atributos');
+   createCheckboxes(servicios, 'serviciosContainer', 'servicios');
+
+   form.addEventListener('submit', (e) => {
+       e.preventDefault();
+       
+       // Obtener ciudad base limpia
+       const currentPath = window.location.pathname.split('/').filter(Boolean)[0];
+       const ciudad = currentPath.replace(/^escorts-/, '');
+       
+       // Construir filtros solo si tienen valores diferentes a los default
+       const params = [];
+       
+       const [edadMin, edadMax] = edadRange.noUiSlider.get().map(Number);
+       if (edadMin !== 18 || edadMax !== 50) {
+           params.push(`edad/${edadMin}-${edadMax}`);
+       }
+       
+       const [precioMin, precioMax] = precioRange.noUiSlider.get().map(Number);
+       if (precioMin !== 50000 || precioMax !== 300000) {
+           params.push(`precio/${precioMin}-${precioMax}`);
+       }
+       
+       const selectedAtributos = Array.from(document.querySelectorAll('[name="atributos[]"]:checked')).map(cb => cb.value);
+       if (selectedAtributos.length) {
+           params.push(`atributos/${selectedAtributos.join(',')}`);
+       }
+       
+       const selectedServicios = Array.from(document.querySelectorAll('[name="servicios[]"]:checked')).map(cb => cb.value);
+       if (selectedServicios.length) {
+           params.push(`servicios/${selectedServicios.join(',')}`);
+       }
+
+       const url = params.length ? `/escorts-${ciudad}/${params.join('/')}` : `/escorts-${ciudad}`;
+       window.location.href = url;
+   });
+
+   // Reset filtros
+   document.getElementById('resetFilters').addEventListener('click', () => {
+       form.reset();
+       edadRange.noUiSlider.reset();
+       precioRange.noUiSlider.reset();
+       document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+           checkbox.checked = false;
+       });
+   });
+
+   // Modal
+   document.querySelector('.btn-filters').addEventListener('click', () => modal.show());
+});
+</script>
+
+
 </body>
 
 </html>

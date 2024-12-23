@@ -25,7 +25,7 @@
     background: #00000047;
     height: 12.5rem;
     bottom: 100px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .foro-banner-content h1 {
@@ -41,17 +41,17 @@
     align-items: center;
     justify-content: space-around;
     height: 10rem;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .foro-texto_banner .thin {
     font-weight: 100;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .foro-texto_banner .bold {
     font-weight: bold;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* Estilos del buscador */
@@ -118,7 +118,7 @@
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 2rem;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* Layout de la columna principal */
@@ -229,7 +229,7 @@
     position: relative;
     bottom: 0;
     width: 100%;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .foro-comments-avatar-img {
@@ -252,7 +252,7 @@
 }
 
 .foro-description {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 16px;
     color: #555;
     line-height: 1.6;
@@ -298,7 +298,7 @@
 .foro-comments-table {
     width: 80%;
     margin: 0 auto;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     border: 1px solid #dee2e6;
     border-radius: 8px;
     overflow: hidden;
@@ -400,7 +400,7 @@
     font-weight: 500;
     color: #F28B50;
     margin-bottom: 5px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .foro-comments-content {
@@ -535,7 +535,7 @@
     display: flex;
     justify-content: center;
     margin-top: 20px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .foro-comentario-card {
@@ -546,7 +546,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 80%;
     max-width: 800px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .foro-comentario-avatar {
@@ -555,7 +555,7 @@
     align-items: center;
     margin-right: 20px;
     text-align: center;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .foro-comentario-avatar-circle {
@@ -569,24 +569,24 @@
     color: white;
     font-size: 24px;
     font-weight: bold;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .foro-comentario-user-info {
     margin-top: 8px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .foro-comentario-user-info strong {
     font-size: 16px;
     color: #333;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .foro-comentario-role {
     font-size: 14px;
     color: #6c757d;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .foro-comentario-content-wrapper {
@@ -594,7 +594,7 @@
     background-color: #eeeeee;
     padding: 15px;
     border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .foro-comentario-header {
@@ -603,23 +603,23 @@
     margin-bottom: 10px;
     font-size: 14px;
     color: #6c757d;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .foro-comentario-date {
     font-weight: 500;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .foro-comentario-link a {
     color: #ff6b6b;
     text-decoration: none;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .foro-comentario-link a:hover {
     text-decoration: underline;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .foro-comentario-content {
@@ -629,7 +629,7 @@
     background-color: white;
     border-radius: 4px;
     margin-top: 10px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* Contenedor principal del formulario de comentarios */
@@ -643,7 +643,7 @@
 .foro-comentario-form {
     width: 100%;
     max-width: 600px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -673,7 +673,7 @@
 .foro-comentario-textarea {
     width: 100%;
     padding: 10px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     border: 1px solid #ccc;
     border-radius: 4px;
     resize: vertical;
@@ -685,7 +685,7 @@
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s;

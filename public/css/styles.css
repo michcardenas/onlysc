@@ -8,7 +8,7 @@ html {
 }
 
 .login-page {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     background: url('../images/blur.jpg') no-repeat center center fixed;
     background-size: cover;
     height: 100vh;
@@ -421,7 +421,7 @@ label .required {
     padding: 10px 20px;
     color: #fff;
     margin-bottom: 0;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* Botón PUBLICATE */
@@ -803,7 +803,7 @@ video:not(.banner-img):not(.historia-circle video) {
 
 
 .poppins-font {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* Sección de enlaces en la parte media */
@@ -1022,13 +1022,13 @@ video:not(.banner-img):not(.historia-circle video) {
 
 .texto_banner .thin {
     font-weight: 100;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 
 }
 
 .texto_banner .bold {
     font-weight: bold;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 
 }
 
@@ -1114,7 +1114,7 @@ video:not(.banner-img):not(.historia-circle video) {
     justify-content: flex-start;
     max-width: 1100px;
     margin: 0 auto;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* Tarjeta individual */
@@ -1251,7 +1251,7 @@ video:not(.banner-img):not(.historia-circle video) {
     height: 325px;
     position: absolute;
     right: 246px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     z-index: 10;
     text-decoration: none;
 }
@@ -1287,6 +1287,7 @@ video:not(.banner-img):not(.historia-circle video) {
     justify-content: flex-end;
     border-radius: 0 0 8px 8px;
     height: 100%;
+    width: 100%;
     text-decoration: none;
 }
 
@@ -1322,7 +1323,7 @@ video:not(.banner-img):not(.historia-circle video) {
 
 /* Ubicación de la tarjeta destacada */
 .inicio-featured-location {
-    font-size: 14px;
+    font-size: 13px;
     color: #ccc;
     display: flex;
     align-items: center;
@@ -1356,8 +1357,8 @@ video:not(.banner-img):not(.historia-circle video) {
     color: #fff;
     text-align: center;
     font-weight: bold;
-    padding: 10px 0;
-    font-size: 14px;
+    padding: 4px 0;
+    font-size: 20px;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     text-decoration: none;
@@ -1467,7 +1468,7 @@ video:not(.banner-img):not(.historia-circle video) {
     font-size: 12px;
     text-decoration: none;
     display: inline-block;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .online-dot {
@@ -1484,7 +1485,7 @@ video:not(.banner-img):not(.historia-circle video) {
     max-width: 1200px;
     height: 1664px;
     margin: 0 auto;
-    font-family: Poppins, sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .escortperfil-breadcrumb {
@@ -2168,7 +2169,7 @@ video:not(.banner-img):not(.historia-circle video) {
 .pagination-container nav {
     margin-top: 100px;
     /* Ajusta según la altura del panel online */
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* Lista de paginación */
@@ -2253,7 +2254,7 @@ video:not(.banner-img):not(.historia-circle video) {
     margin: 0 auto;
     padding: 20px;
     gap: 40px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .blog-sidebar {
@@ -2449,7 +2450,7 @@ video:not(.banner-img):not(.historia-circle video) {
 .estados-historias {
     padding: 15px 355px;
     background: #fff;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
 
@@ -2741,7 +2742,7 @@ video:not(.banner-img):not(.historia-circle video) {
     display: block;
     margin-bottom: 4px;
     transition: text-decoration 0.2s ease;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .nombre-link:hover {
@@ -2752,20 +2753,20 @@ video:not(.banner-img):not(.historia-circle video) {
 #modal-usuario-nombre {
     font-weight: bold;
     font-size: 1rem;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 #modal-historia-tiempo {
     font-size: 0.8rem;
     opacity: 0.8;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .sections-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .volvieronyprimera-section {
@@ -2913,6 +2914,7 @@ video:not(.banner-img):not(.historia-circle video) {
 
 .BlogInicio {
     /* padding: 1rem; */
+    font-family: 'Montserrat', sans-serif;
 }
 
 .BlogInicio-header {
@@ -2920,7 +2922,7 @@ video:not(.banner-img):not(.historia-circle video) {
     padding: 0.5rem 0.95rem;
     border-radius: 0.5rem 0.5rem 0 0;
     width: 95%;
-    height: 4.5%;
+    /* height: 4.5%; */
     margin-bottom: 2rem;
 }
 
@@ -2996,7 +2998,7 @@ video:not(.banner-img):not(.historia-circle video) {
     padding: 0.5rem 0.95rem;
     border-radius: 0.5rem 0.5rem 0 0;
     width: 95%;
-    height: 4.5%;
+    /* height: 4.5%; */
     margin-bottom: 2rem;
 }
 
@@ -3086,6 +3088,27 @@ video:not(.banner-img):not(.historia-circle video) {
     top: 146px;
     /* Cambiado de 948px a 146px como en tu ejemplo */
 }
+
+.filtro-checkbox-grid {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.noUi-connect {
+    background: #e00037 !important;
+}
+
+.noUi-handle {
+    background: #e00037 !important;
+    border: 2px solid #fff !important;
+}
+
+.form-check-input:checked {
+    background-color: #e00037 !important;
+    border-color: #e00037 !important;
+}
+
 
 
 /* Large screens (1280px y menor) */
@@ -3241,7 +3264,7 @@ video:not(.banner-img):not(.historia-circle video) {
     .estados-historias {
         padding: 10px;
         background: #fff;
-        font-family: 'Poppins', sans-serif;
+        font-family: 'Montserrat', sans-serif;
         border-bottom: 1px solid rgba(0, 0, 0, 0.2);
         margin-bottom: 10px;
     }
@@ -3384,7 +3407,7 @@ video:not(.banner-img):not(.historia-circle video) {
         max-width: 1200px;
         height: 2727px;
         margin: 0 auto;
-        font-family: Poppins, sans-serif;
+        font-family: 'Montserrat', sans-serif;
     }
 
     .escortperfil-map-section {
@@ -3517,12 +3540,13 @@ video:not(.banner-img):not(.historia-circle video) {
     }
 
     .volvieronyprimera-section {
-        width: 89%;
-        margin: 0 3px;
+        width: 100%;
+        /* height: 13%; */
+        margin: 0px 3px;
     }
 
     .volvieronyprimera-header {
-        width: 100%;
+        width: 44.6%;
     }
 
     .volvieronyprimera-card {
@@ -3531,7 +3555,7 @@ video:not(.banner-img):not(.historia-circle video) {
         overflow: hidden;
         height: 204px;
         background: #000;
-        width: 173px;
+        width: 355px;
     }
 
     .volvieronyprimera-location-price {
@@ -3542,15 +3566,13 @@ video:not(.banner-img):not(.historia-circle video) {
         font-size: 1rem;
     }
 
-    
-
     .sections-container {
         grid-template-columns: repeat(1, 1fr);
     }
 
     .swiper-wrapper::-webkit-scrollbar {
-        /* height: 6px; */
-        display: none;
+        height: 6px;
+        width: 10px;
     }
 
     .swiper-container2 {
@@ -3570,19 +3592,19 @@ video:not(.banner-img):not(.historia-circle video) {
         grid-template-columns: repeat(1, 1fr);
         margin: 0 40px;
     }
-    
+
     .UEInicio-header {
         background-color: #E00037;
         padding: 0.5rem 0.95rem;
         border-radius: 0.5rem 0.5rem 0 0;
-        width: 89.6%;
+        width: 45%;
         height: auto;
         margin-bottom: 2rem;
     }
 
     .BlogInicio {
         /* padding: 1rem; */
-        width: 98%;
+        width: 50%;
         margin: 0 3px;
     }
 
@@ -3590,7 +3612,7 @@ video:not(.banner-img):not(.historia-circle video) {
         background-color: #E00037;
         padding: 0.5rem 0.95rem;
         border-radius: 0.5rem 0.5rem 0 0;
-        width: 90%;
+        width: 89%;
         height: auto;
         margin-bottom: 2rem;
     }
@@ -3601,7 +3623,7 @@ video:not(.banner-img):not(.historia-circle video) {
         gap: 1rem;
         margin: 0 16px;
     }
-    
+
     .BlogInicio-card {
         background: white;
         border-radius: 0.5rem;
@@ -3611,9 +3633,81 @@ video:not(.banner-img):not(.historia-circle video) {
         transition: transform 0.2s;
         display: flex;
         flex-direction: column;
-        text-decoration: none; /* Agregar esta línea */
+        text-decoration: none;
+        /* Agregar esta línea */
         width: 100%;
     }
+
+    .volvieronyprimera-user-main {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 14.5rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .volvieronyprimera-user-main h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 500;
+    }
+
+    .volvieronyprimera-age {
+        font-size: 1.25rem;
+    }
+
+    .volvieronyprimera-location-price {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.875rem;
+    }
+
+    .escortperfil-swiper .carousel-control {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 45px;
+        height: 45px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s ease;
+    }
+
+    .swiper-pagination2 {
+        position: relative;
+        text-align: center;
+        margin-top: 1rem;
+        width: 100%;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .swiper-pagination2 .swiper-pagination-bullet {
+        width: 8px;
+        height: 8px;
+        display: inline-block;
+        border-radius: 50%;
+        background: #ddd;
+        opacity: 0.5;
+        cursor: pointer;
+        transition: opacity 0.3s ease;
+    }
+
+    .swiper-pagination2 .swiper-pagination-bullet-active {
+        opacity: 1;
+        background: #E00037;
+    }
+
 }
 
 /* Móviles (480px y menor) */

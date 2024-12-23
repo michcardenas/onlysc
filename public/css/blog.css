@@ -6,7 +6,7 @@
     overflow: hidden;
     margin: 0 auto 0;
     z-index: -1;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .blog-banner-img {
@@ -27,7 +27,7 @@
     background: #00000047;
     height: 12.5rem;
     bottom: 100px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .blog-texto_banner {
@@ -35,7 +35,7 @@
     align-items: center;
     justify-content: space-around;
     height: 10rem;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* Contenedor principal */
@@ -45,7 +45,7 @@
     margin: 0 auto;
     padding: 20px;
     gap: 20px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .blog-main {
@@ -61,7 +61,7 @@
     justify-content: flex-start;
     max-width: 1050px;
     margin: 0 auto;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .blog-card {
@@ -415,7 +415,7 @@
     overflow: hidden;
     margin: 0 auto 0;
     z-index: -1;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .blogcategory-banner-img {
@@ -423,7 +423,7 @@
     height: 12rem;
     background-size: cover;
     background-position: center -250px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .blogcategory-banner-content {
@@ -437,7 +437,7 @@
     background: #00000047;
     height: 12.5rem;
     bottom: 100px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* Contenedor principal */
@@ -447,7 +447,7 @@
     margin: 0 auto;
     padding: 20px;
     gap: 20px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .blogcategory-main {

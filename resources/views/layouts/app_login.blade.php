@@ -14,7 +14,7 @@
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.bunny.net/css?family=Poppins" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
@@ -1319,7 +1319,7 @@ tinymce.init({
         body {
             background-color: #2b2b2b;
             color: #e0e0e0;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             padding: 10px;
             border-radius: 0.375rem;
             min-height: 200px;

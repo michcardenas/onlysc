@@ -23,8 +23,12 @@ Route::get('/', function () {
 });
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'showHome'])->name('home');
-Route::post('/escorts-{nombreCiudad}', [InicioController::class, 'show'])->name('inicio');
-Route::get('/escorts-{nombreCiudad}', [InicioController::class, 'show'])->name('inicio');
+Route::post('/escorts-{nombreCiudad}/aplicar-filtros', [InicioController::class, 'filterUsuarios'])
+->name('inicio.filtrar');
+Route::match(['get', 'post'], '/escorts-{nombreCiudad}/{filtros?}', [InicioController::class, 'show'])
+    ->where('nombreCiudad', '[^/]+')
+    ->where('filtros', '.*')
+    ->name('inicio');
 Route::get('/escorts-{nombreCiudad}/{categoria}', [InicioController::class, 'showByCategory'])->name('inicio.categoria');
 
 Route::post('/inicio', [InicioController::class, 'show'])->name('inicio');

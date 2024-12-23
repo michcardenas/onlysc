@@ -37,6 +37,8 @@ class UsuarioPublicate extends Model
         'atributos',    // Nueva columna agregada
         'foto_positions',
     ];
+
+    
     /**
      * Obtener la disponibilidad del usuario
      */

@@ -238,6 +238,9 @@
                 <div class="swiper-wrapper" style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem;">
                     @foreach($volvieron as $usuario)
                     @php
+
+                    $now = now();
+
                     $fotos = json_decode($usuario->fotos, true);
                     $positions = json_decode($usuario->foto_positions, true) ?? [];
                     $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
@@ -302,6 +305,7 @@
                     </a>
                     @endforeach
                 </div>
+                <div class="swiper-pagination2"></div>
             </div>
         </section>
 
@@ -315,6 +319,8 @@
                 <div class="swiper-wrapper" style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem;">
                     @foreach($primeraVez as $usuario)
                     @php
+                    $now = now();
+
                     $fotos = json_decode($usuario->fotos, true);
                     $positions = json_decode($usuario->foto_positions, true) ?? [];
                     $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
@@ -380,35 +386,37 @@
                     </a>
                     @endforeach
                 </div>
+                <div class="swiper-pagination2"></div>
             </div>
 
 
 
         </section>
         <section class="UEInicio">
-    <div class="UEInicio-header">
-        <h2>Últimas experiencias</h2>
-    </div>
+            <div class="UEInicio-header">
+                <h2>Últimas experiencias</h2>
+            </div>
 
-    <div class="UEInicio-grid">
-        @foreach($experiencias as $experiencia)
-            <a href="{{ route('post.show', ['id_blog' => $experiencia->id_blog, 'id' => $experiencia->id]) }}" class="UEInicio-card">
-                <div class="UEInicio-image-container">
-                    <img src="{{ $experiencia->blog_imagen ? asset('storage/' . $experiencia->blog_imagen) : asset('images/default-experiencia.png') }}" 
-                         alt="{{ $experiencia->titulo }}" 
-                         class="UEInicio-image">
-                </div>
-                <div class="UEInicio-content">
-                    <span class="UEInicio-date">
-                        {{ \Carbon\Carbon::parse($experiencia->created_at)->format('d F, Y') }}
-                    </span>
-                    <h3 class="UEInicio-title">{{ $experiencia->titulo }}</h3>
-                    <span class="UEInicio-author">{{ $experiencia->autor_nombre }}</span>
-                </div>
-            </a>
-        @endforeach
-    </div>
-</section>
+            <div class="UEInicio-grid">
+                @foreach($experiencias as $experiencia)
+                <a href="{{ route('post.show', ['id_blog' => $experiencia->id_blog, 'id' => $experiencia->id]) }}" class="UEInicio-card">
+                    <div class="UEInicio-image-container">
+                        <img src="{{ $experiencia->blog_imagen ? asset('storage/' . $experiencia->blog_imagen) : asset('images/default-experiencia.png') }}"
+                            alt="{{ $experiencia->titulo }}"
+                            class="UEInicio-image">
+                    </div>
+                    <div class="UEInicio-content">
+                        <span class="UEInicio-date">
+                            {{ \Carbon\Carbon::parse($experiencia->created_at)->format('d F, Y') }}
+                        </span>
+                        <h3 class="UEInicio-title">{{ $experiencia->titulo }}</h3>
+                        <span class="UEInicio-author">{{ $experiencia->autor_nombre }}</span>
+                    </div>
+                </a>
+                @endforeach
+            </div>
+            <div class="swiper-pagination2"></div>
+        </section>
         <!-- Blog -->
         <section class="BlogInicio">
             <div class="BlogInicio-header">
@@ -417,7 +425,7 @@
 
             <div class="BlogInicio-grid">
                 @foreach($blogArticles as $article)
-                <a href="{{ route('blog.show_article', $article->slug) }}" class="BlogInicio-card">
+                <a href="{{ route('blog.show_article', $article->id) }}" class="BlogInicio-card">
                     <div class="BlogInicio-image-container">
                         <img src="{{ $article->imagen ? asset('storage/' . $article->imagen) : asset('images/default-blog.png') }}"
                             alt="{{ $article->titulo }}"
@@ -438,6 +446,7 @@
                 </a>
                 @endforeach
             </div>
+            <div class="swiper-pagination2"></div>
         </section>
 </main>
 

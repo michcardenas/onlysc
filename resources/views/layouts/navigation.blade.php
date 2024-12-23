@@ -34,6 +34,7 @@
             display: flex;
             justify-content: space-around;
             padding: 4px 0;
+            font-family: 'Montserrat', sans-serif;
         }
 
         .nav-item {
@@ -43,6 +44,7 @@
             text-decoration: none;
             background-color: #fff;
             border: none;
+            font-family: 'Montserrat', sans-serif;
         }
 
         .nav-text {
