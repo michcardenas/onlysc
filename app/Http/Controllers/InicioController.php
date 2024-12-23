@@ -83,10 +83,10 @@ public function show($nombreCiudad)
                         $atributos = explode(',', $segments[$filterIndex + 1]);
                         if (!empty($atributos)) {
                             $query->where(function($q) use ($atributos) {
-                                // Verifica que tenga exactamente los atributos seleccionados
-                                $q->whereRaw('JSON_ARRAY_LENGTH(CAST(atributos AS JSON)) = ?', [count($atributos)]);
+                                // Cuenta las comas para determinar el número de elementos
+                                $q->whereRaw('(LENGTH(atributos) - LENGTH(REPLACE(atributos, ",", "")) + 1) = ?', [count($atributos)]);
                                 
-                                // Y que cada atributo esté presente
+                                // Verifica que cada atributo esté presente
                                 foreach ($atributos as $atributo) {
                                     $q->whereRaw('atributos REGEXP ?', [
                                         "[[:<:]]" . preg_quote($atributo) . "[[:>:]]"
@@ -94,10 +94,6 @@ public function show($nombreCiudad)
                                 }
                             });
                         }
-                        Log::debug('Filtro atributos exactos aplicado', [
-                            'atributos' => $atributos,
-                            'cantidad_esperada' => count($atributos)
-                        ]);
                         $filterIndex += 2;
                         break;
                     
@@ -105,10 +101,10 @@ public function show($nombreCiudad)
                         $servicios = explode(',', $segments[$filterIndex + 1]);
                         if (!empty($servicios)) {
                             $query->where(function($q) use ($servicios) {
-                                // Verifica que tenga exactamente los servicios seleccionados
-                                $q->whereRaw('JSON_ARRAY_LENGTH(CAST(servicios AS JSON)) = ?', [count($servicios)]);
+                                // Cuenta las comas para determinar el número de elementos
+                                $q->whereRaw('(LENGTH(servicios) - LENGTH(REPLACE(servicios, ",", "")) + 1) = ?', [count($servicios)]);
                                 
-                                // Y que cada servicio esté presente
+                                // Verifica que cada servicio esté presente
                                 foreach ($servicios as $servicio) {
                                     $q->whereRaw('servicios REGEXP ?', [
                                         "[[:<:]]" . preg_quote($servicio) . "[[:>:]]"
@@ -116,10 +112,6 @@ public function show($nombreCiudad)
                                 }
                             });
                         }
-                        Log::debug('Filtro servicios exactos aplicado', [
-                            'servicios' => $servicios,
-                            'cantidad_esperada' => count($servicios)
-                        ]);
                         $filterIndex += 2;
                         break;
                     
