@@ -79,41 +79,49 @@ public function show($nombreCiudad)
                     $filterIndex += 2;
                     break;
                     
-                    case 'atributos':
-                        $atributos = explode(',', $segments[$filterIndex + 1]);
-                        if (!empty($atributos)) {
-                            $query->where(function($q) use ($atributos) {
-                                // Cuenta las comas para determinar el número de elementos
-                                $q->whereRaw('(LENGTH(atributos) - LENGTH(REPLACE(atributos, ",", "")) + 1) = ?', [count($atributos)]);
-                                
-                                // Verifica que cada atributo esté presente
-                                foreach ($atributos as $atributo) {
-                                    $q->whereRaw('atributos REGEXP ?', [
-                                        "[[:<:]]" . preg_quote($atributo) . "[[:>:]]"
-                                    ]);
+                case 'atributos':
+                    $atributos = explode(',', $segments[$filterIndex + 1]);
+                    if (!empty($atributos)) {
+                        $query->where(function($q) use ($atributos) {
+                            // Tomar los primeros 3 atributos para la búsqueda
+                            $atributosLimitados = array_slice($atributos, 0, 3);
+                            foreach ($atributosLimitados as $key => $atributo) {
+                                if ($key === 0) {
+                                    $q->where('atributos', 'like', '%' . $atributo . '%');
+                                } else {
+                                    $q->orWhere('atributos', 'like', '%' . $atributo . '%');
                                 }
-                            });
-                        }
-                        $filterIndex += 2;
-                        break;
+                            }
+                        });
+                    }
+                    Log::debug('Filtro atributos aplicado', [
+                        'atributos_seleccionados' => $atributos,
+                        'atributos_aplicados' => array_slice($atributos, 0, 3)
+                    ]);
+                    $filterIndex += 2;
+                    break;
                     
-                    case 'servicios':
-                        $servicios = explode(',', $segments[$filterIndex + 1]);
-                        if (!empty($servicios)) {
-                            $query->where(function($q) use ($servicios) {
-                                // Cuenta las comas para determinar el número de elementos
-                                $q->whereRaw('(LENGTH(servicios) - LENGTH(REPLACE(servicios, ",", "")) + 1) = ?', [count($servicios)]);
-                                
-                                // Verifica que cada servicio esté presente
-                                foreach ($servicios as $servicio) {
-                                    $q->whereRaw('servicios REGEXP ?', [
-                                        "[[:<:]]" . preg_quote($servicio) . "[[:>:]]"
-                                    ]);
+                case 'servicios':
+                    $servicios = explode(',', $segments[$filterIndex + 1]);
+                    if (!empty($servicios)) {
+                        $query->where(function($q) use ($servicios) {
+                            // Tomar los primeros 3 servicios para la búsqueda
+                            $serviciosLimitados = array_slice($servicios, 0, 3);
+                            foreach ($serviciosLimitados as $key => $servicio) {
+                                if ($key === 0) {
+                                    $q->where('servicios', 'like', '%' . $servicio . '%');
+                                } else {
+                                    $q->orWhere('servicios', 'like', '%' . $servicio . '%');
                                 }
-                            });
-                        }
-                        $filterIndex += 2;
-                        break;
+                            }
+                        });
+                    }
+                    Log::debug('Filtro servicios aplicado', [
+                        'servicios_seleccionados' => $servicios,
+                        'servicios_aplicados' => array_slice($servicios, 0, 3)
+                    ]);
+                    $filterIndex += 2;
+                    break;
                     
                 default:
                     $filterIndex++;
