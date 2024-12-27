@@ -80,13 +80,13 @@
 
     <!-- Botón que abre el modal -->
     <button class="share-button" onclick="openShareModal()">
-        <div class="icon-wrapper">
-            <i class="fas fa-share-alt"></i>
-        </div>
-        <div class="text-wrapper">
-            COMPARTIR<br>PERFIL
-        </div>
-    </button>
+    <div class="icon-wrapper">
+        <img src="/images/share-arrows-svgrepo-com.svg" alt="Share icon" class="share-icon">
+    </div>
+    <div class="text-wrapper">
+        COMPARTIR<br>PERFIL
+    </div>
+</button>
 
 
     <!-- Modal de compartir -->

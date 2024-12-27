@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\SeoTemplate;
 use Illuminate\Support\Facades\Log;
 use App\Models\UsuarioPublicate; 
 use Illuminate\Support\Facades\DB;
@@ -167,4 +168,43 @@ public function eliminarPerfil($id)
     }
 }
 
+public function seoTemplates()
+{
+    $templates = SeoTemplate::all()->pluck('description_template', 'tipo')->toArray();
+    $usuarioAutenticado = Auth::user();
+    
+    return view('seo.templates', compact('templates', 'usuarioAutenticado'));
+}
+
+public function updateSeoTemplate(Request $request)
+{
+    $request->validate([
+        'description_template' => 'required|string',
+        'tipo' => 'required|in:single,multiple,complex'
+    ]);
+
+    try {
+        SeoTemplate::updateOrCreate(
+            ['tipo' => $request->tipo],
+            ['description_template' => $request->description_template]
+        );
+
+        Log::info('Template SEO actualizado', [
+            'admin_id' => auth()->id(),
+            'tipo' => $request->tipo
+        ]);
+
+        return redirect()->back()->with('success', 'Contenido SEO actualizado correctamente');
+
+    } catch (\Exception $e) {
+        Log::error('Error al actualizar template SEO', [
+            'error' => $e->getMessage(),
+            'line' => $e->getLine(),
+            'file' => $e->getFile()
+        ]);
+
+        return redirect()->back()
+            ->with('error', 'Error al actualizar el contenido SEO: ' . $e->getMessage());
+    }
+}
 }

@@ -158,7 +158,15 @@
 
             <div class="form-group">
                 <label for="nacionalidad">Nacionalidad</label>
-                <input type="text" name="nacionalidad" value="{{ old('nacionalidad', $usuario->nacionalidad) }}" required>
+                <select name="nacionalidad" id="nacionalidad" class="form-select" required>
+                    <option value="">Seleccionar nacionalidad</option>
+                    <option value="argentine" {{ old('nacionalidad', $usuario->nacionalidad) == 'argentine' ? 'selected' : '' }}>Argentina</option>
+                    <option value="brazilian" {{ old('nacionalidad', $usuario->nacionalidad) == 'brazilian' ? 'selected' : '' }}>Brasil</option>
+                    <option value="chilean" {{ old('nacionalidad', $usuario->nacionalidad) == 'chilean' ? 'selected' : '' }}>Chile</option>
+                    <option value="colombian" {{ old('nacionalidad', $usuario->nacionalidad) == 'colombian' ? 'selected' : '' }}>Colombia</option>
+                    <option value="ecuadorian" {{ old('nacionalidad', $usuario->nacionalidad) == 'ecuadorian' ? 'selected' : '' }}>Ecuador</option>
+                    <option value="uruguayan" {{ old('nacionalidad', $usuario->nacionalidad) == 'uruguayan' ? 'selected' : '' }}>Uruguay</option>
+                </select>
             </div>
 
             <div class="form-group">

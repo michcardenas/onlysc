@@ -44,15 +44,19 @@
             </div>
 
             <div class="navbar-right">
-                <div class="location-dropdown">
-                    <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon">
-                    <select name="location" id="location">
-                        <option value="" disabled selected>Seleccionar ciudad</option>
-                        @foreach($ciudades as $ciudad)
-                        <option value="{{ strtolower($ciudad->nombre) }}">{{ ucfirst($ciudad->nombre) }}</option>
-                        @endforeach
-                    </select>
-                </div>
+    <div class="location-dropdown">
+        <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon">
+        <select name="location" id="location">
+            <option value="" disabled>Seleccionar ciudad</option>
+            @foreach($ciudades as $ciudad)
+                <option value="{{ strtolower($ciudad->nombre) }}" 
+                    {{ session('ciudad_actual') == $ciudad->nombre ? 'selected' : '' }}>
+                    {{ ucfirst($ciudad->nombre) }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
 
                 @if(Auth::check())
                 @if(Auth::user()->rol === '1')
@@ -109,59 +113,95 @@
     </header>
 
 <!-- Modal -->
-<div class="modal fade" id="filterModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content bg-dark text-white">
-            <div class="modal-header border-secondary">
-                <h5 class="modal-title">Filtros</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            
-            <form id="filterForm" method="POST" action="{{ route('inicio', ['nombreCiudad' => $ciudadSeleccionada->url ?? '']) }}">
-                @csrf
-                <div class="modal-body">
-                    <!-- Rango de edad -->
-                    <div class="mb-4">
-                        <label class="form-label">Edad</label>
-                        <div id="edadRange"></div>
-                        <div class="text-center mt-2">
-                            <span id="edadLabel"></span>
-                        </div>
-                        <input type="hidden" name="edadMin" id="edadMin">
-                        <input type="hidden" name="edadMax" id="edadMax">
-                    </div>
+<div class="modal fade filtro-modal" id="filterModal" tabindex="-1">
+   <div class="modal-dialog modal-lg">
+       <div class="modal-content">
+           <div class="modal-header">
+               <h5 class="modal-title">Filtros</h5>
+               <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+           </div>
 
-                    <!-- Rango de precio -->
-                    <div class="mb-4">
-                        <label class="form-label">Precio</label>
-                        <div id="precioRange"></div>
-                        <div class="text-center mt-2">
-                            <span id="precioLabel"></span>
-                        </div>
-                        <input type="hidden" name="precioMin" id="precioMin">
-                        <input type="hidden" name="precioMax" id="precioMax">
-                    </div>
+<!-- Añade un div contenedor -->
+<div class="filters-container">
+    <div class="filter-ciudad">
+        <div class="filter-section">
+            <h6 class="range-title">Ciudad</h6>
+            <select id="ciudadSelect" class="form-select">
+                <option value="">Seleccionar ciudad</option>
+                @foreach($ciudades as $ciudad)
+                    <option value="{{ $ciudad->url }}" {{ isset($ciudadSeleccionada) && $ciudadSeleccionada->url == $ciudad->url ? 'selected' : '' }}>
+                        {{ $ciudad->nombre }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    </div>
 
-                    <!-- Contenedores para checkboxes -->
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="form-label">Atributos</label>
-                            <div id="atributosContainer" class="filtro-checkbox-grid"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Servicios</label>
-                            <div id="serviciosContainer" class="filtro-checkbox-grid"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer border-secondary">
-                    <button type="button" class="btn btn-secondary" id="resetFilters">Resetear</button>
-                    <button type="submit" class="btn" style="background-color: #e00037; color: white;">Aplicar filtros</button>
-                </div>
-            </form>
+    <div class="filtro-nac">
+        <div class="filter-section">
+            <h6 class="range-title">Nacionalidad</h6>
+            <select name="nacionalidad" id="nacionalidadSelect" class="form-select">
+                <option value="">Todas las nacionalidades</option>
+                <option value="argentine">Argentina</option>
+                <option value="brazilian">Brasileña</option>
+                <option value="chilean">Chilena</option>
+                <option value="colombian">Colombiana</option>
+                <option value="ecuadorian">Ecuatoriana</option>
+                <option value="uruguayan">Uruguaya</option>
+            </select>
         </div>
     </div>
 </div>
+           <form id="filterForm">
+               <div class="modal-body">
+                   <!-- Rango de edad -->
+                   <div class="filter-section">
+                       <h6 class="range-title">Edad</h6>
+                       <div class="range-container">
+                           <div id="edadRange"></div>
+                           <div class="range-values">
+                               <span>18 años</span>
+                               <span>50 años</span>
+                           </div>
+                       </div>
+                       <input type="hidden" name="edadMin" id="edadMin">
+                       <input type="hidden" name="edadMax" id="edadMax">
+                   </div>
+
+                   <!-- Rango de precio -->
+                   <div class="filter-section">
+                       <h6 class="range-title">Precio</h6>
+                       <div class="range-container">
+                           <div id="precioRange"></div>
+                           <div class="range-values">
+                               <span>$50.000</span>
+                               <span>$300.000</span>
+                           </div>
+                       </div>
+                       <input type="hidden" name="precioMin" id="precioMin">
+                       <input type="hidden" name="precioMax" id="precioMax">
+                   </div>
+
+                   <!-- Contenedores para checkboxes -->
+                   <!-- Removida la estructura de columnas -->
+                   <div class="filter-section1">
+                       <h6 class="range-title1">Servicios</h6>
+                       <div id="serviciosContainer" class="servicios-grid"></div>
+                   </div>
+                   <div class="filter-section1">
+                       <h6 class="range-title1">Atributos</h6>
+                       <div id="atributosContainer" class="servicios-grid"></div>
+                   </div>
+               </div>
+               <div class="modal-footer">
+                   <button type="button" class="btn btn-secondary" id="resetFilters">Resetear</button>
+                   <button type="submit" class="btn btn-primary">Aplicar filtros</button>
+               </div>
+           </form>
+       </div>
+   </div>
+</div>
+
 
 
 
@@ -1003,112 +1043,176 @@ document.addEventListener('keydown', function(event) {
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-   const modal = new bootstrap.Modal(document.getElementById('filterModal'));
-   const form = document.getElementById('filterForm');
-   
-   // Rangos
-   const edadRange = document.getElementById('edadRange');
-   noUiSlider.create(edadRange, {
-       start: [18, 50],
-       connect: true,
-       range: {
-           'min': 18,
-           'max': 50
-       }
-   });
+    const modal = new bootstrap.Modal(document.getElementById('filterModal'));
+    const form = document.getElementById('filterForm');
+    
+    // Inicialización de rangos
+    const edadRange = document.getElementById('edadRange');
+    noUiSlider.create(edadRange, {
+        start: [18, 50],
+        connect: true,
+        step: 1,
+        range: {
+            'min': 18,
+            'max': 50
+        }
+    });
 
-   const precioRange = document.getElementById('precioRange');
-   noUiSlider.create(precioRange, {
-       start: [50000, 300000],
-       connect: true,
-       step: 1000,
-       range: {
-           'min': 50000,
-           'max': 300000
-       }
-   });
+    const precioRange = document.getElementById('precioRange');
+    noUiSlider.create(precioRange, {
+        start: [50000, 300000],
+        connect: true,
+        step: 1000,
+        range: {
+            'min': 50000,
+            'max': 300000
+        }
+    });
 
-   // Actualizar etiquetas y campos
-   edadRange.noUiSlider.on('update', (values) => {
-       const [min, max] = values.map(x => Math.round(Number(x)));
-       document.getElementById('edadLabel').textContent = `${min} - ${max} años`;
-       document.getElementById('edadMin').value = min;
-       document.getElementById('edadMax').value = max;
-   });
+    // Crear tooltips para edad
+    const edadHandles = edadRange.querySelectorAll('.noUi-handle');
+    edadHandles.forEach(handle => {
+        const tooltip = document.createElement('div');
+        tooltip.className = 'slider-tooltip';
+        handle.appendChild(tooltip);
+    });
 
-   precioRange.noUiSlider.on('update', (values) => {
-       const [min, max] = values.map(x => Math.round(Number(x)));
-       document.getElementById('precioLabel').textContent = `$${min.toLocaleString()} - $${max.toLocaleString()}`;
-       document.getElementById('precioMin').value = min;
-       document.getElementById('precioMax').value = max;
-   });
+    // Actualizar valores de los rangos y tooltips de edad
+    edadRange.noUiSlider.on('update', (values, handle) => {
+        const [min, max] = values.map(x => Math.round(Number(x)));
+        const tooltips = edadRange.querySelectorAll('.slider-tooltip');
+        
+        tooltips[0].textContent = `${min}`;
+        tooltips[1].textContent = `${max}`;
+        
+        const minElement = edadRange.parentElement.querySelector('.range-values span:first-child');
+        const maxElement = edadRange.parentElement.querySelector('.range-values span:last-child');
+        minElement.textContent = `${min} años`;
+        maxElement.textContent = `${max} años`;
+        document.getElementById('edadMin').value = min;
+        document.getElementById('edadMax').value = max;
+    });
 
-   const atributos = ["Busto Grande","Busto Mediano","Busto Pequeño","Cara Visible","Cola Grande","Cola Mediana","Cola Pequeña","Con Video","Contextura Delgada","Contextura Grande","Contextura Mediana","Depilación Full","Depto Propio","En Promoción","English","Escort Independiente","Español","Estatura Alta","Estatura Mediana","Estatura Pequeña","Hentai","Morena","Mulata","No fuma","Ojos Claros","Ojos Oscuros","Peliroja","Portugues","Relato Erotico","Rubia","Tatuajes","Trigueña"];
-   const servicios = ["Anal","Atención a domicilio","Atención en hoteles","Baile Erotico","Besos","Cambio de rol","Departamento Propio","Disfraces","Ducha Erotica","Eventos y Cenas","Eyaculación Cuerpo","Eyaculación Facial","Hetero","Juguetes","Lesbico","Lluvia dorada","Masaje Erotico","Masaje prostatico","Masaje Tantrico","Masaje Thai","Masajes con final feliz","Masajes desnudos","Masajes Eroticos","Masajes para hombres","Masajes sensitivos","Masajes sexuales","Masturbación Rusa","Oral Americana","Oral con preservativo","Oral sin preservativo","Orgias","Parejas","Trio"];
+    // Crear tooltips para precio
+    const precioHandles = precioRange.querySelectorAll('.noUi-handle');
+    precioHandles.forEach(handle => {
+        const tooltip = document.createElement('div');
+        tooltip.className = 'slider-tooltip';
+        handle.appendChild(tooltip);
+    });
 
-   const createCheckboxes = (items, containerId, name) => {
-       const container = document.getElementById(containerId);
-       items.forEach(item => {
-           const div = document.createElement('div');
-           div.className = 'form-check';
-           div.innerHTML = `
-               <input class="form-check-input" type="checkbox" id="${name}-${item}" 
-                      name="${name}[]" value="${item}">
-               <label class="form-check-label" for="${name}-${item}">${item}</label>
-           `;
-           container.appendChild(div);
-       });
-   };
+    // Actualizar valores de los rangos y tooltips de precio
+    precioRange.noUiSlider.on('update', (values, handle) => {
+        const [min, max] = values.map(x => Math.round(Number(x)));
+        const tooltips = precioRange.querySelectorAll('.slider-tooltip');
+        
+        tooltips[0].textContent = `$${min}`;
+        tooltips[1].textContent = `$${max}`;
+        
+        const minElement = precioRange.parentElement.querySelector('.range-values span:first-child');
+        const maxElement = precioRange.parentElement.querySelector('.range-values span:last-child');
+        minElement.textContent = `$${min.toLocaleString()}`;
+        maxElement.textContent = `$${max.toLocaleString()}`;
+        document.getElementById('precioMin').value = min;
+        document.getElementById('precioMax').value = max;
+    });
 
-   createCheckboxes(atributos, 'atributosContainer', 'atributos');
-   createCheckboxes(servicios, 'serviciosContainer', 'servicios');
+    // Arrays de atributos y servicios
+    const atributos = ["Busto Grande","Busto Mediano","Busto Pequeño","Cara Visible","Cola Grande","Cola Mediana","Cola Pequeña","Con Video","Contextura Delgada","Contextura Grande","Contextura Mediana","Depilación Full","Depto Propio","En Promoción","English","Escort Independiente","Español","Estatura Alta","Estatura Mediana","Estatura Pequeña","Hentai","Morena","Mulata","No fuma","Ojos Claros","Ojos Oscuros","Peliroja","Portugues","Relato Erotico","Rubia","Tatuajes","Trigueña"];
+    const servicios = ["Anal","Atención a domicilio","Atención en hoteles","Baile Erotico","Besos","Cambio de rol","Departamento Propio","Disfraces","Ducha Erotica","Eventos y Cenas","Eyaculación Cuerpo","Eyaculación Facial","Hetero","Juguetes","Lesbico","Lluvia dorada","Masaje Erotico","Masaje prostatico","Masaje Tantrico","Masaje Thai","Masajes con final feliz","Masajes desnudos","Masajes Eroticos","Masajes para hombres","Masajes sensitivos","Masajes sexuales","Masturbación Rusa","Oral Americana","Oral con preservativo","Oral sin preservativo","Orgias","Parejas","Trio"];
 
-   form.addEventListener('submit', (e) => {
-       e.preventDefault();
-       
-       // Obtener ciudad base limpia
-       const currentPath = window.location.pathname.split('/').filter(Boolean)[0];
-       const ciudad = currentPath.replace(/^escorts-/, '');
-       
-       // Construir filtros solo si tienen valores diferentes a los default
-       const params = [];
-       
-       const [edadMin, edadMax] = edadRange.noUiSlider.get().map(Number);
-       if (edadMin !== 18 || edadMax !== 50) {
-           params.push(`edad/${edadMin}-${edadMax}`);
-       }
-       
-       const [precioMin, precioMax] = precioRange.noUiSlider.get().map(Number);
-       if (precioMin !== 50000 || precioMax !== 300000) {
-           params.push(`precio/${precioMin}-${precioMax}`);
-       }
-       
-       const selectedAtributos = Array.from(document.querySelectorAll('[name="atributos[]"]:checked')).map(cb => cb.value);
-       if (selectedAtributos.length) {
-           params.push(`atributos/${selectedAtributos.join(',')}`);
-       }
-       
-       const selectedServicios = Array.from(document.querySelectorAll('[name="servicios[]"]:checked')).map(cb => cb.value);
-       if (selectedServicios.length) {
-           params.push(`servicios/${selectedServicios.join(',')}`);
-       }
+    // Función para crear checkboxes
+    const createCheckboxes = (items, containerId, name) => {
+        const container = document.getElementById(containerId);
+        items.forEach(item => {
+            const label = document.createElement('label');
+            label.innerHTML = `
+                <input type="checkbox" name="${name}[]" value="${item}">
+                ${item}
+            `;
+            container.appendChild(label);
+        });
+    };
 
-       const url = params.length ? `/escorts-${ciudad}/${params.join('/')}` : `/escorts-${ciudad}`;
-       window.location.href = url;
-   });
+    createCheckboxes(atributos, 'atributosContainer', 'atributos');
+    createCheckboxes(servicios, 'serviciosContainer', 'servicios');
 
-   // Reset filtros
-   document.getElementById('resetFilters').addEventListener('click', () => {
-       form.reset();
-       edadRange.noUiSlider.reset();
-       precioRange.noUiSlider.reset();
-       document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-           checkbox.checked = false;
-       });
-   });
+    // Manejo del formulario
+    form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const selectedCity = document.getElementById('ciudadSelect').value;
+    const selectedNacionalidad = document.getElementById('nacionalidadSelect').value;
+    const [edadMin, edadMax] = edadRange.noUiSlider.get().map(Number);
+    const [precioMin, precioMax] = precioRange.noUiSlider.get().map(Number);
+    const selectedAtributos = Array.from(document.querySelectorAll('[name="atributos[]"]:checked')).map(cb => cb.value);
+    const selectedServicios = Array.from(document.querySelectorAll('[name="servicios[]"]:checked')).map(cb => cb.value);
+    
+    let url = `/escorts-${selectedCity}`;
 
-   // Modal
-   document.querySelector('.btn-filters').addEventListener('click', () => modal.show());
+    // Para filtros simples (mantener la lógica existente)
+    if (selectedAtributos.length === 1 && selectedServicios.length === 0 && 
+        edadMin === 18 && edadMax === 50 && 
+        precioMin === 50000 && precioMax === 300000 &&
+        !selectedNacionalidad) {
+        url += `/${selectedAtributos[0].toLowerCase().replace(/\s+/g, '-')}`;
+        window.location.href = url;
+        return;
+    } 
+    else if (selectedServicios.length === 1 && selectedAtributos.length === 0 && 
+             edadMin === 18 && edadMax === 50 && 
+             precioMin === 50000 && precioMax === 300000 &&
+             !selectedNacionalidad) {
+        url += `/${selectedServicios[0].toLowerCase().replace(/\s+/g, '-')}`;
+        window.location.href = url;
+        return;
+    }
+    
+    // Para múltiples filtros
+    const params = new URLSearchParams();
+    
+    if (edadMin !== 18 || edadMax !== 50) {
+        params.append('e', `${edadMin}-${edadMax}`);
+    }
+    
+    if (precioMin !== 50000 || precioMax !== 300000) {
+        params.append('p', `${precioMin}-${precioMax}`);
+    }
+    
+    if (selectedAtributos.length > 0) {
+        params.append('a', selectedAtributos.join(','));
+    }
+    
+    if (selectedServicios.length > 0) {
+        params.append('s', selectedServicios.join(','));
+    }
+
+    if (selectedNacionalidad) {
+        params.append('n', selectedNacionalidad);
+    }
+    
+    // Construir URL final
+    const queryString = params.toString();
+    if (queryString) {
+        url += `?${queryString}`;
+    }
+    
+    window.location.href = url;
+});
+
+    // Reset de filtros
+    document.getElementById('resetFilters').addEventListener('click', () => {
+    form.reset();
+    edadRange.noUiSlider.reset();
+    precioRange.noUiSlider.reset();
+    document.getElementById('nacionalidadSelect').value = ''; // Agregar esta línea
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+});
+
+    // Mostrar modal
+    document.querySelector('.btn-filters').addEventListener('click', () => modal.show());
 });
 </script>
 

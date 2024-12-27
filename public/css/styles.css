@@ -5,6 +5,7 @@ html {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .login-page {
@@ -256,7 +257,7 @@ label .required {
     background-position: center;
     background-attachment: fixed;
     height: 100vh;
-    font-family: 'Work Sans', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* Logo */
@@ -409,7 +410,7 @@ label .required {
     width: 100%;
     z-index: 100;
     background-color: #1a1a1a;
-    font-family: "Work Sans", sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* Estilos para la barra de navegación superior negra */
@@ -528,7 +529,7 @@ label .required {
     background-color: #fff;
     color: #333;
     border-bottom: 2px solid #ccc;
-    font-family: "Work Sans", sans-serif !important;
+    font-family: 'Montserrat', sans-serif;
     font-size: .875rem;
     font-weight: normal;
     color: #000;
@@ -698,12 +699,12 @@ video:not(.banner-img):not(.historia-circle video) {
 
 /* Agregar en tu archivo CSS */
 .escortperfil-map-section {
-    margin: 20px 0;
+    margin: 20px -20px;
     padding: 20px;
     background: #fff;
     border-radius: 8px;
     /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
-    margin-top: -16px;
+    margin-top: -6px;
 }
 
 .escort-map {
@@ -725,7 +726,7 @@ video:not(.banner-img):not(.historia-circle video) {
     width: 100%;
     z-index: 100;
     background-color: #1a1a1a;
-    font-family: "Work Sans", sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* Sección superior: enlaces de ubicación */
@@ -1370,7 +1371,7 @@ video:not(.banner-img):not(.historia-circle video) {
     background-color: transparent;
     border-radius: 4px;
     padding: 10px;
-    font-family: 'Work Sans', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     position: absolute;
     top: 824px;
     right: 225px;
@@ -1586,7 +1587,7 @@ video:not(.banner-img):not(.historia-circle video) {
     background-color: rgba(255, 255, 255, 0.5);
     cursor: pointer;
     transition: background-color 0.3s ease;
-    opacity: 1;
+    opacity: 0;
 }
 
 .escortperfil-swiper .swiper-pagination-bullet-active {
@@ -1665,7 +1666,7 @@ video:not(.banner-img):not(.historia-circle video) {
     gap: 10px;
     position: absolute;
     right: 355px;
-    top: 718px;
+    top: 730px;
     /* Ajusta según necesites */
     z-index: 3;
     width: auto;
@@ -1913,8 +1914,8 @@ video:not(.banner-img):not(.historia-circle video) {
 
 .share-icon {
     width: 48px;
-    height: 48px;
-    border-radius: 50%;
+    height: 32px;
+    /* border-radius: 50%; */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1922,6 +1923,7 @@ video:not(.banner-img):not(.historia-circle video) {
     text-decoration: none;
     transition: transform 0.2s, box-shadow 0.2s;
     font-size: 20px;
+    filter: invert(100%);
 }
 
 .icon-wrapper {
@@ -1938,6 +1940,17 @@ video:not(.banner-img):not(.historia-circle video) {
     line-height: 1.2;
     width: 100%;
     font-weight: bold;
+}
+
+/* Nuevo estilo para el botón */
+.share-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
 }
 
 .share-icon:hover {
@@ -2013,8 +2026,8 @@ video:not(.banner-img):not(.historia-circle video) {
     background-color: #fff;
     padding: 25px;
     border-radius: 10px;
-    width: 290px;
-    margin-top: 20px;
+    width: 340px;
+    margin-top: 52px;
 }
 
 /* Título del horario */
@@ -2099,7 +2112,7 @@ video:not(.banner-img):not(.historia-circle video) {
     text-align: center;
     cursor: pointer;
     z-index: 10;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    /* text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); */
     transition: transform 0.2s ease;
 }
 
@@ -2780,7 +2793,7 @@ video:not(.banner-img):not(.historia-circle video) {
     padding: 0.5rem 0.95rem;
     margin-bottom: 1rem;
     border-radius: 0.5rem 0.5rem 0 0;
-    width: 95%;
+    width: 100%;
 }
 
 .volvieronyprimera-header h2 {
@@ -2921,7 +2934,7 @@ video:not(.banner-img):not(.historia-circle video) {
     background-color: #E00037;
     padding: 0.5rem 0.95rem;
     border-radius: 0.5rem 0.5rem 0 0;
-    width: 95%;
+    width: 100%;
     /* height: 4.5%; */
     margin-bottom: 2rem;
 }
@@ -2997,7 +3010,7 @@ video:not(.banner-img):not(.historia-circle video) {
     background-color: #E00037;
     padding: 0.5rem 0.95rem;
     border-radius: 0.5rem 0.5rem 0 0;
-    width: 95%;
+    width: 100%;
     /* height: 4.5%; */
     margin-bottom: 2rem;
 }
@@ -3089,26 +3102,379 @@ video:not(.banner-img):not(.historia-circle video) {
     /* Cambiado de 948px a 146px como en tu ejemplo */
 }
 
-.filtro-checkbox-grid {
-    max-height: 300px;
+/* El modal por defecto está oculto */
+.filtro-modal {
+    display: none;  /* Oculto por defecto */
+}
+
+/* Cuando Bootstrap añade la clase 'show' */
+.filtro-modal.show {
+    display: flex !important;  /* Se muestra cuando está activo */
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1050;
+}
+
+/* Backdrop del modal */
+.modal-backdrop.show {
+    display: none !important; /* Removemos el backdrop oscuro predeterminado */
+}
+
+.filtro-modal.fade.show {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1050;
+    background-color: rgba(0, 0, 0, 0.5); /* Agregamos nuestro propio fondo semitransparente */
+}
+
+.filtro-modal.fade {
+    display: none;
+}
+
+.filtro-modal .modal-dialog {
+    margin: 1.75rem auto;
+    pointer-events: auto; /* Asegura que el modal sea interactivo */
+}
+ 
+ .filtro-modal .modal-content {
+    width: 544px;
+    background-color: #fff !important;
+    color: #333 !important;
+    text-align: center;
+    position: relative;
+    margin: auto;
+    max-height: calc(100vh - 3.5rem);
+    display: flex;
+    flex-direction: column;
+ }
+ 
+ .filtro-modal .modal-body {
+    padding: 1.5rem;
     overflow-y: auto;
-    padding: 10px;
+    max-height: calc(100vh - 200px);
+ }
+ 
+ .filtro-modal .modal-header {
+    border-bottom: 1px solid #dee2e6;
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 1;
+    justify-content: center;
+ }
+ 
+ .filtro-modal .modal-header .btn-close {
+    position: absolute;
+    right: 1rem;
+    padding: 1rem;
+    margin: -1rem;
+ }
+ 
+ .filtro-modal .modal-title {
+    margin: 0;
+    font-weight: bold;
+ }
+ 
+ .filtro-modal .modal-footer {
+    border-top: 1px solid #dee2e6;
+    padding: 1rem;
+    position: sticky;
+    bottom: 0;
+    background: white;
+    z-index: 1;
+ }
+ 
+ .filtro-modal .servicios-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 19px 13px; /* Aumentamos el espacio entre elementos: 20px vertical, 30px horizontal */
+    padding: 0px;
+    overflow-y: visible;
+}
+ 
+/* Ajustamos el espaciado de las secciones */
+.filtro-modal .filter-section,
+.filtro-modal .filter-section1 {
+    margin-bottom: 15px;
+    padding: 0 0px;
+}
+ 
+ /* Estilos de los checkboxes y labels */
+ .filtro-modal .servicios-grid label {
+    display: flex;
+    align-items: center; /* Centramos verticalmente el checkbox con el texto */
+    gap: 10px; /* Espacio entre el checkbox y el texto */
+    margin: 0;
+    font-size: 14px;
+    white-space: normal;
+    line-height: 1.4; /* Aumentamos ligeramente el interlineado */
+    color: #333; /* Color más oscuro para mejor legibilidad */
 }
 
-.noUi-connect {
-    background: #e00037 !important;
+.filtro-modal .servicios-grid input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px; /* Ligeramente más grande */
+    height: 18px;
+    min-width: 18px;
+    border: 1.5px solid #e00037;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    background: white;
+    margin: 0; /* Quitamos el margin-top para mejor alineación */
 }
 
-.noUi-handle {
-    background: #e00037 !important;
-    border: 2px solid #fff !important;
+ 
+ .filtro-modal .servicios-grid input[type="checkbox"]:checked {
+    background-color: #e00037;
+ }
+ 
+ .filtro-modal .servicios-grid input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 5px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+ }
+ 
+ /* Estilos específicos de los rangos */
+ .filtro-modal .range-title {
+    font-weight: bold;
+    margin-bottom: 15px;
+ }
+ 
+ .filtro-modal .range-title1 {
+    font-weight: bold;
+    margin-bottom: 20px; /* Más espacio después del título */
+    text-align: left;
+    font-size: 16px; /* Tamaño ligeramente mayor */
+    color: #333;
+    padding-left: 15px;
 }
 
-.form-check-input:checked {
-    background-color: #e00037 !important;
-    border-color: #e00037 !important;
+ .filtro-modal .range-container {
+    padding: 10px 15px;
+    margin-top: 10px;
+ }
+ 
+ .filtro-modal .range-values {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #666;
+ }
+ 
+ /* Estilos del slider */
+ .filtro-modal .noUi-target {
+    margin-top: 20px;
+    border: none;
+    box-shadow: none;
+    background: #f1f1f1;
+ }
+ 
+ .filtro-modal .noUi-horizontal {
+    height: 4px;
+ }
+ 
+ .filtro-modal .noUi-horizontal .noUi-handle {
+    width: 18px;
+    height: 18px;
+    top: -7px;
+    right: -9px;
+ }
+ 
+ .filtro-modal .noUi-connect {
+    background: #e00037;
+ }
+ 
+ .filtro-modal .noUi-handle {
+    border: 1px solid #e00037;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+ }
+ 
+ .filtro-modal .noUi-handle:before,
+ .filtro-modal .noUi-handle:after {
+    display: none;
+ }
+ 
+ .filtro-modal .noUi-touch-area {
+    height: 100%;
+    width: 100%;
+    border-radius: 8px;
+    background-color: #e00037;
+ }
+ 
+ .filtro-modal .slider-tooltip {
+    position: absolute;
+    background: #e00037;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    z-index: 2;
+ }
+ 
+ .filtro-modal .slider-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #e00037;
+ }
+ 
+ /* Botones */
+ .filtro-modal .btn-primary {
+    background-color: #e00037;
+    border-color: #e00037;
+ }
+ 
+ .filtro-modal .btn-primary:hover {
+    background-color: #c50031;
+    border-color: #c50031;
+ }
+
+ /* Contenedor flexbox para los filtros */
+.filters-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
 }
 
+.filter-ciudad,
+.filtro-nac {
+    flex: 0 0 auto; /* Evita que los elementos se estiren */
+}
+
+.filter-ciudad .filter-section {
+    margin: 15px 0;
+}
+
+.filter-ciudad .range-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    text-align: left;
+    margin: 13px 35px;
+}
+
+.filter-ciudad .form-select {
+    width: 90%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    margin: 0 34px;
+}
+
+.filter-ciudad .form-select:hover {
+    border-color: #999;
+}
+
+.filtro-nac .filter-section {
+    margin: 15px 0;
+}
+
+.filtro-nac .range-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    text-align: left;
+    margin: 13px 35px;
+}
+
+.filtro-nac .form-select {
+    width: 90%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    margin: 0 34px;
+}
+
+.filtro-nac .form-select:hover {
+    border-color: #999;
+}
+
+.filtro-nac .form-select:focus {
+    outline: none;
+    border-color: #999;
+}
+
+.filtro-nac .form-select option {
+    padding: 8px;
+    font-size: 14px;
+}
+
+.filter-ciudad .form-select:focus {
+    outline: none;
+    border-color: #e00037;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+}
+
+.filter-ciudad .form-select option {
+    padding: 8px;
+    font-size: 14px;
+}
+
+.filter-ciudad .form-select.active {
+    background-color: #dc3545;
+    color: white;
+}
+
+.filter-ciudad .form-select option:first-child {
+    color: #dc3545;
+}
 
 
 /* Large screens (1280px y menor) */

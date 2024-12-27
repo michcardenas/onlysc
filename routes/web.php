@@ -144,11 +144,13 @@ Route::put('/ciudades/{id}', [CiudadController::class, 'update'])->name('ciudade
 Route::get('/ciudades/create', [CiudadController::class, 'create'])->name('ciudades.create');
 Route::post('/ciudades', [CiudadController::class, 'store'])->name('ciudades.store');
 
+
 //SEO
 Route::get('/seo', [SEOController::class, 'index'])->name('seo');
 Route::get('/seo-paginas', [SEOPaginasController::class, 'index'])->name('seo.paginas');
-// Rutas para la sección de SEO
 Route::get('/seo-inicio', [SEOController::class, 'home'])->name('seo.home');
 Route::get('/seo-foro', [SEOController::class, 'foroadmin'])->name('seo.foroadmin');
 Route::get('/seo-blog', [SEOController::class, 'blogadmin'])->name('seo.blogadmin');
 Route::get('/seo-publicar', [SEOController::class, 'publicateForm'])->name('seo.publicate.form');
+Route::get('/seo/templates', [AdminController::class, 'seoTemplates'])->name('seo.template');
+Route::put('/seo/update', [AdminController::class, 'updateSeoTemplate'])->name('seo.templates.update');

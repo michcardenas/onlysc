@@ -40,6 +40,7 @@
     <h1 class="seo-title">Bienvenido a la página de SEO</h1>
     <div class="seo-buttons">
         <a href="{{ route('seo.home') }}" class="btn-seo">Inicio</a>
+        <a href="{{ route('seo.template') }}" class="btn-seo">Filtros H2</a>
         <a href="{{ route('seo.foroadmin') }}" class="btn-seo">Foro</a>
         <a href="{{ route('seo.blogadmin') }}" class="btn-seo">Blog</a>
         <a href="{{ route('seo.publicate.form') }}" class="btn-seo">Publicar</a>

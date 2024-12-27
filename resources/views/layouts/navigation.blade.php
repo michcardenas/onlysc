@@ -27,7 +27,7 @@
             background: white;
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
             z-index: 1000;
-            font-family: 'Work Sans', sans-serif;
+            font-family: 'Montserrat', sans-serif;
         }
 
         .nav-items {
@@ -86,7 +86,7 @@
             padding: 0px 0px;
             transform: translateX(100%);
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            font-family: 'Work Sans', sans-serif;
+            font-family: 'Montserrat', sans-serif;
         }
 
         .menu-logo {

@@ -448,6 +448,15 @@
             </div>
             <div class="swiper-pagination2"></div>
         </section>
+
+
+        @if(isset($seoTitle) && isset($seoDescription))
+    <div class="seo-content my-8">
+        <h2 class="text-2xl font-bold mb-4" style="color: #888;">{{ $seoTitle }}</h2>
+        <div class="text-gray-700" style="color: #888;">{{ $seoDescription }}</div>
+    </div>
+@endif
+
 </main>
 
 @endsection
