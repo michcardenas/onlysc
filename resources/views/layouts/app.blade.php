@@ -137,6 +137,18 @@
         </div>
     </div>
 
+    <div class="filtro-nac" id="barrioContainer" style="display: none;">
+    <h6 class="range-title">Barrio</h6>
+    <select id="barrioSelect" class="form-select">
+        <option value="">Seleccionar barrio</option>
+        @if(isset($barrios))
+            @foreach($barrios as $barrio)
+                <option value="{{ $barrio }}">{{ $barrio }}</option>
+            @endforeach
+        @endif
+    </select>
+</div>
+
     <div class="filtro-nac">
         <div class="filter-section">
             <h6 class="range-title">Nacionalidad</h6>
@@ -182,6 +194,19 @@
                        <input type="hidden" name="precioMax" id="precioMax">
                    </div>
 
+<!-- Nuevos checkboxes -->
+<div class="extra-filters">
+    <div class="checkbox-container">
+        <input type="checkbox" name="disponible" id="disponibleCheck">
+        <span class="checkbox-text">Disponible</span>
+    </div>
+    <div class="filter-section">
+        <h6 class="range-title">Reseñas</h6>
+        <div id="resenaCheck" class="review-container">
+            <span class="review-text">Tiene una reseña</span>
+        </div>
+    </div>
+</div>
                    <!-- Contenedores para checkboxes -->
                    <!-- Removida la estructura de columnas -->
                    <div class="filter-section1">
@@ -201,9 +226,6 @@
        </div>
    </div>
 </div>
-
-
-
 
     <main>
         @yield('content')
@@ -1137,79 +1159,129 @@ document.addEventListener('DOMContentLoaded', () => {
     createCheckboxes(atributos, 'atributosContainer', 'atributos');
     createCheckboxes(servicios, 'serviciosContainer', 'servicios');
 
+    // Control del select de barrios
+    const ciudadSelect = document.getElementById('ciudadSelect');
+    const barrioContainer = document.getElementById('barrioContainer');
+    const disponibleCheck = document.getElementById('disponibleCheck');
+    const resenaCheck = document.getElementById('resenaCheck');
+    
+    ciudadSelect.addEventListener('change', function() {
+        const selectedCity = this.options[this.selectedIndex].text;
+        if (selectedCity.toLowerCase().includes('santiago')) {
+            barrioContainer.style.display = 'block';
+        } else {
+            barrioContainer.style.display = 'none';
+            document.getElementById('barrioSelect').value = '';
+        }
+    });
+
+    // Verificar estado inicial del select de ciudad
+    if (ciudadSelect.options[ciudadSelect.selectedIndex].text.toLowerCase().includes('santiago')) {
+        barrioContainer.style.display = 'block';
+    }
+
+    // Event listener para el botón de reseña
+    resenaCheck.addEventListener('click', function() {
+        this.classList.toggle('selected');
+    });
+
     // Manejo del formulario
     form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    const selectedCity = document.getElementById('ciudadSelect').value;
-    const selectedNacionalidad = document.getElementById('nacionalidadSelect').value;
-    const [edadMin, edadMax] = edadRange.noUiSlider.get().map(Number);
-    const [precioMin, precioMax] = precioRange.noUiSlider.get().map(Number);
-    const selectedAtributos = Array.from(document.querySelectorAll('[name="atributos[]"]:checked')).map(cb => cb.value);
-    const selectedServicios = Array.from(document.querySelectorAll('[name="servicios[]"]:checked')).map(cb => cb.value);
-    
-    let url = `/escorts-${selectedCity}`;
+        e.preventDefault();
+        
+        const selectedCity = document.getElementById('ciudadSelect').value;
+        const selectedNacionalidad = document.getElementById('nacionalidadSelect').value;
+        const selectedBarrio = document.getElementById('barrioSelect').value;
+        const [edadMin, edadMax] = edadRange.noUiSlider.get().map(Number);
+        const [precioMin, precioMax] = precioRange.noUiSlider.get().map(Number);
+        const selectedAtributos = Array.from(document.querySelectorAll('[name="atributos[]"]:checked')).map(cb => cb.value);
+        const selectedServicios = Array.from(document.querySelectorAll('[name="servicios[]"]:checked')).map(cb => cb.value);
+        const hasResena = resenaCheck.classList.contains('selected');
+        
+        let url = `/escorts-${selectedCity}`;
 
-    // Para filtros simples (mantener la lógica existente)
-    if (selectedAtributos.length === 1 && selectedServicios.length === 0 && 
-        edadMin === 18 && edadMax === 50 && 
-        precioMin === 50000 && precioMax === 300000 &&
-        !selectedNacionalidad) {
-        url += `/${selectedAtributos[0].toLowerCase().replace(/\s+/g, '-')}`;
-        window.location.href = url;
-        return;
-    } 
-    else if (selectedServicios.length === 1 && selectedAtributos.length === 0 && 
-             edadMin === 18 && edadMax === 50 && 
-             precioMin === 50000 && precioMax === 300000 &&
-             !selectedNacionalidad) {
-        url += `/${selectedServicios[0].toLowerCase().replace(/\s+/g, '-')}`;
-        window.location.href = url;
-        return;
-    }
-    
-    // Para múltiples filtros
-    const params = new URLSearchParams();
-    
-    if (edadMin !== 18 || edadMax !== 50) {
-        params.append('e', `${edadMin}-${edadMax}`);
-    }
-    
-    if (precioMin !== 50000 || precioMax !== 300000) {
-        params.append('p', `${precioMin}-${precioMax}`);
-    }
-    
-    if (selectedAtributos.length > 0) {
-        params.append('a', selectedAtributos.join(','));
-    }
-    
-    if (selectedServicios.length > 0) {
-        params.append('s', selectedServicios.join(','));
-    }
+        // Para filtros simples
+        if (selectedNacionalidad && !selectedAtributos.length && !selectedServicios.length && 
+            edadMin === 18 && edadMax === 50 && 
+            precioMin === 50000 && precioMax === 300000 && 
+            !selectedBarrio && !disponibleCheck.checked && !hasResena) {
+            url += `/escorts-${selectedNacionalidad.toLowerCase()}`;
+            window.location.href = url;
+            return;
+        } else if (selectedAtributos.length === 1 && selectedServicios.length === 0 && 
+            edadMin === 18 && edadMax === 50 && 
+            precioMin === 50000 && precioMax === 300000 &&
+            !selectedNacionalidad && !selectedBarrio && !disponibleCheck.checked && !hasResena) {
+            url += `/${selectedAtributos[0].toLowerCase().replace(/\s+/g, '-')}`;
+            window.location.href = url;
+            return;
+        } 
+        else if (selectedServicios.length === 1 && selectedAtributos.length === 0 && 
+                 edadMin === 18 && edadMax === 50 && 
+                 precioMin === 50000 && precioMax === 300000 &&
+                 !selectedNacionalidad && !selectedBarrio && !disponibleCheck.checked && !hasResena) {
+            url += `/${selectedServicios[0].toLowerCase().replace(/\s+/g, '-')}`;
+            window.location.href = url;
+            return;
+        }
+        
+        // Para múltiples filtros
+        const params = new URLSearchParams();
+        
+        if (edadMin !== 18 || edadMax !== 50) {
+            params.append('e', `${edadMin}-${edadMax}`);
+        }
+        
+        if (precioMin !== 50000 || precioMax !== 300000) {
+            params.append('p', `${precioMin}-${precioMax}`);
+        }
+        
+        if (selectedAtributos.length > 0) {
+            params.append('a', selectedAtributos.join(','));
+        }
+        
+        if (selectedServicios.length > 0) {
+            params.append('s', selectedServicios.join(','));
+        }
 
-    if (selectedNacionalidad) {
-        params.append('n', selectedNacionalidad);
-    }
-    
-    // Construir URL final
-    const queryString = params.toString();
-    if (queryString) {
-        url += `?${queryString}`;
-    }
-    
-    window.location.href = url;
-});
+        if (selectedNacionalidad) {
+            params.append('n', selectedNacionalidad);
+        }
+
+        if (selectedBarrio) {
+            params.append('barrio', selectedBarrio);
+        }
+
+        if (disponibleCheck.checked) {
+            params.append('disponible', '1');
+        }
+
+        if (hasResena) {
+            params.append('resena', '1');
+        }
+        
+        // Construir URL final
+        const queryString = params.toString();
+        if (queryString) {
+            url += `?${queryString}`;
+        }
+        
+        window.location.href = url;
+    });
 
     // Reset de filtros
     document.getElementById('resetFilters').addEventListener('click', () => {
-    form.reset();
-    edadRange.noUiSlider.reset();
-    precioRange.noUiSlider.reset();
-    document.getElementById('nacionalidadSelect').value = ''; // Agregar esta línea
-    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-        checkbox.checked = false;
+        form.reset();
+        edadRange.noUiSlider.reset();
+        precioRange.noUiSlider.reset();
+        document.getElementById('nacionalidadSelect').value = '';
+        document.getElementById('barrioSelect').value = '';
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        disponibleCheck.checked = false;
+        resenaCheck.classList.remove('selected');
     });
-});
 
     // Mostrar modal
     document.querySelector('.btn-filters').addEventListener('click', () => modal.show());

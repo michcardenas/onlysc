@@ -3369,6 +3369,7 @@ video:not(.banner-img):not(.historia-circle video) {
     justify-content: flex-start;
     align-items: flex-start;
     width: 100%;
+    flex-wrap: wrap;
 }
 
 .filter-ciudad,
@@ -3476,6 +3477,100 @@ video:not(.banner-img):not(.historia-circle video) {
     color: #dc3545;
 }
 
+.extra-filters {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 35px;
+    margin-top: 10px;
+}
+
+.extra-filters .checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.extra-filters input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    border: 1.5px solid #e00037;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    background: white;
+    margin: 0;
+}
+
+.extra-filters input[type="checkbox"]:checked {
+    background-color: #e00037;
+}
+
+.extra-filters input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 5px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.extra-filters input[type="checkbox"]:disabled {
+    border-color: #ccc;
+    cursor: not-allowed;
+}
+
+.review-container {
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 8px 16px;
+    display: inline-block;
+    cursor: pointer;
+    border: 1.5px solid #e0e0e0;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.review-container:hover {
+    border-color: #e00037;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.review-container.selected {
+    background-color: #e00037;
+    border-color: #e00037;
+}
+
+.review-container.selected .review-text {
+    color: white;
+}
+
+.review-text {
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.filter-section .range-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    /* text-align: left; */
+    margin: 13px 35px;
+}
+
+.filter-section .review-container {
+    margin: 0 34px;
+}
 
 /* Large screens (1280px y menor) */
 @media screen and (max-width: 1280px) {

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class EscortLocation extends Model
 {
@@ -46,4 +48,30 @@ class EscortLocation extends Model
             
         return $angle * $earthRadius;
     }
+
+    public function getBarrio()
+{
+    $googleMapsKey = 'AIzaSyCE-YA3ZXTQ0uMGWjENmAG274nUWOM7-Kc';
+    $url = "https://maps.googleapis.com/maps/api/geocode/json?latlng={$this->latitud},{$this->longitud}&key={$googleMapsKey}&language=es";
+    
+    try {
+        $response = Http::get($url);
+        Log::info('Google Maps Response:', $response->json());
+        $data = $response->json();
+        
+        if (!empty($data['results'][0]['address_components'])) {
+            foreach ($data['results'][0]['address_components'] as $component) {
+                if (in_array('locality', $component['types']) || 
+                    in_array('sublocality', $component['types']) || 
+                    in_array('sublocality_level_1', $component['types'])) {
+                    return $component['long_name'];
+                }
+            }
+        }
+    } catch (\Exception $e) {
+        Log::error('Error getting barrio: ' . $e->getMessage());
+    }
+    
+    return null;
+}
 }

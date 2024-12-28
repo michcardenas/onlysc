@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Ciudad;
 use App\Models\UsuarioPublicate;
 use App\Models\BlogArticle;
+use App\Models\EscortLocation;
 use App\Models\Posts;
 use App\Models\Foro;
 use App\Models\SeoTemplate;
@@ -15,7 +16,7 @@ use Carbon\Carbon;
 
 class InicioController extends Controller
 {
-    public function show($nombreCiudad)
+    public function show($nombreCiudad, $filtros = null)
     {
         $ciudadSeleccionada = Ciudad::where('url', $nombreCiudad)->firstOrFail();
         session(['ciudad_actual' => $ciudadSeleccionada->nombre]);
@@ -23,95 +24,122 @@ class InicioController extends Controller
         $now = Carbon::now();
         $currentDay = strtolower($now->locale('es')->dayName);
         $currentTime = $now->format('H:i:s');
-
-        // Verificar si hay un filtro simple en la URL
-        $partes = explode('/', request()->path());
-        $filtroSimple = count($partes) > 2 ? end($partes) : null;
-
+    
+        // Obtener barrios si es Santiago
+        $barrios = null;
+        if (stripos($ciudadSeleccionada->nombre, 'santiago') !== false) {
+            $barrios = EscortLocation::whereHas('usuarioPublicate', function($query) {
+                $query->whereIn('estadop', [1, 3]);
+            })
+            ->where('ciudad', 'like', '%santiago%')
+            ->get()
+            ->map(function($location) {
+                return $location->getBarrio();
+            })
+            ->filter()
+            ->unique()
+            ->values();
+        }
+    
         // Base query para usuarios principal
         $query = UsuarioPublicate::query()
             ->whereIn('estadop', [1, 3])
             ->where('ubicacion', $ciudadSeleccionada->nombre);
-
-        // Si hay un filtro simple, aplicarlo primero
-        if ($filtroSimple && !request()->has(['e', 'p', 'a', 's'])) {
-            $filtroNormalizado = str_replace('-', ' ', $filtroSimple);
+    
+        // Verificar si el filtro es una nacionalidad
+        if ($filtros && str_contains($filtros, 'escorts-')) {
+            $nacionalidad = str_replace('escorts-', '', $filtros);
+            $query->where('nacionalidad', $nacionalidad);
+        } else if ($filtros && !request()->hasAny(['e', 'p', 'a', 's'])) {
+            // Tus otros filtros existentes
+            $filtroNormalizado = str_replace('-', ' ', $filtros);
             $query->where(function ($q) use ($filtroNormalizado) {
                 $q->where('atributos', 'like', '%' . $filtroNormalizado . '%')
                     ->orWhere('servicios', 'like', '%' . $filtroNormalizado . '%');
             });
-        } else {
-            // Procesar filtros desde query parameters
-            if ($edad = request()->get('e')) {
-                list($min, $max) = explode('-', $edad);
-                $query->whereBetween('edad', [(int)$min, (int)$max]);
-            }
-
-            if ($precio = request()->get('p')) {
-                list($min, $max) = explode('-', $precio);
-                $query->whereBetween('precio', [(int)$min, (int)$max]);
-            }
-
-            if ($nacionalidad = request()->get('n')) {
-                $query->where('nacionalidad', $nacionalidad);
-            }
-
-            if ($atributos = request()->get('a')) {
-                $atributosArray = explode(',', $atributos);
-                if (!empty($atributosArray)) {
-                    $query->where(function ($q) use ($atributosArray) {
-                        $atributosLimitados = array_slice($atributosArray, 0, 3);
-                        foreach ($atributosLimitados as $key => $atributo) {
-                            if ($key === 0) {
-                                $q->where('atributos', 'like', '%' . $atributo . '%');
-                            } else {
-                                $q->orWhere('atributos', 'like', '%' . $atributo . '%');
-                            }
-                        }
+        }
+    
+        // Procesar filtros desde query parameters
+        if (request()->has('disponible')) {
+            $query->whereHas('disponibilidad', function ($query) use ($currentDay, $currentTime) {
+                $query->where('dia', 'LIKE', $currentDay)
+                    ->where(function ($q) use ($currentTime) {
+                        $q->whereRaw("(hora_hasta < hora_desde AND ('$currentTime' >= hora_desde OR '$currentTime' <= hora_hasta))")
+                            ->orWhereRaw("(hora_hasta >= hora_desde AND '$currentTime' BETWEEN hora_desde AND hora_hasta)");
                     });
-                }
-            }
-
-            if ($servicios = request()->get('s')) {
-                $serviciosArray = explode(',', $servicios);
-                if (!empty($serviciosArray)) {
-                    $query->where(function ($q) use ($serviciosArray) {
-                        $serviciosLimitados = array_slice($serviciosArray, 0, 3);
-                        foreach ($serviciosLimitados as $key => $servicio) {
-                            if ($key === 0) {
-                                $q->where('servicios', 'like', '%' . $servicio . '%');
-                            } else {
-                                $q->orWhere('servicios', 'like', '%' . $servicio . '%');
-                            }
+            });
+        }
+    
+        if ($edad = request()->get('e')) {
+            list($min, $max) = explode('-', $edad);
+            $query->whereBetween('edad', [(int)$min, (int)$max]);
+        }
+    
+        if ($precio = request()->get('p')) {
+            list($min, $max) = explode('-', $precio);
+            $query->whereBetween('precio', [(int)$min, (int)$max]);
+        }
+    
+        if ($barrio = request()->get('barrio')) {
+            $query->whereHas('location', function($q) use ($barrio) {
+                $q->where('direccion', 'LIKE', "%{$barrio}%");
+            });
+        }
+    
+        if ($atributos = request()->get('a')) {
+            $atributosArray = explode(',', $atributos);
+            if (!empty($atributosArray)) {
+                $query->where(function ($q) use ($atributosArray) {
+                    $atributosLimitados = array_slice($atributosArray, 0, 3);
+                    foreach ($atributosLimitados as $key => $atributo) {
+                        if ($key === 0) {
+                            $q->where('atributos', 'like', '%' . $atributo . '%');
+                        } else {
+                            $q->orWhere('atributos', 'like', '%' . $atributo . '%');
                         }
-                    });
-                }
+                    }
+                });
             }
         }
-
+    
+        if ($servicios = request()->get('s')) {
+            $serviciosArray = explode(',', $servicios);
+            if (!empty($serviciosArray)) {
+                $query->where(function ($q) use ($serviciosArray) {
+                    $serviciosLimitados = array_slice($serviciosArray, 0, 3);
+                    foreach ($serviciosLimitados as $key => $servicio) {
+                        if ($key === 0) {
+                            $q->where('servicios', 'like', '%' . $servicio . '%');
+                        } else {
+                            $q->orWhere('servicios', 'like', '%' . $servicio . '%');
+                        }
+                    }
+                });
+            }
+        }
+    
         // Consulta principal con filtros
         $usuarios = $query->with(['disponibilidad', 'estados' => function ($query) {
             $query->where('created_at', '>=', now()->subHours(24));
         }])
-            ->select(
-                'id',
-                'fantasia',
-                'nombre',
-                'edad',
-                'ubicacion',
-                'fotos',
-                'foto_positions',
-                'categorias',
-                'posicion',
-                'precio',
-                'estadop'
-            )
-            ->orderBy('posicion', 'asc')
-            ->paginate(12);
-
+        ->select(
+            'id',
+            'fantasia',
+            'nombre',
+            'edad',
+            'ubicacion',
+            'fotos',
+            'foto_positions',
+            'categorias',
+            'posicion',
+            'precio',
+            'estadop'
+        )
+        ->orderBy('posicion', 'asc')
+        ->paginate(12);
+    
         // Estados
-        // Estados
-        $estados = Estado::select('estados.*', 'u.foto as user_foto')  // Cambiado de 'users.foto' a 'u.foto'
+        $estados = Estado::select('estados.*', 'u.foto as user_foto')
             ->leftJoin('users as u', 'estados.user_id', '=', 'u.id')
             ->with(['usuarioPublicate', 'vistoPor' => function ($query) {
                 $query->where('user_id', auth()->id());
@@ -122,33 +150,33 @@ class InicioController extends Controller
             })
             ->where('estados.created_at', '>=', now()->subHours(24))
             ->orderByRaw('CASE WHEN EXISTS (
-SELECT 1 FROM estado_visto 
-WHERE estado_visto.estado_id = estados.id 
-AND estado_visto.user_id = ?) 
-THEN 1 ELSE 0 END', [auth()->id()])
+                SELECT 1 FROM estado_visto 
+                WHERE estado_visto.estado_id = estados.id 
+                AND estado_visto.user_id = ?) 
+                THEN 1 ELSE 0 END', [auth()->id()])
             ->orderBy('estados.created_at', 'desc')
             ->get();
-
+    
         // Usuario destacado
         $usuarioDestacado = UsuarioPublicate::with(['estados' => function ($query) {
             $query->where('created_at', '>=', now()->subHours(24));
         }])
-            ->where('estadop', 3)
-            ->where('ubicacion', $ciudadSeleccionada->nombre)
-            ->select(
-                'id',
-                'fantasia',
-                'nombre',
-                'edad',
-                'ubicacion',
-                'fotos',
-                'foto_positions',
-                'categorias',
-                'precio',
-                'estadop'
-            )
-            ->first();
-
+        ->where('estadop', 3)
+        ->where('ubicacion', $ciudadSeleccionada->nombre)
+        ->select(
+            'id',
+            'fantasia',
+            'nombre',
+            'edad',
+            'ubicacion',
+            'fotos',
+            'foto_positions',
+            'categorias',
+            'precio',
+            'estadop'
+        )
+        ->first();
+    
         // Usuarios online
         $usuariosOnline = UsuarioPublicate::with([
             'disponibilidad' => function ($query) use ($currentDay, $currentTime) {
@@ -162,19 +190,19 @@ THEN 1 ELSE 0 END', [auth()->id()])
                 $query->where('created_at', '>=', now()->subHours(24));
             }
         ])
-            ->where('estadop', 1)
-            ->where('ubicacion', $ciudadSeleccionada->nombre)
-            ->whereHas('disponibilidad', function ($query) use ($currentDay, $currentTime) {
-                $query->where('dia', 'LIKE', $currentDay)
-                    ->where(function ($q) use ($currentTime) {
-                        $q->whereRaw("(hora_hasta < hora_desde AND ('$currentTime' >= hora_desde OR '$currentTime' <= hora_hasta))")
-                            ->orWhereRaw("(hora_hasta >= hora_desde AND '$currentTime' BETWEEN hora_desde AND hora_hasta)");
-                    });
-            })
-            ->select('id', 'fantasia', 'edad', 'fotos', 'foto_positions', 'estadop')
-            ->take(11)
-            ->get();
-
+        ->where('estadop', 1)
+        ->where('ubicacion', $ciudadSeleccionada->nombre)
+        ->whereHas('disponibilidad', function ($query) use ($currentDay, $currentTime) {
+            $query->where('dia', 'LIKE', $currentDay)
+                ->where(function ($q) use ($currentTime) {
+                    $q->whereRaw("(hora_hasta < hora_desde AND ('$currentTime' >= hora_desde OR '$currentTime' <= hora_hasta))")
+                        ->orWhereRaw("(hora_hasta >= hora_desde AND '$currentTime' BETWEEN hora_desde AND hora_hasta)");
+                });
+        })
+        ->select('id', 'fantasia', 'edad', 'fotos', 'foto_positions', 'estadop')
+        ->take(11)
+        ->get();
+    
         // Primera vez
         $primeraVez = UsuarioPublicate::with([
             'disponibilidad' => function ($query) use ($currentDay, $currentTime) {
@@ -185,25 +213,25 @@ THEN 1 ELSE 0 END', [auth()->id()])
                     });
             }
         ])
-            ->select(
-                'id',
-                'fantasia',
-                'nombre',
-                'edad',
-                'ubicacion',
-                'fotos',
-                'foto_positions',
-                'categorias',
-                'posicion',
-                'precio',
-                'estadop'
-            )
-            ->whereIn('estadop', [1, 3])
-            ->where('ubicacion', $ciudadSeleccionada->nombre)
-            ->orderBy('created_at', 'desc')
-            ->take(2)
-            ->get();
-
+        ->select(
+            'id',
+            'fantasia',
+            'nombre',
+            'edad',
+            'ubicacion',
+            'fotos',
+            'foto_positions',
+            'categorias',
+            'posicion',
+            'precio',
+            'estadop'
+        )
+        ->whereIn('estadop', [1, 3])
+        ->where('ubicacion', $ciudadSeleccionada->nombre)
+        ->orderBy('created_at', 'desc')
+        ->take(2)
+        ->get();
+    
         // Volvieron
         $volvieron = UsuarioPublicate::with([
             'disponibilidad' => function ($query) use ($currentDay, $currentTime) {
@@ -214,26 +242,26 @@ THEN 1 ELSE 0 END', [auth()->id()])
                     });
             }
         ])
-            ->select(
-                'id',
-                'fantasia',
-                'nombre',
-                'edad',
-                'ubicacion',
-                'fotos',
-                'foto_positions',
-                'categorias',
-                'posicion',
-                'precio',
-                'estadop'
-            )
-            ->whereIn('estadop', [1, 3])
-            ->where('ubicacion', $ciudadSeleccionada->nombre)
-            ->whereRaw('DATE(updated_at) != DATE(created_at)')
-            ->orderBy('updated_at', 'desc')
-            ->take(2)
-            ->get();
-
+        ->select(
+            'id',
+            'fantasia',
+            'nombre',
+            'edad',
+            'ubicacion',
+            'fotos',
+            'foto_positions',
+            'categorias',
+            'posicion',
+            'precio',
+            'estadop'
+        )
+        ->whereIn('estadop', [1, 3])
+        ->where('ubicacion', $ciudadSeleccionada->nombre)
+        ->whereRaw('DATE(updated_at) != DATE(created_at)')
+        ->orderBy('updated_at', 'desc')
+        ->take(2)
+        ->get();
+    
         // Blog articles
         $blogArticles = BlogArticle::where('estado', 'publicado')
             ->whereNotNull('fecha_publicacion')
@@ -249,7 +277,7 @@ THEN 1 ELSE 0 END', [auth()->id()])
             )
             ->take(4)
             ->get();
-
+    
         // Experiencias
         $experiencias = Posts::select(
             'posts.id',
@@ -261,35 +289,35 @@ THEN 1 ELSE 0 END', [auth()->id()])
             'blog_articles.imagen as blog_imagen',
             'posts.id_blog'
         )
-            ->leftJoin('users', 'posts.id_usuario', '=', 'users.id')
-            ->leftJoin('blog_articles', 'posts.id_blog', '=', 'blog_articles.id')
-            ->leftJoin('foro', 'posts.id_blog', '=', 'foro.id_blog')
-            ->orderBy('posts.created_at', 'desc')
-            ->take(4)
-            ->get();
-
-            $seoText = $this->generateSeoText(request(), $ciudadSeleccionada);
-
-            return view('inicio', array_merge([
-                'ciudades' => $ciudades,
-                'ciudadSeleccionada' => $ciudadSeleccionada,
-                'usuarios' => $usuarios,
-                'usuarioDestacado' => $usuarioDestacado,
-                'usuariosOnline' => $usuariosOnline,
-                'totalOnline' => $usuariosOnline->count(),
-                'currentTime' => $currentTime,
-                'currentDay' => $currentDay,
-                'estados' => $estados,
-                'primeraVez' => $primeraVez,
-                'blogArticles' => $blogArticles,
-                'volvieron' => $volvieron,
-                'experiencias' => $experiencias
-            ], $seoText ? [
-                'seoTitle' => $seoText['title'],
-                'seoDescription' => $seoText['description']
-            ] : []));
+        ->leftJoin('users', 'posts.id_usuario', '=', 'users.id')
+        ->leftJoin('blog_articles', 'posts.id_blog', '=', 'blog_articles.id')
+        ->leftJoin('foro', 'posts.id_blog', '=', 'foro.id_blog')
+        ->orderBy('posts.created_at', 'desc')
+        ->take(4)
+        ->get();
+    
+        $seoText = $this->generateSeoText(request(), $ciudadSeleccionada);
+    
+        return view('inicio', array_merge([
+            'ciudades' => $ciudades,
+            'ciudadSeleccionada' => $ciudadSeleccionada,
+            'barrios' => $barrios,
+            'usuarios' => $usuarios,
+            'usuarioDestacado' => $usuarioDestacado,
+            'usuariosOnline' => $usuariosOnline,
+            'totalOnline' => $usuariosOnline->count(),
+            'currentTime' => $currentTime,
+            'currentDay' => $currentDay,
+            'estados' => $estados,
+            'primeraVez' => $primeraVez,
+            'blogArticles' => $blogArticles,
+            'volvieron' => $volvieron,
+            'experiencias' => $experiencias
+        ], $seoText ? [
+            'seoTitle' => $seoText['title'],
+            'seoDescription' => $seoText['description']
+        ] : []));
     }
-
     public function showByCategory($nombreCiudad, $categoria)
     {
         // Convertir la categoría a mayúsculas
@@ -531,134 +559,157 @@ THEN 1 ELSE 0 END', [auth()->id()])
     }
 
     private function generateSeoText($request, $ciudadSeleccionada)
-{
-    // Contar filtros activos
-    $activeFilters = 0;
-    if ($request->has('n')) $activeFilters++;
-    if ($request->has('e')) $activeFilters++;
-    if ($request->has('p')) $activeFilters++;
-    if ($request->has('a')) {
-        $atributos = explode(',', $request->get('a'));
-        $activeFilters += count($atributos);
-    }
-    if ($request->has('s')) {
-        $servicios = explode(',', $request->get('s'));
-        $activeFilters += count($servicios);
-    }
-
-    // Si no hay filtros, retornar null
-    if ($activeFilters === 0) {
-        return null;
-    }
-
-    // Determinar qué tipo de template usar
-    $templateType = 'single';
-    if ($activeFilters > 4) {
-        $templateType = 'complex';
-    } elseif ($activeFilters > 1) {
-        $templateType = 'multiple';
-    }
-
-    // Obtener el template correspondiente
-    $template = SeoTemplate::where('tipo', $templateType)->first();
-    if (!$template) {
-        // Templates por defecto si no existen en la base de datos
-        $defaultTemplates = [
-            'single' => 'Encuentra escorts {nacionalidad} en {ciudad}. Explora nuestro catálogo de escorts seleccionadas.',
-            'multiple' => 'Encuentra escorts {nacionalidad} de {edad_min} a {edad_max} años con precios desde ${precio_min} hasta ${precio_max} en {ciudad}.',
-            'complex' => 'Descubre escorts {nacionalidad} en {ciudad} que cumplen con tus preferencias específicas. Contamos con una amplia selección de servicios y características como {atributos} y servicios de {servicios}.'
-        ];
+    {
+        // Verificar si es un filtro de nacionalidad por URL
+        $path = $request->path();
+        $parts = explode('/', $path);
+        $lastPart = end($parts);
+        $isNationalityFilter = str_starts_with($lastPart, 'escorts-');
         
-        $template = new SeoTemplate([
-            'tipo' => $templateType,
-            'description_template' => $defaultTemplates[$templateType]
-        ]);
-    }
-
-    // Preparar las variables de reemplazo
-    $replacements = [
-        '{ciudad}' => $ciudadSeleccionada->nombre,
-        '{nacionalidad}' => '',
-        '{edad_min}' => '18',
-        '{edad_max}' => '50',
-        '{precio_min}' => '50.000',
-        '{precio_max}' => '300.000',
-        '{atributos}' => '',
-        '{servicios}' => ''
-    ];
-
-    // Procesar nacionalidad
-    if ($nacionalidad = $request->get('n')) {
-        $nacionalidades = [
-            'argentine' => 'argentinas',
-            'brazilian' => 'brasileñas',
-            'chilean' => 'chilenas',
-            'colombian' => 'colombianas',
-            'ecuadorian' => 'ecuatorianas',
-            'uruguayan' => 'uruguayas'
+        if ($isNationalityFilter) {
+            $nacionalidad = str_replace('escorts-', '', $lastPart);
+            $request->merge(['n' => $nacionalidad]);
+        }
+    
+        // Contar filtros activos
+        $activeFilters = 0;
+        if ($request->has('n') || $isNationalityFilter) $activeFilters++;
+        if ($request->has('e')) $activeFilters++;
+        if ($request->has('p')) $activeFilters++;
+        if ($request->has('a')) {
+            $atributos = explode(',', $request->get('a'));
+            $activeFilters += count($atributos);
+        }
+        if ($request->has('s')) {
+            $servicios = explode(',', $request->get('s'));
+            $activeFilters += count($servicios);
+        }
+    
+        // Si no hay filtros, retornar null
+        if ($activeFilters === 0) {
+            return null;
+        }
+    
+        // Determinar qué tipo de template usar
+        $templateType = 'single';
+        if ($activeFilters > 4) {
+            $templateType = 'complex';
+        } elseif ($activeFilters > 1) {
+            $templateType = 'multiple';
+        }
+    
+        // Obtener el template correspondiente
+        $template = SeoTemplate::where('tipo', $templateType)->first();
+        if (!$template) {
+            // Templates por defecto si no existen en la base de datos
+            $defaultTemplates = [
+                'single' => 'Encuentra escorts {nacionalidad} en {ciudad}. Explora nuestro catálogo de escorts seleccionadas.',
+                'multiple' => 'Encuentra escorts {nacionalidad} de {edad_min} a {edad_max} años con precios desde ${precio_min} hasta ${precio_max} en {ciudad}.',
+                'complex' => 'Descubre escorts {nacionalidad} en {ciudad} que cumplen con tus preferencias específicas. Contamos con una amplia selección de servicios y características como {atributos} y servicios de {servicios}.'
+            ];
+            
+            $template = new SeoTemplate([
+                'tipo' => $templateType,
+                'description_template' => $defaultTemplates[$templateType]
+            ]);
+        }
+    
+        // Preparar las variables de reemplazo
+        $replacements = [
+            '{ciudad}' => $ciudadSeleccionada->nombre,
+            '{nacionalidad}' => '',
+            '{edad_min}' => '18',
+            '{edad_max}' => '50',
+            '{precio_min}' => '50.000',
+            '{precio_max}' => '300.000',
+            '{atributos}' => '',
+            '{servicios}' => ''
         ];
-        $replacements['{nacionalidad}'] = isset($nacionalidades[$nacionalidad]) ? $nacionalidades[$nacionalidad] : '';
-    }
-
-    // Procesar edad
-    if ($edad = $request->get('e')) {
-        list($min, $max) = explode('-', $edad);
-        $replacements['{edad_min}'] = $min;
-        $replacements['{edad_max}'] = $max;
-    }
-
-    // Procesar precio
-    if ($precio = $request->get('p')) {
-        list($min, $max) = explode('-', $precio);
-        $replacements['{precio_min}'] = number_format($min, 0, ',', '.');
-        $replacements['{precio_max}'] = number_format($max, 0, ',', '.');
-    }
-
-    // Procesar atributos
-    if ($atributos = $request->get('a')) {
-        $atributosArray = explode(',', $atributos);
-        if (!empty($atributosArray)) {
-            $replacements['{atributos}'] = strtolower(implode(', ', array_slice($atributosArray, 0, 3)));
+    
+        // Procesar nacionalidad
+        if ($nacionalidad = $request->get('n')) {
+            $nacionalidades = [
+                'argentine' => 'argentinas',
+                'brazilian' => 'brasileñas',
+                'chilean' => 'chilenas',
+                'colombian' => 'colombianas',
+                'ecuadorian' => 'ecuatorianas',
+                'uruguayan' => 'uruguayas',
+                'argentinas' => 'argentinas',
+                'brasilenas' => 'brasileñas',
+                'chilenas' => 'chilenas',
+                'colombianas' => 'colombianas',
+                'ecuatorianas' => 'ecuatorianas',
+                'uruguayas' => 'uruguayas'
+            ];
+            $replacements['{nacionalidad}'] = isset($nacionalidades[$nacionalidad]) ? $nacionalidades[$nacionalidad] : '';
         }
-    }
-
-    // Procesar servicios
-    if ($servicios = $request->get('s')) {
-        $serviciosArray = explode(',', $servicios);
-        if (!empty($serviciosArray)) {
-            $replacements['{servicios}'] = strtolower(implode(', ', array_slice($serviciosArray, 0, 3)));
+    
+        // Procesar edad
+        if ($edad = $request->get('e')) {
+            list($min, $max) = explode('-', $edad);
+            $replacements['{edad_min}'] = $min;
+            $replacements['{edad_max}'] = $max;
         }
-    }
-
-    // Generar título
-    $title = "Escorts en " . $ciudadSeleccionada->nombre;
-    if ($nacionalidad = $request->get('n')) {
-        $nacionalidades = [
-            'argentine' => 'argentinas',
-            'brazilian' => 'brasileñas',
-            'chilean' => 'chilenas',
-            'colombian' => 'colombianas',
-            'ecuadorian' => 'ecuatorianas',
-            'uruguayan' => 'uruguayas'
+    
+        // Procesar precio
+        if ($precio = $request->get('p')) {
+            list($min, $max) = explode('-', $precio);
+            $replacements['{precio_min}'] = number_format($min, 0, ',', '.');
+            $replacements['{precio_max}'] = number_format($max, 0, ',', '.');
+        }
+    
+        // Procesar atributos
+        if ($atributos = $request->get('a')) {
+            $atributosArray = explode(',', $atributos);
+            if (!empty($atributosArray)) {
+                $replacements['{atributos}'] = strtolower(implode(', ', array_slice($atributosArray, 0, 3)));
+            }
+        }
+    
+        // Procesar servicios
+        if ($servicios = $request->get('s')) {
+            $serviciosArray = explode(',', $servicios);
+            if (!empty($serviciosArray)) {
+                $replacements['{servicios}'] = strtolower(implode(', ', array_slice($serviciosArray, 0, 3)));
+            }
+        }
+    
+        // Generar título
+        $title = "Escorts en " . $ciudadSeleccionada->nombre;
+        if ($nacionalidad = $request->get('n')) {
+            $nacionalidades = [
+                'argentine' => 'argentinas',
+                'brazilian' => 'brasileñas',
+                'chilean' => 'chilenas',
+                'colombian' => 'colombianas',
+                'ecuadorian' => 'ecuatorianas',
+                'uruguayan' => 'uruguayas',
+                'argentinas' => 'argentinas',
+                'brasilenas' => 'brasileñas',
+                'chilenas' => 'chilenas',
+                'colombianas' => 'colombianas',
+                'ecuatorianas' => 'ecuatorianas',
+                'uruguayas' => 'uruguayas'
+            ];
+            if (isset($nacionalidades[$nacionalidad])) {
+                $title = "Escorts " . $nacionalidades[$nacionalidad] . " en " . $ciudadSeleccionada->nombre;
+            }
+        }
+    
+        // Aplicar reemplazos a la descripción
+        $description = str_replace(
+            array_keys($replacements),
+            array_values($replacements),
+            $template->description_template
+        );
+    
+        // Limpiar el texto en caso de que haya variables no reemplazadas
+        $description = preg_replace('/\{[^}]+\}/', '', $description);
+    
+        return [
+            'title' => $title,
+            'description' => $description
         ];
-        if (isset($nacionalidades[$nacionalidad])) {
-            $title = "Escorts " . $nacionalidades[$nacionalidad] . " en " . $ciudadSeleccionada->nombre;
-        }
     }
-
-    // Aplicar reemplazos a la descripción
-    $description = str_replace(
-        array_keys($replacements),
-        array_values($replacements),
-        $template->description_template
-    );
-
-    // Limpiar el texto en caso de que haya variables no reemplazadas
-    $description = preg_replace('/\{[^}]+\}/', '', $description);
-
-    return [
-        'title' => $title,
-        'description' => $description
-    ];
-}
 }
