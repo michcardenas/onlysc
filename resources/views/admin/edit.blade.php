@@ -160,12 +160,12 @@
                 <label for="nacionalidad">Nacionalidad</label>
                 <select name="nacionalidad" id="nacionalidad" class="form-select" required>
                     <option value="">Seleccionar nacionalidad</option>
-                    <option value="argentine" {{ old('nacionalidad', $usuario->nacionalidad) == 'argentine' ? 'selected' : '' }}>Argentina</option>
-                    <option value="brazilian" {{ old('nacionalidad', $usuario->nacionalidad) == 'brazilian' ? 'selected' : '' }}>Brasil</option>
-                    <option value="chilean" {{ old('nacionalidad', $usuario->nacionalidad) == 'chilean' ? 'selected' : '' }}>Chile</option>
-                    <option value="colombian" {{ old('nacionalidad', $usuario->nacionalidad) == 'colombian' ? 'selected' : '' }}>Colombia</option>
-                    <option value="ecuadorian" {{ old('nacionalidad', $usuario->nacionalidad) == 'ecuadorian' ? 'selected' : '' }}>Ecuador</option>
-                    <option value="uruguayan" {{ old('nacionalidad', $usuario->nacionalidad) == 'uruguayan' ? 'selected' : '' }}>Uruguay</option>
+                    <option value="argentina" {{ old('nacionalidad', $usuario->nacionalidad) == 'argentina' ? 'selected' : '' }}>Argentina</option>
+                    <option value="brasil" {{ old('nacionalidad', $usuario->nacionalidad) == 'brasil' ? 'selected' : '' }}>Brasil</option>
+                    <option value="chile" {{ old('nacionalidad', $usuario->nacionalidad) == 'chile' ? 'selected' : '' }}>Chile</option>
+                    <option value="colombia" {{ old('nacionalidad', $usuario->nacionalidad) == 'colombia' ? 'selected' : '' }}>Colombia</option>
+                    <option value="ecuador" {{ old('nacionalidad', $usuario->nacionalidad) == 'ecuador' ? 'selected' : '' }}>Ecuador</option>
+                    <option value="uruguay" {{ old('nacionalidad', $usuario->nacionalidad) == 'uruguay' ? 'selected' : '' }}>Uruguay</option>
                 </select>
             </div>
 

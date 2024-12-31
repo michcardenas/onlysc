@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\SeoTemplate;
 use Illuminate\Support\Facades\Log;
-use App\Models\UsuarioPublicate; 
+use App\Models\UsuarioPublicate;
+use App\Models\Ciudad; 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -167,44 +168,110 @@ public function eliminarPerfil($id)
             ->with('error', 'Error al eliminar el perfil: ' . $e->getMessage());
     }
 }
-
 public function seoTemplates()
 {
-    $templates = SeoTemplate::all()->pluck('description_template', 'tipo')->toArray();
-    $usuarioAutenticado = Auth::user();
+    $ciudades = Ciudad::all();
+    $templates = [];
     
-    return view('seo.templates', compact('templates', 'usuarioAutenticado'));
+    // Obtener todos los templates y organizarlos por tipo y ciudad
+    $allTemplates = SeoTemplate::select('id', 'tipo', 'ciudad_id', 'description_template')
+        ->orderBy('ciudad_id')
+        ->orderBy('tipo')
+        ->get();
+        
+    foreach ($allTemplates as $template) {
+        $templates[$template->tipo][$template->ciudad_id] = $template->description_template;
+    }
+    
+    $defaultTemplates = [
+        'single' => 'Encuentra escorts {nacionalidad} en {ciudad} {sector}. Explora nuestro catálogo de escorts seleccionadas.',
+        'multiple' => 'Encuentra escorts {nacionalidad} de {edad_min} a {edad_max} años con precios desde ${precio_min} hasta ${precio_max} en {ciudad} {sector}.',
+        'complex' => 'Descubre escorts {nacionalidad} en {ciudad} {sector} que cumplen con tus preferencias específicas. Contamos con una amplia selección de servicios y características como {atributos} y servicios de {servicios}.'
+    ];
+    
+    return view('seo.templates', [
+        'templates' => $templates,
+        'defaultTemplates' => $defaultTemplates,
+        'usuarioAutenticado' => Auth::user(),
+        'ciudades' => $ciudades
+    ]);
 }
 
 public function updateSeoTemplate(Request $request)
 {
     $request->validate([
         'description_template' => 'required|string',
-        'tipo' => 'required|in:single,multiple,complex'
+        'tipo' => 'required|in:single,multiple,complex',
+        'ciudad_id' => 'required|exists:ciudades,id'
     ]);
 
     try {
         SeoTemplate::updateOrCreate(
-            ['tipo' => $request->tipo],
-            ['description_template' => $request->description_template]
+            [
+                'ciudad_id' => $request->ciudad_id,
+                'tipo' => $request->tipo
+            ],
+            [
+                'description_template' => $request->description_template
+            ]
         );
 
-        Log::info('Template SEO actualizado', [
-            'admin_id' => auth()->id(),
-            'tipo' => $request->tipo
-        ]);
-
-        return redirect()->back()->with('success', 'Contenido SEO actualizado correctamente');
+        return redirect()->back()->with('success', 'Template SEO actualizado correctamente');
 
     } catch (\Exception $e) {
-        Log::error('Error al actualizar template SEO', [
+        Log::error('Error en template SEO', [
             'error' => $e->getMessage(),
             'line' => $e->getLine(),
             'file' => $e->getFile()
         ]);
 
         return redirect()->back()
-            ->with('error', 'Error al actualizar el contenido SEO: ' . $e->getMessage());
+            ->with('error', 'Error al procesar el template SEO: ' . $e->getMessage());
     }
 }
+
+        /**
+     * Elimina un template SEO específico
+     */
+    public function deleteSeoTemplate($id)
+    {
+        try {
+            $template = SeoTemplate::findOrFail($id);
+            
+            // Log antes de eliminar
+            Log::info('Template SEO eliminado', [
+                'admin_id' => auth()->id(),
+                'ciudad_id' => $template->ciudad_id,
+                'tipo' => $template->tipo
+            ]);
+
+            // Eliminar el template
+            $template->delete();
+
+            return redirect()->back()->with('success', 'Template SEO eliminado correctamente');
+
+        } catch (\Exception $e) {
+            Log::error('Error al eliminar template SEO', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
+
+            return redirect()->back()
+                ->with('error', 'Error al eliminar el template SEO: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Obtiene los templates de una ciudad específica
+     */
+    public function getTemplatesByCiudad($ciudadId)
+    {
+        $templates = SeoTemplate::where('ciudad_id', $ciudadId)
+            ->get()
+            ->groupBy('tipo');
+
+        return response()->json($templates);
+    }
+
 }

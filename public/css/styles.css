@@ -3572,6 +3572,63 @@ video:not(.banner-img):not(.historia-circle video) {
     margin: 0 34px;
 }
 
+/* Estilos para las categorías de precio */
+.price-categories {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    gap: 12px;
+}
+
+.price-category {
+    flex: 1;
+    background: #ffffff;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 12px 15px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.price-category:hover {
+    border-color: #e00037;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(37,99,235,0.1);
+}
+
+.price-category.active {
+    background: #e00037;
+    color: white;
+    border-color: #e00037;
+    box-shadow: 0 4px 6px rgba(37,99,235,0.2);
+}
+
+.category-name {
+    display: block;
+    font-weight: 600;
+    font-size: 1.1em;
+    margin-bottom: 6px;
+    color: #1a1a1a;
+}
+
+.price-category.active .category-name {
+    color: white;
+}
+
+.category-range {
+    display: block;
+    font-size: 0.9em;
+    color: #6b7280;
+}
+
+.price-category.active .category-range {
+    color: rgba(255,255,255,0.9);
+}
+
 /* Large screens (1280px y menor) */
 @media screen and (max-width: 1280px) {
     .inicio-card {

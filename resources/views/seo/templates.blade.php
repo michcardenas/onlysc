@@ -39,130 +39,106 @@
 <div class="container-fluid main-content">
     <div class="card custom-card">
         <div class="card-header">
-            <h3 class="card-title">Contenido SEO para Filtros</h3>
+            <h3 class="card-title">Templates SEO</h3>
         </div>
         <div class="card-body">
+            @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+            @endif
+
+            @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+            @endif
+
+            <!-- Pestañas -->
             <!-- Pestañas -->
             <ul class="nav nav-tabs custom-tabs mb-4" id="templateTabs" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="single-tab" data-bs-toggle="tab" href="#single" role="tab">
-                        Un filtro
-                    </a>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="single-tab" data-bs-toggle="tab" data-bs-target="#single" type="button" role="tab">
+                        Template 1 Filtro
+                    </button>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="multiple-tab" data-bs-toggle="tab" href="#multiple" role="tab">
-                        2-4 filtros
-                    </a>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="multiple-tab" data-bs-toggle="tab" data-bs-target="#multiple" type="button" role="tab">
+                        Template 2-4 Filtros
+                    </button>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="complex-tab" data-bs-toggle="tab" href="#complex" role="tab">
-                        Más de 4 filtros
-                    </a>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="complex-tab" data-bs-toggle="tab" data-bs-target="#complex" type="button" role="tab">
+                        Template +4 Filtros
+                    </button>
                 </li>
             </ul>
 
-            <!-- Contenido de las pestañas -->
-            <div class="tab-content" id="templateTabsContent">
-                <!-- Template para un filtro -->
-                <div class="tab-pane fade show active" id="single" role="tabpanel">
-                    <form action="{{ route('seo.templates.update') }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <input type="hidden" name="tipo" value="single">
 
-                        <div class="mb-3">
-                            <label class="form-label">Variables disponibles:</label>
-                            <ul class="list-group custom-list">
-                                <li class="list-group-item"><code>{ciudad}</code> - Nombre de la ciudad</li>
-                                <li class="list-group-item"><code>{nacionalidad}</code> - Nacionalidad seleccionada</li>
-                                <li class="list-group-item"><code>{edad_min}</code> - Edad mínima</li>
-                                <li class="list-group-item"><code>{edad_max}</code> - Edad máxima</li>
-                                <li class="list-group-item"><code>{precio_min}</code> - Precio mínimo</li>
-                                <li class="list-group-item"><code>{precio_max}</code> - Precio máximo</li>
-                                <li class="list-group-item"><code>{atributos}</code> - Lista de atributos seleccionados</li>
-                                <li class="list-group-item"><code>{servicios}</code> - Lista de servicios seleccionados</li>
-                            </ul>
-                            <small class="text-muted mt-2">* Todas las variables están disponibles en cualquier tipo de template. Si una variable no tiene valor, será omitida automáticamente del texto.</small>
-                        </div>
+<!-- En el contenido de las pestañas -->
+<div class="tab-content" id="templateTabsContent">
+    @foreach(['single' => '1 Filtro', 'multiple' => '2-4 Filtros', 'complex' => '+4 Filtros'] as $tipo => $titulo)
+    <div class="tab-pane fade {{ $tipo === 'single' ? 'show active' : '' }}" id="{{ $tipo }}" role="tabpanel">
+        <form action="{{ route('seo.templates.update') }}" method="POST">
+            @csrf
+            <input type="hidden" name="tipo" value="{{ $tipo }}">
 
-                        <div class="mb-3">
-                            <label for="single_template" class="form-label">Descripción para un filtro</label>
-                            <textarea class="form-control custom-textarea" id="single_template" name="description_template" rows="4">{{ $templates['single'] ?? 'Encuentra escorts {nacionalidad} en {ciudad}. Explora nuestro catálogo de escorts seleccionadas.' }}</textarea>
-                        </div>
-
-                        <button type="submit" class="btn custom-button">Guardar template de un filtro</button>
-                    </form>
-                </div>
-
-                <!-- Template para 2-4 filtros -->
-                <div class="tab-pane fade" id="multiple" role="tabpanel">
-                    <form action="{{ route('seo.templates.update') }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <input type="hidden" name="tipo" value="multiple">
-
-                        <div class="mb-3">
-                            <label class="form-label">Variables disponibles:</label>
-                            <ul class="list-group custom-list">
-                                <li class="list-group-item"><code>{ciudad}</code> - Nombre de la ciudad</li>
-                                <li class="list-group-item"><code>{nacionalidad}</code> - Nacionalidad seleccionada</li>
-                                <li class="list-group-item"><code>{edad_min}</code> - Edad mínima</li>
-                                <li class="list-group-item"><code>{edad_max}</code> - Edad máxima</li>
-                                <li class="list-group-item"><code>{precio_min}</code> - Precio mínimo</li>
-                                <li class="list-group-item"><code>{precio_max}</code> - Precio máximo</li>
-                                <li class="list-group-item"><code>{atributos}</code> - Lista de atributos seleccionados</li>
-                                <li class="list-group-item"><code>{servicios}</code> - Lista de servicios seleccionados</li>
-                            </ul>
-                            <small class="text-muted mt-2" style="color: #333;">* Todas las variables están disponibles en cualquier tipo de template. Si una variable no tiene valor, será omitida automáticamente del texto.</small>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="multiple_template" class="form-label">Descripción para 2-4 filtros</label>
-                            <textarea class="form-control custom-textarea" id="multiple_template" name="description_template" rows="4">{{ $templates['multiple'] ?? 'Encuentra escorts {nacionalidad} de {edad_min} a {edad_max} años con precios desde ${precio_min} hasta ${precio_max} en {ciudad}.' }}</textarea>
-                        </div>
-
-                        <button type="submit" class="btn custom-button">Guardar template de 2-4 filtros</button>
-                    </form>
-                </div>
-
-                <!-- Template para más de 4 filtros -->
-                <div class="tab-pane fade" id="complex" role="tabpanel">
-                    <form action="{{ route('seo.templates.update') }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <input type="hidden" name="tipo" value="complex">
-
-                        <div class="mb-3">
-                            <label class="form-label">Variables disponibles:</label>
-                            <ul class="list-group custom-list">
-                                <li class="list-group-item"><code>{ciudad}</code> - Nombre de la ciudad</li>
-                                <li class="list-group-item"><code>{nacionalidad}</code> - Nacionalidad seleccionada</li>
-                                <li class="list-group-item"><code>{edad_min}</code> - Edad mínima</li>
-                                <li class="list-group-item"><code>{edad_max}</code> - Edad máxima</li>
-                                <li class="list-group-item"><code>{precio_min}</code> - Precio mínimo</li>
-                                <li class="list-group-item"><code>{precio_max}</code> - Precio máximo</li>
-                                <li class="list-group-item"><code>{atributos}</code> - Lista de atributos seleccionados</li>
-                                <li class="list-group-item"><code>{servicios}</code> - Lista de servicios seleccionados</li>
-                            </ul>
-                            <small class="text-muted mt-2">* Todas las variables están disponibles en cualquier tipo de template. Si una variable no tiene valor, será omitida automáticamente del texto.</small>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="complex_template" class="form-label">Descripción para más de 4 filtros</label>
-                            <textarea class="form-control custom-textarea" id="complex_template" name="description_template" rows="4">{{ $templates['complex'] ?? 'Descubre escorts {nacionalidad} en {ciudad} que cumplen con tus preferencias específicas. Contamos con una amplia selección de servicios y características como {atributos} y servicios de {servicios}.' }}</textarea>
-                        </div>
-
-                        <button type="submit" class="btn custom-button">Guardar template complejo</button>
-                    </form>
-                </div>
+            <div class="mb-3">
+                <label for="{{ $tipo }}_ciudad" class="form-label">Ciudad</label>
+                <select class="form-control custom-textarea" id="{{ $tipo }}_ciudad" name="ciudad_id" 
+                        onchange="loadTemplate('{{ $tipo }}', this.value)">
+                    @foreach($ciudades as $ciudad)
+                    <option value="{{ $ciudad->id }}">{{ $ciudad->nombre }}</option>
+                    @endforeach
+                </select>
             </div>
-        </div>
+
+            <div class="mb-3">
+                <label for="{{ $tipo }}_template" class="form-label">Template para {{ $titulo }}</label>
+                <textarea
+                    class="form-control custom-textarea"
+                    id="{{ $tipo }}_template"
+                    name="description_template"
+                    rows="4"
+                    onkeyup="updatePreview('{{ $tipo }}')">{{ isset($templates[$tipo][$ciudad->id]) ? $templates[$tipo][$ciudad->id] : $defaultTemplates[$tipo] }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Vista previa:</label>
+                <div id="{{ $tipo }}_preview" class="p-3 bg-light border rounded"></div>
+            </div>
+
+            <button type="submit" class="btn custom-button">Guardar Template</button>
+        </form>
+    </div>
+    @endforeach
+</div>
+
+
+            <!-- Variables disponibles -->
+            <div class="mt-4">
+    <h4 class="mb-3">Variables disponibles:</h4>
+    <ul class="list-group custom-list">
+        <li class="list-group-item"><code>{ciudad}</code> - Nombre de la ciudad</li>
+        <li class="list-group-item"><code>{sector}</code> - Sector específico (si aplica)</li>
+        <li class="list-group-item"><code>{nacionalidad}</code> - Nacionalidad seleccionada</li>
+        <li class="list-group-item"><code>{edad_min}</code> - Edad mínima</li>
+        <li class="list-group-item"><code>{edad_max}</code> - Edad máxima</li>
+        <li class="list-group-item"><code>{precio_min}</code> - Precio mínimo</li>
+        <li class="list-group-item"><code>{precio_max}</code> - Precio máximo</li>
+        <li class="list-group-item"><code>{atributos}</code> - Lista de atributos seleccionados</li>
+        <li class="list-group-item"><code>{servicios}</code> - Lista de servicios seleccionados</li>
+    </ul>
+    <small class="text-muted mt-2">* Todas las variables están disponibles en cualquier tipo de template. Si una variable no tiene valor, será omitida automáticamente del texto.</small>
+</div>
+
     </div>
 </div>
 
 <footer class="footer-admin">
     <p>&copy; {{ date('Y') }} OnlyEscorts chile. Todos los derechos reservados.</p>
 </footer>
+
 
 <style>
     /* Estilos generales */
@@ -336,6 +312,10 @@
 
     .text-muted mt-2 {
         color: #888;
+    }
+
+    .mt-2 {
+        color: #FFF;
     }
 
     /* Logo */

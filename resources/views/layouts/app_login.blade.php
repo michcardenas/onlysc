@@ -1594,4 +1594,42 @@ function confirmarEliminarPerfil(id) {
 }
 </script>
 
+
+<script>
+function updatePreview(tipo) {
+    const template = document.getElementById(`${tipo}_template`).value;
+    const ciudad = document.getElementById(`${tipo}_ciudad`).options[document.getElementById(`${tipo}_ciudad`).selectedIndex].text;
+    
+    let preview = template
+        .replace('{ciudad}', ciudad)
+        .replace('{nacionalidad}', 'brasileñas')
+        .replace('{edad_min}', '18')
+        .replace('{edad_max}', '35')
+        .replace('{precio_min}', '50000')
+        .replace('{precio_max}', '150000')
+        .replace('{atributos}', 'altura, peso, medidas')
+        .replace('{servicios}', 'masajes, compañía');
+    
+    document.getElementById(`${tipo}_preview`).textContent = preview;
+}
+
+function loadTemplate(tipo, ciudadId) {
+    fetch(`/seo/templates/${ciudadId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data[tipo] && data[tipo].length > 0) {
+                document.getElementById(`${tipo}_template`).value = data[tipo][0].description_template;
+            } else {
+                // Cargar template por defecto si no existe uno específico
+                const defaultTemplates = {
+                    'single': 'Encuentra escorts {nacionalidad} en {ciudad}. Explora nuestro catálogo de escorts seleccionadas.',
+                    'multiple': 'Encuentra escorts {nacionalidad} de {edad_min} a {edad_max} años con precios desde ${precio_min} hasta ${precio_max} en {ciudad}.',
+                    'complex': 'Descubre escorts {nacionalidad} en {ciudad} que cumplen con tus preferencias específicas. Contamos con una amplia selección de servicios y características como {atributos} y servicios de {servicios}.'
+                };
+                document.getElementById(`${tipo}_template`).value = defaultTemplates[tipo];
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+</script>
 </html>

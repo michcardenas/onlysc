@@ -146,7 +146,14 @@
                                     <span class="inicio-card-age">{{ $usuario->edad }}</span>
                                 </h3>
                                 <div class="inicio-card-location">
-                                    <i class="fa fa-map-marker"></i> {{ $usuario->ubicacion }}
+                                    <i class="fa fa-map-marker"></i>
+                                    @if($ciudadSeleccionada->url === 'santiago')
+                                    {{-- Mostrar siempre el sector derivado o seleccionado --}}
+                                    {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}
+                                    @else
+                                    {{-- Para otras ciudades, mostrar la ubicación habitual --}}
+                                    {{ $usuario->ubicacion }}
+                                    @endif
                                     <span class="inicio-card-price">${{ number_format($usuario->precio, 0, ',', '.') }}</span>
                                 </div>
                             </div>
@@ -177,7 +184,16 @@
                         </h3>
                         <div class="location-price">
                             <span class="inicio-featured-location">
-                                <i class="fa fa-map-marker" aria-hidden="true"></i> {{ $usuarioDestacado->ubicacion }}
+                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                @if(request()->segment(2) && isset($sectorSeleccionado))
+                                {{ $sectorSeleccionado }}
+                                @else
+                                @if(request()->segment(1) == 'escorts-santiago' && $usuario->location?->direccion)
+                                {{ explode(',', $usuario->location->direccion)[0] }}
+                                @else
+                                {{ $usuario->ubicacion }}
+                                @endif
+                                @endif
                             </span>
                             <span class="inicio-featured-price">${{ number_format($usuarioDestacado->precio, 0, ',', '.') }}</span>
                         </div>
@@ -273,7 +289,7 @@
                     @endphp
                     <a href="{{ url('escorts/' . $usuario->id) }}" class="swiper-slide2" style="flex: 0 0 auto; margin-right: 0;">
                         <div class="volvieronyprimera-card">
-                            <div class="volvieronyprimera-vip-tag">{{ $usuario->estadop == 3 ? 'DELUXE' : 'VIP' }}</div>
+                            <div class="volvieronyprimera-vip-tag">{{ strtoupper($usuario->categorias) }}</div>
                             @php
                             $fotos = json_decode($usuario->fotos, true);
                             $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
@@ -295,7 +311,15 @@
                                     <div class="volvieronyprimera-location-price">
                                         <div class="location-container">
                                             <i class="fa fa-map-marker"></i>
-                                            <span class="volvieronyprimera-location">{{ $usuario->ubicacion }}</span>
+                                            <span class="volvieronyprimera-location">
+                                                @if($ciudadSeleccionada->url === 'santiago')
+                                                {{-- Mostrar siempre el sector derivado o seleccionado --}}
+                                                {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}
+                                                @else
+                                                {{-- Para otras ciudades, mostrar la ubicación habitual --}}
+                                                {{ $usuario->ubicacion }}
+                                                @endif
+                                            </span>
                                         </div>
                                         <span class="volvieronyprimera-price">${{ number_format($usuario->precio, 0, ',', '.') }}</span>
                                     </div>
@@ -353,7 +377,7 @@
                     @endphp
                     <a href="{{ url('escorts/' . $usuario->id) }}" class="swiper-slide2" style="flex: 0 0 auto; margin-right: 0;">
                         <div class="volvieronyprimera-card">
-                            <div class="volvieronyprimera-vip-tag">{{ $usuario->estadop == 3 ? 'DELUXE' : 'VIP' }}</div>
+                            <div class="volvieronyprimera-vip-tag">{{ strtoupper($usuario->categorias) }}</div>
                             @php
                             $fotos = json_decode($usuario->fotos, true);
                             $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
@@ -376,7 +400,15 @@
                                     <div class="volvieronyprimera-location-price">
                                         <div class="location-container">
                                             <i class="fa fa-map-marker"></i>
-                                            <span class="volvieronyprimera-location">{{ $usuario->ubicacion }}</span>
+                                            <span class="volvieronyprimera-location">
+                                                @if($ciudadSeleccionada->url === 'santiago')
+                                                {{-- Mostrar siempre el sector derivado o seleccionado --}}
+                                                {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}
+                                                @else
+                                                {{-- Para otras ciudades, mostrar la ubicación habitual --}}
+                                                {{ $usuario->ubicacion }}
+                                                @endif
+                                            </span>
                                         </div>
                                         <span class="volvieronyprimera-price">${{ number_format($usuario->precio, 0, ',', '.') }}</span>
                                     </div>
@@ -451,11 +483,11 @@
 
 
         @if(isset($seoTitle) && isset($seoDescription))
-    <div class="seo-content my-8">
-        <h2 class="text-2xl font-bold mb-4" style="color: #888;">{{ $seoTitle }}</h2>
-        <div class="text-gray-700" style="color: #888;">{{ $seoDescription }}</div>
-    </div>
-@endif
+        <div class="seo-content my-8">
+            <h2 class="text-2xl font-bold mb-4" style="color: #888;">{{ $seoTitle }}</h2>
+            <div class="text-gray-700" style="color: #888;">{{ $seoDescription }}</div>
+        </div>
+        @endif
 
 </main>
 

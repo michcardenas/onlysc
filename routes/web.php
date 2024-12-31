@@ -153,4 +153,6 @@ Route::get('/seo-foro', [SEOController::class, 'foroadmin'])->name('seo.foroadmi
 Route::get('/seo-blog', [SEOController::class, 'blogadmin'])->name('seo.blogadmin');
 Route::get('/seo-publicar', [SEOController::class, 'publicateForm'])->name('seo.publicate.form');
 Route::get('/seo/templates', [AdminController::class, 'seoTemplates'])->name('seo.template');
-Route::put('/seo/update', [AdminController::class, 'updateSeoTemplate'])->name('seo.templates.update');
+Route::post('/seo/update', [AdminController::class, 'updateSeoTemplate'])->name('seo.templates.update');
+Route::delete('/seo/templates/{id}', [AdminController::class, 'deleteSeoTemplate'])->name('seo.templates.delete');
+Route::get('/seo/templates/ciudad/{ciudadId}', [AdminController::class, 'getTemplatesByCiudad'])->name('seo.templates.by-ciudad');

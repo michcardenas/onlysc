@@ -10,6 +10,12 @@ class SeoTemplate extends Model
     
     protected $fillable = [
         'tipo',
-        'description_template'
+        'description_template',
+        'ciudad_id'
     ];
+
+    public function ciudad()
+    {
+        return $this->belongsTo(Ciudad::class, 'ciudad_id', 'id');
+    }
 }
