@@ -15,7 +15,7 @@
 .tinymce-editor {
     display: block;
     width: 100%;
-    background-color: #1a1a1a 
+    background-color: #1a1a1a;
     color: white !important;
 }
 

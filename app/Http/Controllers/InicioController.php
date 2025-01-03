@@ -21,6 +21,10 @@ class InicioController extends Controller
 {
     public function show($nombreCiudad, $sector = null, $filtros = null)
     {
+        
+        $seoText = null;
+
+        try {
         $ciudadSeleccionada = Ciudad::where('url', $nombreCiudad)->firstOrFail();
         session(['ciudad_actual' => $ciudadSeleccionada->nombre]);
         $ciudades = Ciudad::all();
@@ -32,13 +36,24 @@ class InicioController extends Controller
         $query = UsuarioPublicate::query()
             ->whereIn('estadop', [1, 3])
             ->where('ubicacion', $ciudadSeleccionada->nombre);
+
+            Log::debug('Query inicial', [
+                'sql' => $query->toSql(),
+                'bindings' => $query->getBindings(),
+                'count' => $query->count()
+            ]);
     
         $sectorValido = null;
         $filtroAdicional = null;
     
         // Primero procesamos categorías especiales
-        if (in_array($sector, ['premium', 'vip', 'diamond'])) {
-            request()->merge(['categoria' => $sector]);
+        $categorias_especiales = ['premium', 'vip', 'de_lujo', 'de lujo', 'under'];
+        if ($sector && in_array(strtolower($sector), $categorias_especiales)) {
+            $sector_categoria = strtolower($sector);
+            if ($sector_categoria === 'de lujo') {
+                $sector_categoria = 'de_lujo';
+            }
+            request()->merge(['categoria' => $sector_categoria]);
             $sector = null;
         }
     
@@ -106,10 +121,30 @@ class InicioController extends Controller
     
         // Procesamiento de filtros desde request
         if ($categoria = request()->get('categoria')) {
-            $query->where('categorias', strtolower($categoria));
-        } else if ($precio = request()->get('p')) {
-            list($min, $max) = explode('-', $precio);
-            $query->whereBetween('precio', [(int)$min, (int)$max]);
+            $categoria = strtolower($categoria);
+            // Normalizar "de lujo" a "de_lujo" si es necesario
+            if ($categoria === 'de lujo') {
+                $categoria = 'de_lujo';
+            }
+    
+            // Aplicar los rangos de precio según la categoría
+            switch ($categoria) {
+                case 'premium':
+                    $query->whereBetween('precio', [50000, 70000]);
+                    break;
+                case 'vip':
+                    $query->whereBetween('precio', [70000, 130000]);
+                    break;
+                case 'de_lujo':
+                    $query->whereBetween('precio', [130000, 300000]);
+                    break;
+                case 'under':
+                    $query->whereBetween('precio', [50000, 300000]);
+                    break;
+            }
+            
+            // Aplicar el filtro de categoría
+            $query->where('categorias', $categoria);
         }
     
         // Procesar filtros desde query parameters
@@ -398,7 +433,29 @@ class InicioController extends Controller
             }
         }        
     
-        $seoText = $this->generateSeoText(request(), $ciudadSeleccionada, $sectorValido);
+        try {
+            if (method_exists($this, 'generateSeoText')) {
+                $seoText = $this->generateSeoText(request(), $ciudadSeleccionada, $sectorValido);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error generating SEO text', ['error' => $e->getMessage()]);
+        }
+
+    }
+        }
+     catch (\Exception $e) {
+        Log::error('Error en show', [
+            'error' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        
+        return response()->json([
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ], 500);
+    }
 
 
         return view('inicio', array_merge([
@@ -417,13 +474,12 @@ class InicioController extends Controller
             'volvieron' => $volvieron,
             'experiencias' => $experiencias,
             'ubicacionesMostradas' => $ubicacionesMostradas
-        ], $seoText ? [
-            'seoTitle' => $seoText['title'],
+        ],  $seoText ? [
+            'seoTitle' => $seoText['title'], 
             'seoDescription' => $seoText['description']
         ] : []));
     }
 
-    }
     private function isKnownFilter($value)
 {
     // Si ya tiene un prefijo conocido, retornar true
