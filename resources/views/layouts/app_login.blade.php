@@ -1596,40 +1596,239 @@ function confirmarEliminarPerfil(id) {
 
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('templatesForm');
+    const ciudadSelect = document.getElementById('global_ciudad');
+    const selectedCiudadInput = document.getElementById('selected_ciudad_id');
+
+    // Manejar el envío del formulario
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Verificar que se haya seleccionado una ciudad
+        if (!ciudadSelect.value) {
+            alert('Por favor, seleccione una ciudad');
+            return;
+        }
+
+        // Actualizar el ID de la ciudad seleccionada
+        selectedCiudadInput.value = ciudadSelect.value;
+
+        // Recopilar todos los templates
+        const templates = [];
+        document.querySelectorAll('textarea[data-tipo]').forEach(textarea => {
+            if (textarea.value.trim()) { // Solo incluir templates con contenido
+                templates.push({
+                    tipo: textarea.dataset.tipo,
+                    description_template: textarea.value,
+                });
+            }
+        });
+
+        // Enviar los datos usando fetch
+        fetch('/seo/templates/update-all', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                ciudad_id: ciudadSelect.value,
+                templates: templates
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Templates guardados correctamente');
+            } else {
+                alert(data.message || 'Error al guardar los templates');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al guardar los templates');
+        });
+    });
+
+    // Inicializar previews al cargar la página
+    document.querySelectorAll('textarea[data-tipo]').forEach(textarea => {
+        const tipo = textarea.dataset.tipo;
+        updatePreview(tipo);
+    });
+
+    // Actualizar previews cuando cambia la ciudad
+    ciudadSelect.addEventListener('change', function() {
+        const ciudadId = this.value;
+        selectedCiudadInput.value = ciudadId;
+        
+        if (ciudadId) {
+            loadTemplatesByCiudad(ciudadId);
+        }
+    });
+});
+
+// Función para actualizar la vista previa de cualquier template
 function updatePreview(tipo) {
-    const template = document.getElementById(`${tipo}_template`).value;
-    const ciudad = document.getElementById(`${tipo}_ciudad`).options[document.getElementById(`${tipo}_ciudad`).selectedIndex].text;
+    // Obtener el textarea y el contenedor de vista previa
+    const textarea = document.getElementById(`${tipo}_template`);
+    const previewContainer = document.getElementById(`${tipo}_preview`);
     
-    let preview = template
-        .replace('{ciudad}', ciudad)
-        .replace('{nacionalidad}', 'brasileñas')
-        .replace('{edad_min}', '18')
-        .replace('{edad_max}', '35')
-        .replace('{precio_min}', '50000')
-        .replace('{precio_max}', '150000')
-        .replace('{atributos}', 'altura, peso, medidas')
-        .replace('{servicios}', 'masajes, compañía');
-    
-    document.getElementById(`${tipo}_preview`).textContent = preview;
+    if (!textarea || !previewContainer) return;
+
+    // Obtener la ciudad seleccionada
+    const ciudadSelect = document.getElementById('global_ciudad');
+    const ciudadNombre = ciudadSelect.options[ciudadSelect.selectedIndex]?.text || 'Ciudad';
+
+    // Datos de ejemplo para la vista previa
+    const previewData = {
+        ciudad: ciudadNombre,
+        sector: 'Centro',
+        nacionalidad: 'brasileñas',
+        edad_min: '18',
+        edad_max: '35',
+        precio_min: '50000',
+        precio_max: '150000',
+        atributos: 'altura 170cm, peso 55kg, medidas 90-60-90',
+        servicios: 'masajes, compañía VIP',
+        disponible: 'disponible ahora',
+        resena: 'con reseñas verificadas',
+        categorias: 'VIP, Premium'
+    };
+
+    // Obtener el template actual
+    let preview = textarea.value;
+
+    // Reemplazar todas las variables en el template
+    Object.entries(previewData).forEach(([key, value]) => {
+        const regex = new RegExp(`{${key}}`, 'g');
+        preview = preview.replace(regex, value);
+    });
+
+    // Actualizar el contenedor de vista previa
+    previewContainer.textContent = preview || 'Vista previa del template...';
 }
 
-function loadTemplate(tipo, ciudadId) {
+// Inicializar los event listeners cuando el DOM está listo
+document.addEventListener('DOMContentLoaded', function() {
+    // Agregar event listeners a todos los textareas
+    const textareas = document.querySelectorAll('textarea[data-tipo]');
+    textareas.forEach(textarea => {
+        const tipo = textarea.dataset.tipo;
+        
+        // Actualizar preview cuando se escribe
+        textarea.addEventListener('input', () => updatePreview(tipo));
+        
+        // Actualizar preview inicial
+        updatePreview(tipo);
+    });
+
+    // Actualizar todas las previews cuando cambia la ciudad
+    const ciudadSelect = document.getElementById('global_ciudad');
+    if (ciudadSelect) {
+        ciudadSelect.addEventListener('change', () => {
+            textareas.forEach(textarea => {
+                updatePreview(textarea.dataset.tipo);
+            });
+        });
+    }
+});
+
+// Función para cargar templates desde el servidor
+function loadTemplatesByCiudad(ciudadId) {
+    if (!ciudadId) return;
+
     fetch(`/seo/templates/${ciudadId}`)
         .then(response => response.json())
         .then(data => {
-            if (data[tipo] && data[tipo].length > 0) {
-                document.getElementById(`${tipo}_template`).value = data[tipo][0].description_template;
-            } else {
-                // Cargar template por defecto si no existe uno específico
-                const defaultTemplates = {
-                    'single': 'Encuentra escorts {nacionalidad} en {ciudad}. Explora nuestro catálogo de escorts seleccionadas.',
-                    'multiple': 'Encuentra escorts {nacionalidad} de {edad_min} a {edad_max} años con precios desde ${precio_min} hasta ${precio_max} en {ciudad}.',
-                    'complex': 'Descubre escorts {nacionalidad} en {ciudad} que cumplen con tus preferencias específicas. Contamos con una amplia selección de servicios y características como {atributos} y servicios de {servicios}.'
-                };
-                document.getElementById(`${tipo}_template`).value = defaultTemplates[tipo];
-            }
+            // Cargar templates generales
+            ['single', 'multiple', 'complex'].forEach(tipo => {
+                const textarea = document.getElementById(`${tipo}_template`);
+                if (textarea && data[tipo]) {
+                    textarea.value = data[tipo];
+                    updatePreview(tipo);
+                }
+            });
+
+            // Cargar templates unitarios
+            ['ciudad', 'nacionalidad', 'edad', 'precio', 'atributos', 
+             'servicios', 'disponible', 'resena', 'categorias'].forEach(filtro => {
+                const textarea = document.getElementById(`${filtro}_template`);
+                if (textarea && data.filtros && data.filtros[filtro]) {
+                    textarea.value = data.filtros[filtro];
+                    updatePreview(filtro);
+                }
+            });
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error cargando templates:', error);
+        });
 }
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    tinymce.init({
+        selector: '.tinymce-editor',
+        height: 150,
+        min_height: 150,
+        max_height: 300,
+        resize: true,
+        menubar: false,
+        plugins: [
+            'advlist', 'autolink', 'lists', 'link', 'charmap', 'preview',
+            'anchor', 'searchreplace', 'code', 'fullscreen',
+            'insertdatetime', 'media', 'table', 'help', 'wordcount'
+        ],
+        toolbar: 'undo redo | blocks | ' +
+            'bold italic | alignleft aligncenter ' +
+            'alignright alignjustify | bullist numlist | ' +
+            'removeformat',
+        content_css: false,
+        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px; margin: 0; background-color: #1a1a1a; color: white; }',
+        forced_root_block: 'p',
+        protect: [
+            /\<\/?(if|endif)\>/g,  // Protect conditional comments
+            /\<xsl\:[^>]+\>/g,     // Protect XSL tags
+        ],
+        setup: function(editor) {
+            editor.on('init', function() {
+                editor.getContainer().style.transition = "none";
+                this.getBody().style.maxHeight = "300px";
+            });
+            
+            editor.on('change', function() {
+                // Obtenemos el contenido y procesamos los saltos de línea
+                const content = editor.getContent({format: 'html'});
+                const previewId = editor.targetElm.getAttribute('data-tipo') + '_preview';
+                const previewDiv = document.getElementById(previewId);
+                
+                // Aplicamos el contenido a la vista previa
+                previewDiv.innerHTML = content;
+                
+                // Copiamos los estilos aplicados en el editor
+                const editorContent = editor.getBody();
+                const previewContent = previewDiv.getElementsByTagName('p')[0];
+                if(previewContent && editorContent) {
+                    const computedStyle = window.getComputedStyle(editorContent);
+                    previewContent.style.cssText = computedStyle.cssText;
+                }
+            });
+
+            // Modo de visualización sin código
+            editor.on('BeforeSetContent', function(e) {
+                // Mantener el HTML pero mostrar solo el texto formateado
+                if(e.content) {
+                    e.content = e.content.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+                }
+            });
+        },
+        init_instance_callback: function(editor) {
+            // Configurar el modo de visualización inicial
+            editor.getBody().setAttribute('contenteditable', true);
+            editor.getBody().setAttribute('data-gramm', false);
+        }
+    });
+});
 </script>
 </html>

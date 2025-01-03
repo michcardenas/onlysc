@@ -80,6 +80,7 @@
                     <option value="premium" {{ old('categorias', $usuario->categorias) == 'premium' ? 'selected' : '' }}>Premium</option>
                     <option value="VIP" {{ old('categorias', $usuario->categorias) == 'VIP' ? 'selected' : '' }}>VIP</option>
                     <option value="masajes" {{ old('categorias', $usuario->categorias) == 'masajes' ? 'selected' : '' }}>Masajes</option>
+                    <option value="under" {{ old('categorias', $usuario->categorias) == 'under' ? 'selected' : '' }}>Under</option>
                 </select>
             </div>
 

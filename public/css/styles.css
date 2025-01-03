@@ -3585,7 +3585,7 @@ video:not(.banner-img):not(.historia-circle video) {
     background: #ffffff;
     border: 2px solid #e5e7eb;
     border-radius: 12px;
-    padding: 12px 15px;
+    padding: 12px 8px;
     cursor: pointer;
     text-align: center;
     transition: all 0.2s ease;

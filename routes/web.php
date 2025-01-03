@@ -156,3 +156,4 @@ Route::get('/seo/templates', [AdminController::class, 'seoTemplates'])->name('se
 Route::post('/seo/update', [AdminController::class, 'updateSeoTemplate'])->name('seo.templates.update');
 Route::delete('/seo/templates/{id}', [AdminController::class, 'deleteSeoTemplate'])->name('seo.templates.delete');
 Route::get('/seo/templates/ciudad/{ciudadId}', [AdminController::class, 'getTemplatesByCiudad'])->name('seo.templates.by-ciudad');
+Route::post('/seo/templates/update-all', [AdminController::class, 'updateAllTemplates'])->name('seo.templates.update.all');

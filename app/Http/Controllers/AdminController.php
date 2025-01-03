@@ -169,68 +169,83 @@ public function eliminarPerfil($id)
     }
 }
 public function seoTemplates()
-{
-    $ciudades = Ciudad::all();
-    $templates = [];
-    
-    // Obtener todos los templates y organizarlos por tipo y ciudad
-    $allTemplates = SeoTemplate::select('id', 'tipo', 'ciudad_id', 'description_template')
-        ->orderBy('ciudad_id')
-        ->orderBy('tipo')
-        ->get();
+    {
+        $ciudades = Ciudad::all();
+        $templates = [];
         
-    foreach ($allTemplates as $template) {
-        $templates[$template->tipo][$template->ciudad_id] = $template->description_template;
+        // Obtener todos los templates y organizarlos por tipo y ciudad
+        $allTemplates = SeoTemplate::select('id', 'tipo', 'filtro', 'ciudad_id', 'description_template')
+            ->orderBy('ciudad_id')
+            ->orderBy('tipo')
+            ->get();
+            
+        foreach ($allTemplates as $template) {
+            if ($template->filtro) {
+                $templates['filtros'][$template->filtro][$template->ciudad_id] = $template->description_template;
+            } else {
+                $templates[$template->tipo][$template->ciudad_id] = $template->description_template;
+            }
+        }
+        
+        $defaultTemplates = [
+            'ciudad' => 'Explora escorts en {ciudad}.',
+            'nacionalidad' => 'Encuentra escorts {nacionalidad} en {ciudad}.',
+            'edad' => 'Descubre escorts en {ciudad} de {edad_min} a {edad_max} años.',
+            'precio' => 'Encuentra escorts con precios desde {precio_min} hasta {precio_max} en {ciudad}.',
+            'atributos' => 'Escorts en {ciudad} con atributos como {atributos}.',
+            'servicios' => 'Escorts en {ciudad} que ofrecen servicios como {servicios}.',
+            'disponible' => 'Escorts en {ciudad} con disponibilidad: {disponible}.',
+            'resena' => 'Encuentra escorts en {ciudad} con estado de reseñas: {resena}.',
+            'categorias' => 'Explora escorts en {ciudad} clasificadas en {categorias}.',
+            'single' => 'Descubre escorts únicas en {ciudad}.',
+            'multiple' => 'Encuentra escorts con tus filtros favoritos en {ciudad}.',
+            'complex' => 'Personaliza tu búsqueda y encuentra escorts en {ciudad} que se adapten a todas tus preferencias.'
+        ];
+        
+        return view('seo.templates', [
+            'templates' => $templates,
+            'defaultTemplates' => $defaultTemplates,
+            'usuarioAutenticado' => Auth::user(),
+            'ciudades' => $ciudades
+        ]);
     }
-    
-    $defaultTemplates = [
-        'single' => 'Encuentra escorts {nacionalidad} en {ciudad} {sector}. Explora nuestro catálogo de escorts seleccionadas.',
-        'multiple' => 'Encuentra escorts {nacionalidad} de {edad_min} a {edad_max} años con precios desde ${precio_min} hasta ${precio_max} en {ciudad} {sector}.',
-        'complex' => 'Descubre escorts {nacionalidad} en {ciudad} {sector} que cumplen con tus preferencias específicas. Contamos con una amplia selección de servicios y características como {atributos} y servicios de {servicios}.'
-    ];
-    
-    return view('seo.templates', [
-        'templates' => $templates,
-        'defaultTemplates' => $defaultTemplates,
-        'usuarioAutenticado' => Auth::user(),
-        'ciudades' => $ciudades
-    ]);
-}
 
-public function updateSeoTemplate(Request $request)
-{
-    $request->validate([
-        'description_template' => 'required|string',
-        'tipo' => 'required|in:single,multiple,complex',
-        'ciudad_id' => 'required|exists:ciudades,id'
-    ]);
-
-    try {
-        SeoTemplate::updateOrCreate(
-            [
-                'ciudad_id' => $request->ciudad_id,
-                'tipo' => $request->tipo
-            ],
-            [
-                'description_template' => $request->description_template
-            ]
-        );
-
-        return redirect()->back()->with('success', 'Template SEO actualizado correctamente');
-
-    } catch (\Exception $e) {
-        Log::error('Error en template SEO', [
-            'error' => $e->getMessage(),
-            'line' => $e->getLine(),
-            'file' => $e->getFile()
+    public function updateSeoTemplate(Request $request)
+    {
+        $request->validate([
+            'description_template' => 'required|string',
+            'tipo' => 'nullable|in:single,multiple,complex',
+            'filtro' => 'nullable|string',
+            'ciudad_id' => 'required|exists:ciudades,id'
         ]);
 
-        return redirect()->back()
-            ->with('error', 'Error al procesar el template SEO: ' . $e->getMessage());
-    }
-}
+        try {
+            SeoTemplate::updateOrCreate(
+                [
+                    'ciudad_id' => $request->ciudad_id,
+                    'tipo' => $request->tipo,
+                    'filtro' => $request->filtro
+                ],
+                [
+                    'description_template' => $request->description_template
+                ]
+            );
 
-        /**
+            return redirect()->back()->with('success', 'Template SEO actualizado correctamente');
+
+        } catch (\Exception $e) {
+            Log::error('Error en template SEO', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
+
+            return redirect()->back()
+                ->with('error', 'Error al procesar el template SEO: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Elimina un template SEO específico
      */
     public function deleteSeoTemplate($id)
@@ -242,7 +257,8 @@ public function updateSeoTemplate(Request $request)
             Log::info('Template SEO eliminado', [
                 'admin_id' => auth()->id(),
                 'ciudad_id' => $template->ciudad_id,
-                'tipo' => $template->tipo
+                'tipo' => $template->tipo,
+                'filtro' => $template->filtro
             ]);
 
             // Eliminar el template
@@ -269,9 +285,88 @@ public function updateSeoTemplate(Request $request)
     {
         $templates = SeoTemplate::where('ciudad_id', $ciudadId)
             ->get()
-            ->groupBy('tipo');
-
+            ->reduce(function ($carry, $template) {
+                if ($template->filtro) {
+                    $carry['filtros'][$template->filtro] = $template->description_template;
+                } else {
+                    $carry[$template->tipo] = $template->description_template;
+                }
+                return $carry;
+            }, []);
+    
         return response()->json($templates);
     }
+
+    public function updateAllTemplates(Request $request)
+{
+    $request->validate([
+        'ciudad_id' => 'required|exists:ciudades,id',
+        'templates' => 'required|array',
+        'templates.*.tipo' => 'required|string',
+        'templates.*.description_template' => 'required|string',
+    ]);
+
+    try {
+        DB::beginTransaction();
+
+        foreach ($request->templates as $templateData) {
+            // Lista de tipos que son filtros
+            $filtroTypes = [
+                'ciudad', 'nacionalidad', 'edad', 'precio', 
+                'atributos', 'servicios', 'disponible', 
+                'resena', 'categorias'
+            ];
+
+            // Determinar si es un filtro o un tipo general
+            $isFilter = in_array($templateData['tipo'], $filtroTypes);
+
+            if ($isFilter) {
+                // Si es un filtro, guardamos el tipo como 'filtro'
+                SeoTemplate::updateOrCreate(
+                    [
+                        'ciudad_id' => $request->ciudad_id,
+                        'tipo' => 'filtro',
+                        'filtro' => $templateData['tipo']
+                    ],
+                    [
+                        'description_template' => $templateData['description_template']
+                    ]
+                );
+            } else {
+                // Si es un tipo general, guardamos sin filtro
+                SeoTemplate::updateOrCreate(
+                    [
+                        'ciudad_id' => $request->ciudad_id,
+                        'tipo' => $templateData['tipo'],
+                        'filtro' => null
+                    ],
+                    [
+                        'description_template' => $templateData['description_template']
+                    ]
+                );
+            }
+        }
+
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Templates actualizados correctamente'
+        ]);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Error al actualizar templates SEO', [
+            'error' => $e->getMessage(),
+            'line' => $e->getLine(),
+            'file' => $e->getFile()
+        ]);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al actualizar los templates: ' . $e->getMessage()
+        ], 500);
+    }
+}
 
 }
