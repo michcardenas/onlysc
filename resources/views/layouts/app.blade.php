@@ -47,7 +47,7 @@
         <select name="location" id="location">
             <option value="" disabled>Seleccionar ciudad</option>
             @foreach($ciudades as $ciudad)
-                <option value="{{ strtolower($ciudad->nombre) }}" 
+                <option value="{{ strtolower($ciudad->url) }}" 
                     {{ session('ciudad_actual') == $ciudad->nombre ? 'selected' : '' }}>
                     {{ ucfirst($ciudad->nombre) }}
                 </option>

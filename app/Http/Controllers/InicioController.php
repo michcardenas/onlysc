@@ -20,10 +20,8 @@ use Illuminate\Support\Facades\Cache;
 class InicioController extends Controller
 {
     public function show($nombreCiudad, $sector = null, $filtros = null)
-    {
-        
+    {  
         $seoText = null;
-
         try {
         $ciudadSeleccionada = Ciudad::where('url', $nombreCiudad)->firstOrFail();
         session(['ciudad_actual' => $ciudadSeleccionada->nombre]);
