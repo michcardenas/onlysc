@@ -189,15 +189,13 @@
                        <div class="location-price">
                            <span class="inicio-featured-location">
                                <i class="fa fa-map-marker" aria-hidden="true"></i>
-                               @if(request()->segment(2) && isset($sectorSeleccionado))
-                               {{ $sectorSeleccionado }}
-                               @else
-                               @if(request()->segment(1) == 'escorts-santiago' && $usuario->location?->direccion)
-                               {{ explode(',', $usuario->location->direccion)[0] }}
-                               @else
-                               {{ $usuario->ubicacion }}
-                               @endif
-                               @endif
+                               @if($ciudadSeleccionada->url === 'santiago')
+                                   {{-- Mostrar siempre el sector derivado o seleccionado --}}
+                                   {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}
+                                   @else
+                                   {{-- Para otras ciudades, mostrar la ubicación habitual --}}
+                                   {{ $usuario->ubicacion }}
+                                   @endif
                            </span>
                            <span class="inicio-featured-price">${{ number_format($usuarioDestacado->precio, 0, ',', '.') }}</span>
                        </div>
