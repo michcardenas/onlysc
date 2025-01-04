@@ -117,32 +117,50 @@ class InicioController extends Controller
             });
         }
     
-        // Procesamiento de filtros desde request
         if ($categoria = request()->get('categoria')) {
             $categoria = strtolower($categoria);
-            // Normalizar "de lujo" a "de_lujo" si es necesario
-            if ($categoria === 'de lujo') {
-                $categoria = 'de_lujo';
-            }
-    
-            // Aplicar los rangos de precio según la categoría
+            
+            // Normalizar categorías
             switch ($categoria) {
+                case 'de lujo':
+                    $categoria = 'de_lujo';
+                    break;
                 case 'premium':
-                    $query->whereBetween('precio', [50000, 70000]);
-                    break;
                 case 'vip':
-                    $query->whereBetween('precio', [70000, 130000]);
-                    break;
-                case 'de_lujo':
-                    $query->whereBetween('precio', [130000, 300000]);
-                    break;
                 case 'under':
-                    $query->whereBetween('precio', [50000, 300000]);
+                    // Mantener el valor tal cual
                     break;
+                default:
+                    Log::warning('Categoría no reconocida', ['categoria' => $categoria]);
             }
+
+            Log::info('Aplicando filtro de categoría', [
+                'categoria' => $categoria,
+                'query_antes' => $query->toSql(),
+                'bindings_antes' => $query->getBindings()
+            ]);
             
             // Aplicar el filtro de categoría
             $query->where('categorias', $categoria);
+
+            Log::info('Después de aplicar filtro de categoría', [
+                'query_final' => $query->toSql(),
+                'bindings_final' => $query->getBindings(),
+                'resultados' => $query->count()
+            ]);
+        }
+
+        // Si NO hay filtro de categoría, entonces procesar filtros de precio normalmente
+        elseif ($precio = request()->get('p')) {
+            list($min, $max) = explode('-', $precio);
+            $query->whereBetween('precio', [(int)$min, (int)$max]);
+        }
+
+
+        // Si NO hay filtro de categoría, entonces procesar filtros de precio normalmente
+        elseif ($precio = request()->get('p')) {
+            list($min, $max) = explode('-', $precio);
+            $query->whereBetween('precio', [(int)$min, (int)$max]);
         }
     
         // Procesar filtros desde query parameters

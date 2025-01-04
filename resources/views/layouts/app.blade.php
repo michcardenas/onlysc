@@ -1443,7 +1443,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.price-category').forEach(category => {
             category.classList.remove('active');
         });
-        precioRange.noUiSlider.set([50000, 300000]);
+        precioRange.noUiSlider.set([0, 300000]);
     });
 
     // Mostrar modal
