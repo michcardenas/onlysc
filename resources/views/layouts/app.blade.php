@@ -124,7 +124,7 @@
     <div class="filter-ciudad">
         <div class="filter-section">
             <h6 class="range-title">Ciudad</h6>
-            <select id="ciudadSelect" class="form-select">
+            <select id="ciudadSelect" class="form-select" required>
                 <option value="">Seleccionar ciudad</option>
                 @foreach($ciudades as $ciudad)
                     <option value="{{ $ciudad->url }}" {{ isset($ciudadSeleccionada) && $ciudadSeleccionada->url == $ciudad->url ? 'selected' : '' }}>
@@ -134,6 +134,7 @@
             </select>
         </div>
     </div>
+
 
     <div class="filtro-nac" id="barrioContainer" style="display: none;">
     <h6 class="range-title">Sector</h6>
@@ -181,25 +182,26 @@
                    <!-- Rango de precio -->
                    <div class="filter-section">
     <h6 class="range-title">Precio</h6>
+    <div class="price-category" data-min="0" data-max="300000" data-categorias="Under">
+            <span class="category-name">Under</span>
+        </div>
     <div class="price-categories">
-        <div class="price-category" data-min="50000" data-max="70000" data-categorias="premium">
+        <div class="price-category" data-min="0" data-max="70000" data-categorias="premium">
             <span class="category-name">Premium</span>
         </div>
         <div class="price-category" data-min="70000" data-max="130000" data-categorias="vip">
             <span class="category-name">VIP</span>
         </div>
-        <div class="price-category" data-min="130000" data-max="300000" data-categorias="de_lujo">
+        <div class="price-category" data-min="130000" data-max="250000" data-categorias="de_lujo">
             <span class="category-name">De Lujo</span>
         </div>
-        <div class="price-category" data-min="50000" data-max="300000" data-categorias="Under">
-            <span class="category-name">Under</span>
-        </div>
+
     </div>
     <input type="hidden" name="categorias" id="categoriasFilter">
     <div class="range-container">
         <div id="precioRange"></div>
         <div class="range-values">
-            <span>$50.000</span>
+            <span>$0</span>
             <span>$300.000</span>
         </div>
     </div>
@@ -208,28 +210,38 @@
 </div>
 <!-- Nuevos checkboxes -->
 <div class="extra-filters">
-    <div class="checkbox-container">
-        <input type="checkbox" name="disponible" id="disponibleCheck">
-        <span class="checkbox-text">Disponible</span>
-    </div>
-    <div class="filter-section">
-        <h6 class="range-title">Reseñas</h6>
-        <div id="resenaCheck" class="review-container">
-            <span class="review-text">Tiene una reseña</span>
-        </div>
-    </div>
+   <div class="filter-section" style="display: flex; gap: 20px;">
+       <div>
+           <h6 class="range-title">Disponibilidad</h6>
+           <div id="disponibleCheck" class="review-container">
+               <span class="review-text">Disponible</span>
+           </div>
+       </div>
+       <div>
+           <h6 class="range-title">Reseñas</h6>
+           <div id="resenaCheck" class="review-container">
+               <span class="review-text">Tiene una reseña</span>
+           </div>
+       </div>
+   </div>
 </div>
                    <!-- Contenedores para checkboxes -->
                    <!-- Removida la estructura de columnas -->
                    <div class="filter-section1">
-                       <h6 class="range-title1">Servicios</h6>
-                       <div id="serviciosContainer" class="servicios-grid"></div>
-                   </div>
-                   <div class="filter-section1">
-                       <h6 class="range-title1">Atributos</h6>
-                       <div id="atributosContainer" class="servicios-grid"></div>
-                   </div>
-               </div>
+   <h6 class="range-title1">Servicios</h6>
+   <div id="serviciosContainer" class="servicios-grid"></div>
+   <div class="review-container" id="showMoreServices">
+       <span class="review-text">Mostrar más</span>
+   </div>
+</div>
+<div class="filter-section1">
+   <h6 class="range-title1">Atributos</h6>
+   <div id="atributosContainer" class="servicios-grid"></div>
+   <div class="review-container" id="showMoreAttributes">
+       <span class="review-text">Mostrar más</span>
+   </div>
+</div>
+</div>
                <div class="modal-footer">
                    <button type="button" class="btn btn-secondary" id="resetFilters">Resetear</button>
                    <button type="submit" class="btn btn-primary">Aplicar filtros</button>
@@ -1100,11 +1112,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const precioRange = document.getElementById('precioRange');
     noUiSlider.create(precioRange, {
-        start: [50000, 300000],
+        start: [0, 300000],
         connect: true,
         step: 1000,
         range: {
-            'min': 50000,
+            'min': 0,
             'max': 300000
         }
     });
@@ -1114,13 +1126,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const priceCategories = document.querySelectorAll('.price-category');
         if (ciudadSelect.value.toLowerCase() === 'santiago') {
             priceCategories.forEach(category => {
-                category.style.display = 'inline-block';
+                category.style.display = 'block';
             });
         } else {
             priceCategories.forEach(category => {
                 category.style.display = 'none';
             });
-            precioRange.noUiSlider.set([50000, 300000]);
+            precioRange.noUiSlider.set([0, 300000]);
             document.getElementById('categoriaFilter').value = '';
             document.querySelectorAll('.price-category').forEach(category => {
                 category.classList.remove('active');
@@ -1137,7 +1149,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (category.classList.contains('active')) {
                 category.classList.remove('active');
-                precioRange.noUiSlider.set([50000, 300000]);
+                precioRange.noUiSlider.set([0, 300000]);
                 document.getElementById('categoriaFilter').value = '';
             } else {
                 document.querySelectorAll('.price-category').forEach(cat => {
@@ -1205,9 +1217,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Crear checkboxes
     const createCheckboxes = (items, containerId, name) => {
         const container = document.getElementById(containerId);
-        items.forEach(item => {
+        const showCount = 8;
+        
+        items.forEach((item, index) => {
             const label = document.createElement('label');
             label.className = 'checkbox-label';
+            if (index >= showCount) label.style.display = 'none';
             label.innerHTML = `
                 <input type="checkbox" name="${name}[]" value="${item}">
                 <span class="checkbox-text">${item}</span>
@@ -1215,6 +1230,21 @@ document.addEventListener('DOMContentLoaded', () => {
             container.appendChild(label);
         });
     };
+
+    ['showMoreServices', 'showMoreAttributes'].forEach(id => {
+        document.getElementById(id).addEventListener('click', function() {
+            const container = document.getElementById(id === 'showMoreServices' ? 'serviciosContainer' : 'atributosContainer');
+            const labels = container.querySelectorAll('.checkbox-label');
+            const isExpanded = this.classList.contains('selected');
+            
+            labels.forEach((label, index) => {
+                if (index >= 8) label.style.display = isExpanded ? 'none' : 'block';
+            });
+            
+            this.classList.toggle('selected');
+            this.querySelector('.review-text').textContent = isExpanded ? 'Mostrar más' : 'Mostrar menos';
+        });
+    });
 
     createCheckboxes(atributos, 'atributosContainer', 'atributos');
     createCheckboxes(servicios, 'serviciosContainer', 'servicios');
@@ -1250,6 +1280,10 @@ document.addEventListener('DOMContentLoaded', () => {
         this.classList.toggle('selected');
     });
 
+    disponibleCheck.addEventListener('click', function() {
+        this.classList.toggle('selected');
+    });
+
     // Función para normalizar texto para URL
     const normalizeText = (text) => {
         return text.toLowerCase()
@@ -1258,157 +1292,134 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/[\u0300-\u036f]/g, "");
     };
 
-    // Manejo del formulario
     form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        let url = `/escorts-${ciudadSelect.value}`;
-        
-        const isSantiago = ciudadSelect.options[ciudadSelect.selectedIndex].text.toLowerCase().includes('santiago');
-        if (isSantiago && barrioSelect.value) {
-            const normalizedBarrio = normalizeText(barrioSelect.value);
-            url += `/${normalizedBarrio}`;
-        }
+    e.preventDefault();
 
-        // Función para contar filtros activos
-        const getActiveFiltersCount = () => {
-            let count = 0;
-            
-            // Contar cada tipo de filtro
-            if (nacionalidadSelect.value) count++;
-            
-            const [edadMin, edadMax] = edadRange.noUiSlider.get().map(Number);
-            if (edadMin !== 18 || edadMax !== 50) count++;
-            
-            const [precioMin, precioMax] = precioRange.noUiSlider.get().map(Number);
-            if (precioMin !== 50000 || precioMax !== 300000) count++;
-            
-            if (getCheckedValues('atributos[]').length > 0) count++;
-            if (getCheckedValues('servicios[]').length > 0) count++;
-            if (disponibleCheck.checked) count++;
-            if (resenaCheck.classList.contains('selected')) count++;
-            if (document.querySelector('.price-category.active')) count++;
-            
-            return count;
-        };
+    if (!ciudadSelect.value) {
+        alert('Por favor seleccione una ciudad');
+        return;
+    }
+    
+    let url = `/escorts-${ciudadSelect.value}`;
+    
+    const isSantiago = ciudadSelect.options[ciudadSelect.selectedIndex].text.toLowerCase().includes('santiago');
+    if (isSantiago && barrioSelect.value) {
+        const normalizedBarrio = normalizeText(barrioSelect.value);
+        url += `/${normalizedBarrio}`;
+    }
 
-        const activeFiltersCount = getActiveFiltersCount();
-
-        // Manejo de filtros únicos
-        if (activeFiltersCount === 1) {
-            // Nacionalidad
-            if (nacionalidadSelect.value) {
-                url += `${isSantiago && barrioSelect.value ? '/' : '/'}escorts-${nacionalidadSelect.value.toLowerCase()}`;
-                window.location.href = url;
-                return;
-            }
-
-            // Categoría de precio
-            const selectedCategory = document.querySelector('.price-category.active');
-            if (selectedCategory) {
-                const categoria = selectedCategory.querySelector('.category-name').textContent.toLowerCase();
-                url += `/${categoria}`;
-                window.location.href = url;
-                return;
-            }
-
-            // Edad
-            const [edadMin, edadMax] = edadRange.noUiSlider.get().map(Number);
-            if (edadMin !== 18 || edadMax !== 50) {
-                url += `/edad-${edadMin}-${edadMax}`;
-                window.location.href = url;
-                return;
-            }
-
-            // Precio
-            const [precioMin, precioMax] = precioRange.noUiSlider.get().map(Number);
-            if (precioMin !== 50000 || precioMax !== 300000) {
-                url += `/precio-${precioMin}-${precioMax}`;
-                window.location.href = url;
-                return;
-            }
-
-            // Atributo único
-            const checkedAtributos = getCheckedValues('atributos[]');
-            if (checkedAtributos.length === 1) {
-                url += `/${normalizeText(checkedAtributos[0])}`;
-                window.location.href = url;
-                return;
-            }
-
-            // Servicio único
-            const checkedServicios = getCheckedValues('servicios[]');
-            if (checkedServicios.length === 1) {
-                url += `/${normalizeText(checkedServicios[0])}`;
-                window.location.href = url;
-                return;
-            }
-
-            // Disponible
-            if (disponibleCheck.checked) {
-                url += `/disponible`;
-                window.location.href = url;
-                return;
-            }
-
-            // Reseña
-            if (resenaCheck.classList.contains('selected')) {
-                url += `/resena-verificada`;
-                window.location.href = url;
-                return;
-            }
-        }
-
-        // Para múltiples filtros, usar QueryParams
-        const params = new URLSearchParams();
-
-        // Procesar todos los filtros
-        if (nacionalidadSelect.value) {
-            params.append('n', nacionalidadSelect.value);
-        }
-
+    // Función para contar filtros activos
+    const getActiveFiltersCount = () => {
+        let count = 0;
+        if (nacionalidadSelect.value) count++;
         const [edadMin, edadMax] = edadRange.noUiSlider.get().map(Number);
-        if (edadMin !== 18 || edadMax !== 50) {
-            params.append('e', `${edadMin}-${edadMax}`);
-        }
+        if (edadMin !== 18 || edadMax !== 50) count++;
+        const [precioMin, precioMax] = precioRange.noUiSlider.get().map(Number);
+        if (precioMin !== 0 || precioMax !== 300000) count++;
+        if (getCheckedValues('atributos[]').length > 0) count++;
+        if (getCheckedValues('servicios[]').length > 0) count++;
+        if (disponibleCheck.classList.contains('selected')) count++;
+        if (resenaCheck.classList.contains('selected')) count++;
+        if (document.querySelector('.price-category.active')) count++;
+        return count;
+    };
 
-        const selectedCategory = document.querySelector('.price-category.active');
-        if (selectedCategory) {
-            const categoria = selectedCategory.querySelector('.category-name').textContent.toLowerCase();
-            params.append('categoria', categoria);
+    const activeFiltersCount = getActiveFiltersCount();
+
+    // Para múltiples filtros, usar QueryParams
+    const params = new URLSearchParams();
+
+    // Procesar todos los filtros
+    if (disponibleCheck.classList.contains('selected')) {
+        if (activeFiltersCount === 1) {
+            url += `/disponible`;
+            window.location.href = url;
+            return;
         } else {
-            const [precioMin, precioMax] = precioRange.noUiSlider.get().map(Number);
-            if (precioMin !== 50000 || precioMax !== 300000) {
-                params.append('p', `${precioMin}-${precioMax}`);
-            }
-        }
-
-        const checkedAtributos = getCheckedValues('atributos[]');
-        if (checkedAtributos.length > 0) {
-            params.append('a', checkedAtributos.join(','));
-        }
-
-        const checkedServicios = getCheckedValues('servicios[]');
-        if (checkedServicios.length > 0) {
-            params.append('s', checkedServicios.join(','));
-        }
-
-        if (disponibleCheck.checked) {
             params.append('disponible', '1');
         }
+    }
 
-        if (resenaCheck.classList.contains('selected')) {
-            params.append('resena', '1');
+    if (nacionalidadSelect.value) {
+        if (activeFiltersCount === 1) {
+            url += `${isSantiago && barrioSelect.value ? '/' : '/'}escorts-${nacionalidadSelect.value.toLowerCase()}`;
+            window.location.href = url;
+            return;
         }
+        params.append('n', nacionalidadSelect.value);
+    }
 
-        // Construir URL final
-        const queryString = params.toString();
-        if (queryString) {
-            url += `?${queryString}`;
+    const [edadMin, edadMax] = edadRange.noUiSlider.get().map(Number);
+    if (edadMin !== 18 || edadMax !== 50) {
+        if (activeFiltersCount === 1) {
+            url += `/edad-${edadMin}-${edadMax}`;
+            window.location.href = url;
+            return;
         }
-        
-        window.location.href = url;
-    });
+        params.append('e', `${edadMin}-${edadMax}`);
+    }
+
+    const selectedCategory = document.querySelector('.price-category.active');
+    if (selectedCategory) {
+        let categoria = selectedCategory.querySelector('.category-name').textContent.toLowerCase().replace(/\s+/g, '_');
+        // Siempre usar ruta limpia para categorías especiales
+        if (['vip', 'premium', 'de_lujo', 'under'].includes(categoria)) {
+            url += `/${categoria}`;
+            if (activeFiltersCount === 1) {
+                window.location.href = url;
+                return;
+            }
+        } else if (activeFiltersCount === 1) {
+            url += `/${categoria}`;
+            window.location.href = url;
+            return;
+        } else {
+            params.append('categoria', categoria);
+        }
+    } else {
+        const [precioMin, precioMax] = precioRange.noUiSlider.get().map(Number);
+        if (precioMin !== 0 || precioMax !== 300000) {
+            params.append('p', `${precioMin}-${precioMax}`);
+        }
+    }
+
+    const checkedAtributos = getCheckedValues('atributos[]');
+    if (checkedAtributos.length > 0) {
+        if (activeFiltersCount === 1) {
+            url += `/${normalizeText(checkedAtributos[0])}`;
+            window.location.href = url;
+            return;
+        }
+        params.append('a', checkedAtributos.join(','));
+    }
+
+    const checkedServicios = getCheckedValues('servicios[]');
+    if (checkedServicios.length > 0) {
+        if (activeFiltersCount === 1) {
+            url += `/${normalizeText(checkedServicios[0])}`;
+            window.location.href = url;
+            return;
+        }
+        params.append('s', checkedServicios.join(','));
+    }
+
+    if (resenaCheck.classList.contains('selected')) {
+        if (activeFiltersCount === 1) {
+            url += `/resena-verificada`;
+            window.location.href = url;
+            return;
+        }
+        params.append('resena', '1');
+    }
+
+    // Construir URL final
+    const queryString = params.toString();
+    if (queryString) {
+        url += `?${queryString}`;
+    }
+    
+    window.location.href = url;
+});
 
     // Funciones auxiliares
     function getCheckedValues(name) {
@@ -1429,12 +1440,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
             checkbox.checked = false;
         });
-    document.querySelectorAll('.price-category').forEach(category => {
-        category.classList.remove('active');
+        document.querySelectorAll('.price-category').forEach(category => {
+            category.classList.remove('active');
+        });
+        precioRange.noUiSlider.set([50000, 300000]);
     });
-    precioRange.noUiSlider.set([50000, 300000]);
-});
-
 
     // Mostrar modal
     document.querySelector('.btn-filters').addEventListener('click', () => modal.show());

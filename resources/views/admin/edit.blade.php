@@ -76,7 +76,6 @@
                 <label for="categorias">Categoría</label>
                 <select name="categorias" id="categorias" class="form-control" required>
                     <option value="">Seleccione una categoría</option>
-                    <option value="deluxe" {{ old('categorias', $usuario->categorias) == 'deluxe' ? 'selected' : '' }}>Deluxe</option>
                     <option value="premium" {{ old('categorias', $usuario->categorias) == 'premium' ? 'selected' : '' }}>Premium</option>
                     <option value="VIP" {{ old('categorias', $usuario->categorias) == 'VIP' ? 'selected' : '' }}>VIP</option>
                     <option value="masajes" {{ old('categorias', $usuario->categorias) == 'masajes' ? 'selected' : '' }}>Masajes</option>

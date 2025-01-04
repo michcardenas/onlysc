@@ -34,7 +34,7 @@
                                 $disponibilidadTexto = $usuario->disponibilidad;
                                 $isAvailable = true; // Puedes implementar tu lógica de disponibilidad aquí
 
-                                $mostrarPuntoVerde = $usuario->estadop == 1 && $isAvailable;
+                                $mostrarPuntoVerde = ($usuario->estadop == 1 || $usuario->estadop == 3) && $isAvailable;
                             @endphp
 
                             <a href="{{ url('escorts/' . $usuario->id) }}" class="inicio-card">

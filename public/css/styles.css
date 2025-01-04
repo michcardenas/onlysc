@@ -3147,17 +3147,19 @@ video:not(.banner-img):not(.historia-circle video) {
     pointer-events: auto; /* Asegura que el modal sea interactivo */
 }
  
- .filtro-modal .modal-content {
+.filtro-modal .modal-content {
     width: 544px;
-    background-color: #fff !important;
-    color: #333 !important;
+    background-color: #fff;
+    color: #333;
     text-align: center;
     position: relative;
     margin: auto;
-    max-height: calc(100vh - 3.5rem);
+    max-height: 100vh; /* Ajustado para mejor visibilidad */
     display: flex;
     flex-direction: column;
- }
+    border-radius: 8px;
+    overflow: hidden; /* Evita que el contenido se salga */
+}
  
  .filtro-modal .modal-body {
     padding: 1.5rem;
@@ -3479,58 +3481,14 @@ video:not(.banner-img):not(.historia-circle video) {
 
 .extra-filters {
     display: flex;
-    justify-content: space-between;
     padding: 10px 35px;
     margin-top: 10px;
-}
-
-.extra-filters .checkbox-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-}
-
-.extra-filters input[type="checkbox"] {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
-    min-width: 18px;
-    border: 1.5px solid #e00037;
-    border-radius: 3px;
-    outline: none;
-    cursor: pointer;
-    position: relative;
-    background: white;
-    margin: 0;
-}
-
-.extra-filters input[type="checkbox"]:checked {
-    background-color: #e00037;
-}
-
-.extra-filters input[type="checkbox"]:checked::after {
-    content: '';
-    position: absolute;
-    left: 4px;
-    top: 1px;
-    width: 5px;
-    height: 9px;
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
-}
-
-.extra-filters input[type="checkbox"]:disabled {
-    border-color: #ccc;
-    cursor: not-allowed;
 }
 
 .review-container {
     background-color: #fff;
     border-radius: 20px;
-    padding: 8px 16px;
+    padding: 8px 18px;
     display: inline-block;
     cursor: pointer;
     border: 1.5px solid #e0e0e0;
@@ -3555,7 +3513,7 @@ video:not(.banner-img):not(.historia-circle video) {
 
 .review-text {
     color: #333;
-    font-size: 14px;
+    font-size: 12.5px;
     font-weight: 500;
     transition: color 0.3s ease;
 }
@@ -3585,7 +3543,7 @@ video:not(.banner-img):not(.historia-circle video) {
     background: #ffffff;
     border: 2px solid #e5e7eb;
     border-radius: 12px;
-    padding: 12px 8px;
+    padding: 6px 8px;
     cursor: pointer;
     text-align: center;
     transition: all 0.2s ease;

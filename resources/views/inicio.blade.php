@@ -111,27 +111,33 @@
                     $now = Carbon\Carbon::now();
                     $currentDay = strtolower($now->locale('es')->dayName);
                     $isAvailable = false;
+foreach ($usuario->disponibilidad as $disponibilidad) {
+    if (strtolower($disponibilidad->dia) === $currentDay) {
+        // Check for full time availability
+        if ($disponibilidad->hora_desde === '00:00:00' && $disponibilidad->hora_hasta === '23:59:00') {
+            $isAvailable = true;
+            break;
+        }
+        
+        // Regular time slot check
+        $horaDesde = Carbon\Carbon::parse($disponibilidad->hora_desde);
+        $horaHasta = Carbon\Carbon::parse($disponibilidad->hora_hasta);
 
-                    foreach ($usuario->disponibilidad as $disponibilidad) {
-                    if (strtolower($disponibilidad->dia) === $currentDay) {
-                    $horaDesde = Carbon\Carbon::parse($disponibilidad->hora_desde);
-                    $horaHasta = Carbon\Carbon::parse($disponibilidad->hora_hasta);
+        if ($horaHasta->lessThan($horaDesde)) {
+            if ($now->greaterThanOrEqualTo($horaDesde) || $now->lessThanOrEqualTo($horaHasta)) {
+                $isAvailable = true;
+                break;
+            }
+        } else {
+            if ($now->between($horaDesde, $horaHasta)) {
+                $isAvailable = true;
+                break;
+            }
+        }
+    }
+}
 
-                    if ($horaHasta->lessThan($horaDesde)) {
-                    if ($now->greaterThanOrEqualTo($horaDesde) || $now->lessThanOrEqualTo($horaHasta)) {
-                    $isAvailable = true;
-                    break;
-                    }
-                    } else {
-                    if ($now->between($horaDesde, $horaHasta)) {
-                    $isAvailable = true;
-                    break;
-                    }
-                    }
-                    }
-                    }
-
-                    $mostrarPuntoVerde = $usuario->estadop == 1 && $isAvailable;
+$mostrarPuntoVerde = ($usuario->estadop == 1 || $usuario->estadop == 3) && $isAvailable;
                     @endphp
 
                     <a href="{{ url('escorts/' . $usuario->id) }}" class="inicio-card">
@@ -169,38 +175,71 @@
             </div>
 
             @if($usuarioDestacado && !$usuarios->isEmpty())
-            @php
-            $fotosDestacado = json_decode($usuarioDestacado->fotos, true);
-            $positionsDestacado = json_decode($usuarioDestacado->foto_positions, true) ?? [];
-            $primeraFotoDestacado = is_array($fotosDestacado) && !empty($fotosDestacado) ? $fotosDestacado[0] : null;
-            $posicionFotoDestacado = in_array(($positionsDestacado[$primeraFotoDestacado] ?? ''), ['left', 'right', 'center']) ? $positionsDestacado[$primeraFotoDestacado] : 'center';
-            @endphp
+@php
+$fotosDestacado = json_decode($usuarioDestacado->fotos, true);
+$positionsDestacado = json_decode($usuarioDestacado->foto_positions, true) ?? [];
+$primeraFotoDestacado = is_array($fotosDestacado) && !empty($fotosDestacado) ? $fotosDestacado[0] : null;
+$posicionFotoDestacado = in_array(($positionsDestacado[$primeraFotoDestacado] ?? ''), ['left', 'right', 'center']) ? $positionsDestacado[$primeraFotoDestacado] : 'center';
 
-            <a href="{{ url('escorts/' . $usuarioDestacado->id) }}" class="inicio-featured-card">
-                <div class="inicio-featured-label">CHICA DEL MES</div>
-                <div class="inicio-featured-image"
-                    style="background-image: url('{{ $primeraFotoDestacado ? asset("storage/chicas/{$usuarioDestacado->id}/{$primeraFotoDestacado}") : asset("images/default-avatar.png") }}');
-                           background-position: {{ $posicionFotoDestacado }} center;">
-                    <div class="inicio-featured-overlay">
-                        <h3 class="inicio-featured-title">
-                            {{ $usuarioDestacado->fantasia }}
-                            <span class="inicio-featured-age">{{ $usuarioDestacado->edad }}</span>
-                        </h3>
-                        <div class="location-price">
-                            <span class="inicio-featured-location">
-                                <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                @if($ciudadSeleccionada->url === 'santiago')
-                                {{ $ubicacionesMostradas[$usuarioDestacado->id] ?? 'Sector no disponible' }}
-                                @else
-                                {{ $usuarioDestacado->ubicacion }}
-                                @endif
-                            </span>
-                            <span class="inicio-featured-price">${{ number_format($usuarioDestacado->precio, 0, ',', '.') }}</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-            @endif
+// Lógica de disponibilidad para usuario destacado
+$isAvailableDestacado = false;
+foreach ($usuarioDestacado->disponibilidad as $disponibilidad) {
+    if (strtolower($disponibilidad->dia) === $currentDay) {
+        // Check for full time availability
+        if (trim($disponibilidad->hora_desde) === '00:00:00' && trim($disponibilidad->hora_hasta) === '23:59:00') {
+            $isAvailableDestacado = true;
+            break;
+        }
+        
+        // Regular time slot check
+        $horaDesde = Carbon\Carbon::parse($disponibilidad->hora_desde);
+        $horaHasta = Carbon\Carbon::parse($disponibilidad->hora_hasta);
+
+        if ($horaHasta->lessThan($horaDesde)) {
+            if ($now->greaterThanOrEqualTo($horaDesde) || $now->lessThanOrEqualTo($horaHasta)) {
+                $isAvailableDestacado = true;
+                break;
+            }
+        } else {
+            if ($now->between($horaDesde, $horaHasta)) {
+                $isAvailableDestacado = true;
+                break;
+            }
+        }
+    }
+}
+
+$mostrarPuntoVerdeDestacado = ($usuarioDestacado->estadop == 1 || $usuarioDestacado->estadop == 3) && $isAvailableDestacado;
+@endphp
+
+<a href="{{ url('escorts/' . $usuarioDestacado->id) }}" class="inicio-featured-card">
+    <div class="inicio-featured-label">CHICA DEL MES</div>
+    <div class="inicio-featured-image"
+        style="background-image: url('{{ $primeraFotoDestacado ? asset("storage/chicas/{$usuarioDestacado->id}/{$primeraFotoDestacado}") : asset("images/default-avatar.png") }}');
+               background-position: {{ $posicionFotoDestacado }} center;">
+        <div class="inicio-featured-overlay">
+            <h3 class="inicio-featured-title">
+                {{ $usuarioDestacado->fantasia }}
+                @if($mostrarPuntoVerdeDestacado)
+                <span class="online-dot"></span>
+                @endif
+                <span class="inicio-featured-age">{{ $usuarioDestacado->edad }}</span>
+            </h3>
+            <div class="location-price">
+                <span class="inicio-featured-location">
+                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                    @if($ciudadSeleccionada->url === 'santiago')
+                    {{ $ubicacionesMostradas[$usuarioDestacado->id] ?? 'Sector no disponible' }}
+                    @else
+                    {{ $usuarioDestacado->ubicacion }}
+                    @endif
+                </span>
+                <span class="inicio-featured-price">${{ number_format($usuarioDestacado->precio, 0, ',', '.') }}</span>
+            </div>
+        </div>
+    </div>
+</a>
+@endif
         </section>
 
         <aside class="online-panel">
@@ -288,7 +327,7 @@
                     }
                     }
 
-                    $mostrarPuntoVerde = $usuario->estadop == 1 && $isAvailable;
+                    $mostrarPuntoVerde = ($usuario->estadop == 1 || $usuario->estadop == 3) && $isAvailable;
                     @endphp
                     <a href="{{ url('escorts/' . $usuario->id) }}" class="swiper-slide2" style="flex: 0 0 auto; margin-right: 0;">
                         <div class="volvieronyprimera-card">
@@ -376,7 +415,7 @@
                     }
                     }
 
-                    $mostrarPuntoVerde = $usuario->estadop == 1 && $isAvailable;
+                    $mostrarPuntoVerde = ($usuario->estadop == 1 || $usuario->estadop == 3) && $isAvailable;
                     @endphp
                     <a href="{{ url('escorts/' . $usuario->id) }}" class="swiper-slide2" style="flex: 0 0 auto; margin-right: 0;">
                         <div class="volvieronyprimera-card">
