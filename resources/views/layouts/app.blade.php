@@ -25,13 +25,16 @@
 
     <!-- Scripts -->
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
-
+    @isset($canonicalUrl)
+    <link rel="canonical" href="{{ $canonicalUrl }}" />
+@endisset
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/es.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/9.3.2/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
+    <meta name="robots" content="{{ $metaRobots ?? 'index,follow' }}">
 </head>
 
 <body>
@@ -1089,6 +1092,10 @@ document.addEventListener('keydown', function(event) {
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // Variable global para control de filtros
+    let hasAddedUrlFilter = false;
+
+    // Elementos del DOM
     const modal = new bootstrap.Modal(document.getElementById('filterModal'));
     const form = document.getElementById('filterForm');
     const ciudadSelect = document.getElementById('ciudadSelect');
@@ -1097,6 +1104,76 @@ document.addEventListener('DOMContentLoaded', () => {
     const nacionalidadSelect = document.getElementById('nacionalidadSelect');
     const disponibleCheck = document.getElementById('disponibleCheck');
     const resenaCheck = document.getElementById('resenaCheck');
+
+    // Funciones de normalización
+    const normalizeText = (text) => {
+        return text.toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "") // Remover acentos
+            .replace(/\s+/g, '-') // Espacios a guiones
+            .replace(/[^a-z0-9-]/g, '-') // Caracteres especiales a guiones
+            .replace(/-+/g, '-') // Evitar múltiples guiones seguidos
+            .replace(/^-|-$/g, ''); // Remover guiones al inicio y final
+    };
+
+    const normalizeString = (text) => {
+        return text.toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim();
+    };
+
+    // Función para contar filtros actuales
+    const countUrlFilters = () => {
+        let filterCount = 0;
+        
+        // Si hay nacionalidad seleccionada
+        if (nacionalidadSelect.value) filterCount++;
+        
+        // Si hay edad diferente del default
+        const [edadMin, edadMax] = edadRange.noUiSlider.get().map(Number);
+        if (edadMin !== 18 || edadMax !== 50) filterCount++;
+        
+        // Si hay precio/categoría seleccionada
+        const selectedCategory = document.querySelector('.price-category.active');
+        if (selectedCategory || 
+            (precioRange.noUiSlider.get()[0] !== 0 || 
+             precioRange.noUiSlider.get()[1] !== 300000)) {
+            filterCount++;
+        }
+        
+        // Si está disponible
+        if (disponibleCheck.classList.contains('selected')) filterCount++;
+        
+        // Si hay atributos seleccionados
+        const checkedAtributos = document.querySelectorAll('input[name="atributos[]"]:checked');
+        if (checkedAtributos.length > 0) filterCount++;
+        
+        // Si hay servicios seleccionados
+        const checkedServicios = document.querySelectorAll('input[name="servicios[]"]:checked');
+        if (checkedServicios.length > 0) filterCount++;
+        
+        // Si tiene reseña verificada
+        if (resenaCheck.classList.contains('selected')) filterCount++;
+        
+        return filterCount;
+    };
+
+    // Función para determinar si un filtro debe ir en la URL
+    const shouldAddToUrl = () => {
+        if (hasAddedUrlFilter) return false;
+        
+        const isSantiago = ciudadSelect.value.toLowerCase() === 'santiago';
+        const currentFilters = countUrlFilters();
+        
+        // Si es Santiago y tiene barrio seleccionado, permitimos una variable adicional
+        if (isSantiago && barrioSelect.value) {
+            return true; // Siempre permitimos el primer filtro después del barrio
+        }
+        
+        // Para otros casos, solo permitimos un filtro
+        return true;
+    };
 
     // Inicialización de rangos
     const edadRange = document.getElementById('edadRange');
@@ -1121,24 +1198,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Mostrar u ocultar categorías según la ciudad seleccionada
-    ciudadSelect.addEventListener('change', () => {
+    // Gestión de categorías de precio
+    const handlePriceCategories = () => {
         const priceCategories = document.querySelectorAll('.price-category');
-        if (ciudadSelect.value.toLowerCase() === 'santiago') {
-            priceCategories.forEach(category => {
-                category.style.display = 'block';
-            });
-        } else {
-            priceCategories.forEach(category => {
-                category.style.display = 'none';
-            });
+        const isSantiago = ciudadSelect.value.toLowerCase() === 'santiago';
+        
+        priceCategories.forEach(category => {
+            category.style.display = isSantiago ? 'block' : 'none';
+        });
+
+        if (!isSantiago) {
             precioRange.noUiSlider.set([0, 300000]);
             document.getElementById('categoriaFilter').value = '';
-            document.querySelectorAll('.price-category').forEach(category => {
+            priceCategories.forEach(category => {
                 category.classList.remove('active');
             });
         }
-    });
+    };
+
+    ciudadSelect.addEventListener('change', handlePriceCategories);
 
     // Event listeners para categorías de precio
     document.querySelectorAll('.price-category').forEach(category => {
@@ -1162,59 +1240,73 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Tooltips para edad
-    const edadHandles = edadRange.querySelectorAll('.noUi-handle');
-    edadHandles.forEach(handle => {
-        const tooltip = document.createElement('div');
-        tooltip.className = 'slider-tooltip';
-        handle.appendChild(tooltip);
-    });
+    // Configuración de tooltips y actualizaciones de rangos
+    const setupRangeTooltips = (range, suffix = '') => {
+        const handles = range.querySelectorAll('.noUi-handle');
+        handles.forEach(handle => {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'slider-tooltip';
+            handle.appendChild(tooltip);
+        });
+    };
 
-    // Actualizar valores de edad
-    edadRange.noUiSlider.on('update', (values, handle) => {
+    const updateRangeValues = (range, values, prefix = '', suffix = '') => {
         const [min, max] = values.map(x => Math.round(Number(x)));
-        const tooltips = edadRange.querySelectorAll('.slider-tooltip');
+        const tooltips = range.querySelectorAll('.slider-tooltip');
+        const minElement = range.parentElement.querySelector('.range-values span:first-child');
+        const maxElement = range.parentElement.querySelector('.range-values span:last-child');
         
-        tooltips[0].textContent = `${min}`;
-        tooltips[1].textContent = `${max}`;
+        tooltips[0].textContent = `${prefix}${min.toLocaleString()}${suffix}`;
+        tooltips[1].textContent = `${prefix}${max.toLocaleString()}${suffix}`;
+        minElement.textContent = `${prefix}${min.toLocaleString()}${suffix}`;
+        maxElement.textContent = `${prefix}${max.toLocaleString()}${suffix}`;
         
-        const minElement = edadRange.parentElement.querySelector('.range-values span:first-child');
-        const maxElement = edadRange.parentElement.querySelector('.range-values span:last-child');
-        minElement.textContent = `${min} años`;
-        maxElement.textContent = `${max} años`;
+        return [min, max];
+    };
+
+    // Configurar tooltips
+    setupRangeTooltips(edadRange);
+    setupRangeTooltips(precioRange);
+
+    // Event listeners para rangos
+    edadRange.noUiSlider.on('update', (values) => {
+        const [min, max] = updateRangeValues(edadRange, values, '', ' años');
         document.getElementById('edadMin').value = min;
         document.getElementById('edadMax').value = max;
     });
 
-    // Tooltips para precio
-    const precioHandles = precioRange.querySelectorAll('.noUi-handle');
-    precioHandles.forEach(handle => {
-        const tooltip = document.createElement('div');
-        tooltip.className = 'slider-tooltip';
-        handle.appendChild(tooltip);
-    });
-
-    // Actualizar valores de precio
-    precioRange.noUiSlider.on('update', (values, handle) => {
-        const [min, max] = values.map(x => Math.round(Number(x)));
-        const tooltips = precioRange.querySelectorAll('.slider-tooltip');
-        
-        tooltips[0].textContent = `$${min.toLocaleString()}`;
-        tooltips[1].textContent = `$${max.toLocaleString()}`;
-        
-        const minElement = precioRange.parentElement.querySelector('.range-values span:first-child');
-        const maxElement = precioRange.parentElement.querySelector('.range-values span:last-child');
-        minElement.textContent = `$${min.toLocaleString()}`;
-        maxElement.textContent = `$${max.toLocaleString()}`;
+    precioRange.noUiSlider.on('update', (values) => {
+        const [min, max] = updateRangeValues(precioRange, values, '$');
         document.getElementById('precioMin').value = min;
         document.getElementById('precioMax').value = max;
     });
 
     // Arrays de atributos y servicios
-    const atributos = ["Busto Grande","Busto Mediano","Busto Pequeño","Cara Visible","Cola Grande","Cola Mediana","Cola Pequeña","Con Video","Contextura Delgada","Contextura Grande","Contextura Mediana","Depilación Full","Depto Propio","En Promoción","English","Escort Independiente","Español","Estatura Alta","Estatura Mediana","Estatura Pequeña","Hentai","Morena","Mulata","No fuma","Ojos Claros","Ojos Oscuros","Peliroja","Portugues","Relato Erotico","Rubia","Tatuajes","Trigueña"];
-    const servicios = ["Anal","Atención a domicilio","Atención en hoteles","Baile Erotico","Besos","Cambio de rol","Departamento Propio","Disfraces","Ducha Erotica","Eventos y Cenas","Eyaculación Cuerpo","Eyaculación Facial","Hetero","Juguetes","Lesbico","Lluvia dorada","Masaje Erotico","Masaje prostatico","Masaje Tantrico","Masaje Thai","Masajes con final feliz","Masajes desnudos","Masajes Eroticos","Masajes para hombres","Masajes sensitivos","Masajes sexuales","Masturbación Rusa","Oral Americana","Oral con preservativo","Oral sin preservativo","Orgias","Parejas","Trio"];
+    const atributos = [
+        "Busto grande", "Busto mediano", "Busto pequeño", "Cara visible",
+        "Cola grande", "Cola mediana", "Cola pequeña", "Con video",
+        "Contextura delgada", "Contextura grande", "Contextura mediana",
+        "Depilacion full", "Depto propio", "En promocion", "English",
+        "Escort independiente", "Español", "Estatura alta", "Estatura mediana",
+        "Estatura pequeña", "Hentai", "Morena", "Mulata", "No fuma",
+        "Ojos claros", "Ojos oscuros", "Peliroja", "Portugues",
+        "Relato erotico", "Rubia", "Tatuajes", "Trigueña"
+    ];
 
-    // Crear checkboxes
+    const servicios = [
+        "Anal", "Atencion a domicilio", "Atencion en hoteles", "Baile erotico",
+        "Besos", "Cambio de rol", "Departamento propio", "Disfraces",
+        "Ducha erotica", "Eventos y cenas", "Eyaculacion cuerpo",
+        "Eyaculacion facial", "Hetero", "Juguetes", "Lesbico",
+        "Lluvia dorada", "Masaje erotico", "Masaje prostatico",
+        "Masaje tantrico", "Masaje thai", "Masajes con final feliz",
+        "Masajes desnudos", "Masajes eroticos", "Masajes para hombres",
+        "Masajes sensitivos", "Masajes sexuales", "Masturbacion rusa",
+        "Oral americana", "Oral con preservativo", "Oral sin preservativo",
+        "Orgias", "Parejas", "Trio"
+    ];
+
+    // Crear checkboxes con valores originales
     const createCheckboxes = (items, containerId, name) => {
         const container = document.getElementById(containerId);
         const showCount = 8;
@@ -1223,6 +1315,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const label = document.createElement('label');
             label.className = 'checkbox-label';
             if (index >= showCount) label.style.display = 'none';
+            
             label.innerHTML = `
                 <input type="checkbox" name="${name}[]" value="${item}">
                 <span class="checkbox-text">${item}</span>
@@ -1231,6 +1324,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    // Gestión de mostrar más/menos
     ['showMoreServices', 'showMoreAttributes'].forEach(id => {
         document.getElementById(id).addEventListener('click', function() {
             const container = document.getElementById(id === 'showMoreServices' ? 'serviciosContainer' : 'atributosContainer');
@@ -1246,36 +1340,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Crear los checkboxes
     createCheckboxes(atributos, 'atributosContainer', 'atributos');
     createCheckboxes(servicios, 'serviciosContainer', 'servicios');
 
-    // Control de visibilidad del selector de barrios
+    // Gestión de barrios
     const toggleBarrioContainer = () => {
         const selectedCity = ciudadSelect.options[ciudadSelect.selectedIndex].text;
         const isSantiago = selectedCity.toLowerCase().includes('santiago');
         
-        if (isSantiago) {
-            barrioContainer.style.display = 'block';
-            if (barrioSelect.options.length <= 1 && window.barriosSantiago && window.barriosSantiago.length) {
-                barrioSelect.innerHTML = '<option value="">Seleccionar barrio</option>';
-                window.barriosSantiago.forEach(barrio => {
-                    const option = document.createElement('option');
-                    option.value = barrio;
-                    option.textContent = barrio;
-                    barrioSelect.appendChild(option);
-                });
-            }
-        } else {
-            barrioContainer.style.display = 'none';
+        barrioContainer.style.display = isSantiago ? 'block' : 'none';
+        
+        if (isSantiago && barrioSelect.options.length <= 1 && window.barriosSantiago?.length) {
+            barrioSelect.innerHTML = '<option value="">Seleccionar barrio</option>';
+            window.barriosSantiago.forEach(barrio => {
+                const option = document.createElement('option');
+                option.value = barrio;
+                option.textContent = barrio;
+                barrioSelect.appendChild(option);
+            });
+        } else if (!isSantiago) {
             barrioSelect.value = '';
         }
     };
 
-    // Event listeners para cambios en la ciudad
     ciudadSelect.addEventListener('change', toggleBarrioContainer);
     toggleBarrioContainer();
 
-    // Event listener para el botón de reseña
+    // Event listeners para botones
     resenaCheck.addEventListener('click', function() {
         this.classList.toggle('selected');
     });
@@ -1284,148 +1376,151 @@ document.addEventListener('DOMContentLoaded', () => {
         this.classList.toggle('selected');
     });
 
-    // Función para normalizar texto para URL
-    const normalizeText = (text) => {
-        return text.toLowerCase()
-            .replace(/\s+/g, '-')
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "");
-    };
-
+    // Manejo del envío del formulario
     form.addEventListener('submit', (e) => {
-    e.preventDefault();
+        e.preventDefault();
+        hasAddedUrlFilter = false;
 
-    if (!ciudadSelect.value) {
-        alert('Por favor seleccione una ciudad');
-        return;
-    }
-    
-    let url = `/escorts-${ciudadSelect.value}`;
-    
-    const isSantiago = ciudadSelect.options[ciudadSelect.selectedIndex].text.toLowerCase().includes('santiago');
-    if (isSantiago && barrioSelect.value) {
-        const normalizedBarrio = normalizeText(barrioSelect.value);
-        url += `/${normalizedBarrio}`;
-    }
-
-    // Función para contar filtros activos
-    const getActiveFiltersCount = () => {
-        let count = 0;
-        if (nacionalidadSelect.value) count++;
-        const [edadMin, edadMax] = edadRange.noUiSlider.get().map(Number);
-        if (edadMin !== 18 || edadMax !== 50) count++;
-        const [precioMin, precioMax] = precioRange.noUiSlider.get().map(Number);
-        if (precioMin !== 0 || precioMax !== 300000) count++;
-        if (getCheckedValues('atributos[]').length > 0) count++;
-        if (getCheckedValues('servicios[]').length > 0) count++;
-        if (disponibleCheck.classList.contains('selected')) count++;
-        if (resenaCheck.classList.contains('selected')) count++;
-        if (document.querySelector('.price-category.active')) count++;
-        return count;
-    };
-
-    const activeFiltersCount = getActiveFiltersCount();
-
-    // Para múltiples filtros, usar QueryParams
-    const params = new URLSearchParams();
-
-    // Procesar todos los filtros
-    if (disponibleCheck.classList.contains('selected')) {
-        if (activeFiltersCount === 1) {
-            url += `/disponible`;
-            window.location.href = url;
-            return;
-        } else {
-            params.append('disponible', '1');
-        }
-    }
-
-    if (nacionalidadSelect.value) {
-        if (activeFiltersCount === 1) {
-            url += `${isSantiago && barrioSelect.value ? '/' : '/'}escorts-${nacionalidadSelect.value.toLowerCase()}`;
-            window.location.href = url;
+        if (!ciudadSelect.value) {
+            alert('Por favor seleccione una ciudad');
             return;
         }
-        params.append('n', nacionalidadSelect.value);
-    }
-
-    const [edadMin, edadMax] = edadRange.noUiSlider.get().map(Number);
-    if (edadMin !== 18 || edadMax !== 50) {
-        if (activeFiltersCount === 1) {
-            url += `/edad-${edadMin}-${edadMax}`;
-            window.location.href = url;
-            return;
+        
+        let url = `/escorts-${ciudadSelect.value}`;
+        const params = new URLSearchParams();
+        
+        const isSantiago = ciudadSelect.options[ciudadSelect.selectedIndex].text.toLowerCase().includes('santiago');
+        
+        // Agregar sector/comuna para Santiago
+        if (isSantiago && barrioSelect.value) {
+            const normalizedBarrio = normalizeText(barrioSelect.value);
+            url += `/${normalizedBarrio}`;
         }
-        params.append('e', `${edadMin}-${edadMax}`);
-    }
 
-    const selectedCategory = document.querySelector('.price-category.active');
-    if (selectedCategory) {
-        let categoria = selectedCategory.querySelector('.category-name').textContent.toLowerCase().replace(/\s+/g, '_');
-        // Siempre usar ruta limpia para categorías especiales
-        if (['vip', 'premium', 'de_lujo', 'under'].includes(categoria)) {
-            url += `/${categoria}`;
-            if (activeFiltersCount === 1) {
-                window.location.href = url;
-                return;
+        // Procesar nacionalidad
+        if (nacionalidadSelect.value) {
+            const gentilicios = {
+                'argentina': 'argentina',
+        'brasil': 'brasilena',
+        'chile': 'chilena',
+        'colombia': 'colombiana',
+        'ecuador': 'ecuatoriana',
+        'uruguay': 'uruguaya'
+            };
+            
+            const gentilicio = gentilicios[nacionalidadSelect.value.toLowerCase()] || 
+                              nacionalidadSelect.value.toLowerCase();
+            
+            if (shouldAddToUrl()) {
+                url += `/${gentilicio}`;
+                hasAddedUrlFilter = true;
+            } else {
+                params.append('n', nacionalidadSelect.value);
             }
-        } else if (activeFiltersCount === 1) {
-            url += `/${categoria}`;
-            window.location.href = url;
-            return;
+        }
+
+        // Procesar edad
+        const [edadMin, edadMax] = edadRange.noUiSlider.get().map(Number);
+        if (edadMin !== 18 || edadMax !== 50) {
+            if (shouldAddToUrl()) {
+                url += `/edad-${edadMin}-${edadMax}`;
+                hasAddedUrlFilter = true;
+            } else {
+                params.append('e', `${edadMin}-${edadMax}`);
+            }
+        }
+
+        // Procesar categoría de precio
+        const selectedCategory = document.querySelector('.price-category.active');
+        if (selectedCategory) {
+            const categoria = selectedCategory.querySelector('.category-name')
+                .textContent.toLowerCase().replace(/\s+/g, '_');
+            
+            if (shouldAddToUrl()) {
+                url += `/${categoria}`;
+                hasAddedUrlFilter = true;
+            } else {
+                params.append('categoria', categoria);
+            }
         } else {
-            params.append('categoria', categoria);
+            const [precioMin, precioMax] = precioRange.noUiSlider.get().map(Number);
+            if (precioMin !== 0 || precioMax !== 300000) {
+                if (shouldAddToUrl()) {
+                    url += `/precio-${precioMin}-${precioMax}`;
+                    hasAddedUrlFilter = true;
+                } else {
+                    params.append('p', `${precioMin}-${precioMax}`);
+                }
+            }
         }
-    } else {
-        const [precioMin, precioMax] = precioRange.noUiSlider.get().map(Number);
-        if (precioMin !== 0 || precioMax !== 300000) {
-            params.append('p', `${precioMin}-${precioMax}`);
+
+        // Procesar disponibilidad
+        if (disponibleCheck.classList.contains('selected')) {
+            if (shouldAddToUrl()) {
+                url += '/disponible';
+                hasAddedUrlFilter = true;
+            } else {
+                params.append('disponible', '1');
+            }
         }
-    }
 
-    const checkedAtributos = getCheckedValues('atributos[]');
-    if (checkedAtributos.length > 0) {
-        if (activeFiltersCount === 1) {
-            url += `/${normalizeText(checkedAtributos[0])}`;
-            window.location.href = url;
-            return;
-        }
-        params.append('a', checkedAtributos.join(','));
-    }
-
-    const checkedServicios = getCheckedValues('servicios[]');
-    if (checkedServicios.length > 0) {
-        if (activeFiltersCount === 1) {
-            url += `/${normalizeText(checkedServicios[0])}`;
-            window.location.href = url;
-            return;
-        }
-        params.append('s', checkedServicios.join(','));
-    }
-
-    if (resenaCheck.classList.contains('selected')) {
-        if (activeFiltersCount === 1) {
-            url += `/resena-verificada`;
-            window.location.href = url;
-            return;
-        }
-        params.append('resena', '1');
-    }
-
-    // Construir URL final
-    const queryString = params.toString();
-    if (queryString) {
-        url += `?${queryString}`;
-    }
-    
-    window.location.href = url;
-});
-
-    // Funciones auxiliares
-    function getCheckedValues(name) {
-        return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`))
+        // Procesar atributos
+        const checkedAtributos = Array.from(document.querySelectorAll('input[name="atributos[]"]:checked'))
             .map(cb => cb.value);
-    }
+        if (checkedAtributos.length > 0) {
+            if (shouldAddToUrl()) {
+                const normalizedAtributo = normalizeText(checkedAtributos[0]);
+                url += `/${normalizedAtributo}`;
+                hasAddedUrlFilter = true;
+                
+                // Si hay más atributos, los agregamos todos como parámetros
+                if (checkedAtributos.length > 1) {
+                    params.append('a', checkedAtributos.slice(1).join(','));
+                }
+            } else {
+                // Agregamos todos los atributos como parámetros
+                params.append('a', checkedAtributos.join(','));
+            }
+        }
+
+        // Procesar servicios
+        const checkedServicios = Array.from(document.querySelectorAll('input[name="servicios[]"]:checked'))
+            .map(cb => cb.value);
+        if (checkedServicios.length > 0) {
+            if (shouldAddToUrl()) {
+                // Si podemos agregar a la URL, agregamos solo el primer servicio
+                const servicioParaUrl = normalizeText(checkedServicios[0]);
+                url += `/${servicioParaUrl}`;
+                hasAddedUrlFilter = true;
+                
+                // Si hay más servicios, los agregamos todos como parámetros
+                if (checkedServicios.length > 1) {
+                    params.append('s', checkedServicios.slice(1).join(','));
+                }
+            } else {
+                // Agregamos todos los servicios como parámetros
+                params.append('s', checkedServicios.join(','));
+            }
+        }
+
+        // Procesar reseñas verificadas
+        if (resenaCheck.classList.contains('selected')) {
+            if (shouldAddToUrl()) {
+                url += '/resena-verificada';
+                hasAddedUrlFilter = true;
+            } else {
+                params.append('resena', '1');
+            }
+        }
+
+        // Construir URL final
+        const queryString = params.toString();
+        if (queryString) {
+            url += `?${queryString}`;
+        }
+        
+        window.location.href = url;
+    });
 
     // Reset de filtros
     document.getElementById('resetFilters').addEventListener('click', () => {
@@ -1435,7 +1530,7 @@ document.addEventListener('DOMContentLoaded', () => {
         nacionalidadSelect.value = '';
         barrioSelect.value = '';
         barrioContainer.style.display = ciudadSelect.value.toLowerCase().includes('santiago') ? 'block' : 'none';
-        disponibleCheck.checked = false;
+        disponibleCheck.classList.remove('selected');
         resenaCheck.classList.remove('selected');
         document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
             checkbox.checked = false;
@@ -1444,6 +1539,7 @@ document.addEventListener('DOMContentLoaded', () => {
             category.classList.remove('active');
         });
         precioRange.noUiSlider.set([0, 300000]);
+        document.getElementById('categoriaFilter').value = '';
     });
 
     // Mostrar modal
