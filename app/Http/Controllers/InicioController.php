@@ -19,6 +19,21 @@ use Illuminate\Support\Facades\Cache;
 
 class InicioController extends Controller
 {
+
+    private function procesarUbicacionUsuario($usuario, $ciudadSeleccionada, $sectorValido = null)
+    {
+        if ($ciudadSeleccionada->url === 'santiago') {
+            if ($sectorValido) {
+                return ucwords(str_replace('-', ' ', $sectorValido));
+            } elseif ($usuario->location && $usuario->location->direccion) {
+                return $this->extraerSectorDeDireccion($usuario->location->direccion);
+            }
+            return 'Sector no disponible';
+        }
+        return $usuario->ubicacion;
+    }
+
+
     public function show($nombreCiudad, $sector = null, $filtros = null)
     {
         $seoText = null;
@@ -100,7 +115,6 @@ class InicioController extends Controller
                     $q->where('direccion', 'LIKE', "%{$sectorValido}%")
                         ->orWhere('direccion', 'LIKE', "%, {$sectorValido},%");
                 });
-                $variableCount++;
             }
 
             // Si hay un sector que no es válido, podría ser un filtro
@@ -113,8 +127,28 @@ class InicioController extends Controller
             if ($filtros) {
                 $variableCount++;
 
+                $filtroNormalizado = str_replace('-', ' ', $filtros);
+                $nacionalidadMap = [
+                    'colombiana' => 'colombia',
+                    'argentina' => 'argentina',
+                    'brasilena' => 'brasil',
+                    'chilena' => 'chile',
+                    'ecuatoriana' => 'ecuador',
+                    'uruguaya' => 'uruguay',
+                    'venezolana' => 'venezuela',
+                    'paraguaya' => 'paraguay',
+                    'peruana' => 'peru'
+                ];
+
+                if (array_key_exists($filtroNormalizado, $nacionalidadMap)) {
+                    Log::info('Aplicando filtro de nacionalidad', [
+                        'filtro' => $filtroNormalizado,
+                        'nacionalidad' => $nacionalidadMap[$filtroNormalizado]
+                    ]);
+                    $query->where('nacionalidad', $nacionalidadMap[$filtroNormalizado]);
+                }
                 // Procesar filtros de edad
-                if (preg_match('/^edad-(\d+)-(\d+)$/', $filtros, $matches)) {
+                else if (preg_match('/^edad-(\d+)-(\d+)$/', $filtros, $matches)) {
                     $min = (int)$matches[1];
                     $max = (int)$matches[2];
                     $query->whereBetween('edad', [$min, $max]);
@@ -125,27 +159,6 @@ class InicioController extends Controller
                     $max = (int)$matches[2];
                     $query->whereBetween('precio', [$min, $max]);
                 }
-                // Procesar nacionalidad con gentilicio
-                // Procesar nacionalidad con gentilicio
-else if (str_starts_with($filtros, 'escorts-')) {
-    $nacionalidad = str_replace('escorts-', '', $filtros);
-    $gentilicios = [
-        'argentina' => 'argentina',
-        'brasilena' => 'brasil',
-        'chilena' => 'chile',
-        'colombiana' => 'colombia',
-        'ecuatoriana' => 'ecuador',
-        'uruguaya' => 'uruguay'
-    ];
-    $nacionalidadNormalizada = $gentilicios[$nacionalidad] ?? $nacionalidad;
-    
-    // Solo permitir las nacionalidades que están en el select
-    $nacionalidadesValidas = ['argentina', 'brasil', 'chile', 'colombia', 'ecuador', 'uruguay'];
-    
-    if (in_array($nacionalidadNormalizada, $nacionalidadesValidas)) {
-        $query->where('nacionalidad', $nacionalidadNormalizada);
-    }
-}
                 // Procesar disponible
                 else if ($filtros === 'disponible') {
                     $query->whereHas('disponibilidad', function ($query) use ($currentDay, $currentTime) {
@@ -277,7 +290,6 @@ else if (str_starts_with($filtros, 'escorts-')) {
 
                         $query->where(function ($subQuery) use ($servicioEncontrado) {
                             $subQuery->where(function ($q) use ($servicioEncontrado) {
-                                // Buscar en el array de servicios
                                 $q->whereRaw('JSON_CONTAINS(LOWER(servicios), ?, "$")', ['"' . mb_strtolower($servicioEncontrado, 'UTF-8') . '"'])
                                     ->orWhereRaw('JSON_CONTAINS(LOWER(servicios_adicionales), ?, "$")', ['"' . mb_strtolower($servicioEncontrado, 'UTF-8') . '"']);
                             });
@@ -430,10 +442,13 @@ else if (str_starts_with($filtros, 'escorts-')) {
                 ->orderBy('estados.created_at', 'desc')
                 ->get();
 
-            // Usuario destacado - Independent query
-            $usuarioDestacado = UsuarioPublicate::with(['estados' => function ($query) {
-                $query->where('created_at', '>=', now()->subHours(24));
-            }, 'location:id,usuario_publicate_id,direccion'])  // Added location relation
+            // Usuario destacado - Independiente de los filtros
+            $usuarioDestacado = UsuarioPublicate::with([
+                'estados' => function ($query) {
+                    $query->where('created_at', '>=', now()->subHours(24));
+                },
+                'location:id,usuario_publicate_id,direccion'
+            ])
                 ->where('estadop', 3)
                 ->where('ubicacion', $ciudadSeleccionada->nombre)
                 ->select(
@@ -448,7 +463,9 @@ else if (str_starts_with($filtros, 'escorts-')) {
                     'precio',
                     'estadop'
                 )
+                ->orderBy('updated_at', 'desc')
                 ->first();
+
             // Usuarios online
             $usuariosOnline = UsuarioPublicate::with([
                 'disponibilidad' => function ($query) use ($currentDay, $currentTime) {
@@ -502,7 +519,7 @@ else if (str_starts_with($filtros, 'escorts-')) {
                                 ->orWhereRaw("(hora_hasta >= hora_desde AND '$currentTime' BETWEEN hora_desde AND hora_hasta)");
                         });
                 },
-                'location:id,usuario_publicate_id,direccion'  // Agregada la relación location
+                'location:id,usuario_publicate_id,direccion'
             ])
                 ->select(
                     'id',
@@ -532,7 +549,7 @@ else if (str_starts_with($filtros, 'escorts-')) {
                                 ->orWhereRaw("(hora_hasta >= hora_desde AND '$currentTime' BETWEEN hora_desde AND hora_hasta)");
                         });
                 },
-                'location:id,usuario_publicate_id,direccion'  // Agregada la relación location
+                'location:id,usuario_publicate_id,direccion'
             ])
                 ->select(
                     'id',
@@ -588,21 +605,106 @@ else if (str_starts_with($filtros, 'escorts-')) {
                 ->take(4)
                 ->get();
 
-            // Procesar la ubicación para la vista
-            $ubicacionesMostradas = [];
-            foreach ($usuarios as $usuario) {
-                if ($ciudadSeleccionada->url === 'santiago') {
-                    if ($sectorValido) {
-                        $ubicacionesMostradas[$usuario->id] = ucwords(str_replace('-', ' ', $sectorValido));
-                    } elseif ($usuario->location && $usuario->location->direccion) {
-                        $ubicacionesMostradas[$usuario->id] = $this->extraerSectorDeDireccion($usuario->location->direccion);
-                    } else {
-                        $ubicacionesMostradas[$usuario->id] = 'Sector no disponible';
-                    }
-                } else {
-                    $ubicacionesMostradas[$usuario->id] = $usuario->ubicacion;
-                }
+// Procesar la ubicación para la vista
+$ubicacionesMostradas = [];
+
+// Procesar ubicaciones para usuarios principales
+foreach ($usuarios as $usuario) {
+    if ($ciudadSeleccionada->url === 'santiago') {
+        if ($sectorValido) {
+            $ubicacionesMostradas[$usuario->id] = ucwords(str_replace('-', ' ', $sectorValido));
+        } elseif ($usuario->location && $usuario->location->direccion) {
+            $ubicacionesMostradas[$usuario->id] = $this->extraerSectorDeDireccion($usuario->location->direccion);
+        } else {
+            $ubicacionesMostradas[$usuario->id] = 'Sector no disponible';
+        }
+    } else {
+        $ubicacionesMostradas[$usuario->id] = $usuario->ubicacion;
+    }
+}
+
+// Procesar ubicaciones para usuarios online
+foreach ($usuariosOnline as $usuario) {
+    if ($ciudadSeleccionada->url === 'santiago') {
+        if ($sectorValido) {
+            $ubicacionesMostradas[$usuario->id] = ucwords(str_replace('-', ' ', $sectorValido));
+        } elseif ($usuario->location && $usuario->location->direccion) {
+            $ubicacionesMostradas[$usuario->id] = $this->extraerSectorDeDireccion($usuario->location->direccion);
+        } else {
+            $ubicacionesMostradas[$usuario->id] = 'Sector no disponible';
+        }
+    } else {
+        $ubicacionesMostradas[$usuario->id] = $usuario->ubicacion;
+    }
+}
+
+// Procesar ubicaciones para primera vez
+foreach ($primeraVez as $usuario) {
+    if ($ciudadSeleccionada->url === 'santiago') {
+        if ($sectorValido) {
+            $ubicacionesMostradas[$usuario->id] = ucwords(str_replace('-', ' ', $sectorValido));
+        } elseif ($usuario->location && $usuario->location->direccion) {
+            $ubicacionesMostradas[$usuario->id] = $this->extraerSectorDeDireccion($usuario->location->direccion);
+        } else {
+            $ubicacionesMostradas[$usuario->id] = 'Sector no disponible';
+        }
+    } else {
+        $ubicacionesMostradas[$usuario->id] = $usuario->ubicacion;
+    }
+}
+
+// Procesar ubicaciones para los que volvieron
+foreach ($volvieron as $usuario) {
+    if ($ciudadSeleccionada->url === 'santiago') {
+        if ($sectorValido) {
+            $ubicacionesMostradas[$usuario->id] = ucwords(str_replace('-', ' ', $sectorValido));
+        } elseif ($usuario->location && $usuario->location->direccion) {
+            $ubicacionesMostradas[$usuario->id] = $this->extraerSectorDeDireccion($usuario->location->direccion);
+        } else {
+            $ubicacionesMostradas[$usuario->id] = 'Sector no disponible';
+        }
+    } else {
+        $ubicacionesMostradas[$usuario->id] = $usuario->ubicacion;
+    }
+}
+
+// Procesar ubicación para usuario destacado si existe
+if ($usuarioDestacado) {
+    if ($ciudadSeleccionada->url === 'santiago') {
+        if ($sectorValido) {
+            $ubicacionesMostradas[$usuarioDestacado->id] = ucwords(str_replace('-', ' ', $sectorValido));
+        } elseif ($usuarioDestacado->location && $usuarioDestacado->location->direccion) {
+            $ubicacionesMostradas[$usuarioDestacado->id] = $this->extraerSectorDeDireccion($usuarioDestacado->location->direccion);
+        } else {
+            $ubicacionesMostradas[$usuarioDestacado->id] = 'Sector no disponible';
+        }
+    } else {
+        $ubicacionesMostradas[$usuarioDestacado->id] = $usuarioDestacado->ubicacion;
+    }
+}
+            // Replace title construction section
+            $title = "Escorts en {$ciudadSeleccionada->nombre}";
+
+            if ($sector && $this->validarSector($sector)) {
+                $title .= " en " . ucwords(str_replace('-', ' ', $sector));
             }
+
+            // Add category to title if present
+            if ($categoria = request()->get('categoria')) {
+                $categoriaDisplay = str_replace('_', ' ', $categoria);
+                $title .= " " . ucwords($categoriaDisplay);
+            }
+
+            if ($filtros) {
+                $title .= " " . ucwords(str_replace('-', ' ', $filtros));
+            }
+
+            if ($variableCount > 1) {
+                $title .= " | Filtros aplicados";
+            }
+
+            // Compartir con la vista
+            view()->share(['pageTitle' => $title]);
 
             // Determinar indexación y canonical basado en las reglas
             if ($ciudadSeleccionada->url === 'santiago') {
@@ -610,22 +712,22 @@ else if (str_starts_with($filtros, 'escorts-')) {
                     // Santiago + comuna + 1 variable → Se indexa
                     $shouldIndex = ($variableCount <= 1);
 
-                    // Si hay más de un filtro, el canonical apunta a la versión con un filtro
-                    if ($variableCount > 1 && $firstFilter) {
-                        $canonicalUrl = url("/escorts-santiago/{$sector}/{$firstFilter}");
+                    if ($variableCount > 1) {
+                        // Si hay más de un filtro, el canonical apunta a la versión con el primer filtro
+                        $canonicalUrl = url("/escorts-santiago/{$sector}/{$filtros}");
                     }
                 } else {
                     // Santiago sin comuna → máximo 1 variable
                     $shouldIndex = ($variableCount <= 1);
-                    if ($variableCount > 1 && $firstFilter) {
-                        $canonicalUrl = url("/escorts-santiago/{$firstFilter}");
+                    if ($variableCount > 1) {
+                        $canonicalUrl = url("/escorts-santiago/{$filtros}");
                     }
                 }
             } else {
                 // Otras ciudades → máximo 1 variable
                 $shouldIndex = ($variableCount <= 1);
-                if ($variableCount > 1 && $firstFilter) {
-                    $canonicalUrl = url("/escorts-{$nombreCiudad}/{$firstFilter}");
+                if ($variableCount > 1) {
+                    $canonicalUrl = url("/escorts-{$nombreCiudad}/{$filtros}");
                 }
             }
 
@@ -643,6 +745,27 @@ else if (str_starts_with($filtros, 'escorts-')) {
             } catch (\Exception $e) {
                 Log::error('Error generating SEO text', ['error' => $e->getMessage()]);
             }
+
+            return view('inicio', array_merge([
+                'ciudades' => $ciudades,
+                'ciudadSeleccionada' => $ciudadSeleccionada,
+                'sectorSeleccionado' => $sectorValido,
+                'usuarios' => $usuarios,
+                'usuarioDestacado' => $usuarioDestacado,
+                'usuariosOnline' => $usuariosOnline,
+                'totalOnline' => $usuariosOnline->count(),
+                'currentTime' => $currentTime,
+                'currentDay' => $currentDay,
+                'estados' => $estados,
+                'primeraVez' => $primeraVez,
+                'blogArticles' => $blogArticles,
+                'volvieron' => $volvieron,
+                'experiencias' => $experiencias,
+                'ubicacionesMostradas' => $ubicacionesMostradas
+            ], $seoText ? [
+                'seoTitle' => $seoText['title'],
+                'seoDescription' => $seoText['description']
+            ] : []));
         } catch (\Exception $e) {
             Log::error('Error en show', [
                 'error' => $e->getMessage(),
@@ -656,27 +779,6 @@ else if (str_starts_with($filtros, 'escorts-')) {
                 'trace' => $e->getTraceAsString()
             ], 500);
         }
-
-        return view('inicio', array_merge([
-            'ciudades' => $ciudades,
-            'ciudadSeleccionada' => $ciudadSeleccionada,
-            'sectorSeleccionado' => $sectorValido,
-            'usuarios' => $usuarios,
-            'usuarioDestacado' => $usuarioDestacado,
-            'usuariosOnline' => $usuariosOnline,
-            'totalOnline' => $usuariosOnline->count(),
-            'currentTime' => $currentTime,
-            'currentDay' => $currentDay,
-            'estados' => $estados,
-            'primeraVez' => $primeraVez,
-            'blogArticles' => $blogArticles,
-            'volvieron' => $volvieron,
-            'experiencias' => $experiencias,
-            'ubicacionesMostradas' => $ubicacionesMostradas
-        ], $seoText ? [
-            'seoTitle' => $seoText['title'],
-            'seoDescription' => $seoText['description']
-        ] : []));
     }
 
     // Función auxiliar para normalizar strings de manera consistente

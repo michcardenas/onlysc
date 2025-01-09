@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Título de la pestaña -->
-    <title>Escorts</title>
+    <title>{{ $pageTitle ?? 'OnlyEscorts' }}</title>
 
     <!-- Icono de la pestaña (favicon) -->
     <link rel="icon" href="{{ asset('images/icono.png') }}" type="image/png">
@@ -115,6 +115,7 @@
 
 <!-- Modal -->
 <div class="modal fade filtro-modal" id="filterModal" tabindex="-1">
+<div class="filtro-alert-container"></div>
    <div class="modal-dialog modal-lg">
        <div class="modal-content">
            <div class="modal-header">
@@ -185,8 +186,16 @@
                    <!-- Rango de precio -->
                    <div class="filter-section">
     <h6 class="range-title">Precio</h6>
-    <div class="price-category" data-min="0" data-max="300000" data-categorias="Under">
+    <div class="price-categories">
+    <div class="price-category" data-min="0" data-max="300000" data-categorias="Under" style="visibility: hidden; pointer-events: none;">
             <span class="category-name">Under</span>
+        </div>
+        <div class="price-category" data-min="0" data-max="300000" data-categorias="Under">
+            <span class="category-name">Under</span>
+        </div>
+        <div class="price-category" data-min="0" data-max="300000" data-categorias="Under" style="visibility: hidden; pointer-events: none;">
+            <span class="category-name">Under</span>
+        </div>
         </div>
     <div class="price-categories">
         <div class="price-category" data-min="0" data-max="70000" data-categorias="premium">
@@ -1123,6 +1132,27 @@ document.addEventListener('DOMContentLoaded', () => {
             .trim();
     };
 
+    function showFiltroAlert(message) {
+    const alertContainer = document.querySelector('.filtro-alert-container');
+    const alertElement = document.createElement('div');
+    alertElement.className = 'filtro-custom-alert';
+    
+    alertElement.innerHTML = `
+        <span class="filtro-alert-message">${message}</span>
+        <button class="filtro-alert-close" onclick="this.parentElement.remove()">&times;</button>
+    `;
+    
+    alertContainer.appendChild(alertElement);
+    
+    // Auto cerrar después de 5 segundos
+    setTimeout(() => {
+        if (alertElement.parentElement) {
+            alertElement.classList.add('filtro-fade-out');
+            setTimeout(() => alertElement.remove(), 300);
+        }
+    }, 5000);
+}
+
     // Función para contar filtros actuales
     const countUrlFilters = () => {
         let filterCount = 0;
@@ -1382,9 +1412,9 @@ document.addEventListener('DOMContentLoaded', () => {
         hasAddedUrlFilter = false;
 
         if (!ciudadSelect.value) {
-            alert('Por favor seleccione una ciudad');
-            return;
-        }
+    showFiltroAlert('Por favor seleccione una ciudad');
+    return;
+}
         
         let url = `/escorts-${ciudadSelect.value}`;
         const params = new URLSearchParams();

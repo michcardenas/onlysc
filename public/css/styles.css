@@ -8,6 +8,18 @@ html {
     font-family: 'Montserrat', sans-serif;
 }
 
+::-webkit-scrollbar {
+    width: 10px;
+   }
+   
+   ::-webkit-scrollbar-track {
+    background: transparent;
+   }
+   
+   ::-webkit-scrollbar-thumb {
+    background: #e00037;
+   }
+
 .login-page {
     font-family: 'Montserrat', sans-serif;
     background: url('../images/blur.jpg') no-repeat center center fixed;
@@ -3148,7 +3160,7 @@ video:not(.banner-img):not(.historia-circle video) {
 }
  
 .filtro-modal .modal-content {
-    width: 544px;
+    width: 633px;
     background-color: #fff;
     color: #333;
     text-align: center;
@@ -3159,12 +3171,13 @@ video:not(.banner-img):not(.historia-circle video) {
     flex-direction: column;
     border-radius: 8px;
     overflow: hidden; /* Evita que el contenido se salga */
+    /* height: 1037px; */
 }
  
  .filtro-modal .modal-body {
     padding: 1.5rem;
     overflow-y: auto;
-    max-height: calc(100vh - 200px);
+    max-height: calc(100vh - 310px);
  }
  
  .filtro-modal .modal-header {
@@ -3201,10 +3214,12 @@ video:not(.banner-img):not(.historia-circle video) {
  .filtro-modal .servicios-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 19px 13px; /* Aumentamos el espacio entre elementos: 20px vertical, 30px horizontal */
+    gap: 5px 0px;
     padding: 0px;
-    overflow-y: visible;
+    width: 100px;
+    max-width: 100px;
 }
+
  
 /* Ajustamos el espaciado de las secciones */
 .filtro-modal .filter-section,
@@ -3216,13 +3231,17 @@ video:not(.banner-img):not(.historia-circle video) {
  /* Estilos de los checkboxes y labels */
  .filtro-modal .servicios-grid label {
     display: flex;
-    align-items: center; /* Centramos verticalmente el checkbox con el texto */
-    gap: 10px; /* Espacio entre el checkbox y el texto */
+    align-items: center;
+    gap: 5px;
     margin: 0;
     font-size: 14px;
-    white-space: normal;
-    line-height: 1.4; /* Aumentamos ligeramente el interlineado */
-    color: #333; /* Color más oscuro para mejor legibilidad */
+    white-space: nowrap;
+    line-height: 1.4;
+    color: #333;
+    padding: 8px 7px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    width: 1%;
 }
 
 .filtro-modal .servicios-grid input[type="checkbox"] {
@@ -3256,6 +3275,8 @@ video:not(.banner-img):not(.historia-circle video) {
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
  }
+ 
+
  
  /* Estilos específicos de los rangos */
  .filtro-modal .range-title {
@@ -3370,7 +3391,7 @@ video:not(.banner-img):not(.historia-circle video) {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
-    width: 100%;
+    width: 112%;
     flex-wrap: wrap;
 }
 
@@ -3481,7 +3502,8 @@ video:not(.banner-img):not(.historia-circle video) {
 
 .extra-filters {
     display: flex;
-    padding: 10px 35px;
+    padding: 10px 81px;
+    gap: 2px;
     margin-top: 10px;
 }
 
@@ -3494,6 +3516,8 @@ video:not(.banner-img):not(.historia-circle video) {
     border: 1.5px solid #e0e0e0;
     transition: all 0.3s ease;
     user-select: none;
+    margin-top: 24px;
+    gap: 10px;
 }
 
 .review-container:hover {
@@ -3534,7 +3558,7 @@ video:not(.banner-img):not(.historia-circle video) {
 .price-categories {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
     gap: 12px;
 }
 
@@ -3550,6 +3574,7 @@ video:not(.banner-img):not(.historia-circle video) {
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     position: relative;
     overflow: hidden;
+    height: 42px;
 }
 
 .price-category:hover {
@@ -3585,6 +3610,93 @@ video:not(.banner-img):not(.historia-circle video) {
 
 .price-category.active .category-range {
     color: rgba(255,255,255,0.9);
+}
+
+/* Contenedor principal de alertas */
+.filtro-alert-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    max-width: 350px;
+    width: 100%;
+}
+
+/* Estilo base de la alerta */
+.filtro-custom-alert {
+    background-color: #fff;
+    border-left: 4px solid #dc3545;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    margin-bottom: 10px;
+    padding: 16px 20px;
+    position: relative;
+    animation: filtroSlideIn 0.3s ease-out forwards;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+/* Icono de error */
+.filtro-custom-alert::before {
+    content: "⚠️";
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+/* Mensaje de la alerta */
+.filtro-alert-message {
+    color: #333;
+    font-size: 14px;
+    line-height: 1.4;
+    margin-right: 20px;
+    flex-grow: 1;
+}
+
+/* Botón de cerrar */
+.filtro-alert-close {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.filtro-alert-close:hover {
+    color: #333;
+}
+
+/* Animaciones */
+@keyframes filtroSlideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes filtroFadeOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Clase para la animación de salida */
+.filtro-custom-alert.filtro-fade-out {
+    animation: filtroFadeOut 0.3s ease-out forwards;
 }
 
 /* Large screens (1280px y menor) */
