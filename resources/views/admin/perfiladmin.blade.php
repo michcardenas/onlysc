@@ -24,10 +24,11 @@
         </div>
         <ul class="nav-links-admin">
             <li><a href="{{ route('home') }}">Inicio</a></li>
-            <li><a href="{{ route('panel_control') }}">Chicas</a></li>
 
             <li><a href="{{ route('admin.profile') }}">Perfil</a></li>
             @if($usuarioAutenticado->rol == 1)
+            <li><a href="{{ route('panel_control') }}">Chicas</a></li>
+
             <li><a href="{{ route('admin.perfiles') }}">Perfiles</a></li>
             <li><a href="{{ route('publicate.form') }}">Publicar</a></li>
             <li><a href="{{ route('foroadmin') }}">Foro</a></li>

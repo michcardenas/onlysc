@@ -24,6 +24,40 @@
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    @if(isset($meta))
+        <title>{{ $meta->meta_title }}</title>
+        <meta name="description" content="{{ $meta->meta_description }}">
+        <meta name="keywords" content="{{ $meta->meta_keywords }}">
+        <meta name="robots" content="{{ $meta->meta_robots }}">
+        @if($meta->canonical_url)
+            <link rel="canonical" href="{{ $meta->canonical_url }}">
+        @endif
+    @endif
+    <style>
+    .visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0,0,0,0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+    opacity: 0;
+}
+
+.seo-container {
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+}
+    </style>
 
 </head>
 <body class="custom-background">
@@ -46,6 +80,23 @@
             @yield('content')
         </div>
     </main>
+    @if(isset($meta))
+    <div class="seo-container" aria-hidden="true">
+        @if($meta->heading_h1)
+            <h1 class="visually-hidden">{{ $meta->heading_h1 }}</h1>
+        @endif
+        
+        @if($meta->heading_h2)
+            <h2 class="visually-hidden">{{ $meta->heading_h2 }}</h2>
+        @endif
+        
+        @if($meta->additional_text)
+            <div class="visually-hidden">
+                {!! $meta->additional_text !!}
+            </div>
+        @endif
+    </div>
+@endif
     <footer class="footerhome">
     <p>© 2024 Only Escorts | Todos los derechos reservados</p>
 </footer>

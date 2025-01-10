@@ -15,6 +15,8 @@ use App\Models\UsuarioPublicate;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\SEOController;
 use App\Http\Controllers\SEOPaginasController;
+use App\Http\Controllers\MetaTagController;
+
 
 Auth::routes();
 
@@ -157,3 +159,4 @@ Route::post('/seo/update', [AdminController::class, 'updateSeoTemplate'])->name(
 Route::delete('/seo/templates/{id}', [AdminController::class, 'deleteSeoTemplate'])->name('seo.templates.delete');
 Route::get('/seo/templates/ciudad/{ciudadId}', [AdminController::class, 'getTemplatesByCiudad'])->name('seo.templates.by-ciudad');
 Route::post('/seo/templates/update-all', [AdminController::class, 'updateAllTemplates'])->name('seo.templates.update.all');
+Route::put('/seo/update/{page}', [MetaTagController::class, 'update'])->name('seo.update');
