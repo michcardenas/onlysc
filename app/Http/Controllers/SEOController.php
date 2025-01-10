@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\MetaTag;
 
 class SEOController extends Controller
 {
@@ -17,7 +18,9 @@ class SEOController extends Controller
     }
     public function home()
     {
-        return view('seo.home'); // Vista para el inicio
+        $meta = MetaTag::where('page', 'home')->first();
+    
+        return view('seo.home', compact('meta'));
     }
 
     public function foroadmin()
