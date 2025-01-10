@@ -366,7 +366,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (cards.length < 12) {
                 const container = document.querySelector('.inicio-container');
                 if (container) {
-                    container.style.marginBottom = '500px';
                 }
             }
         });
