@@ -4430,7 +4430,6 @@ video:not(.banner-img):not(.historia-circle video) {
     }
 
     .inicio-card {
-        width: 100%;
         margin: 0;
         min-width: unset;
         max-width: none;
