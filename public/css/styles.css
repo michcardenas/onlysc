@@ -1109,6 +1109,7 @@ video:not(.banner-img):not(.historia-circle video) {
 /* Sección de tarjetas */
 .inicio-usuarios-section {
     display: flex;
+    margin-bottom: 500px;
 }
 
 .inicio-section-title {
