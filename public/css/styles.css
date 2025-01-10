@@ -1117,17 +1117,16 @@ video:not(.banner-img):not(.historia-circle video) {
     margin-bottom: 20px;
 }
 
-/* Contenedor de tarjetas en filas de 4 */
+/* Contenedor de tarjetas */
 .inicio-card-container {
     display: flex;
-    gap: 10px; /* Espaciado entre las tarjetas */
-     /* Distribuye el espacio entre las tarjetas */
-    max-width: 100%; /* Asegura que el contenedor no exceda el ancho de la pantalla */
-    margin: 0 auto; /* Centra el contenedor */
-    padding: 0; /* Elimina el padding adicional */
-    box-sizing: border-box;
-    font-family: 'Montserrat', sans-serif;
     flex-wrap: wrap;
+    gap: 10px;
+    align-content: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    margin: 0 65px;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* Tarjeta individual */
@@ -1138,12 +1137,15 @@ video:not(.banner-img):not(.historia-circle video) {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     background-color: #000;
     height: 450px;
-    width: calc(25% - 10px); /* 4 columnas menos el espacio del gap */
+    width: calc((100% - 20px) / 4); /* 4 tarjetas por fila con gap de 10px */
+    max-width: 265px; /* Ancho máximo original */
+    min-width: 265px; /* Mantiene el ancho mínimo */
     text-decoration: none;
     color: inherit;
     display: block;
     transition: transform 0.2s ease;
 }
+
 
 .inicio-card:hover {
     transform: translateY(-5px);
@@ -4412,10 +4414,27 @@ video:not(.banner-img):not(.historia-circle video) {
 
 /* Móviles (480px y menor) */
 @media screen and (max-width: 480px) {
+    .inicio-container {
+        padding: 0;
+        margin: 0;
+        max-width: 100%;
+    }
+
+    .inicio-card-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4px;
+        padding: 2px;
+        margin: 0;
+        width: 100%;
+    }
+
     .inicio-card {
         width: 100%;
-        /* width: 177px; */
-        margin: 0 auto;
+        margin: 0;
+        min-width: unset;
+        max-width: none;
+        height: 360px;
     }
 
     .logo img {
@@ -4465,7 +4484,7 @@ video:not(.banner-img):not(.historia-circle video) {
 
 /* Móviles muy pequeños (320px y menor) */
 @media screen and (max-width: 320px) {
-    .inicio-card {
+        .inicio-card {
         height: 340px;
         width: 160px;
     }
