@@ -1121,6 +1121,7 @@ video:not(.banner-img):not(.historia-circle video) {
 .inicio-card-container {
     display: flex;
     gap: 10px; /* Espaciado entre las tarjetas */
+     /* Distribuye el espacio entre las tarjetas */
     max-width: 100%; /* Asegura que el contenedor no exceda el ancho de la pantalla */
     margin: 0 auto; /* Centra el contenedor */
     padding: 0; /* Elimina el padding adicional */
@@ -4328,20 +4329,21 @@ video:not(.banner-img):not(.historia-circle video) {
         background: #E00037;
     }
 
-    .filtro-modal .modal-content {
-        width: 350px;
-        background-color: #fff;
-        color: #333;
-        text-align: center;
-        position: relative;
-        margin: auto;
-        max-height: 100vh; /* Ajustado para mejor visibilidad */
-        display: flex;
-        flex-direction: column;
-        border-radius: 8px;
-        overflow: hidden; /* Evita que el contenido se salga */
-        /* height: 1037px; */
-    }
+.filtro-modal .modal-content {
+    width: 100vw;           /* Cubre todo el ancho de la ventana */
+    height: 100vh;          /* Cubre todo el alto de la ventana */
+    background-color: #fff;
+    color: #333;
+    text-align: center;
+    position: fixed;        /* Cambiado a fixed para cubrir toda la pantalla */
+    top: 0;                 /* Asegura que comience desde la parte superior */
+    left: 0;                /* Asegura que comience desde la izquierda */
+    margin: 0;              /* Eliminado el margen auto */
+    display: flex;
+    flex-direction: column;
+    border-radius: 0;       /* Eliminado el border-radius ya que cubrirá toda la pantalla */
+    overflow: auto;         /* Cambiado a auto para permitir scroll si es necesario */
+}
 
     .category-name {
         display: block;
