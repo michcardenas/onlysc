@@ -111,33 +111,33 @@
                     $now = Carbon\Carbon::now();
                     $currentDay = strtolower($now->locale('es')->dayName);
                     $isAvailable = false;
-foreach ($usuario->disponibilidad as $disponibilidad) {
-    if (strtolower($disponibilidad->dia) === $currentDay) {
-        // Check for full time availability
-        if ($disponibilidad->hora_desde === '00:00:00' && $disponibilidad->hora_hasta === '23:59:00') {
-            $isAvailable = true;
-            break;
-        }
-        
-        // Regular time slot check
-        $horaDesde = Carbon\Carbon::parse($disponibilidad->hora_desde);
-        $horaHasta = Carbon\Carbon::parse($disponibilidad->hora_hasta);
+                    foreach ($usuario->disponibilidad as $disponibilidad) {
+                        if (strtolower($disponibilidad->dia) === $currentDay) {
+                            // Check for full time availability
+                            if ($disponibilidad->hora_desde === '00:00:00' && $disponibilidad->hora_hasta === '23:59:00') {
+                                $isAvailable = true;
+                                break;
+                            }
+                            
+                            // Regular time slot check
+                            $horaDesde = Carbon\Carbon::parse($disponibilidad->hora_desde);
+                            $horaHasta = Carbon\Carbon::parse($disponibilidad->hora_hasta);
 
-        if ($horaHasta->lessThan($horaDesde)) {
-            if ($now->greaterThanOrEqualTo($horaDesde) || $now->lessThanOrEqualTo($horaHasta)) {
-                $isAvailable = true;
-                break;
-            }
-        } else {
-            if ($now->between($horaDesde, $horaHasta)) {
-                $isAvailable = true;
-                break;
-            }
-        }
-    }
-}
+                            if ($horaHasta->lessThan($horaDesde)) {
+                                if ($now->greaterThanOrEqualTo($horaDesde) || $now->lessThanOrEqualTo($horaHasta)) {
+                                    $isAvailable = true;
+                                    break;
+                                }
+                            } else {
+                                if ($now->between($horaDesde, $horaHasta)) {
+                                    $isAvailable = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
 
-$mostrarPuntoVerde = ($usuario->estadop == 1 || $usuario->estadop == 3) && $isAvailable;
+                    $mostrarPuntoVerde = ($usuario->estadop == 1 || $usuario->estadop == 3) && $isAvailable;
                     @endphp
 
                     <a href="{{ url('escorts/' . $usuario->id) }}" class="inicio-card">
@@ -158,10 +158,8 @@ $mostrarPuntoVerde = ($usuario->estadop == 1 || $usuario->estadop == 3) && $isAv
                                 <div class="inicio-card-location">
                                     <i class="fa fa-map-marker"></i>
                                     @if($ciudadSeleccionada->url === 'santiago')
-                                    {{-- Mostrar siempre el sector derivado o seleccionado --}}
                                     {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}
                                     @else
-                                    {{-- Para otras ciudades, mostrar la ubicación habitual --}}
                                     {{ $usuario->ubicacion }}
                                     @endif
                                     <span class="inicio-card-price">${{ number_format($usuario->precio, 0, ',', '.') }}</span>
@@ -170,11 +168,27 @@ $mostrarPuntoVerde = ($usuario->estadop == 1 || $usuario->estadop == 3) && $isAv
                         </div>
                     </a>
                     @endforeach
+
+                    @if($usuarios->count() < 6)
+                        @for($i = $usuarios->count(); $i < 6; $i++)
+                        <div class="inicio-card placeholder-card"></div>
+                        @endfor
+                    @endif
                     @endif
                 </div>
             </div>
+        </section>
 
-            @if($usuarioDestacado && !$usuarios->isEmpty())
+        @if($usuarios->hasPages())
+        <div class="pagination-container">
+            {{ $usuarios->links() }}
+        </div>
+        @endif
+    </div>
+
+
+            @if($usuarioDestacado)
+
 @php
 $fotosDestacado = json_decode($usuarioDestacado->fotos, true);
 $positionsDestacado = json_decode($usuarioDestacado->foto_positions, true) ?? [];
@@ -523,13 +537,12 @@ $mostrarPuntoVerdeDestacado = ($usuarioDestacado->estadop == 1 || $usuarioDestac
             <div class="swiper-pagination2"></div>
         </section>
 
-
-        @if(isset($seoTitle) && isset($seoDescription))
-        <div class="seo-content my-8">
-            <h2 class="text-2xl font-bold mb-4" style="color: #888;">{{ $seoTitle }}</h2>
-            <div class="text-gray-700" style="color: #888;">{!! $seoDescription !!}</div>
-        </div>
-        @endif
+@if(isset($seoTitle) && isset($seoDescription))
+    <div class="seo-section">
+        <h2 class="seo-title">{{ $seoTitle }}</h2>
+        <div class="seo-description">{!! $seoDescription !!}</div>
+    </div>
+@endif
 
 </main>
 

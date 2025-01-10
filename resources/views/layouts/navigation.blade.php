@@ -220,12 +220,14 @@
                 <span class="nav-text">Inicio</span>
             </a>
 
-            <a href="{{ route('foro') }}" class="nav-item">
-                <svg class="nav-icon" viewBox="0 0 24 24">
-                    <path d="M4.25 5.61C6.27 8.2 10 13 10 13v6c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-6s3.72-4.8 5.74-7.39A.998.998 0 0 0 18.95 4H5.04c-.83 0-1.3.95-.79 1.61z" />
-                </svg>
-                <span class="nav-text">Filtro avanzado</span>
-            </a>
+            <a href="#" class="nav-item" data-bs-toggle="modal" data-bs-target="#filterModal">
+    <svg class="nav-icon" viewBox="0 0 24 24">
+        <path d="M11 2a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm0 16a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm6.31-3.9a1 1 0 0 1 1.41 0l3.18 3.18a1 1 0 0 1-1.41 1.41l-3.18-3.18a1 1 0 0 1 0-1.41z" />
+    </svg>
+    <span class="nav-text">Filtro avanzado</span>
+</a>
+
+
 
             <a href="{{ route('favoritos.show') }}" class="nav-item">
                 <svg class="nav-icon" viewBox="0 0 24 24">

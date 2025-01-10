@@ -1386,7 +1386,7 @@ video:not(.banner-img):not(.historia-circle video) {
     font-family: 'Montserrat', sans-serif;
     position: absolute;
     top: 824px;
-    right: 225px;
+    right: 242px;
     z-index: 10;
 }
 
@@ -2835,9 +2835,9 @@ video:not(.banner-img):not(.historia-circle video) {
 
 .volvieronyprimera-image {
     width: 100%;
-    height: 100%;
+    height: 96%;
     background-size: cover;
-    background-position: center;
+    /* background-position: center; */
     position: relative;
 }
 
@@ -3699,6 +3699,30 @@ video:not(.banner-img):not(.historia-circle video) {
     animation: filtroFadeOut 0.3s ease-out forwards;
 }
 
+.seo-section {
+    background-color: #f9fafb;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e5e7eb;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    max-width: 100%;
+}
+
+.seo-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #d1d5db;
+}
+
+.seo-description {
+    color: #4b5563;
+    line-height: 1.625;
+}
+
 /* Large screens (1280px y menor) */
 @media screen and (max-width: 1280px) {
     .inicio-card {
@@ -3730,8 +3754,11 @@ video:not(.banner-img):not(.historia-circle video) {
 }
 
 /* Tablets y pantallas medianas (768px y menor) */
-/* Tablets y pantallas medianas (768px y menor) */
 @media screen and (max-width: 768px) {
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
     .inicio-card {
         height: 360px;
         width: 190px;
@@ -3746,6 +3773,15 @@ video:not(.banner-img):not(.historia-circle video) {
         z-index: 1;
         margin-bottom: 20px;
         margin-top: 20px;
+    }
+
+    .placeholder-card {
+        background: transparent;
+        border: 2px dashed #e0e0e0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0.5;
     }
 
     .location-price {
@@ -3787,7 +3823,7 @@ video:not(.banner-img):not(.historia-circle video) {
     .inicio-card-container {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
+        gap: 4px;
         padding: 0 10px;
     }
 
@@ -4134,7 +4170,7 @@ video:not(.banner-img):not(.historia-circle video) {
     }
 
     .volvieronyprimera-header {
-        width: 44.6%;
+        width: 49%;
     }
 
     .volvieronyprimera-card {
@@ -4185,7 +4221,7 @@ video:not(.banner-img):not(.historia-circle video) {
         background-color: #E00037;
         padding: 0.5rem 0.95rem;
         border-radius: 0.5rem 0.5rem 0 0;
-        width: 45%;
+        width: 49.4%;
         height: auto;
         margin-bottom: 2rem;
     }
@@ -4200,7 +4236,7 @@ video:not(.banner-img):not(.historia-circle video) {
         background-color: #E00037;
         padding: 0.5rem 0.95rem;
         border-radius: 0.5rem 0.5rem 0 0;
-        width: 89%;
+        width: 97%;
         height: auto;
         margin-bottom: 2rem;
     }
@@ -4296,13 +4332,91 @@ video:not(.banner-img):not(.historia-circle video) {
         background: #E00037;
     }
 
+    .filtro-modal .modal-content {
+        width: 350px;
+        background-color: #fff;
+        color: #333;
+        text-align: center;
+        position: relative;
+        margin: auto;
+        max-height: 100vh; /* Ajustado para mejor visibilidad */
+        display: flex;
+        flex-direction: column;
+        border-radius: 8px;
+        overflow: hidden; /* Evita que el contenido se salga */
+        /* height: 1037px; */
+    }
+
+    .category-name {
+        display: block;
+        font-weight: 600;
+        font-size: 0.95em;
+        margin-bottom: 6px;
+        color: #1a1a1a;
+    }
+
+    .filter-ciudad .filter-section {
+        margin: 0px 0;
+    }
+
+    .filtro-modal .servicios-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5px 0px;
+        padding: 0px;
+        width: 100px;
+        max-width: 100px;
+    }
+    
+     
+    /* Ajustamos el espaciado de las secciones */
+    .filtro-modal .filter-section,
+    .filtro-modal .filter-section1 {
+        margin-bottom: 15px;
+        padding: 0 0px;
+    }
+
+    .extra-filters {
+        display: flex;
+        padding: 0px 0px;
+        gap: 2px;
+        margin: 3px 3px 3px -20px;
+    }
+
+    .filtro-modal .range-container {
+        padding: 10px 15px;
+        margin-top: 16px;
+     }
+     
+     /* Estilos de los checkboxes y labels */
+     .filtro-modal .servicios-grid label {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin: 0;
+        font-size: 11.9px;
+        white-space: nowrap;
+        line-height: 1.4;
+        color: #333;
+        padding: 8px 7px;
+        border-radius: 4px;
+        transition: background-color 0.2s ease;
+        width: 1%;
+    }
+    
+    .filtro-modal .modal-body {
+        padding: 1.5rem;
+        overflow-y: auto;
+        max-height: calc(100vh - 410px);
+     }
+
 }
 
 /* Móviles (480px y menor) */
 @media screen and (max-width: 480px) {
     .inicio-card {
         width: 100%;
-        width: 173px;
+        width: 177px;
         margin: 0 auto;
     }
 
@@ -4338,6 +4452,19 @@ video:not(.banner-img):not(.historia-circle video) {
     .online-panel {
         display: none;
     }
+
+    .seo-section {
+        background-color: #fff;
+        border-radius: 0.5rem;
+        box-shadow: 0 0px 0px 0px rgba(0, 0, 0, 0.1), 0 0px 0px 0px rgba(0, 0, 0, 0.06);
+        border: 0px solid #fff;
+        margin: 2rem 0;
+        padding: 1.5rem;
+        max-width: 100%;
+        width: 49%;
+    }
+
+
 }
 
 /* Móviles muy pequeños (320px y menor) */

@@ -19,21 +19,6 @@ use Illuminate\Support\Facades\Cache;
 
 class InicioController extends Controller
 {
-
-    private function procesarUbicacionUsuario($usuario, $ciudadSeleccionada, $sectorValido = null)
-    {
-        if ($ciudadSeleccionada->url === 'santiago') {
-            if ($sectorValido) {
-                return ucwords(str_replace('-', ' ', $sectorValido));
-            } elseif ($usuario->location && $usuario->location->direccion) {
-                return $this->extraerSectorDeDireccion($usuario->location->direccion);
-            }
-            return 'Sector no disponible';
-        }
-        return $usuario->ubicacion;
-    }
-
-
     public function show($nombreCiudad, $sector = null, $filtros = null)
     {
         $seoText = null;
@@ -443,6 +428,7 @@ class InicioController extends Controller
                 ->get();
 
             // Usuario destacado - Independiente de los filtros
+            // Usuario destacado - Solo filtro de ciudad
             $usuarioDestacado = UsuarioPublicate::with([
                 'estados' => function ($query) {
                     $query->where('created_at', '>=', now()->subHours(24));
@@ -947,97 +933,32 @@ if ($usuarioDestacado) {
 
     private function clasificarFiltro($filtro)
     {
-        // Añadir logging para debug
         Log::info('Clasificando filtro: ' . $filtro);
-
-        $servicios = array_map('strtolower', [
-            "Anal",
-            "Atención a domicilio",
-            "Atención en hoteles",
-            "Baile Erotico",
-            "Besos",
-            "Cambio de rol",
-            "Departamento Propio",
-            "Disfraces",
-            "Ducha Erotica",
-            "Eventos y Cenas",
-            "Eyaculación Cuerpo",
-            "Eyaculación Facial",
-            "Hetero",
-            "Juguetes",
-            "Lesbico",
-            "Lluvia dorada",
-            "Masaje Erotico",
-            "Masaje prostatico",
-            "Masaje Tantrico",
-            "Masaje Thai",
-            "Masajes con final feliz",
-            "Masajes desnudos",
-            "Masajes Eroticos",
-            "Masajes para hombres",
-            "Masajes sensitivos",
-            "Masajes sexuales",
-            "Masturbación Rusa",
-            "Oral Americana",
-            "Oral con preservativo",
-            "Oral sin preservativo",
-            "Orgias",
-            "Parejas",
-            "Trio"
-        ]);
-
-        $atributos = array_map('strtolower', [
-            "Busto Grande",
-            "Busto Mediano",
-            "Busto Pequeño",
-            "Cara Visible",
-            "Cola Grande",
-            "Cola Mediana",
-            "Cola Pequeña",
-            "Con Video",
-            "Contextura Delgada",
-            "Contextura Grande",
-            "Contextura Mediana",
-            "Depilación Full",
-            "Depto Propio",
-            "En Promoción",
-            "English",
-            "Escort Independiente",
-            "Español",
-            "Estatura Alta",
-            "Estatura Mediana",
-            "Estatura Pequeña",
-            "Hentai",
-            "Morena",
-            "Mulata",
-            "No fuma",
-            "Ojos Claros",
-            "Ojos Oscuros",
-            "Peliroja",
-            "Portugues",
-            "Relato Erotico",
-            "Rubia",
-            "Tatuajes",
-            "Trigueña"
-        ]);
-
-        // Normalizar el filtro a minúsculas para la comparación
-        $filtroNormalizado = strtolower($filtro);
+    
+        $servicios = ["Anal","Atencion a domicilio","Atencion en hoteles","Baile erotico","Besos","Cambio de rol","Departamento propio","Disfraces","Ducha erotica","Eventos y cenas","Eyaculacion cuerpo","Eyaculacion facial","Hetero","Juguetes","Lesbico","Lluvia dorada","Masaje erotico","Masaje prostatico","Masaje tantrico","Masaje thai","Masajes con final feliz","Masajes desnudos","Masajes eroticos","Masajes para hombres","Masajes sensitivos","Masajes sexuales","Masturbacion rusa","Oral americana","Oral con preservativo","Oral sin preservativo","Orgias","Parejas","Trio"];
+    
+        $atributos = ["Busto grande","Busto mediano","Busto pequeño","Cara visible","Cola grande","Cola mediana","Cola pequeña","Con video","Contextura delgada","Contextura grande","Contextura mediana","Depilacion full","Depto propio","En promocion","English","Escort independiente","Español","Estatura alta","Estatura mediana","Estatura pequeña","Hentai","Morena","Mulata","No fuma","Ojos claros","Ojos oscuros","Peliroja","Portugues","Relato erotico","Rubia","Tatuajes","Trigueña"];
+    
+        // Normalizar el filtro reemplazando TODOS los guiones
+        $filtroNormalizado = strtolower(preg_replace('/-+/', ' ', $filtro));
+        $serviciosNormalizados = array_map('strtolower', $servicios);
+        $atributosNormalizados = array_map('strtolower', $atributos);
+    
         Log::info('Filtro normalizado: ' . $filtroNormalizado);
-
-        if (in_array($filtroNormalizado, $servicios)) {
-            $valorOriginal = ucwords(str_replace('-', ' ', $filtro));
-            Log::info('Encontrado como servicio: ' . $valorOriginal);
-            return ['tipo' => 'servicio', 'valor' => $valorOriginal];
+        
+        $index = array_search($filtroNormalizado, $serviciosNormalizados);
+        if ($index !== false) {
+            Log::info('Servicio encontrado: ' . $servicios[$index]);
+            return ['tipo' => 'servicio', 'valor' => $servicios[$index]];
         }
-
-        if (in_array($filtroNormalizado, $atributos)) {
-            $valorOriginal = ucwords(str_replace('-', ' ', $filtro));
-            Log::info('Encontrado como atributo: ' . $valorOriginal);
-            return ['tipo' => 'atributo', 'valor' => $valorOriginal];
+    
+        $index = array_search($filtroNormalizado, $atributosNormalizados);
+        if ($index !== false) {
+            Log::info('Atributo encontrado: ' . $atributos[$index]);
+            return ['tipo' => 'atributo', 'valor' => $atributos[$index]];
         }
-
-        Log::info('No se encontró coincidencia para el filtro');
+    
+        Log::info('No se encontró coincidencia');
         return null;
     }
 
@@ -1285,8 +1206,7 @@ if ($usuarioDestacado) {
     private function generateSeoText($request, $ciudadSeleccionada, $sectorSeleccionado = null)
     {
         Log::info('Starting generateSeoText');
-
-        // Array de nacionalidades (mantener el existente)
+    
         $nacionalidades = [
             'argentina' => 'argentinas',
             'brasil' => 'brasileñas',
@@ -1294,75 +1214,117 @@ if ($usuarioDestacado) {
             'colombia' => 'colombianas',
             'ecuador' => 'ecuatorianas',
             'uruguay' => 'uruguayas',
+            'venezuela' => 'venezolanas',
+            'paraguay' => 'paraguayas',
+            'peru' => 'peruanas',
             'argentinas' => 'argentinas',
             'brasilenas' => 'brasileñas',
             'chilenas' => 'chilenas',
             'colombianas' => 'colombianas',
             'ecuatorianas' => 'ecuatorianas',
-            'uruguayas' => 'uruguayas'
+            'uruguayas' => 'uruguayas',
+            'venezolanas' => 'venezolanas',
+            'paraguayas' => 'paraguayas',
+            'peruanas' => 'peruanas'
         ];
-
-        // Procesar la URL para detectar filtros en la ruta
+    
         $path = $request->path();
         $parts = explode('/', $path);
         $lastPart = strtolower(end($parts));
-
-        // Detectar filtros individuales en la URL
+    
+        $clasificacionUrl = null;
         $singleFilter = null;
-
-        // Detectar filtro de nacionalidad en la URL
         $isNationalityFilter = false;
         $nacionalidadFromUrl = null;
-
-        if (str_starts_with($lastPart, 'escorts-')) {
+    
+        // Detectar servicios en la URL
+        if (str_contains($lastPart, 'anal')) {
+            $singleFilter = 'servicios';
+            if ($request->has('s')) {
+                $servicios = explode(',', $request->get('s'));
+                array_unshift($servicios, 'Anal');
+                $request->merge(['s' => implode(',', array_unique($servicios))]);
+            } else {
+                $request->merge(['s' => 'Anal']);
+            }
+        }
+        elseif (str_starts_with($lastPart, 'escorts-')) {
             $posibleNacionalidad = str_replace('escorts-', '', $lastPart);
             if (isset($nacionalidades[$posibleNacionalidad])) {
                 $isNationalityFilter = true;
                 $nacionalidadFromUrl = $posibleNacionalidad;
                 $request->merge(['n' => $nacionalidadFromUrl]);
                 $singleFilter = 'nacionalidad';
+                $variableCount++;
             }
         }
-        // Detectar otros filtros individuales
-        elseif (str_starts_with($lastPart, 'edad-')) {
-            $edadValues = str_replace('edad-', '', $lastPart);
-            $request->merge(['e' => $edadValues]);
+        elseif (preg_match('/^edad-(\d+)-(\d+)$/', $lastPart, $matches)) {
+            $request->merge(['e' => "{$matches[1]}-{$matches[2]}"]);
             $singleFilter = 'edad';
-        } elseif (str_starts_with($lastPart, 'disponible')) {
+            $request->merge(['singleFilter' => 'edad']);
+        }
+        elseif (preg_match('/^precio-(\d+)-(\d+)$/', $lastPart, $matches)) {
+            $request->merge(['p' => "{$matches[1]}-{$matches[2]}"]);
+            $singleFilter = 'precio';
+        }
+        elseif ($lastPart === 'disponible') {
             $request->merge(['disponible' => '1']);
             $singleFilter = 'disponible';
-        } elseif (str_starts_with($lastPart, 'resena-verificada')) {
+        }
+        elseif ($lastPart === 'resena-verificada') {
             $request->merge(['resena' => '1']);
             $singleFilter = 'resena';
-        } elseif (in_array($lastPart, ['vip', 'premium', 'de_lujo', 'under'])) {
+        }
+        elseif (in_array($lastPart, ['vip', 'premium', 'de_lujo', 'under'])) {
             $request->merge(['categoria' => $lastPart]);
             $singleFilter = 'categoria';
         }
-
-        // Detectar otros filtros en la URL (servicios y atributos)
-        $clasificacionUrl = null;
+    
         if (!$isNationalityFilter && !$singleFilter) {
-            $clasificacionUrl = $this->clasificarFiltro($lastPart);
-            if ($clasificacionUrl) {
-                if ($clasificacionUrl['tipo'] === 'servicio') {
-                    // Para filtro único de servicio, usar el valor normalizado directamente
-                    $request->merge(['s' => $clasificacionUrl['valor']]);
-                    $singleFilter = 'servicios';
-                } elseif ($clasificacionUrl['tipo'] === 'atributo') {
-                    // Para filtro único de atributo, usar el valor normalizado directamente
-                    $request->merge(['a' => $clasificacionUrl['valor']]);
-                    $singleFilter = 'atributos';
+            $filtroNormalizado = str_replace('-', ' ', $lastPart);
+            $nacionalidadMap = [
+                'colombiana' => 'colombia',
+                'argentina' => 'argentina',
+                'brasilena' => 'brasil',
+                'chilena' => 'chile',
+                'ecuatoriana' => 'ecuador',
+                'uruguaya' => 'uruguay',
+                'venezolana' => 'venezuela',
+                'paraguaya' => 'paraguay',
+                'peruana' => 'peru'
+            ];
+    
+            if (array_key_exists($filtroNormalizado, $nacionalidadMap)) {
+                $isNationalityFilter = true;
+                $nacionalidadFromUrl = $nacionalidadMap[$filtroNormalizado];
+                $request->merge(['n' => $nacionalidadFromUrl]);
+                $singleFilter = 'nacionalidad';
+            } else {
+                $clasificacionUrl = $this->clasificarFiltro($lastPart);
+                if ($clasificacionUrl) {
+                    if ($clasificacionUrl['tipo'] === 'servicio') {
+                        if ($request->has('s')) {
+                            $servicios = explode(',', $request->get('s'));
+                            $servicios[] = $clasificacionUrl['valor'];
+                            $request->merge(['s' => implode(',', array_unique($servicios))]);
+                        } else {
+                            $request->merge(['s' => $clasificacionUrl['valor']]);
+                        }
+                        $singleFilter = 'servicios';
+                    } elseif ($clasificacionUrl['tipo'] === 'atributo') {
+                        if ($request->has('a')) {
+                            $atributos = explode(',', $request->get('a'));
+                            $atributos[] = $clasificacionUrl['valor'];
+                            $request->merge(['a' => implode(',', array_unique($atributos))]);
+                        } else {
+                            $request->merge(['a' => $clasificacionUrl['valor']]);
+                        }
+                        $singleFilter = 'atributos';
+                    }
                 }
             }
         }
-
-        Log::info('Detected single filter', [
-            'filter_type' => $singleFilter,
-            'last_part' => $lastPart,
-            'clasificacion' => $clasificacionUrl
-        ]);
-
-        // Estructura para almacenar información de filtros activos
+    
         $activeFilters = [
             'nacionalidad' => null,
             'edad' => null,
@@ -1373,18 +1335,20 @@ if ($usuarioDestacado) {
             'disponible' => false,
             'resena' => false
         ];
-
-        // Procesar cada tipo de filtro
+    
         if ($request->has('n') || $isNationalityFilter) {
             $nacionalidad = $request->get('n') ?? $nacionalidadFromUrl;
             $activeFilters['nacionalidad'] = $nacionalidades[$nacionalidad] ?? null;
+            if ($singleFilter === null) {
+                $singleFilter = 'nacionalidad';
+            }
         }
-
+    
         if ($request->has('e')) {
             list($min, $max) = explode('-', $request->get('e'));
             $activeFilters['edad'] = ['min' => $min, 'max' => $max];
         }
-
+    
         if ($request->has('p')) {
             list($min, $max) = explode('-', $request->get('p'));
             $activeFilters['precio'] = [
@@ -1392,141 +1356,145 @@ if ($usuarioDestacado) {
                 'max' => number_format($max, 0, ',', '.')
             ];
         }
-
+    
         if ($request->has('a')) {
-            $activeFilters['atributos'] = array_map('ucwords', explode(',', $request->get('a')));
+            $atributos = explode(',', $request->get('a'));
+            $activeFilters['atributos'] = array_map(function($atributo) {
+                return ucwords(str_replace('-', ' ', $atributo));
+            }, $atributos);
         }
-
+    
         if ($request->has('s')) {
-            $activeFilters['servicios'] = array_map('ucwords', explode(',', $request->get('s')));
+            $servicios = explode(',', $request->get('s'));
+            $activeFilters['servicios'] = array_map(function($servicio) {
+                return ucwords(str_replace('-', ' ', $servicio));
+            }, $servicios);
         }
-
+    
         if ($request->has('categoria')) {
-            $activeFilters['categoria'] = ucwords($request->get('categoria'));
+            $categoria = $request->get('categoria');
+            $activeFilters['categoria'] = ucwords(str_replace('_', ' ', $categoria));
         }
-
-        if ($request->has('disponible')) {
-            $activeFilters['disponible'] = true;
-        }
-
-        if ($request->has('resena')) {
-            $activeFilters['resena'] = true;
-        }
-
-        // Procesar clasificación de URL si existe
+    
+        $activeFilters['disponible'] = $request->has('disponible');
+        $activeFilters['resena'] = $request->has('resena');
+    
         if ($clasificacionUrl) {
             if ($clasificacionUrl['tipo'] === 'servicio') {
-                $activeFilters['servicios'][] = $clasificacionUrl['valor'];
+                $activeFilters['servicios'][] = ucwords($clasificacionUrl['valor']);
             } elseif ($clasificacionUrl['tipo'] === 'atributo') {
-                $activeFilters['atributos'][] = $clasificacionUrl['valor'];
+                $activeFilters['atributos'][] = ucwords($clasificacionUrl['valor']);
             }
         }
-
-        // Contar filtros activos totales
-        $totalActiveFilters = count(array_filter($activeFilters, function ($value) {
-            return !empty($value) && $value !== false &&
-                (!is_array($value) || !empty(array_filter($value)));
-        }));
-
-        // Determinar el tipo de template basado en la cantidad de filtros
-        $templateType = 'filtro';
-        $filtroType = 'ciudad';
-
-        // Si es un filtro único por URL, usar ese tipo específico
-        if ($singleFilter) {
+    
+        $totalActiveFilters = 0;
+        if (!empty($activeFilters['nacionalidad'])) $totalActiveFilters++;
+        if (!empty($activeFilters['edad'])) $totalActiveFilters++;
+        if (!empty($activeFilters['precio'])) $totalActiveFilters++;
+        if (!empty($activeFilters['atributos'])) $totalActiveFilters++;
+        if (!empty($activeFilters['servicios'])) $totalActiveFilters++;
+        if (!empty($activeFilters['categoria'])) $totalActiveFilters++;
+        if ($activeFilters['disponible'] === true) $totalActiveFilters++;
+        if ($activeFilters['resena'] === true) $totalActiveFilters++;
+    
+        if ($totalActiveFilters === 0) {
             $templateType = 'filtro';
-            $filtroType = $singleFilter;
-            Log::info('Using single filter template', [
-                'type' => $filtroType,
-                'template_type' => $templateType
-            ]);
-
-            if ($totalActiveFilters > 0) {
-                if ($totalActiveFilters > 4) {
-                    $templateType = 'complex';
-                } elseif ($totalActiveFilters > 1) {
-                    $templateType = 'multiple';
-                } elseif ($totalActiveFilters === 1) {
-                    // Determinar el tipo de filtro único
-                    foreach ($activeFilters as $key => $value) {
-                        if (!empty($value) && $value !== false) {
-                            $filtroType = $key;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            // Obtener template apropiado
-            $templateQuery = SeoTemplate::query()
-                ->where(function ($query) use ($ciudadSeleccionada) {
-                    $query->where('ciudad_id', $ciudadSeleccionada->id)
-                        ->orWhereNull('ciudad_id');
-                })
-                ->where(function ($query) use ($templateType, $filtroType) {
-                    if ($templateType === 'filtro') {
-                        $query->where('tipo', 'filtro')
-                            ->where('filtro', $filtroType);
-                    } else {
-                        $query->where('tipo', $templateType);
-                    }
-                })
-                ->orderBy('ciudad_id', 'desc');
-
-            $template = $templateQuery->first();
-
-            if (!$template) {
-                Log::info('No template found');
-                return null;
-            }
-
-            // Preparar reemplazos base
-            $replacements = [
-                '{ciudad}' => $ciudadSeleccionada->nombre,
-                '{sector}' => $sectorSeleccionado ? ucwords($sectorSeleccionado) : '',
-                '{nacionalidad}' => $activeFilters['nacionalidad'] ?? '',
-                '{edad_min}' => $activeFilters['edad']['min'] ?? '18',
-                '{edad_max}' => $activeFilters['edad']['max'] ?? '50',
-                '{precio_min}' => $activeFilters['precio']['min'] ?? '50.000',
-                '{precio_max}' => $activeFilters['precio']['max'] ?? '300.000',
-                '{atributos}' => implode(', ', array_unique($activeFilters['atributos'])),
-                '{servicios}' => implode(', ', array_unique($activeFilters['servicios'])),
-                '{disponible}' => $activeFilters['disponible'] ? 'ahora' : '',
-                '{resena}' => $activeFilters['resena'] ? 'verificada' : '',
-                '{categorias}' => $activeFilters['categoria'] ?? ''
-            ];
-
-            // Generar título SEO
-            $title = $this->generateSeoTitle($ciudadSeleccionada, $sectorSeleccionado, $activeFilters, $singleFilter, $clasificacionUrl);
-
-            // Generar descripción
-            $description = str_replace(
-                array_keys($replacements),
-                array_values($replacements),
-                $template->description_template
-            );
-
-            // Limpiar variables no reemplazadas
-            $description = preg_replace('/\{[^}]+\}/', '', $description);
-
-            Log::info('Generated SEO text', [
-                'title' => $title,
-                'description' => $description,
-                'template_type' => $templateType,
-                'active_filters' => $totalActiveFilters
-            ]);
-
-            return [
-                'title' => $title,
-                'description' => $description
-            ];
+            $filtroType = 'ciudad';
         }
+        elseif ($totalActiveFilters === 1) {
+            $templateType = 'filtro';
+            $filtroType = match($singleFilter) {
+                'nacionalidad' => 'nacionalidad',
+                'edad' => 'edad', 
+                'precio' => 'precio',
+                'disponible' => 'disponible',
+                'resena' => 'resena',
+                'categoria' => 'categorias',
+                'servicios' => 'servicios',
+                'atributos' => 'atributos',
+                default => $singleFilter
+            };
+        }
+        elseif ($totalActiveFilters >= 2 && $totalActiveFilters <= 4) {
+            $templateType = 'multiple';
+            $filtroType = null;
+        }
+        else {
+            $templateType = 'complex';
+            $filtroType = null;
+        }
+    
+        Log::info('Template selection', [
+            'tipo' => $templateType,
+            'filtro' => $filtroType,
+            'total_filtros' => $totalActiveFilters,
+            'single_filter' => $singleFilter,
+            'active_filters' => $activeFilters
+        ]);
+    
+        $templateQuery = SeoTemplate::query()
+            ->where(function ($query) use ($ciudadSeleccionada) {
+                $query->where('ciudad_id', $ciudadSeleccionada->id)
+                      ->orWhereNull('ciudad_id');
+            })
+            ->where('tipo', $templateType);
+    
+        if ($filtroType !== null) {
+            $templateQuery->where('filtro', $filtroType);
+        } else {
+            $templateQuery->whereNull('filtro');
+        }
+    
+        $template = $templateQuery->orderBy('ciudad_id', 'desc')->first();
+    
+        if (!$template) {
+            Log::warning('No template found for SEO text');
+            return null;
+        }
+    
+        $replacements = [
+            '{ciudad}' => $ciudadSeleccionada->nombre,
+            '{sector}' => $sectorSeleccionado ? ucwords($sectorSeleccionado) : '',
+            '{nacionalidad}' => $activeFilters['nacionalidad'] ?? '',
+            '{edad_min}' => $activeFilters['edad']['min'] ?? '18',
+            '{edad_max}' => $activeFilters['edad']['max'] ?? '50',
+            '{precio_min}' => $activeFilters['precio']['min'] ?? '50.000',
+            '{precio_max}' => $activeFilters['precio']['max'] ?? '300.000',
+            '{atributos}' => !empty($activeFilters['atributos']) ? implode(', ', array_unique($activeFilters['atributos'])) : '',
+            '{servicios}' => !empty($activeFilters['servicios']) ? implode(', ', array_unique($activeFilters['servicios'])) : '',
+            '{disponible}' => $activeFilters['disponible'] ? 'ahora' : '',
+            '{resena}' => $activeFilters['resena'] ? 'verificada' : '',
+            '{categorias}' => $activeFilters['categoria'] ?? ''
+        ];
+    
+        $title = $this->generateSeoTitle($ciudadSeleccionada, $sectorSeleccionado, $activeFilters, $singleFilter, $clasificacionUrl);
+    
+        $description = $template->description_template;
+        foreach ($replacements as $key => $value) {
+            $description = str_replace($key, $value, $description);
+        }
+    
+        $description = preg_replace('/\{[^}]+\}/', '', $description);
+        $description = trim($description);
+    
+        Log::info('SEO text generado', [
+            'title' => $title,
+            'description' => $description,
+            'template_type' => $templateType,
+            'active_filters' => $activeFilters
+        ]);
+    
+        return [
+            'title' => $title,
+            'description' => $description
+        ];
     }
+    
+
     private function generateSeoTitle($ciudad, $sector, $filters, $singleFilter = null, $clasificacionUrl = null)
     {
         $title = "Escorts";
-
-        // Si es un filtro único por URL, darle prioridad
+    
         if ($singleFilter) {
             switch ($singleFilter) {
                 case 'nacionalidad':
@@ -1538,19 +1506,32 @@ if ($usuarioDestacado) {
                     if ($clasificacionUrl && $clasificacionUrl['tipo'] === 'servicio') {
                         $title = "Escorts con servicio de " . ucwords($clasificacionUrl['valor']);
                     } elseif (!empty($filters['servicios'])) {
-                        $title = "Escorts con servicio de " . reset($filters['servicios']);
+                        if (count($filters['servicios']) > 1) {
+                            $title = "Escorts con servicios de " . implode(' y ', $filters['servicios']);
+                        } else {
+                            $title = "Escorts con servicio de " . reset($filters['servicios']);
+                        }
                     }
                     break;
                 case 'atributos':
                     if ($clasificacionUrl && $clasificacionUrl['tipo'] === 'atributo') {
                         $title = "Escorts " . ucwords($clasificacionUrl['valor']);
                     } elseif (!empty($filters['atributos'])) {
-                        $title = "Escorts " . reset($filters['atributos']);
+                        if (count($filters['atributos']) > 1) {
+                            $title = "Escorts con " . implode(' y ', $filters['atributos']);
+                        } else {
+                            $title = "Escorts " . reset($filters['atributos']);
+                        }
                     }
                     break;
                 case 'categoria':
                     if (!empty($filters['categoria'])) {
                         $title = "Escorts " . $filters['categoria'];
+                    }
+                    break;
+                case 'precio':
+                    if (!empty($filters['precio'])) {
+                        $title = "Escorts desde $" . $filters['precio']['min'] . " hasta $" . $filters['precio']['max'];
                     }
                     break;
                 case 'edad':
@@ -1566,30 +1547,46 @@ if ($usuarioDestacado) {
                     break;
             }
         } else {
-            // Lógica existente para múltiples filtros
             if (!empty($filters['nacionalidad'])) {
                 $title .= " " . $filters['nacionalidad'];
             }
-
             if (!empty($filters['categoria'])) {
                 $title .= " " . $filters['categoria'];
             }
-
             if (!empty($filters['servicios'])) {
-                $title .= " con servicio de " . reset($filters['servicios']);
+                if (count($filters['servicios']) > 1) {
+                    $title .= " con servicios de " . implode(' y ', $filters['servicios']);
+                } else {
+                    $title .= " con servicio de " . reset($filters['servicios']);
+                }
             }
-
             if (!empty($filters['atributos'])) {
-                $title .= " " . reset($filters['atributos']);
+                if (count($filters['atributos']) > 1) {
+                    $title .= " con " . implode(' y ', $filters['atributos']);
+                } else {
+                    $title .= " " . reset($filters['atributos']);
+                }
+            }
+            if (!empty($filters['edad'])) {
+                $title .= " de " . $filters['edad']['min'] . " a " . $filters['edad']['max'] . " años";
+            }
+            if (!empty($filters['precio'])) {
+                $title .= " desde $" . $filters['precio']['min'] . " hasta $" . $filters['precio']['max'];
+            }
+            if ($filters['disponible'] === true) {
+                $title .= " disponibles ahora";
+            }
+            if ($filters['resena'] === true) {
+                $title .= " con reseñas verificadas";
             }
         }
-
-        // Agregar ciudad y sector
+    
         $title .= " en " . $ciudad->nombre;
         if ($sector) {
             $title .= " - " . ucwords($sector);
         }
-
+    
         return $title;
     }
+
 }
