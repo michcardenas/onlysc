@@ -1121,7 +1121,6 @@ video:not(.banner-img):not(.historia-circle video) {
 .inicio-card-container {
     display: flex;
     gap: 10px; /* Espaciado entre las tarjetas */
-     /* Distribuye el espacio entre las tarjetas */
     max-width: 100%; /* Asegura que el contenedor no exceda el ancho de la pantalla */
     margin: 0 auto; /* Centra el contenedor */
     padding: 0; /* Elimina el padding adicional */
