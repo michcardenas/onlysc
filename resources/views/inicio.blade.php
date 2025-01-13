@@ -111,33 +111,33 @@
                     $now = Carbon\Carbon::now();
                     $currentDay = strtolower($now->locale('es')->dayName);
                     $isAvailable = false;
-foreach ($usuario->disponibilidad as $disponibilidad) {
-    if (strtolower($disponibilidad->dia) === $currentDay) {
-        // Check for full time availability
-        if ($disponibilidad->hora_desde === '00:00:00' && $disponibilidad->hora_hasta === '23:59:00') {
-            $isAvailable = true;
-            break;
-        }
-        
-        // Regular time slot check
-        $horaDesde = Carbon\Carbon::parse($disponibilidad->hora_desde);
-        $horaHasta = Carbon\Carbon::parse($disponibilidad->hora_hasta);
+                    foreach ($usuario->disponibilidad as $disponibilidad) {
+                    if (strtolower($disponibilidad->dia) === $currentDay) {
+                    // Check for full time availability
+                    if ($disponibilidad->hora_desde === '00:00:00' && $disponibilidad->hora_hasta === '23:59:00') {
+                    $isAvailable = true;
+                    break;
+                    }
 
-        if ($horaHasta->lessThan($horaDesde)) {
-            if ($now->greaterThanOrEqualTo($horaDesde) || $now->lessThanOrEqualTo($horaHasta)) {
-                $isAvailable = true;
-                break;
-            }
-        } else {
-            if ($now->between($horaDesde, $horaHasta)) {
-                $isAvailable = true;
-                break;
-            }
-        }
-    }
-}
+                    // Regular time slot check
+                    $horaDesde = Carbon\Carbon::parse($disponibilidad->hora_desde);
+                    $horaHasta = Carbon\Carbon::parse($disponibilidad->hora_hasta);
 
-$mostrarPuntoVerde = ($usuario->estadop == 1 || $usuario->estadop == 3) && $isAvailable;
+                    if ($horaHasta->lessThan($horaDesde)) {
+                    if ($now->greaterThanOrEqualTo($horaDesde) || $now->lessThanOrEqualTo($horaHasta)) {
+                    $isAvailable = true;
+                    break;
+                    }
+                    } else {
+                    if ($now->between($horaDesde, $horaHasta)) {
+                    $isAvailable = true;
+                    break;
+                    }
+                    }
+                    }
+                    }
+
+                    $mostrarPuntoVerde = ($usuario->estadop == 1 || $usuario->estadop == 3) && $isAvailable;
                     @endphp
 
                     <a href="{{ url('escorts/' . $usuario->id) }}" class="inicio-card">
@@ -176,71 +176,71 @@ $mostrarPuntoVerde = ($usuario->estadop == 1 || $usuario->estadop == 3) && $isAv
 
             @if($usuarioDestacado)
 
-@php
-$fotosDestacado = json_decode($usuarioDestacado->fotos, true);
-$positionsDestacado = json_decode($usuarioDestacado->foto_positions, true) ?? [];
-$primeraFotoDestacado = is_array($fotosDestacado) && !empty($fotosDestacado) ? $fotosDestacado[0] : null;
-$posicionFotoDestacado = in_array(($positionsDestacado[$primeraFotoDestacado] ?? ''), ['left', 'right', 'center']) ? $positionsDestacado[$primeraFotoDestacado] : 'center';
+            @php
+            $fotosDestacado = json_decode($usuarioDestacado->fotos, true);
+            $positionsDestacado = json_decode($usuarioDestacado->foto_positions, true) ?? [];
+            $primeraFotoDestacado = is_array($fotosDestacado) && !empty($fotosDestacado) ? $fotosDestacado[0] : null;
+            $posicionFotoDestacado = in_array(($positionsDestacado[$primeraFotoDestacado] ?? ''), ['left', 'right', 'center']) ? $positionsDestacado[$primeraFotoDestacado] : 'center';
 
-// Lógica de disponibilidad para usuario destacado
-$isAvailableDestacado = false;
-foreach ($usuarioDestacado->disponibilidad as $disponibilidad) {
-    if (strtolower($disponibilidad->dia) === $currentDay) {
-        // Check for full time availability
-        if (trim($disponibilidad->hora_desde) === '00:00:00' && trim($disponibilidad->hora_hasta) === '23:59:00') {
+            // Lógica de disponibilidad para usuario destacado
+            $isAvailableDestacado = false;
+            foreach ($usuarioDestacado->disponibilidad as $disponibilidad) {
+            if (strtolower($disponibilidad->dia) === $currentDay) {
+            // Check for full time availability
+            if (trim($disponibilidad->hora_desde) === '00:00:00' && trim($disponibilidad->hora_hasta) === '23:59:00') {
             $isAvailableDestacado = true;
             break;
-        }
-        
-        // Regular time slot check
-        $horaDesde = Carbon\Carbon::parse($disponibilidad->hora_desde);
-        $horaHasta = Carbon\Carbon::parse($disponibilidad->hora_hasta);
+            }
 
-        if ($horaHasta->lessThan($horaDesde)) {
+            // Regular time slot check
+            $horaDesde = Carbon\Carbon::parse($disponibilidad->hora_desde);
+            $horaHasta = Carbon\Carbon::parse($disponibilidad->hora_hasta);
+
+            if ($horaHasta->lessThan($horaDesde)) {
             if ($now->greaterThanOrEqualTo($horaDesde) || $now->lessThanOrEqualTo($horaHasta)) {
-                $isAvailableDestacado = true;
-                break;
+            $isAvailableDestacado = true;
+            break;
             }
-        } else {
+            } else {
             if ($now->between($horaDesde, $horaHasta)) {
-                $isAvailableDestacado = true;
-                break;
+            $isAvailableDestacado = true;
+            break;
             }
-        }
-    }
-}
+            }
+            }
+            }
 
-$mostrarPuntoVerdeDestacado = ($usuarioDestacado->estadop == 1 || $usuarioDestacado->estadop == 3) && $isAvailableDestacado;
-@endphp
+            $mostrarPuntoVerdeDestacado = ($usuarioDestacado->estadop == 1 || $usuarioDestacado->estadop == 3) && $isAvailableDestacado;
+            @endphp
 
-<a href="{{ url('escorts/' . $usuarioDestacado->id) }}" class="inicio-featured-card">
-    <div class="inicio-featured-label">CHICA DEL MES</div>
-    <div class="inicio-featured-image"
-        style="background-image: url('{{ $primeraFotoDestacado ? asset("storage/chicas/{$usuarioDestacado->id}/{$primeraFotoDestacado}") : asset("images/default-avatar.png") }}');
+            <a href="{{ url('escorts/' . $usuarioDestacado->id) }}" class="inicio-featured-card">
+                <div class="inicio-featured-label">CHICA DEL MES</div>
+                <div class="inicio-featured-image"
+                    style="background-image: url('{{ $primeraFotoDestacado ? asset("storage/chicas/{$usuarioDestacado->id}/{$primeraFotoDestacado}") : asset("images/default-avatar.png") }}');
                background-position: {{ $posicionFotoDestacado }} center;">
-        <div class="inicio-featured-overlay">
-            <h3 class="inicio-featured-title">
-                {{ $usuarioDestacado->fantasia }}
-                @if($mostrarPuntoVerdeDestacado)
-                <span class="online-dot"></span>
-                @endif
-                <span class="inicio-featured-age">{{ $usuarioDestacado->edad }}</span>
-            </h3>
-            <div class="location-price">
-                <span class="inicio-featured-location">
-                    <i class="fa fa-map-marker" aria-hidden="true"></i>
-                    @if($ciudadSeleccionada->url === 'santiago')
-                    {{ $ubicacionesMostradas[$usuarioDestacado->id] ?? 'Sector no disponible' }}
-                    @else
-                    {{ $usuarioDestacado->ubicacion }}
-                    @endif
-                </span>
-                <span class="inicio-featured-price">${{ number_format($usuarioDestacado->precio, 0, ',', '.') }}</span>
-            </div>
-        </div>
-    </div>
-</a>
-@endif
+                    <div class="inicio-featured-overlay">
+                        <h3 class="inicio-featured-title">
+                            {{ $usuarioDestacado->fantasia }}
+                            @if($mostrarPuntoVerdeDestacado)
+                            <span class="online-dot"></span>
+                            @endif
+                            <span class="inicio-featured-age">{{ $usuarioDestacado->edad }}</span>
+                        </h3>
+                        <div class="location-price">
+                            <span class="inicio-featured-location">
+                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                @if($ciudadSeleccionada->url === 'santiago')
+                                {{ $ubicacionesMostradas[$usuarioDestacado->id] ?? 'Sector no disponible' }}
+                                @else
+                                {{ $usuarioDestacado->ubicacion }}
+                                @endif
+                            </span>
+                            <span class="inicio-featured-price">${{ number_format($usuarioDestacado->precio, 0, ',', '.') }}</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            @endif
         </section>
 
         <aside class="online-panel">
@@ -289,15 +289,13 @@ $mostrarPuntoVerdeDestacado = ($usuarioDestacado->estadop == 1 || $usuarioDestac
     <div class="sections-container">
         <!-- Volvieron Section -->
         <section class="volvieronyprimera-section">
-            <div class="volvieronyprimera-header">
-                <h2>Volvieron</h2>
-            </div>
-
             <div class="swiper-container2">
+                <div class="category-header">
+                    <h2>Volvieron</h2>
+                </div>
                 <div class="swiper-wrapper" style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem;">
                     @foreach($volvieron as $usuario)
                     @php
-
                     $now = now();
 
                     $fotos = json_decode($usuario->fotos, true);
@@ -337,9 +335,9 @@ $mostrarPuntoVerdeDestacado = ($usuarioDestacado->estadop == 1 || $usuarioDestac
                             $fotos = json_decode($usuario->fotos, true);
                             $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
                             @endphp
-                            <div class="volvieronyprimera-image"
-                                style="background-image: url('{{ $primeraFoto ? asset("storage/chicas/{$usuario->id}/{$primeraFoto}") : asset("images/default-avatar.png") }}');">
-                            </div>
+                            <img class="volvieronyprimera-image"
+                                src="{{ $primeraFoto ? asset('storage/chicas/' . $usuario->id . '/' . $primeraFoto) : asset('images/default-avatar.png') }}"
+                                alt="Foto de perfil" />
                             <div class="volvieronyprimera-content">
                                 <div class="volvieronyprimera-user-info">
                                     <div class="volvieronyprimera-user-main">
@@ -356,10 +354,8 @@ $mostrarPuntoVerdeDestacado = ($usuarioDestacado->estadop == 1 || $usuarioDestac
                                             <i class="fa fa-map-marker"></i>
                                             <span class="volvieronyprimera-location">
                                                 @if($ciudadSeleccionada->url === 'santiago')
-                                                {{-- Mostrar siempre el sector derivado o seleccionado --}}
                                                 {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}
                                                 @else
-                                                {{-- Para otras ciudades, mostrar la ubicación habitual --}}
                                                 {{ $usuario->ubicacion }}
                                                 @endif
                                             </span>
@@ -376,13 +372,12 @@ $mostrarPuntoVerdeDestacado = ($usuarioDestacado->estadop == 1 || $usuarioDestac
             </div>
         </section>
 
-        <!-- Primera vez Section - Misma estructura pero con $primeraVez -->
+        <!-- Primera vez Section -->
         <section class="volvieronyprimera-section">
-            <div class="volvieronyprimera-header">
-                <h2>Primera vez</h2>
-            </div>
-
             <div class="swiper-container2">
+                <div class="category-header">
+                    <h2>Primera vez</h2>
+                </div>
                 <div class="swiper-wrapper" style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem;">
                     @foreach($primeraVez as $usuario)
                     @php
@@ -425,9 +420,9 @@ $mostrarPuntoVerdeDestacado = ($usuarioDestacado->estadop == 1 || $usuarioDestac
                             $fotos = json_decode($usuario->fotos, true);
                             $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
                             @endphp
-                            <div class="volvieronyprimera-image"
-                                style="background-image: url('{{ $primeraFoto ? asset("storage/chicas/{$usuario->id}/{$primeraFoto}") : asset("images/default-avatar.png") }}');">
-                            </div>
+                            <img class="volvieronyprimera-image"
+                                src="{{ $primeraFoto ? asset('storage/chicas/' . $usuario->id . '/' . $primeraFoto) : asset('images/default-avatar.png') }}"
+                                alt="Foto de perfil" />
                             <div class="volvieronyprimera-content">
                                 <div class="volvieronyprimera-user-info">
                                     <div class="volvieronyprimera-user-main">
@@ -436,7 +431,6 @@ $mostrarPuntoVerdeDestacado = ($usuarioDestacado->estadop == 1 || $usuarioDestac
                                             @if($mostrarPuntoVerde)
                                             <span class="online-dot1"></span>
                                             @endif
-
                                         </h3>
                                         <span class="volvieronyprimera-age">{{ $usuario->edad }}</span>
                                     </div>
@@ -445,10 +439,8 @@ $mostrarPuntoVerdeDestacado = ($usuarioDestacado->estadop == 1 || $usuarioDestac
                                             <i class="fa fa-map-marker"></i>
                                             <span class="volvieronyprimera-location">
                                                 @if($ciudadSeleccionada->url === 'santiago')
-                                                {{-- Mostrar siempre el sector derivado o seleccionado --}}
                                                 {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}
                                                 @else
-                                                {{-- Para otras ciudades, mostrar la ubicación habitual --}}
                                                 {{ $usuario->ubicacion }}
                                                 @endif
                                             </span>
@@ -465,41 +457,45 @@ $mostrarPuntoVerdeDestacado = ($usuarioDestacado->estadop == 1 || $usuarioDestac
             </div>
 
 
-
         </section>
+
+        <!-- Últimas experiencias Section -->
         <section class="UEInicio">
-            <div class="UEInicio-header">
-                <h2>Últimas experiencias</h2>
+            <div class="swiper-container2">
+                <div class="category-header">
+                    <h2>Últimas experiencias</h2>
+                </div>
+                <div class="UEInicio-grid">
+                    @foreach($experiencias as $experiencia)
+                    <a href="{{ route('post.show', ['id_blog' => $experiencia->id_blog, 'id' => $experiencia->id]) }}" class="UEInicio-card">
+                        <div class="UEInicio-image-container">
+                            <img src="{{ $experiencia->blog_imagen ? asset('storage/' . $experiencia->blog_imagen) : asset('images/default-experiencia.png') }}"
+                                alt="{{ $experiencia->titulo }}"
+                                class="UEInicio-image">
+                        </div>
+                        <div class="UEInicio-content">
+                            <span class="UEInicio-date">
+                                {{ \Carbon\Carbon::parse($experiencia->created_at)->format('d F, Y') }}
+                            </span>
+                            <h3 class="UEInicio-title">{{ $experiencia->titulo }}</h3>
+                            <span class="UEInicio-author">{{ $experiencia->autor_nombre }}</span>
+                        </div>
+                    </a>
+                    @endforeach
+                </div>
+                <div class="swiper-pagination2"></div>
             </div>
-
-            <div class="UEInicio-grid">
-                @foreach($experiencias as $experiencia)
-                <a href="{{ route('post.show', ['id_blog' => $experiencia->id_blog, 'id' => $experiencia->id]) }}" class="UEInicio-card">
-                    <div class="UEInicio-image-container">
-                        <img src="{{ $experiencia->blog_imagen ? asset('storage/' . $experiencia->blog_imagen) : asset('images/default-experiencia.png') }}"
-                            alt="{{ $experiencia->titulo }}"
-                            class="UEInicio-image">
-                    </div>
-                    <div class="UEInicio-content">
-                        <span class="UEInicio-date">
-                            {{ \Carbon\Carbon::parse($experiencia->created_at)->format('d F, Y') }}
-                        </span>
-                        <h3 class="UEInicio-title">{{ $experiencia->titulo }}</h3>
-                        <span class="UEInicio-author">{{ $experiencia->autor_nombre }}</span>
-                    </div>
-                </a>
-                @endforeach
-            </div>
-            <div class="swiper-pagination2"></div>
         </section>
-        <!-- Blog -->
-        <section class="BlogInicio">
-            <div class="BlogInicio-header">
-                <h2>Blog</h2>
-            </div>
 
-            <div class="BlogInicio-grid">
-                @foreach($blogArticles as $article)
+  <!-- Blog Section -->
+<section class="BlogInicio">
+    <div class="swiper-blog">
+        <div class="category-header">
+            <h2>Blog</h2>
+        </div>
+        <div class="BlogInicio-grid swiper-wrapper">
+            @foreach($blogArticles as $article)
+            <div class="BlogInicio-item swiper-slide">
                 <a href="{{ route('blog.show_article', $article->id) }}" class="BlogInicio-card">
                     <div class="BlogInicio-image-container">
                         <img src="{{ $article->imagen ? asset('storage/' . $article->imagen) : asset('images/default-blog.png') }}"
@@ -519,17 +515,24 @@ $mostrarPuntoVerdeDestacado = ($usuarioDestacado->estadop == 1 || $usuarioDestac
                         @endif
                     </div>
                 </a>
-                @endforeach
             </div>
-            <div class="swiper-pagination2"></div>
-        </section>
-
-@if(isset($seoTitle) && isset($seoDescription))
-    <div class="seo-section">
-        <h2 class="seo-title">{{ $seoTitle }}</h2>
-        <div class="seo-description">{!! $seoDescription !!}</div>
+            @endforeach
+        </div>
+        <!-- Solo mostrar en móvil -->
+        <div class="swiper-pagination mobile-only"></div>
+        <div class="swiper-button-next mobile-only"></div>
+        <div class="swiper-button-prev mobile-only"></div>
     </div>
-@endif
+</section>
+
+
+
+        @if(isset($seoTitle) && isset($seoDescription))
+        <div class="seo-section">
+            <h2 class="seo-title">{{ $seoTitle }}</h2>
+            <div class="seo-description">{!! $seoDescription !!}</div>
+        </div>
+        @endif
 
 </main>
 

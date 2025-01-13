@@ -1577,7 +1577,31 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+<script>
+const initBlogSwiper = () => {
+    if (window.innerWidth < 768) {
+        const swiper = new Swiper('.swiper-blog', {
+            slidesPerView: 1,
+            spaceBetween: 30,
+            loop: true,
+            effect: 'slide',
+            speed: 400,
+            autoHeight: true,
+            grabCursor: true,
+            touchRatio: 1,
+            touchAngle: 45,
+            resistance: false,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            }
+        });
+    }
+};
 
+// Asegurarnos de que el Swiper se inicialice correctamente
+document.addEventListener('DOMContentLoaded', initBlogSwiper);
+</script>
 </body>
 
 </html>
