@@ -2838,10 +2838,11 @@ video:not(.banner-img):not(.historia-circle video) {
 }
 
 .volvieronyprimera-image {
-    width: auto;
+    width: 294px;
     height: 204px;
     /* altura fija del contenedor */
     object-fit: cover;
+    object-position: center;
 }
 
 .volvieronyprimera-vip-tag {
