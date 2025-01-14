@@ -433,13 +433,7 @@ class UsuarioPublicateController extends Controller
     protected function processImage($image, $userId) {
         try {
             $manager = new ImageManager(new Driver());
-            Log::info('Iniciando procesamiento de imagen', [
-                'nombre_original' => $image->getClientOriginalName(),
-                'tamaño_original' => $image->getSize(),
-                'tipo' => $image->getMimeType(),
-                'userId' => $userId
-            ]);
-    
+            
             // Generar nombre único
             $nombreArchivo = uniqid() . '_' . time() . '.' . $image->getClientOriginalExtension();
             $nombreThumb = 'thumb_' . $nombreArchivo;
@@ -451,36 +445,26 @@ class UsuarioPublicateController extends Controller
     
             // Guardar versión original
             $image->move($path, $nombreArchivo);
-            Log::info('Imagen original guardada', ['nombre' => $nombreArchivo]);
-    
+            
             // Crear y guardar thumbnail
             $img = $manager->read($path . '/' . $nombreArchivo);
-            Log::info('Dimensiones originales', [
-                'ancho' => $img->width(),
-                'alto' => $img->height()
-            ]);
+            
+            // Dimensiones originales
+            $originalWidth = $img->width();
+            $originalHeight = $img->height();
+            
+            // Dimensiones objetivo (proporción 294:204 ≈ 1.44:1)
+            $targetWidth = 588;  // Doble del ancho deseado
+            $targetHeight = 408; // Doble del alto deseado
+            
+            // Realizar el cover sin el closure
+            $img->cover($targetWidth, $targetHeight);
     
-            $img->scaleDown(width: 294, height: 204);
-            Log::info('Dimensiones después de redimensionar', [
-                'ancho_nuevo' => $img->width(),
-                'alto_nuevo' => $img->height()
-            ]);
-    
-            // Create the appropriate encoder based on the file extension
-            $format = strtolower($image->getClientOriginalExtension());
-            $encoder = match($format) {
-                'jpg', 'jpeg' => new \Intervention\Image\Encoders\JpegEncoder(),
-                'png' => new \Intervention\Image\Encoders\PngEncoder(),
-                'webp' => new \Intervention\Image\Encoders\WebpEncoder(),
-                'gif' => new \Intervention\Image\Encoders\GifEncoder(),
-                default => new \Intervention\Image\Encoders\JpegEncoder()
-            };
-    
+            // Usar el encoder con alta calidad
+            $encoder = new \Intervention\Image\Encoders\JpegEncoder(85);
             $encodedImage = $img->encode($encoder);
             file_put_contents($path . '/' . $nombreThumb, $encodedImage);
             
-            Log::info('Thumbnail guardado', ['nombre' => $nombreThumb]);
-    
             return $nombreArchivo;
         } catch (\Exception $e) {
             Log::error('Error al procesar imagen: ' . $e->getMessage(), [

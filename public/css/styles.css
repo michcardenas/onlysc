@@ -2835,13 +2835,18 @@ video:not(.banner-img):not(.historia-circle video) {
     height: 204px;
     background: #000;
     width: 294px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .volvieronyprimera-image {
-    width: 294px;
-    height: 204px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    background: #000;
+    object-position: center;
+    transform: scale(1.01);
+    transition: transform 0.3s ease;
 }
 
 .volvieronyprimera-vip-tag {
