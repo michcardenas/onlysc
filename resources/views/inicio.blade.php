@@ -336,8 +336,11 @@
                             $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
                             @endphp
                             <img class="volvieronyprimera-image"
-                                src="{{ $primeraFoto ? asset('storage/chicas/' . $usuario->id . '/' . $primeraFoto) : asset('images/default-avatar.png') }}"
-                                alt="Foto de perfil" />
+   src="{{ $primeraFoto ? (file_exists(storage_path('app/public/chicas/' . $usuario->id . '/thumb_' . $primeraFoto)) ? 
+       asset('storage/chicas/' . $usuario->id . '/thumb_' . $primeraFoto) : 
+       asset('storage/chicas/' . $usuario->id . '/' . $primeraFoto)) : 
+       asset('images/default-avatar.png') }}"
+   alt="Foto de perfil" />
                             <div class="volvieronyprimera-content">
                                 <div class="volvieronyprimera-user-info">
                                     <div class="volvieronyprimera-user-main">
@@ -421,8 +424,11 @@
                             $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
                             @endphp
                             <img class="volvieronyprimera-image"
-                                src="{{ $primeraFoto ? asset('storage/chicas/' . $usuario->id . '/' . $primeraFoto) : asset('images/default-avatar.png') }}"
-                                alt="Foto de perfil" />
+   src="{{ $primeraFoto ? (file_exists(storage_path('app/public/chicas/' . $usuario->id . '/thumb_' . $primeraFoto)) ? 
+       asset('storage/chicas/' . $usuario->id . '/thumb_' . $primeraFoto) : 
+       asset('storage/chicas/' . $usuario->id . '/' . $primeraFoto)) : 
+       asset('images/default-avatar.png') }}"
+   alt="Foto de perfil" />
                             <div class="volvieronyprimera-content">
                                 <div class="volvieronyprimera-user-info">
                                     <div class="volvieronyprimera-user-main">

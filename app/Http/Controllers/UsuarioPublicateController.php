@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use App\Models\User;
 use App\Notifications\UserCreatedNotification;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -236,18 +238,12 @@ class UsuarioPublicateController extends Controller
                 // Manejar foto destacada
                 if ($request->hasFile('foto_destacada')) {
                     Log::info('Procesando foto destacada');
-
+                    
                     $foto = $request->file('foto_destacada');
-                    $nombreArchivo = uniqid() . '_' . time() . '.' . $foto->getClientOriginalExtension();
-                    $path = storage_path("app/public/chicas/{$usuario->id}");
+                    $nombreArchivo = $this->processImage($foto, $usuario->id);
 
-                    if (!File::exists($path)) {
-                        File::makeDirectory($path, 0755, true);
-                    }
-
-                    // Guardar la nueva foto
-                    if ($foto->move($path, $nombreArchivo)) {
-                        Log::info('Nueva foto destacada guardada:', ['nombre' => $nombreArchivo]);
+                    if ($nombreArchivo) {
+                        Log::info('Nueva foto destacada procesada:', ['nombre' => $nombreArchivo]);
 
                         // Si hay fotos existentes, manejar la foto destacada anterior
                         if (!empty($nombresFotos)) {
@@ -268,24 +264,22 @@ class UsuarioPublicateController extends Controller
                         $nombresFotos = array_values($nombresFotos); // Reindexar el array
                         array_unshift($nombresFotos, $nombreArchivo);
                     } else {
-                        Log::error('Error al mover la foto destacada');
-                        throw new \Exception('No se pudo guardar la foto destacada');
+                        Log::error('Error al procesar la foto destacada');
+                        throw new \Exception('No se pudo procesar la foto destacada');
                     }
                 }
 
                 // Procesar fotos adicionales
                 if ($request->hasFile('fotos')) {
                     foreach ($request->file('fotos') as $foto) {
-                        $nombreArchivo = uniqid() . '_' . time() . '.' . $foto->getClientOriginalExtension();
-                        $path = storage_path("app/public/chicas/{$usuario->id}");
-
-                        if (!File::exists($path)) {
-                            File::makeDirectory($path, 0755, true);
-                        }
-
-                        if ($foto->move($path, $nombreArchivo)) {
+                        $nombreArchivo = $this->processImage($foto, $usuario->id);
+                        
+                        if ($nombreArchivo) {
                             $nombresFotos[] = $nombreArchivo;
-                            Log::info('Nueva foto adicional guardada:', ['nombre' => $nombreArchivo]);
+                            Log::info('Nueva foto adicional procesada:', ['nombre' => $nombreArchivo]);
+                        } else {
+                            Log::error('Error al procesar foto adicional');
+                            continue;
                         }
                     }
                 }
@@ -359,6 +353,7 @@ class UsuarioPublicateController extends Controller
                 ->with('error', 'Ocurrió un error al actualizar el usuario. Inténtalo de nuevo.');
         }
     }
+
     public function eliminarFoto(Request $request)
     {
         try {
@@ -434,4 +429,66 @@ class UsuarioPublicateController extends Controller
             ], 500);
         }
     }
+
+    protected function processImage($image, $userId) {
+        try {
+            $manager = new ImageManager(new Driver());
+            Log::info('Iniciando procesamiento de imagen', [
+                'nombre_original' => $image->getClientOriginalName(),
+                'tamaño_original' => $image->getSize(),
+                'tipo' => $image->getMimeType(),
+                'userId' => $userId
+            ]);
+    
+            // Generar nombre único
+            $nombreArchivo = uniqid() . '_' . time() . '.' . $image->getClientOriginalExtension();
+            $nombreThumb = 'thumb_' . $nombreArchivo;
+            $path = storage_path("app/public/chicas/{$userId}");
+    
+            if (!File::exists($path)) {
+                File::makeDirectory($path, 0755, true);
+            }
+    
+            // Guardar versión original
+            $image->move($path, $nombreArchivo);
+            Log::info('Imagen original guardada', ['nombre' => $nombreArchivo]);
+    
+            // Crear y guardar thumbnail
+            $img = $manager->read($path . '/' . $nombreArchivo);
+            Log::info('Dimensiones originales', [
+                'ancho' => $img->width(),
+                'alto' => $img->height()
+            ]);
+    
+            $img->scaleDown(width: 294, height: 204);
+            Log::info('Dimensiones después de redimensionar', [
+                'ancho_nuevo' => $img->width(),
+                'alto_nuevo' => $img->height()
+            ]);
+    
+            // Create the appropriate encoder based on the file extension
+            $format = strtolower($image->getClientOriginalExtension());
+            $encoder = match($format) {
+                'jpg', 'jpeg' => new \Intervention\Image\Encoders\JpegEncoder(),
+                'png' => new \Intervention\Image\Encoders\PngEncoder(),
+                'webp' => new \Intervention\Image\Encoders\WebpEncoder(),
+                'gif' => new \Intervention\Image\Encoders\GifEncoder(),
+                default => new \Intervention\Image\Encoders\JpegEncoder()
+            };
+    
+            $encodedImage = $img->encode($encoder);
+            file_put_contents($path . '/' . $nombreThumb, $encodedImage);
+            
+            Log::info('Thumbnail guardado', ['nombre' => $nombreThumb]);
+    
+            return $nombreArchivo;
+        } catch (\Exception $e) {
+            Log::error('Error al procesar imagen: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+            return null;
+        }
+    }
+
 }

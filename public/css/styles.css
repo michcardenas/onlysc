@@ -2840,9 +2840,8 @@ video:not(.banner-img):not(.historia-circle video) {
 .volvieronyprimera-image {
     width: 294px;
     height: 204px;
-    /* altura fija del contenedor */
     object-fit: cover;
-    object-position: center;
+    background: #000;
 }
 
 .volvieronyprimera-vip-tag {
@@ -2946,7 +2945,7 @@ video:not(.banner-img):not(.historia-circle video) {
     font-family: 'Montserrat', sans-serif;
     position: relative;
     max-width: 100%;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .swiper-blog {
