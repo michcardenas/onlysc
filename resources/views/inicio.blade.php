@@ -336,11 +336,11 @@
                             $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
                             @endphp
                             <img class="volvieronyprimera-image"
-   src="{{ $primeraFoto ? (file_exists(storage_path('app/public/chicas/' . $usuario->id . '/thumb_' . $primeraFoto)) ? 
+                                src="{{ $primeraFoto ? (file_exists(storage_path('app/public/chicas/' . $usuario->id . '/thumb_' . $primeraFoto)) ? 
        asset('storage/chicas/' . $usuario->id . '/thumb_' . $primeraFoto) : 
        asset('storage/chicas/' . $usuario->id . '/' . $primeraFoto)) : 
        asset('images/default-avatar.png') }}"
-   alt="Foto de perfil" />
+                                alt="Foto de perfil" />
                             <div class="volvieronyprimera-content">
                                 <div class="volvieronyprimera-user-info">
                                     <div class="volvieronyprimera-user-main">
@@ -424,11 +424,11 @@
                             $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
                             @endphp
                             <img class="volvieronyprimera-image"
-   src="{{ $primeraFoto ? (file_exists(storage_path('app/public/chicas/' . $usuario->id . '/thumb_' . $primeraFoto)) ? 
+                                src="{{ $primeraFoto ? (file_exists(storage_path('app/public/chicas/' . $usuario->id . '/thumb_' . $primeraFoto)) ? 
        asset('storage/chicas/' . $usuario->id . '/thumb_' . $primeraFoto) : 
        asset('storage/chicas/' . $usuario->id . '/' . $primeraFoto)) : 
        asset('images/default-avatar.png') }}"
-   alt="Foto de perfil" />
+                                alt="Foto de perfil" />
                             <div class="volvieronyprimera-content">
                                 <div class="volvieronyprimera-user-info">
                                     <div class="volvieronyprimera-user-main">
@@ -493,43 +493,43 @@
             </div>
         </section>
 
-  <!-- Blog Section -->
-<section class="BlogInicio">
-    <div class="swiper-blog">
-        <div class="category-header">
-            <h2>Blog</h2>
-        </div>
-        <div class="BlogInicio-grid swiper-wrapper">
-            @foreach($blogArticles as $article)
-            <div class="BlogInicio-item swiper-slide">
-                <a href="{{ route('blog.show_article', $article->id) }}" class="BlogInicio-card">
-                    <div class="BlogInicio-image-container">
-                        <img src="{{ $article->imagen ? asset('storage/' . $article->imagen) : asset('images/default-blog.png') }}"
-                            alt="{{ $article->titulo }}"
-                            class="BlogInicio-image">
-                        @if($article->destacado)
-                        <div class="BlogInicio-destacado">Destacado</div>
-                        @endif
+        <!-- Blog Section -->
+        <section class="BlogInicio">
+            <div class="swiper-blog">
+                <div class="category-header">
+                    <h2>Blog</h2>
+                </div>
+                <div class="BlogInicio-grid swiper-wrapper">
+                    @foreach($blogArticles as $article)
+                    <div class="BlogInicio-item swiper-slide">
+                        <a href="{{ route('blog.show_article', $article->id) }}" class="BlogInicio-card">
+                            <div class="BlogInicio-image-container">
+                                <img src="{{ $article->imagen ? asset('storage/' . $article->imagen) : asset('images/default-blog.png') }}"
+                                    alt="{{ $article->titulo }}"
+                                    class="BlogInicio-image">
+                                @if($article->destacado)
+                                <div class="BlogInicio-destacado">Destacado</div>
+                                @endif
+                            </div>
+                            <div class="BlogInicio-content">
+                                <span class="BlogInicio-date">
+                                    {{ $article->fecha_publicacion ? \Carbon\Carbon::parse($article->fecha_publicacion)->format('d F, Y') : '' }}
+                                </span>
+                                <h3 class="BlogInicio-title">{{ $article->titulo }}</h3>
+                                @if($article->extracto)
+                                <p class="BlogInicio-excerpt">{{ Str::limit($article->extracto, 100) }}</p>
+                                @endif
+                            </div>
+                        </a>
                     </div>
-                    <div class="BlogInicio-content">
-                        <span class="BlogInicio-date">
-                            {{ $article->fecha_publicacion ? \Carbon\Carbon::parse($article->fecha_publicacion)->format('d F, Y') : '' }}
-                        </span>
-                        <h3 class="BlogInicio-title">{{ $article->titulo }}</h3>
-                        @if($article->extracto)
-                        <p class="BlogInicio-excerpt">{{ Str::limit($article->extracto, 100) }}</p>
-                        @endif
-                    </div>
-                </a>
+                    @endforeach
+                </div>
+                <!-- Solo mostrar en móvil -->
+                <div class="swiper-pagination mobile-only"></div>
+                <div class="swiper-button-next mobile-only"></div>
+                <div class="swiper-button-prev mobile-only"></div>
             </div>
-            @endforeach
-        </div>
-        <!-- Solo mostrar en móvil -->
-        <div class="swiper-pagination mobile-only"></div>
-        <div class="swiper-button-next mobile-only"></div>
-        <div class="swiper-button-prev mobile-only"></div>
-    </div>
-</section>
+        </section>
 
 
 
