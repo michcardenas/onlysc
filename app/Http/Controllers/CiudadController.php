@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Ciudad; 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+
 
 class CiudadController extends Controller
 {
@@ -37,16 +39,38 @@ class CiudadController extends Controller
                 'required',
                 'string',
                 'max:255',
-                'regex:/^[^\s.,\/]+$/', 
+                'regex:/^[^\s.,\/]+$/',
+            ],
+            'zona' => 'nullable|string|max:255', // Validar zona como string opcional
+            'posicion' => [
+                'nullable',
+                'integer',
             ],
         ], [
-            // Mensajes personalizados para la validación de 'regex'
             'url.regex' => 'El campo URL no puede contener espacios, puntos, comas ni barras (/).',
         ]);
     
-        // Buscar la ciudad por su ID y actualizar
+        // Buscar la ciudad por su ID
         $ciudad = Ciudad::findOrFail($id);
-        $ciudad->update($request->only('nombre', 'url'));
+    
+        // Si se actualiza la posición, verificar conflictos
+        if ($request->filled('posicion') && $request->filled('zona')) {
+            $posicionExistente = Ciudad::where('zona', $request->zona)
+                ->where('posicion', $request->posicion)
+                ->where('id', '!=', $id) // Excluir la ciudad actual
+                ->first();
+    
+            if ($posicionExistente) {
+                // Si ya existe, mueve el registro conflictivo al final
+                $ultimaPosicion = Ciudad::where('zona', $request->zona)
+                    ->max('posicion');
+    
+                $posicionExistente->update(['posicion' => $ultimaPosicion + 1]);
+            }
+        }
+    
+        // Actualizar los campos permitidos
+        $ciudad->update($request->only('nombre', 'url', 'zona', 'posicion'));
     
         // Redirigir con un mensaje de éxito
         return redirect()->route('ciudades.index')->with('success', 'Ciudad actualizada con éxito.');
@@ -71,13 +95,22 @@ class CiudadController extends Controller
                     'max:255',
                     'regex:/^[^\s.,\/]+$/', // No permite espacios, puntos, comas ni barras
                 ],
+                'zona' => 'nullable|string|max:255', // Validar zona como string opcional
+                'posicion' => [
+                    'nullable',
+                    'integer',
+                    Rule::unique('ciudades')->where(function ($query) use ($request) {
+                        return $query->where('zona', $request->zona); // Validar unicidad de posicion por zona
+                    }),
+                ],
             ], [
-                // Mensajes personalizados para la validación de 'regex'
+                // Mensajes personalizados
                 'url.regex' => 'El campo URL no puede contener espacios, puntos, comas ni barras (/).',
+                'posicion.unique' => 'La posición ya está en uso en la misma zona.',
             ]);
         
             // Crear la nueva ciudad
-            Ciudad::create($request->only('nombre', 'url'));
+            Ciudad::create($request->only('nombre', 'url', 'zona', 'posicion'));
         
             // Redirigir a la lista de ciudades con un mensaje de éxito
             return redirect()->route('ciudades.index')->with('success', 'Ciudad agregada con éxito.');

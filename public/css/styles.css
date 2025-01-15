@@ -263,14 +263,6 @@ label .required {
 
 
 /* Fondo de la página */
-.custom-background {
-    background-image: url('../images/IMAGEN-scaled-e1727837771908.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    height: 100vh;
-    font-family: 'Montserrat', sans-serif;
-}
 
 /* Logo */
 .logo-container1 {
@@ -348,15 +340,18 @@ label .required {
 }
 
 .swiper-container {
-    width: 100%;
+    width: 112%;
     height: auto;
     padding: 20px 0;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .swiper-slide {
     display: flex;
     justify-content: center;
+    flex-shrink: 0;
+    margin-right: 15px; /* Ajusta según el espacio deseado */
+
 }
 
 
@@ -367,22 +362,26 @@ label .required {
     flex-wrap: wrap;
     padding: 20px;
     width: 100%;
-    max-width: 1200px;
     margin: 0 auto;
+    gap: 20px;
 }
 
 
 .card {
-    width: 24rem;
+    width: 325px; 
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     position: relative;
+    transition: transform 0.5s ease, box-shadow 0.5s ease; /* Transición más suave */
+
+    
 }
 
 .card img {
     width: 100%;
     height: 28rem;
+    object-fit: cover; 
 }
 
 .card-content {
@@ -390,6 +389,7 @@ label .required {
     top: 10px;
     left: 10px;
     color: white;
+    
     z-index: 2;
     text-align: left;
 }
@@ -730,15 +730,11 @@ video:not(.banner-img):not(.historia-circle video) {
 .footerhome {
     color: #ffffff;
     text-align: center;
-    padding: 10px 0;
+    padding: 20px 0; /* Espaciado interno más amplio */
     font-size: 14px;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 100;
     background-color: #1a1a1a;
     font-family: 'Montserrat', sans-serif;
+    margin-top: 20px; /* Espacio hacia arriba del contenido */
 }
 
 /* Sección superior: enlaces de ubicación */
@@ -4053,7 +4049,6 @@ margin-bottom: 0rem;
         flex-wrap: wrap;
         padding: 20px;
         width: 92%;
-        max-width: 1200px;
         margin: 0 auto;
     }
 

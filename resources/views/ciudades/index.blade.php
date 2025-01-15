@@ -46,39 +46,83 @@
             Agregar Ciudad
         </a>
     </div>
-    <table class="table-admin">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>URL</th> <!-- Nueva columna -->
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($ciudades as $index => $ciudad)
-            <tr>
-                <td>{{ $ciudad->nombre }}</td>
-                <td>
-                    <!-- Mostrar la URL fija concatenada -->
-                    <span>https://onlyescorts.cl/{{ $ciudad->url }}</span>
-                </td>
-                <td>
-                    <!-- Botón Editar -->
-                    <a href="{{ route('ciudades.edit', $ciudad->id) }}" class="btn btn-warning btn-sm">
-                        <i class="fas fa-edit"></i>
-                    </a>
-                    <!-- Botón Eliminar -->
-                    <form action="{{ route('ciudades.destroy', $ciudad->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar esta ciudad?')">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+
+    <!-- Mostrar las zonas definidas primero -->
+    @foreach(['Zona Norte', 'Zona Centro', 'Zona Sur'] as $zona)
+        @if($ciudades->where('zona', $zona)->isNotEmpty())
+            <h2 style="color: white;">{{ $zona }}</h2>
+            <table class="table-admin">
+                <thead>
+                    <tr>
+                        <th>Posición</th>
+                        <th>Nombre</th>
+                        <th>URL</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($ciudades->where('zona', $zona)->sortBy('posicion') as $ciudad)
+                    <tr>
+                        <td>{{ $ciudad->posicion ?? 'N/A' }}</td>
+                        <td>{{ $ciudad->nombre }}</td>
+                        <td>
+                            <span>https://onlyescorts.cl/{{ $ciudad->url }}</span>
+                        </td>
+                        <td>
+                            <a href="{{ route('ciudades.edit', $ciudad->id) }}" class="btn btn-warning btn-sm">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ route('ciudades.destroy', $ciudad->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar esta ciudad?')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+    @endforeach
+
+    <!-- Mostrar las ciudades sin zona al final -->
+    @if($ciudades->whereNull('zona')->isNotEmpty())
+        <h2 style="color: white;">Sin Zona</h2>
+        <table class="table-admin">
+            <thead>
+                <tr>
+                    <th>Posición</th>
+                    <th>Nombre</th>
+                    <th>URL</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($ciudades->whereNull('zona')->sortBy('posicion') as $ciudad)
+                <tr>
+                    <td>{{ $ciudad->posicion ?? 'N/A' }}</td>
+                    <td>{{ $ciudad->nombre }}</td>
+                    <td>
+                        <span>https://onlyescorts.cl/{{ $ciudad->url }}</span>
+                    </td>
+                    <td>
+                        <a href="{{ route('ciudades.edit', $ciudad->id) }}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form action="{{ route('ciudades.destroy', $ciudad->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar esta ciudad?')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
 </div>
 @endsection

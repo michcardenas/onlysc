@@ -244,6 +244,7 @@ select.form-control option {
     background-color: #343a40;
     color: white;
 }
+
 </style>
 <header>
     <nav class="navbar-admin">
@@ -285,6 +286,8 @@ select.form-control option {
             <h2 class="text-white">Editar Etiquetas Meta - Página Home</h2>
         </div>
         <div class="card-body">
+        <a href="{{ route('tarjetas.index') }}" class="btn custom-button mb-3">Editar Tarjetas</a>
+
         @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -302,8 +305,10 @@ select.form-control option {
             </button>
         </div>
     @endif
-        <form action="{{ route('seo.update', ['page' => 'home']) }}" method="POST">
-        @csrf
+    
+    <form action="{{ route('seo.update', ['page' => 'home']) }}" 
+      method="POST" 
+      enctype="multipart/form-data">        @csrf
                 @method('PUT')
                 
                 <!-- Meta Title -->
@@ -378,36 +383,93 @@ select.form-control option {
                         @enderror
                     </div>
 
-                    <!-- Heading H2 -->
-                    <div class="form-group template-group">
-                        <label for="heading_h2" class="text-white">Encabezado H2</label>
-                        <input type="text" 
-                            class="form-control bg-dark text-white @error('heading_h2') is-invalid @enderror" 
-                            id="heading_h2" 
-                            name="heading_h2" 
-                            placeholder="Ingrese el encabezado H2" 
-                            value="{{ old('heading_h2', $meta->heading_h2 ?? '') }}">
-                        @error('heading_h2')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
+                   <!-- Heading H2 Original -->
+<div class="form-group template-group">
+    <label for="heading_h2" class="text-white">Encabezado H2</label>
+    <input type="text"
+           class="form-control bg-dark text-white @error('heading_h2') is-invalid @enderror"
+           id="heading_h2"
+           name="heading_h2"
+           placeholder="Ingrese el encabezado H2"
+           value="{{ old('heading_h2', $meta->heading_h2 ?? '') }}">
+    @error('heading_h2')
+        <div class="invalid-feedback">
+            {{ $message }}
+        </div>
+    @enderror
+</div>
 
-                    <!-- Additional Text -->
-                    <div class="form-group template-group">
-                        <label for="additional_text" class="text-white">Texto Adicional</label>
-                        <textarea class="form-control bg-dark text-white @error('additional_text') is-invalid @enderror" 
-                                id="additional_text" 
-                                name="additional_text" 
-                                rows="4" 
-                                placeholder="Ingrese texto adicional">{{ old('additional_text', $meta->additional_text ?? '') }}</textarea>
-                        @error('additional_text')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
+<!-- Heading H2 Secundario -->
+<div class="form-group template-group">
+    <label for="heading_h2_secondary" class="text-white">Encabezado H2 Secundario</label>
+    <input type="text"
+           class="form-control bg-dark text-white @error('heading_h2_secondary') is-invalid @enderror"
+           id="heading_h2_secondary"
+           name="heading_h2_secondary"
+           placeholder="Ingrese el encabezado H2 secundario"
+           value="{{ old('heading_h2_secondary', $meta->heading_h2_secondary ?? '') }}">
+    @error('heading_h2_secondary')
+        <div class="invalid-feedback">
+            {{ $message }}
+        </div>
+    @enderror
+</div>
+
+<!-- Additional Text Original -->
+<div class="form-group template-group">
+    <label for="additional_text" class="text-white">Texto Adicional</label>
+    <textarea class="form-control bg-dark text-white @error('additional_text') is-invalid @enderror"
+              id="additional_text"
+              name="additional_text"
+              rows="4"
+              placeholder="Ingrese texto adicional">{{ old('additional_text', $meta->additional_text ?? '') }}</textarea>
+    @error('additional_text')
+        <div class="invalid-feedback">
+            {{ $message }}
+        </div>
+    @enderror
+</div>
+
+<!-- Additional Text Ver Más -->
+<div class="form-group template-group">
+    <label for="additional_text_more" class="text-white">Texto Adicional Ver Más</label>
+    <textarea class="form-control bg-dark text-white @error('additional_text_more') is-invalid @enderror"
+              id="additional_text_more"
+              name="additional_text_more"
+              rows="4"
+              placeholder="Ingrese texto adicional para ver más">{{ old('additional_text_more', $meta->additional_text_more ?? '') }}</textarea>
+    @error('additional_text_more')
+        <div class="invalid-feedback">
+            {{ $message }}
+        </div>
+    @enderror
+</div>
+<!-- Imagen de Fondo -->
+<div class="form-group template-group">
+    <label for="fondo" class="text-white">Imagen de Fondo</label>
+    <div class="input-group">
+        <input type="file" 
+               class="form-control bg-dark text-white @error('fondo') is-invalid @enderror"
+               id="fondo"
+               name="fondo"
+               accept="image/jpeg,image/png,image/jpg,image/webp">
+        @error('fondo')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+        @enderror
+    </div>
+    
+    @if(isset($meta->fondo))
+        <div class="mt-2">
+            <img src="{{ asset('storage/' . $meta->fondo) }}" 
+                 alt="Imagen de fondo actual" 
+                 class="img-thumbnail" 
+                 style="max-height: 100px">
+            <p class="text-white-50 small mt-1">Imagen actual: {{ basename($meta->fondo) }}</p>
+        </div>
+    @endif
+</div>
 
                 <!-- Botones de Acción -->
                 <div class="form-group text-right">

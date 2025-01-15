@@ -19,6 +19,10 @@ class SEOController extends Controller
     public function home()
     {
         $meta = MetaTag::where('page', 'home')->first();
+        if (!$meta) {
+            $meta = new MetaTag();
+            $meta->page = 'home';
+        }
     
         return view('seo.home', compact('meta'));
     }

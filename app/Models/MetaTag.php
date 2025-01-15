@@ -19,6 +19,9 @@ class MetaTag extends Model
         'canonical_url',
         'heading_h1',
         'heading_h2',
-        'additional_text'
+        'heading_h2_secondary', 
+        'additional_text',
+        'additional_text_more',
+        'fondo'
     ];
 }

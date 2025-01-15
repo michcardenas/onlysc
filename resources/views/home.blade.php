@@ -22,71 +22,42 @@
     <!-- Swiper Container -->
     <div class="swiper-container home-swiper">
     <div class="swiper-wrapper" style="display: flex;">
-    <!-- Tarjeta 1 -->
+        @foreach($tarjetas as $tarjeta)
             <div class="swiper-slide">
                 <div class="card">
-                    <a href="/foro" class="card-link">
-                        <img src="{{ asset('images/foro.jpg') }}" alt="Foro">
+                    <a href="{{ $tarjeta->link }}" class="card-link">
+                        <img src="{{ asset('storage/' . $tarjeta->imagen) }}" alt="{{ $tarjeta->titulo }}">
                         <div class="card-content">
-                            <p>Participa en nuestra comunidad</p> <!-- Se corrigió <php> a <p> -->
-                            <h3>Foro</h3>
+                            <p>{{ $tarjeta->descripcion }}</p>
+                            <h3>{{ $tarjeta->titulo }}</h3>
                         </div>
                     </a>
                 </div>
             </div>
+        @endforeach
+    </div>
+</div>
 
-            <!-- Tarjeta 2 -->
-            <div class="swiper-slide">
-                <div class="card">
-                    <a href="/sitemap" class="card-link">
-                        <img src="{{ asset('images/sitemap.webp') }}" alt="Sitemap">
-                        <div class="card-content">
-                            <p>Mapa de nuestro sitio</p>
-                            <h3>Sitemap</h3>
-                        </div>
-                    </a>
-                </div>
+ <!-- Paginación (opcional) -->
+ <div class="swiper-pagination"></div>
+    </div>
+
+    <!-- Encabezado H2 con texto descriptivo -->
+    <div class="wrapper">
+    <div class="glass-container">
+        <h2 class="mission-title">{{ $meta->heading_h2 }}</h2>
+        <div class="content-wrapper">
+            <div class="mission-text" id="mission-text">
+                {!! $meta->additional_text !!}
             </div>
-
-            <!-- Tarjeta 3 -->
-            <div class="swiper-slide">
-                <div class="card">
-                    <a href="/contacto" class="card-link">
-                        <img src="{{ asset('images/contacto.jpg') }}" alt="Contacto">
-                        <div class="card-content">
-                            <p>Ponte en contacto</p>
-                            <h3>Contacto</h3>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Tarjeta 4 -->
-            <div class="swiper-slide">
-                <div class="card contacto">
-                    <a href="/blog" class="card-link">
-                        <img src="{{ asset('images/blog.jpg') }}" alt="Blog">
-                        <div class="card-content">
-                            <p>Actualizaciones y noticias</p>
-                            <h3>Blog</h3>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Tarjeta 5 -->
-            <div class="swiper-slide">
-                <div class="card contacto">
-                    <a href="/publicate" class="card-link">
-                        <img src="{{ asset('images/publicate.jpeg') }}" alt="Publicate">
-                        <div class="card-content">
-                            <p>Publica tu anuncio ahora</p>
-                            <h3>Publicate</h3>
-                        </div>
-                    </a>
-                </div>
+            <div class="extended-text" id="additional-text" style="display: none;">
+                <br>
+                {!! $meta->additional_text_more !!}
             </div>
         </div>
+        <button id="btn-ver-mas" class="btn-glass">Ver más</button>
+    </div>
+</div>
 
         <!-- Paginación (opcional) -->
         <div class="swiper-pagination"></div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MetaTag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MetaTagController extends Controller
 {
@@ -22,16 +23,36 @@ class MetaTagController extends Controller
                 'meta_robots' => 'required',
                 'heading_h1' => 'nullable|max:255',
                 'heading_h2' => 'nullable|max:255',
+                'heading_h2_secondary' => 'nullable|max:255',
                 'additional_text' => 'nullable',
+                'additional_text_more' => 'nullable',
+                'fondo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             ]);
     
             \Log::info('Datos validados:', $validated);
     
-            // Buscar o crear el registro
-            $meta = MetaTag::updateOrCreate(
-                ['page' => $page],
-                $validated
-            );
+            // Remover fondo de los datos validados ya que se procesará por separado
+            $imageFile = $request->file('fondo');
+            unset($validated['fondo']);
+    
+            // Buscar el registro existente o crear uno nuevo
+            $meta = MetaTag::firstOrNew(['page' => $page]);
+    
+            // Procesar la imagen si se proporcionó una nueva
+            if ($imageFile) {
+                // Eliminar la imagen anterior si existe
+                if ($meta->fondo && Storage::exists('public/' . $meta->fondo)) {
+                    Storage::delete('public/' . $meta->fondo);
+                }
+    
+                // Guardar la nueva imagen
+                $imagePath = $imageFile->store('images/fondos', 'public');
+                $validated['fondo'] = $imagePath;
+            }
+    
+            // Actualizar los datos
+            $meta->fill($validated);
+            $meta->save();
     
             \Log::info('Registro guardado:', $meta->toArray());
     
@@ -42,7 +63,7 @@ class MetaTagController extends Controller
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            
+    
             return redirect()->back()
                 ->with('error', 'Error al guardar las etiquetas meta: ' . $e->getMessage())
                 ->withInput();

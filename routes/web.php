@@ -19,11 +19,9 @@ use App\Http\Controllers\MetaTagController;
 
 
 Auth::routes();
-
 Route::get('/', function () {
-    return redirect()->route('home');
+    return redirect()->route('home')->with('showLoader', true);
 });
-
 Route::get('/', [App\Http\Controllers\HomeController::class, 'showHome'])->name('home');
 Route::post('/escorts-{nombreCiudad}/aplicar-filtros', [InicioController::class, 'filterUsuarios'])
 ->name('inicio.filtrar');
@@ -160,3 +158,9 @@ Route::delete('/seo/templates/{id}', [AdminController::class, 'deleteSeoTemplate
 Route::get('/seo/templates/ciudad/{ciudadId}', [AdminController::class, 'getTemplatesByCiudad'])->name('seo.templates.by-ciudad');
 Route::post('/seo/templates/update-all', [AdminController::class, 'updateAllTemplates'])->name('seo.templates.update.all');
 Route::put('/seo/update/{page}', [MetaTagController::class, 'update'])->name('seo.update');
+Route::get('/admin/tarjetas', [TarjetaController::class, 'index'])->name('tarjetas.index');
+Route::get('/admin/tarjetas/create', [TarjetaController::class, 'create'])->name('tarjetas.create');
+Route::post('/admin/tarjetas', [TarjetaController::class, 'store'])->name('tarjetas.store');
+Route::get('/admin/tarjetas/{id}/edit', [TarjetaController::class, 'edit'])->name('tarjetas.edit');
+Route::put('/admin/tarjetas/{id}', [TarjetaController::class, 'update'])->name('tarjetas.update');
+Route::delete('/admin/tarjetas/{id}', [TarjetaController::class, 'destroy'])->name('tarjetas.destroy');

@@ -17,6 +17,7 @@
     <form action="{{ route('ciudades.store') }}" method="POST">
         @csrf
 
+        <!-- Nombre de la Ciudad -->
         <div class="form-group">
             <label style="color: white;" for="nombre">Nombre de la Ciudad</label>
             <input 
@@ -27,7 +28,8 @@
                 value="{{ old('nombre') }}" 
                 required>
         </div>
-        
+
+        <!-- URL de la Ciudad -->
         <div class="form-group">
             <label style="color: white;" for="url">URL de la Ciudad</label>
             <div style="display: flex; align-items: center;">
@@ -44,7 +46,39 @@
             </div>
         </div>
 
-        <button type="submit" class="btn" style="background-color: #ff0f58; color: white; margin-top: 10px;">
+        <!-- Campo Select para la Zona -->
+        <div class="form-group">
+            <label style="color: white;" for="zona">Zona</label>
+            <select 
+                name="zona" 
+                id="zona" 
+                class="form-control" 
+                required>
+                <option value="" disabled selected>Selecciona una zona</option>
+                <option value="Zona Norte" {{ old('zona') == 'Zona Norte' ? 'selected' : '' }}>Zona Norte</option>
+                <option value="Zona Centro" {{ old('zona') == 'Zona Centro' ? 'selected' : '' }}>Zona Centro</option>
+                <option value="Zona Sur" {{ old('zona') == 'Zona Sur' ? 'selected' : '' }}>Zona Sur</option>
+            </select>
+        </div>
+
+        <!-- Campo Numérico para la Posición -->
+        <div class="form-group">
+            <label style="color: white;" for="posicion">Posición</label>
+            <input 
+                type="number" 
+                name="posicion" 
+                id="posicion" 
+                class="form-control" 
+                value="{{ old('posicion') }}" 
+                placeholder="Ejemplo: 1, 2, 3..." 
+                required>
+        </div>
+
+        <!-- Botones -->
+        <button 
+            type="submit" 
+            class="btn" 
+            style="background-color: #ff0f58; color: white; margin-top: 10px;">
             Guardar Ciudad
         </button>
         <a href="{{ route('ciudades.index') }}" class="btn btn-secondary mt-3">Cancelar</a>
