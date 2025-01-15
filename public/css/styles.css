@@ -468,6 +468,14 @@ label .required {
     filter: invert(100%);
 }
 
+.location-icon2{
+    width: 16px;
+    height: auto;
+    /* margin-right: 5px; */
+    color: #f8f5f6;
+    filter: invert(100%);
+}
+
 .location-dropdown select {
     background-color: #333;
     color: white;
@@ -1277,7 +1285,7 @@ video:not(.banner-img):not(.historia-circle video) {
     align-items: center;
     margin-bottom: 40px;
     /* top: 10px; */
-    gap: 5px;
+    gap: 0px;
 }
 
 /* Imagen de fondo de la tarjeta destacada */
@@ -1342,7 +1350,7 @@ video:not(.banner-img):not(.historia-circle video) {
     display: flex;
     align-items: center;
     margin-top: -40px;
-    gap: 2px;
+    gap: 0px;
 }
 
 /* Precio en la tarjeta destacada */
@@ -4606,8 +4614,8 @@ margin-bottom: 0rem;
 @media screen and (max-width: 480px) {
     .inicio-container {
         padding: 0;
-        margin: 0;
-        max-width: 100%;
+        margin: 0px;
+        max-width: 480px;
     }
 
     .inicio-card-container {
@@ -4802,18 +4810,72 @@ margin-bottom: 0rem;
 @media screen and (max-width: 430px) {
     .inicio-card {
         height: 340px;
-        width: 203px;
+        width: 208px;
+    }
+
+    .inicio-container {
+        padding: 0;
+        margin: 5 5 5 5;
+        max-width: 430px;
+    }
+}
+
+@media screen and (max-width: 415px) {
+    .inicio-card {
+        height: 340px;
+        width: 202px;
+    }
+
+    .inicio-container {
+        padding: 0;
+        margin: 5 5 5 5;
+        max-width: 414px;
     }
 }
 
 @media screen and (max-width: 413px) {
     .inicio-card {
         height: 340px;
-        width: 203px;
+        width: 201px;
+    }
+
+    .inicio-container {
+        padding: 0;
+        margin: 5 5 5 5;
+        max-width: 412px;
     }
 }
 
+@media screen and (max-width: 393px) {
+ .inicio-container {
+        padding: 0;
+        margin: 5 5 5 5;
+        max-width: 392px;
+    }
+
+    .inicio-card {
+        height: 340px;
+        width: 191px;
+    }
+}
+
+
 @media screen and (max-width: 391px) {
+    .inicio-card-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4px;
+        padding: 2px;
+        margin: 0;
+        max-width: 390px;
+    }
+
+    .inicio-container {
+        padding: 0;
+        margin: 5 5 5 5;
+        max-width: 390px;
+    }
+
     .inicio-card {
         height: 340px;
         width: 191px;
@@ -4826,7 +4888,13 @@ margin-bottom: 0rem;
 @media screen and (max-width: 375px) {
     .inicio-card {
         height: 340px;
-        width: 175px;
+        width: 182px;
+    }
+
+    .inicio-container {
+        padding: 0;
+        margin: 5 5 5 5;
+        max-width: 375px;
     }
 
     .location-dropdown select {
@@ -4848,6 +4916,12 @@ margin-bottom: 0rem;
     .inicio-card {
         height: 340px;
         width: 175px;
+    }
+
+    .inicio-container {
+        padding: 0;
+        margin: 5 5 5 5;
+        max-width: 360px;
     }
 }
 

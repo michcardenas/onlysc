@@ -156,7 +156,7 @@
                                     <span class="inicio-card-age">{{ $usuario->edad }}</span>
                                 </h3>
                                 <div class="inicio-card-location">
-                                    <i class="fa fa-map-marker"></i>
+                                <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2">
                                     @if($ciudadSeleccionada->url === 'santiago')
                                     {{-- Mostrar siempre el sector derivado o seleccionado --}}
                                     {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}
@@ -228,7 +228,7 @@
                         </h3>
                         <div class="location-price">
                             <span class="inicio-featured-location">
-                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                            <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2">
                                 @if($ciudadSeleccionada->url === 'santiago')
                                 {{ $ubicacionesMostradas[$usuarioDestacado->id] ?? 'Sector no disponible' }}
                                 @else
@@ -291,7 +291,7 @@
         <section class="volvieronyprimera-section">
             <div class="swiper-container2">
                 <div class="category-header">
-                    <h2>Volvieron</h2>
+                    <h2>Escorts de Regreso</h2>
                 </div>
                 <div class="swiper-wrapper" style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem;">
                     @foreach($volvieron as $usuario)
@@ -354,7 +354,7 @@
                                     </div>
                                     <div class="volvieronyprimera-location-price">
                                         <div class="location-container">
-                                            <i class="fa fa-map-marker"></i>
+                                        <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2">
                                             <span class="volvieronyprimera-location">
                                                 @if($ciudadSeleccionada->url === 'santiago')
                                                 {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}
@@ -379,7 +379,7 @@
         <section class="volvieronyprimera-section">
             <div class="swiper-container2">
                 <div class="category-header">
-                    <h2>Primera vez</h2>
+                    <h2>Escorts Nuevas</h2>
                 </div>
                 <div class="swiper-wrapper" style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem;">
                     @foreach($primeraVez as $usuario)
@@ -442,7 +442,7 @@
                                     </div>
                                     <div class="volvieronyprimera-location-price">
                                         <div class="location-container">
-                                            <i class="fa fa-map-marker"></i>
+                                        <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2">
                                             <span class="volvieronyprimera-location">
                                                 @if($ciudadSeleccionada->url === 'santiago')
                                                 {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}

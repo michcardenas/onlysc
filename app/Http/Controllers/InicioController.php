@@ -668,27 +668,164 @@ if ($usuarioDestacado) {
         $ubicacionesMostradas[$usuarioDestacado->id] = $usuarioDestacado->ubicacion;
     }
 }
-            // Replace title construction section
-            $title = "Escorts en {$ciudadSeleccionada->nombre}";
-
-            if ($sector && $this->validarSector($sector)) {
-                $title .= " en " . ucwords(str_replace('-', ' ', $sector));
-            }
-
-            // Add category to title if present
-            if ($categoria = request()->get('categoria')) {
-                $categoriaDisplay = str_replace('_', ' ', $categoria);
-                $title .= " " . ucwords($categoriaDisplay);
-            }
-
-            if ($filtros) {
-                $title .= " " . ucwords(str_replace('-', ' ', $filtros));
-            }
-
-            if ($variableCount > 1) {
-                $title .= " | Filtros aplicados";
-            }
-
+            // Construcción del título
+if (request()->segment(1) === 'escorts' && request()->segment(2)) {
+    // Perfil individual 
+    $title = ucwords(strtolower($usuario->fantasia));
+    
+    // Determinar si es masajista o escort
+    $esMasajista = in_array('Masajes eroticos', $usuario->servicios) || 
+                   in_array('Masajes sensitivos', $usuario->servicios) ||
+                   in_array('Masajes con final feliz', $usuario->servicios);
+    
+    if ($esMasajista) {
+        $title .= " Masajista";
+    } else {
+        $title .= " Escort";
+        
+        // Agregar categoría solo si es escort
+        if (!empty($usuario->categorias)) {
+            $categoriaDisplay = match (strtolower($usuario->categorias)) {
+                'vip' => 'VIP',
+                'premium' => 'Premium',
+                'de_lujo' => 'de Lujo',
+                'under' => 'Under',
+                default => ucwords($usuario->categorias)
+            };
+            $title .= " " . $categoriaDisplay;
+        }
+    }
+    
+    // Agregar ubicación
+    if ($usuario->ubicacion === 'Santiago') {
+        $sector = $usuario->location ? 
+                 $this->extraerSectorDeDireccion($usuario->location->direccion) : 
+                 'Santiago';
+        $title .= " en " . $sector;
+    } else {
+        $title .= " en " . $usuario->ubicacion;
+    }
+    
+    $title .= " | OnlyEscorts";
+ 
+ } else {
+    // Página de listado
+    $title = "Escorts ";
+ 
+    // Procesar categoría primero
+    if ($categoria = request()->get('categoria')) {
+        $categoriaDisplay = match (strtolower($categoria)) {
+            'vip' => 'VIP',
+            'premium' => 'Premium',
+            'de_lujo' => 'de Lujo',
+            'under' => 'Under',
+            default => ucwords(str_replace('_', ' ', $categoria))
+        };
+        $title .= $categoriaDisplay . " ";
+    }
+ 
+    // Agregar ciudad y sector
+    $title .= "en {$ciudadSeleccionada->nombre}";
+    if ($sector && $this->validarSector($sector)) {
+        $title .= ", zona " . ucwords(str_replace('-', ' ', $sector));
+    }
+ 
+    // Procesar filtros específicos
+    $filtrosProcesados = [];
+ 
+    // Nacionalidad
+    if ($nacionalidad = request()->get('n')) {
+        $nacionalidadDisplay = match ($nacionalidad) {
+            'colombia' => 'colombianas',
+            'argentina' => 'argentinas',
+            'brasil' => 'brasileñas',
+            'chile' => 'chilenas',
+            'ecuador' => 'ecuatorianas',
+            'uruguay' => 'uruguayas',
+            'venezuela' => 'venezolanas',
+            'paraguay' => 'paraguayas',
+            'peru' => 'peruanas',
+            default => $nacionalidad . 's'
+        };
+        $filtrosProcesados[] = $nacionalidadDisplay;
+    }
+ 
+    // Edad
+    if ($edad = request()->get('e')) {
+        list($min, $max) = explode('-', $edad);
+        $filtrosProcesados[] = "de {$min} a {$max} años";
+    }
+ 
+    // Precio
+    if ($precio = request()->get('p')) {
+        list($min, $max) = explode('-', $precio);
+        $filtrosProcesados[] = "tarifas $" . number_format($min, 0, ',', '.') . " a $" . number_format($max, 0, ',', '.');
+    }
+ 
+    // Disponibilidad
+    if (request()->has('disponible')) {
+        $filtrosProcesados[] = "disponibles ahora";
+    }
+ 
+    // Atributos
+    if ($atributos = request()->get('a')) {
+        $atributosArray = explode(',', $atributos);
+        foreach ($atributosArray as $atributo) {
+            $atributoDisplay = match (strtolower($atributo)) {
+                'busto grande' => 'tetona',
+                'cola grande' => 'culona',
+                'contextura delgada' => 'delgada',
+                'contextura mediana' => 'mediana',
+                'contextura grande' => 'gordita',
+                'estatura alta' => 'alta',
+                'estatura pequeña' => 'petite',
+                default => $atributo
+            };
+            $filtrosProcesados[] = $atributoDisplay;
+        }
+    }
+ 
+    // Servicios
+    if ($servicios = request()->get('s')) {
+        $serviciosArray = explode(',', $servicios);
+        foreach ($serviciosArray as $servicio) {
+            $servicioDisplay = str_replace(['masajes ', 'masaje '], '', strtolower($servicio));
+            $filtrosProcesados[] = $servicioDisplay;
+        }
+    }
+ 
+    // Reseñas verificadas
+    if (request()->has('resena')) {
+        $filtrosProcesados[] = "con reseñas verificadas";
+    }
+ 
+    // Agregar filtros al título
+    if (!empty($filtrosProcesados)) {
+        $title .= ", " . implode(', ', array_slice($filtrosProcesados, 0, 3));
+        
+        if (count($filtrosProcesados) > 3) {
+            $title .= " y más filtros";
+        }
+    }
+ 
+    // Filtros desde URL
+    if ($filtros) {
+        $filtroDisplay = match (true) {
+            str_contains($filtros, 'edad-') => "de " . str_replace('edad-', '', $filtros) . " años",
+            str_contains($filtros, 'precio-') => "tarifas " . str_replace('precio-', '$', $filtros),
+            $filtros === 'disponible' => "disponibles ahora",
+            $filtros === 'resena-verificada' => "con reseñas verificadas",
+            default => ucwords(str_replace('-', ' ', $filtros))
+        };
+        
+        if (!str_contains($title, $filtroDisplay)) {
+            $title .= ", " . $filtroDisplay;
+        }
+    }
+ 
+    // Sufijo para listados
+    $title .= " | OnlyEscorts";
+ }
             // Compartir con la vista
             view()->share(['pageTitle' => $title]);
 

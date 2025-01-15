@@ -1114,6 +1114,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const disponibleCheck = document.getElementById('disponibleCheck');
     const resenaCheck = document.getElementById('resenaCheck');
 
+    // Agregar esta función
+const handleModalClose = () => {
+    // Prevenir la recarga del formulario
+    form.reset();
+    window.history.replaceState({}, document.title, window.location.href);
+};
+
+modal._element.addEventListener('hidden.bs.modal', handleModalClose);
+
+document.querySelector('.btn-close')?.addEventListener('click', () => {
+    modal.hide();
+});
+
     // Funciones de normalización
     const normalizeText = (text) => {
         return text.toLowerCase()
