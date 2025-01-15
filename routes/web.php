@@ -16,6 +16,8 @@ use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\SEOController;
 use App\Http\Controllers\SEOPaginasController;
 use App\Http\Controllers\MetaTagController;
+use App\Http\Controllers\TarjetaController;
+
 
 
 Auth::routes();
