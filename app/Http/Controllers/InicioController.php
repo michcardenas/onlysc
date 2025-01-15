@@ -1255,16 +1255,27 @@ if (request()->segment(1) === 'escorts' && request()->segment(2)) {
         }
     }
 
-    public function showPerfil($id)
+    public function showPerfil($nombre)
     {
-        $usuario = UsuarioPublicate::with([
-            'disponibilidad',
-            'estados' => function ($query) {
-                $query->where('created_at', '>=', now()->subHours(24));
-            }
-        ])->findOrFail($id);
-
-        return view('perfil', ['usuario' => $usuario]);
+        try {
+            $id = substr($nombre, strrpos($nombre, '-') + 1);
+            
+            $usuarioPublicate = UsuarioPublicate::with([
+                'disponibilidad',
+                'estados' => function ($query) {
+                    $query->where('created_at', '>=', now()->subHours(24));
+                }
+            ])->findOrFail($id);
+    
+            // Agregamos la consulta de ciudades
+            $ciudades = Ciudad::all(); // Asegúrate de tener el modelo importado: use App\Models\Ciudad;
+    
+            return view('showescort', compact('usuarioPublicate', 'ciudades'));
+            
+        } catch (\Exception $e) {
+            \Log::error('Error en showPerfil: ' . $e->getMessage());
+            return abort(404);
+        }
     }
 
 

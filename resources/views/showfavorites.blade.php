@@ -37,7 +37,7 @@
                                 $mostrarPuntoVerde = ($usuario->estadop == 1 || $usuario->estadop == 3) && $isAvailable;
                             @endphp
 
-                            <a href="{{ url('escorts/' . $usuario->id) }}" class="inicio-card">
+                            <a href="{{ $usuario->getPerfilUrl() }}" class="inicio-card">
                                 <div class="inicio-card-category">{{ strtoupper($usuario->categorias) }}</div>
                                 <div class="inicio-card-image">
                                     <div class="inicio-image"

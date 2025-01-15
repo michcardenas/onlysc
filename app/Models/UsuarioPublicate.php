@@ -79,6 +79,8 @@ class UsuarioPublicate extends Model
         return null;
     }
 
+    
+
     // /**
     //  * Get the route key for the model.
     //  * Esto le dice a Laravel que use 'fantasia' en lugar de 'id' para las rutas

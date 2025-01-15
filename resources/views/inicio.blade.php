@@ -140,7 +140,7 @@
                     $mostrarPuntoVerde = ($usuario->estadop == 1 || $usuario->estadop == 3) && $isAvailable;
                     @endphp
 
-                    <a href="{{ url('escorts/' . $usuario->id) }}" class="inicio-card">
+                    <a href="{{ route('perfil.show', ['nombre' => $usuario->fantasia . '-' . $usuario->id]) }}" class="inicio-card">
                         <div class="inicio-card-category">{{ strtoupper($usuario->categorias) }}</div>
                         <div class="inicio-card-image">
                             <div class="inicio-image"
@@ -156,7 +156,7 @@
                                     <span class="inicio-card-age">{{ $usuario->edad }}</span>
                                 </h3>
                                 <div class="inicio-card-location">
-                                <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2">
+                                    <i class="fa fa-map-marker"></i>
                                     @if($ciudadSeleccionada->url === 'santiago')
                                     {{-- Mostrar siempre el sector derivado o seleccionado --}}
                                     {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}
@@ -213,7 +213,7 @@
             $mostrarPuntoVerdeDestacado = ($usuarioDestacado->estadop == 1 || $usuarioDestacado->estadop == 3) && $isAvailableDestacado;
             @endphp
 
-            <a href="{{ url('escorts/' . $usuarioDestacado->id) }}" class="inicio-featured-card">
+            <a href="{{ route('perfil.show', ['nombre' => $usuarioDestacado->fantasia . '-' . $usuarioDestacado->id]) }}" class="inicio-featured-card">
                 <div class="inicio-featured-label">CHICA DEL MES</div>
                 <div class="inicio-featured-image"
                     style="background-image: url('{{ $primeraFotoDestacado ? asset("storage/chicas/{$usuarioDestacado->id}/{$primeraFotoDestacado}") : asset("images/default-avatar.png") }}');
@@ -228,7 +228,7 @@
                         </h3>
                         <div class="location-price">
                             <span class="inicio-featured-location">
-                            <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2">
+                                <i class="fa fa-map-marker" aria-hidden="true"></i>
                                 @if($ciudadSeleccionada->url === 'santiago')
                                 {{ $ubicacionesMostradas[$usuarioDestacado->id] ?? 'Sector no disponible' }}
                                 @else
@@ -270,7 +270,7 @@
                                 <span class="online-age">{{ $usuario->edad }}</span>
                             </div>
                             <div class="online-status">ONLINE</div>
-                            <a href="{{ url('escorts/' . $usuario->id) }}" class="online-profile-button">Ver perfil</a>
+                            <a href="{{ route('perfil.show', ['nombre' => $usuario->fantasia . '-' . $usuario->id]) }}" class="online-profile-button">Ver perfil</a>
                         </div>
                     </li>
                     @endforeach
@@ -328,7 +328,7 @@
 
                     $mostrarPuntoVerde = ($usuario->estadop == 1 || $usuario->estadop == 3) && $isAvailable;
                     @endphp
-                    <a href="{{ url('escorts/' . $usuario->id) }}" class="swiper-slide2" style="flex: 0 0 auto; margin-right: 0;">
+                    <a href="{{ route('perfil.show', ['nombre' => $usuario->fantasia . '-' . $usuario->id]) }}" class="swiper-slide2" style="flex: 0 0 auto; margin-right: 0;">
                         <div class="volvieronyprimera-card">
                             <div class="volvieronyprimera-vip-tag">{{ strtoupper($usuario->categorias) }}</div>
                             @php
@@ -354,7 +354,7 @@
                                     </div>
                                     <div class="volvieronyprimera-location-price">
                                         <div class="location-container">
-                                        <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2">
+                                            <i class="fa fa-map-marker"></i>
                                             <span class="volvieronyprimera-location">
                                                 @if($ciudadSeleccionada->url === 'santiago')
                                                 {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}
@@ -416,7 +416,7 @@
 
                     $mostrarPuntoVerde = ($usuario->estadop == 1 || $usuario->estadop == 3) && $isAvailable;
                     @endphp
-                    <a href="{{ url('escorts/' . $usuario->id) }}" class="swiper-slide2" style="flex: 0 0 auto; margin-right: 0;">
+                    <a href="{{ route('perfil.show', ['nombre' => $usuario->fantasia . '-' . $usuario->id]) }}" class="swiper-slide2" style="flex: 0 0 auto; margin-right: 0;">
                         <div class="volvieronyprimera-card">
                             <div class="volvieronyprimera-vip-tag">{{ strtoupper($usuario->categorias) }}</div>
                             @php
@@ -442,7 +442,7 @@
                                     </div>
                                     <div class="volvieronyprimera-location-price">
                                         <div class="location-container">
-                                        <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2">
+                                            <i class="fa fa-map-marker"></i>
                                             <span class="volvieronyprimera-location">
                                                 @if($ciudadSeleccionada->url === 'santiago')
                                                 {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}
@@ -516,8 +516,8 @@
                                     {{ $article->fecha_publicacion ? \Carbon\Carbon::parse($article->fecha_publicacion)->format('d F, Y') : '' }}
                                 </span>
                                 <h3 class="BlogInicio-title">{{ $article->titulo }}</h3>
-                                @if($article->extracto)
-                                <p class="BlogInicio-excerpt">{{ Str::limit($article->extracto, 100) }}</p>
+                                @if($article->contenido)
+                                <p class="BlogInicio-excerpt">{{ Str::limit(strip_tags($article->contenido), 100) }}</p>
                                 @endif
                             </div>
                         </a>

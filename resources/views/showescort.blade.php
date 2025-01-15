@@ -1,5 +1,11 @@
 @extends('layouts.app')
 
+@php
+$pageTitle = $usuarioPublicate->fantasia . ' Escort ' . 
+    ($usuarioPublicate->categorias ? ucfirst(strtolower($usuarioPublicate->categorias)) . ' ' : '') . 
+    'en ' . $usuarioPublicate->ubicacion . ' | OnlyEscorts';
+@endphp
+
 @section('content')
 
 <div class="escortperfil-container">

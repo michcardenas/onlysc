@@ -34,7 +34,9 @@ Route::match(['get', 'post'], '/escorts-{nombreCiudad}/{filtros?}', [InicioContr
 Route::get('/escorts-{nombreCiudad}/{categoria}', [InicioController::class, 'showByCategory'])->name('inicio.categoria');
 
 Route::post('/inicio', [InicioController::class, 'show'])->name('inicio');
-Route::get('/perfil/{id}', [InicioController::class, 'showPerfil'])->name('perfil.show');
+Route::get('/escorts/{nombre}', [InicioController::class, 'showPerfil'])
+    ->where('nombre', '.+') // Esto aceptará cualquier carácter
+    ->name('perfil.show');
 
 //Publicate
 Route::get('/publicate', [PublicateController::class, 'showRegistrationForm'])->name('publicate.form');
