@@ -13,35 +13,34 @@ $pageTitle = $usuarioPublicate->fantasia . ' Escort ' .
         <div class="escortperfil-swiper">
             <div class="escortperfil-swiper-wrapper swiper-wrapper">
                 @php
-                $fotos = json_decode($usuarioPublicate->fotos, true);
-                $blockedImages = json_decode($usuarioPublicate->blocked_images, true);
+$fotos = json_decode($usuarioPublicate->fotos, true) ?? [];
+$blockedImages = json_decode($usuarioPublicate->blocked_images, true) ?? [];
 
-                // Solo aplicamos el reemplazo si el usuario NO está autenticado
-                if (!Auth::check()) {
-                foreach ($fotos as $key => $foto) {
-                if (in_array($foto, $blockedImages)) {
-                $fotos[$key] = 'Exclusivo-para-miembros.png';
-                }
-                }
-                }
-                // Si está autenticado, mostramos todas las fotos originales
-                @endphp
+// Solo aplicamos el reemplazo si el usuario NO está autenticado
+if (!Auth::check()) {
+    foreach ($fotos as $key => $foto) {
+        if (is_array($blockedImages) && in_array($foto, $blockedImages)) {
+            $fotos[$key] = 'Exclusivo-para-miembros.png';
+        }
+    }
+}
+@endphp
 
-                @foreach($fotos as $foto)
-                <div class="escortperfil-swiper-slide swiper-slide">
-                    @if($foto === 'Exclusivo-para-miembros.png')
-                    <img src="{{ asset('storage/chicas/Exclusivo-para-miembros.png') }}"
-                        alt="Contenido exclusivo"
-                        class="escortperfil-banner-img"
-                        onclick="openEscortModal(this.src)">
-                    @else
-                    <img src="{{ asset("storage/chicas/{$usuarioPublicate->id}/{$foto}") }}"
-                        alt="Foto de {{ $usuarioPublicate->fantasia }}"
-                        class="escortperfil-banner-img"
-                        onclick="openEscortModal(this.src)">
-                    @endif
-                </div>
-                @endforeach
+@foreach($fotos as $foto)
+    <div class="escortperfil-swiper-slide swiper-slide">
+        @if($foto === 'Exclusivo-para-miembros.png')
+            <img src="{{ asset('storage/chicas/Exclusivo-para-miembros.png') }}"
+                alt="Contenido exclusivo"
+                class="escortperfil-banner-img"
+                onclick="openEscortModal(this.src)">
+        @else
+            <img src="{{ asset("storage/chicas/{$usuarioPublicate->id}/{$foto}") }}"
+                alt="Foto de {{ $usuarioPublicate->fantasia }}"
+                class="escortperfil-banner-img"
+                onclick="openEscortModal(this.src)">
+        @endif
+    </div>
+@endforeach
 
             </div>
 
