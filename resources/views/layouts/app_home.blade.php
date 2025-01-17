@@ -500,7 +500,7 @@
 }
 
 .btn-glass:hover {
-    background-color:rgb(131, 0, 33);
+    background-color:rgb(194, 0, 48);
 }
 
 /* Estilo del texto extendido (oculto por defecto) */
