@@ -19,12 +19,11 @@
 @endsection
 
 @section('content')
-    <!-- Swiper Container -->
-    <div class="swiper-container home-swiper">
-    <div class="swiper-wrapper" style="display: flex;">
+<div class="swiper home-swiper">
+    <div class="swiper-wrapper">
         @foreach($tarjetas as $tarjeta)
             <div class="swiper-slide">
-                <div class="card">
+                <div class="card carru">
                     <a href="{{ $tarjeta->link }}" class="card-link">
                         <img src="{{ asset('storage/' . $tarjeta->imagen) }}" alt="{{ $tarjeta->titulo }}">
                         <div class="card-content">
@@ -36,11 +35,9 @@
             </div>
         @endforeach
     </div>
+    <!-- Paginación -->
+    <div class="swiper-pagination"></div>
 </div>
-
- <!-- Paginación (opcional) -->
- <div class="swiper-pagination"></div>
-    </div>
 
     <!-- Encabezado H2 con texto descriptivo -->
     <div class="wrapper">
