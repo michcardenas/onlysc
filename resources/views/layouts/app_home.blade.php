@@ -444,7 +444,7 @@
 
 /* Contenedor principal */
 .glass-container {
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.5);
     border-radius: 16px;
     padding: 24px;
     max-width: 900px;
