@@ -460,9 +460,7 @@
 
 /* Estilo del título */
 .mission-title {
-    font-family: 'Poppins', sans-serif;
     font-size: 3rem;
-    font-weight: bold;
     line-height: 1.2;
     margin: 0;
     background: linear-gradient(90deg, #FF99CC, #33CCFF);
@@ -483,10 +481,7 @@
 
 /* Estilo del texto */
 .mission-text {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1rem;
     line-height: 1.6;
-    color: #d4d4d4;
     margin-bottom: 10px;
     text-align: right;
 }
@@ -494,7 +489,7 @@
 /* Estilo del botón */
 .btn-glass {
     padding: 12px 24px;
-    background-color: #6a0dad;
+    background-color: #e00037;
     color: #fff;
     font-size: 1rem;
     font-weight: 600;
@@ -505,7 +500,7 @@
 }
 
 .btn-glass:hover {
-    background-color: #8e44ad;
+    background-color:rgb(131, 0, 33);
 }
 
 /* Estilo del texto extendido (oculto por defecto) */
