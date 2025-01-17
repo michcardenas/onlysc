@@ -446,13 +446,42 @@ select.form-control option {
 </div>
 <!-- Texto Zonas -->
 <div class="form-group template-group">
-    <label for="texto_zonas" class="text-white">Texto Zonas</label>
+    <label for="texto_zonas" class="text-white">Texto Norte</label>
     <textarea class="form-control bg-dark text-white @error('texto_zonas') is-invalid @enderror"
               id="texto_zonas"
               name="texto_zonas"
               rows="4"
               placeholder="Ingrese el texto para las zonas">{{ old('texto_zonas', $meta->texto_zonas ?? '') }}</textarea>
     @error('texto_zonas')
+        <div class="invalid-feedback">
+            {{ $message }}
+        </div>
+    @enderror
+</div>
+<!-- Texto Zonas - Zona Centro -->
+<div class="form-group template-group">
+    <label for="texto_zonas_centro" class="text-white">Texto Zonas - Zona Centro</label>
+    <textarea class="form-control bg-dark text-white @error('texto_zonas_centro') is-invalid @enderror"
+              id="texto_zonas_centro"
+              name="texto_zonas_centro"
+              rows="4"
+              placeholder="Ingrese el texto para la Zona Centro">{{ old('texto_zonas_centro', $meta->texto_zonas_centro ?? '') }}</textarea>
+    @error('texto_zonas_centro')
+        <div class="invalid-feedback">
+            {{ $message }}
+        </div>
+    @enderror
+</div>
+
+<!-- Texto Zonas - Zona Sur -->
+<div class="form-group template-group">
+    <label for="texto_zonas_sur" class="text-white">Texto Zonas - Zona Sur</label>
+    <textarea class="form-control bg-dark text-white @error('texto_zonas_sur') is-invalid @enderror"
+              id="texto_zonas_sur"
+              name="texto_zonas_sur"
+              rows="4"
+              placeholder="Ingrese el texto para la Zona Sur">{{ old('texto_zonas_sur', $meta->texto_zonas_sur ?? '') }}</textarea>
+    @error('texto_zonas_sur')
         <div class="invalid-feedback">
             {{ $message }}
         </div>

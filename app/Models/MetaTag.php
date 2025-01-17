@@ -24,6 +24,8 @@ class MetaTag extends Model
         'additional_text_more',
         'fondo',
         'texto_zonas', // Nueva columna
-        'titulo_tarjetas'
+        'titulo_tarjetas',
+        'texto_zonas_centro', // Nueva columna
+        'texto_zonas_sur' // Nueva columna
     ];
 }

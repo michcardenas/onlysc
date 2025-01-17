@@ -51,10 +51,11 @@
                 <br>
                 {!! $meta->additional_text_more !!}
             </div>
+            <button id="btn-ver-mas" class="btn-glass">Ver más</button>
         </div>
-        <button id="btn-ver-mas" class="btn-glass">Ver más</button>
     </div>
 </div>
+
 
         <!-- Paginación (opcional) -->
         <div class="swiper-pagination"></div>

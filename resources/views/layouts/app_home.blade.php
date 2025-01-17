@@ -314,6 +314,7 @@
     backdrop-filter: blur(10px);
     background: rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.2);
+    min-height: 20rem;
 }
 /* Estilos base del carrusel */
 .home-swiper {
@@ -441,6 +442,103 @@
     }
 }
 
+/* Contenedor principal */
+.glass-container {
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* Estilo del título */
+.mission-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 3rem;
+    font-weight: bold;
+    line-height: 1.2;
+    margin: 0;
+    background: linear-gradient(90deg, #FF99CC, #33CCFF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: left;
+    flex: 1; /* Ocupa más espacio a la izquierda */
+}
+
+/* Contenedor del texto y botón */
+.content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Texto y botón alineados a la derecha */
+    text-align: right;
+}
+
+/* Estilo del texto */
+.mission-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #d4d4d4;
+    margin-bottom: 10px;
+    text-align: right;
+}
+
+/* Estilo del botón */
+.btn-glass {
+    padding: 12px 24px;
+    background-color: #6a0dad;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn-glass:hover {
+    background-color: #8e44ad;
+}
+
+/* Estilo del texto extendido (oculto por defecto) */
+.extended-text {
+    display: none;
+}
+
+/* Diseño responsivo */
+@media (max-width: 768px) {
+    .glass-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .mission-title {
+        font-size: 2rem;
+        margin-bottom: 16px;
+        text-align: center;
+    }
+
+    .content-wrapper {
+        align-items: center;
+    }
+
+    .mission-text {
+        text-align: center;
+    }
+
+    .btn-glass {
+        width: 100%; /* Botón ocupa todo el ancho en móvil */
+    }
+}
 
 
     </style>
@@ -487,7 +585,13 @@
                         
                         <!-- Texto adicional debajo del título -->
                         <p class="texto-adicional">
-                            {{ $meta->texto_zonas }}
+                            @if($zona === 'Zona Norte')
+                                {{ $meta->texto_zonas }}
+                            @elseif($zona === 'Zona Centro')
+                                {{ $meta->texto_zonas_centro }}
+                            @elseif($zona === 'Zona Sur')
+                                {{ $meta->texto_zonas_sur }}
+                            @endif
                         </p>
 
                         <!-- Línea divisoria -->

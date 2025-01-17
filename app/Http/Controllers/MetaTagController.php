@@ -29,6 +29,8 @@ class MetaTagController extends Controller
                 'texto_zonas' => 'nullable', // Validación para texto_zonas
                 'titulo_tarjetas' => 'nullable|max:255', // Validación para titulo_tarjetas
                 'fondo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+                'texto_zonas_centro' => 'nullable', // Validación para texto_zonas_centro
+                'texto_zonas_sur' => 'nullable' // Validación para texto_zonas_sur
             ]);
     
             \Log::info('Datos validados:', $validated);
