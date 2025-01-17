@@ -534,6 +534,22 @@
         width: 100%; /* Botón ocupa todo el ancho en móvil */
     }
 }
+/* Estilo del título */
+/* Estilo del título */
+.titulo-tarjetas {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2.5rem; /* Tamaño del texto */
+    font-weight: 400; /* Peso regular para el texto */
+    text-align: center; /* Centrado */
+    color: #ffff; /* Color del texto principal */
+    margin-bottom: 20px; /* Espaciado inferior */
+}
+
+/* Estilo para la última palabra destacada */
+.titulo-tarjetas .highlight {
+    font-weight: 700; /* Negrita */
+    color: #e63946; /* Cambia este color según tu diseño */
+}
 
 
     </style>
@@ -611,9 +627,15 @@
     <div class="swiper-button-next zonas-next"></div>
 </div>
 
-
+<!-- titulo tarjetas aqui-->
         <!-- Contenedor para las tarjetas -->
+      
+
         <div class="cards-container">
+        <h2 class="titulo-tarjetas">
+    {!! preg_replace('/\s(\S+)$/', ' <span class="highlight">$1</span>', e($meta->titulo_tarjetas ?? 'Sin título definido')) !!}
+</h2>
+
             <!-- Aquí se insertan las tarjetas desde la vista 'home.blade.php' -->
             @yield('content')
         </div>

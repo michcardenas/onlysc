@@ -40,7 +40,9 @@ class HomeController extends Controller
             'texto_zonas' => '', // Agregado nuevo campo
             'titulo_tarjetas' => '', // Agregado nuevo campo
             'texto_zonas_centro' => '', // Agregado nuevo campo
-            'texto_zonas_sur' => '' // Agregado nuevo campo
+            'texto_zonas_sur' => '', // Agregado nuevo campo
+            'titulo_tarjetas' => '' // Agregado nuevo campo
+            
             ]);
         }
     
