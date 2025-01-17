@@ -17,13 +17,14 @@ class ForoController extends Controller
 {
     public function showForo()
     {
-        // Obtenemos todos los foros ordenados por fecha
+        // Obtenemos los foros ordenados por posición y los paginamos de 4 en 4
         $foros = DB::table('foro')
             ->select('foro.*', 'users.name as nombre_usuario')
             ->leftJoin('users', 'foro.id_usuario', '=', 'users.id')
             ->orderBy('posicion', 'asc')
-            ->get();
-    
+            ->paginate(4); // Cambiado a paginate(4)
+            $foros->defaultView('vendor.pagination.default');
+
         // Solo obtenemos las ciudades que necesita el foro
         $ciudades = Ciudad::all();
     
@@ -32,6 +33,7 @@ class ForoController extends Controller
             'ciudades' => $ciudades
         ]);
     }
+    
     
     public function show_foro($categoria)
     {
@@ -83,43 +85,56 @@ class ForoController extends Controller
     }
 
     public function store(Request $request)
-{
-    // Limpiar el contenido HTML
-    $contenidoLimpio = strip_tags($request->contenido);
-    $request->merge(['contenido' => $contenidoLimpio]);
-
-    // Validación de los campos
-    $validated = $request->validate([
-        'titulo' => 'required|max:255',
-        'subtitulo' => 'required|max:255',
-        'contenido' => 'required',
-        'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
-    ]);
-
-    // Almacenar la foto
-    $fotoPath = $request->file('foto')->store('foros', 'public');
-
-    // Obtener la última posición
-    $lastPosition = Foro::max('posicion') ?? 0;
-    $newPosition = $lastPosition + 1;
-
-    // Crear un nuevo foro
-    $foro = Foro::create([
-        'titulo' => $validated['titulo'],
-        'subtitulo' => $validated['subtitulo'],
-        'contenido' => $contenidoLimpio,
-        'foto' => $fotoPath,
-        'id_usuario' => auth()->id(),
-        'fecha' => now(),
-        'posicion' => $newPosition
-    ]);
-
-    // Actualizar el id_blog para que sea igual al id
-    $foro->id_blog = $foro->id;
-    $foro->save();
-
-    return redirect()->route('foroadmin')->with('success', 'Foro creado exitosamente');
-}
+    {
+        // Limpiar el contenido HTML
+        $contenidoLimpio = strip_tags($request->contenido);
+        $request->merge(['contenido' => $contenidoLimpio]);
+    
+        // Validación de los campos
+        $validated = $request->validate([
+            'titulo' => 'required|max:255',
+            'subtitulo' => 'required|max:255',
+            'contenido' => 'required',
+            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+    
+        // Almacenar la foto directamente en public/storage/foros
+        $file = $request->file('foto');
+        $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
+        $destinationPath = public_path('storage/foros');
+        
+        // Crear la carpeta si no existe
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0777, true);
+        }
+    
+        $file->move($destinationPath, $fileName);
+    
+        // Generar la ruta relativa para guardar en la base de datos
+        $fotoPath = 'foros/' . $fileName;
+    
+        // Obtener la última posición
+        $lastPosition = Foro::max('posicion') ?? 0;
+        $newPosition = $lastPosition + 1;
+    
+        // Crear un nuevo foro
+        $foro = Foro::create([
+            'titulo' => $validated['titulo'],
+            'subtitulo' => $validated['subtitulo'],
+            'contenido' => $contenidoLimpio,
+            'foto' => $fotoPath,
+            'id_usuario' => auth()->id(),
+            'fecha' => now(),
+            'posicion' => $newPosition
+        ]);
+    
+        // Actualizar el id_blog para que sea igual al id
+        $foro->id_blog = $foro->id;
+        $foro->save();
+    
+        return redirect()->route('foroadmin')->with('success', 'Foro creado exitosamente');
+    }
+    
 
     public function edit($id)
     {
@@ -133,11 +148,11 @@ class ForoController extends Controller
     {
         // Obtener el foro a actualizar
         $foro = Foro::findOrFail($id);
-
+    
         // Limpiar el contenido HTML
         $contenidoLimpio = strip_tags($request->contenido);
         $request->merge(['contenido' => $contenidoLimpio]);
-
+    
         // Validación de los campos
         $validated = $request->validate([
             'titulo' => 'required|max:255',
@@ -145,26 +160,40 @@ class ForoController extends Controller
             'contenido' => 'required',
             'foto' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable'
         ]);
-
+    
         // Si se subió una nueva foto
         if ($request->hasFile('foto')) {
             // Eliminar la foto anterior si existe
-            if ($foro->foto) {
-                Storage::disk('public')->delete($foro->foto);
+            if ($foro->foto && file_exists(public_path('storage/' . $foro->foto))) {
+                unlink(public_path('storage/' . $foro->foto));
             }
-            $fotoPath = $request->file('foto')->store('foros', 'public');
-            $foro->foto = $fotoPath;
+    
+            // Guardar la nueva foto directamente en public/storage/foros
+            $file = $request->file('foto');
+            $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
+            $destinationPath = public_path('storage/foros');
+            
+            // Asegurarse de que la carpeta exista
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0777, true);
+            }
+    
+            $file->move($destinationPath, $fileName);
+    
+            // Actualizar la ruta de la foto en la base de datos
+            $foro->foto = 'foros/' . $fileName;
         }
-
+    
         // Actualizar otros campos usando el contenido limpio
         $foro->titulo = $validated['titulo'];
         $foro->subtitulo = $validated['subtitulo'];
         $foro->contenido = $contenidoLimpio;
         $foro->id_blog = $request->input('id_blog');
         $foro->save();
-
+    
         return redirect()->route('foroadmin')->with('success', 'Foro actualizado exitosamente');
     }
+    
 
     public function destroy($id)
     {

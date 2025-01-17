@@ -14,10 +14,247 @@
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/foro.css') }}">
     <link rel="stylesheet" href="{{ asset('css/blog.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Scripts -->
     <script src="https://cdn.tiny.cloud/1/z94ao1xzansr93pi0qe5kfxgddo1f4ltb8q7qa8pw9g52txs/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<style>
+/* Layout principal con flexbox */
+.foro-layout {
+    display: flex;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
 
+/* Columna principal */
+.foro-main-column {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Grid de tarjetas de foro */
+.foro-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Estilos de las tarjetas */
+.foro-card {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+    height: 450px; 
+}
+
+.foro-card:hover {
+    transform: translateY(-3px);
+}
+
+.foro-card-content {
+    padding: 1.5rem;
+    height: 30%; /* 30% de la tarjeta para el contenido */
+    overflow: hidden;
+}
+
+.foro-card-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.foro-card-description {
+    color: #666;
+    line-height: 1.5;
+}
+.foro-card-image {
+    flex: 1; /* Toma el espacio restante */
+    position: relative;
+    overflow: hidden;
+    height: 55%;
+}
+
+.foro-card-image img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}}
+
+.foro-card-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #666;
+    height: 15%; 
+}
+
+.foro-card-footer svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+/* Barra lateral */
+.foro-sidebar {
+    width: 300px;
+    flex-shrink: 0;
+}
+
+/* Estilos de comentarios */
+.foro-comments {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.foro-comment-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+}
+
+.foro-comment-link:hover {
+    background-color: #f8f9fa;
+}
+
+.foro-comment {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.foro-comment:last-child {
+    border-bottom: none;
+}
+
+/* Paginación */
+.foro-pagination {
+    margin-top: 2rem;
+}
+
+.foro-pagination nav {
+    display: flex;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.foro-pagination .page-item {
+    display: inline-block;
+    margin: 0 3px;
+}
+
+.foro-pagination .page-link {
+    display: block;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    color: #007bff;
+    text-decoration: none;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    background-color: #fff;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.foro-pagination .page-link:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.foro-pagination .page-item.active .page-link {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+    pointer-events: none;
+}
+
+.foro-pagination .page-item.disabled .page-link {
+    color: #6c757d;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+    pointer-events: none;
+}
+
+/* Media queries para responsividad */
+@media (max-width: 1024px) {
+    .foro-layout {
+        flex-direction: column;
+    }
+
+    .foro-sidebar {
+        width: 100%;
+    }
+
+    .foro-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    
+    .foro-card-image img {
+  
+    object-fit: fill;
+}
+    .foro-card {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .foro-card-image {
+        height: 180px;
+    }
+
+    .foro-card-content {
+        padding: 1rem;
+    }
+
+    .foro-card-footer {
+        padding: 0.75rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .foro-layout {
+        padding: 0.5rem;
+    }
+
+    .foro-card {
+        max-width: 100%;
+    }
+
+    .foro-card-image {
+        height: 160px;
+    }
+
+    .foro-card-title {
+        font-size: 1.1rem;
+    }
+
+    .foro-card-description {
+        font-size: 0.9rem;
+    }
+
+    .foro-card-footer {
+        font-size: 0.8rem;
+    }
+}
+
+/* Mantén los estilos existentes para foro-card, foro-comments, etc. */
+</style>
     <script>
           tinymce.init({
     selector: '#comentario',
@@ -107,8 +344,7 @@
         });
     }
 });
-</script>
-<script>
+
 document.addEventListener('DOMContentLoaded', function() {
     // Primero verificamos que existan los elementos necesarios
     const contenido = document.querySelector('.blog-text');
