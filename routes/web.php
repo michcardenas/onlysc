@@ -56,6 +56,9 @@ Route::post('/rta', [InicioController::class, 'rta'])->name('rta.store');
 
 //panel
 Route::get('/panel-control', [AdminController::class, 'index'])->name('panel_control');
+// Agregar en el grupo de rutas con middleware auth
+Route::post('/usuarios-publicate/toggle-image-block', [UsuarioPublicateController::class, 'toggleImageBlock'])
+    ->name('usuarios_publicate.toggleImageBlock');
 Route::get('/usuarios-publicate/{id}/edit', [UsuarioPublicateController::class, 'edit'])->name('usuarios_publicate.edit');
 Route::put('/usuarios-publicate/{id}', [UsuarioPublicateController::class, 'update'])->name('usuarios_publicate.update');
 Route::post('/usuarios-publicate/eliminar-foto', [UsuarioPublicateController::class, 'eliminarFoto'])->name('usuarios_publicate.eliminarFoto');
@@ -136,6 +139,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/estados/marcar-visto', [InicioController::class, 'marcarComoVisto'])->name('estados.marcar-visto');
     Route::post('/favorite/{id}', [PerfilController::class, 'toggleFavorite'])->name('favorite.toggle');
     Route::get('/mis-favoritos', [PerfilController::class, 'showFavorites'])->name('favoritos.show');
+    
 });
 
 Route::get('/usuario/{id}', [PerfilController::class, 'getUsuario'])->name('usuario.get');

@@ -1,31 +1,50 @@
 @extends('layouts.app')
 
 @php
-$pageTitle = $usuarioPublicate->fantasia . ' Escort ' . 
-    ($usuarioPublicate->categorias ? ucfirst(strtolower($usuarioPublicate->categorias)) . ' ' : '') . 
-    'en ' . $usuarioPublicate->ubicacion . ' | OnlyEscorts';
+$pageTitle = $usuarioPublicate->fantasia . ' Escort ' .
+($usuarioPublicate->categorias ? ucfirst(strtolower($usuarioPublicate->categorias)) . ' ' : '') .
+'en ' . $usuarioPublicate->ubicacion . ' | OnlyEscorts';
 @endphp
 
 @section('content')
 
 <div class="escortperfil-container">
-    <!-- Sección del Banner con nombre superpuesto -->
     <header class="escortperfil-banner">
         <div class="escortperfil-swiper">
             <div class="escortperfil-swiper-wrapper swiper-wrapper">
                 @php
                 $fotos = json_decode($usuarioPublicate->fotos, true);
-                $fotos = is_array($fotos) ? $fotos : [];
+                $blockedImages = json_decode($usuarioPublicate->blocked_images, true);
+
+                // Solo aplicamos el reemplazo si el usuario NO está autenticado
+                if (!Auth::check()) {
+                foreach ($fotos as $key => $foto) {
+                if (in_array($foto, $blockedImages)) {
+                $fotos[$key] = 'Exclusivo-para-miembros.png';
+                }
+                }
+                }
+                // Si está autenticado, mostramos todas las fotos originales
                 @endphp
+
                 @foreach($fotos as $foto)
                 <div class="escortperfil-swiper-slide swiper-slide">
-                <img src="{{ asset("storage/chicas/{$usuarioPublicate->id}/{$foto}") }}"
-                    alt="Foto de {{ $usuarioPublicate->fantasia }}"
-                    class="escortperfil-banner-img"
-                    onclick="openEscortModal(this.src)">
-            </div>
+                    @if($foto === 'Exclusivo-para-miembros.png')
+                    <img src="{{ asset('storage/chicas/Exclusivo-para-miembros.png') }}"
+                        alt="Contenido exclusivo"
+                        class="escortperfil-banner-img"
+                        onclick="openEscortModal(this.src)">
+                    @else
+                    <img src="{{ asset("storage/chicas/{$usuarioPublicate->id}/{$foto}") }}"
+                        alt="Foto de {{ $usuarioPublicate->fantasia }}"
+                        class="escortperfil-banner-img"
+                        onclick="openEscortModal(this.src)">
+                    @endif
+                </div>
                 @endforeach
+
             </div>
+
             <!-- Botones de navegación -->
             <div class="escortperfil-swiper-button-prev carousel-control prev">&lt;</div>
             <div class="escortperfil-swiper-button-next carousel-control next">&gt;</div>
@@ -41,10 +60,10 @@ $pageTitle = $usuarioPublicate->fantasia . ' Escort ' .
 
 
     <div class="escortperfil-modal-backdrop" id="escortperfilModalBackdrop" onclick="closeEscortModal()"></div>
-<div class="escortperfil-modal" id="escortperfilImageModal">
-    <button class="escortperfil-modal-close" onclick="closeEscortModal()">×</button>
-    <img class="escortperfil-modal-image" id="escortperfilModalImage" src="" alt="Imagen ampliada">
-</div>
+    <div class="escortperfil-modal" id="escortperfilImageModal">
+        <button class="escortperfil-modal-close" onclick="closeEscortModal()">×</button>
+        <img class="escortperfil-modal-image" id="escortperfilModalImage" src="" alt="Imagen ampliada">
+    </div>
 
     <div class="escortperfil-info-bar">
         <div class="escortperfil-info-item">
@@ -86,13 +105,13 @@ $pageTitle = $usuarioPublicate->fantasia . ' Escort ' .
 
     <!-- Botón que abre el modal -->
     <button class="share-button" onclick="openShareModal()">
-    <div class="icon-wrapper">
-        <img src="/images/share-arrows-svgrepo-com.svg" alt="Share icon" class="share-icon">
-    </div>
-    <div class="text-wrapper">
-        COMPARTIR<br>PERFIL
-    </div>
-</button>
+        <div class="icon-wrapper">
+            <img src="/images/share-arrows-svgrepo-com.svg" alt="Share icon" class="share-icon">
+        </div>
+        <div class="text-wrapper">
+            COMPARTIR<br>PERFIL
+        </div>
+    </button>
 
 
     <!-- Modal de compartir -->
@@ -127,10 +146,15 @@ $pageTitle = $usuarioPublicate->fantasia . ' Escort ' .
 
     <!-- Breadcrumb -->
     <div class="escortperfil-breadcrumb">
-        <a href="/">Inicio</a> /
-        <a href="{{ strtolower($usuarioPublicate->ubicacion) }}">Escorts en {{ $usuarioPublicate->ubicacion }}</a> /
+        <a href="/">Inicio</a>
+        <span class="separator">/</span>
+        <a href="{{ strtolower($usuarioPublicate->ubicacion) }}">Escorts en {{ $usuarioPublicate->ubicacion }}</a>
+        <span class="separator">/</span>
+        <a href="{{ strtolower($usuarioPublicate->categorias) }}">{{ $usuarioPublicate->categorias }}</a>
+        <span class="separator">/</span>
         <span>{{ $usuarioPublicate->fantasia }}</span>
     </div>
+
     <div class="escortperfil-side-section">
         <div class="escortperfil-actions">
             <a href="https://wa.me/{{ $usuarioPublicate->telefono }}" class="escortperfil-btn disponible" target="_blank">

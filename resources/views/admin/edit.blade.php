@@ -238,177 +238,177 @@
                 </div>
             </div>
             <div class="admin-form-group">
-    <div class="admin-services-wrapper">
-        <label class="admin-services-label">Servicios <span class="required-asterisk">*</span></label>
-        <div class="publicate-services-grid">
-            @php
-            $serviciosActuales = json_decode($usuario->servicios, true) ?? [];
-            
-            // Array asociativo de valores normalizados => textos de visualización
-            $serviciosMapping = [
-                'Anal' => 'Anal',
-                'Atencion a domicilio' => 'Atención a domicilio',
-                'Atencion en hoteles' => 'Atención en hoteles',
-                'Baile erotico' => 'Baile Erótico',
-                'Besos' => 'Besos',
-                'Cambio de rol' => 'Cambio de rol',
-                'Departamento propio' => 'Departamento Propio',
-                'Disfraces' => 'Disfraces',
-                'Ducha erotica' => 'Ducha Erótica',
-                'Eventos y cenas' => 'Eventos y Cenas',
-                'Eyaculacion cuerpo' => 'Eyaculación Cuerpo',
-                'Eyaculacion facial' => 'Eyaculación Facial',
-                'Hetero' => 'Hetero',
-                'Juguetes' => 'Juguetes',
-                'Lesbico' => 'Lésbico',
-                'Lluvia dorada' => 'Lluvia dorada',
-                'Masaje erotico' => 'Masaje Erótico',
-                'Masaje prostatico' => 'Masaje prostático',
-                'Masaje tantrico' => 'Masaje Tántrico',
-                'Masaje thai' => 'Masaje Thai',
-                'Masajes con final feliz' => 'Masajes con final feliz',
-                'Masajes desnudos' => 'Masajes desnudos',
-                'Masajes eroticos' => 'Masajes Eróticos',
-                'Masajes para hombres' => 'Masajes para hombres',
-                'Masajes sensitivos' => 'Masajes sensitivos',
-                'Masajes sexuales' => 'Masajes sexuales',
-                'Masturbacion rusa' => 'Masturbación Rusa',
-                'Oral americana' => 'Oral Americana',
-                'Oral con preservativo' => 'Oral con preservativo',
-                'Oral sin preservativo' => 'Oral sin preservativo',
-                'Orgias' => 'Orgías',
-                'Parejas' => 'Parejas',
-                'Trio' => 'Trío'
-            ];
-            @endphp
+                <div class="admin-services-wrapper">
+                    <label class="admin-services-label">Servicios <span class="required-asterisk">*</span></label>
+                    <div class="publicate-services-grid">
+                        @php
+                        $serviciosActuales = json_decode($usuario->servicios, true) ?? [];
 
-            @foreach($serviciosMapping as $valorNormalizado => $textoMostrado)
-                <label class="admin-service-item">
-                    <input type="checkbox" 
-                           name="servicios[]" 
-                           value="{{ $valorNormalizado }}"
-                           {{ in_array($valorNormalizado, $serviciosActuales) ? 'checked' : '' }}>
-                    <span>{{ $textoMostrado }}</span>
-                </label>
-            @endforeach
-        </div>
-    </div>
-</div>
+                        // Array asociativo de valores normalizados => textos de visualización
+                        $serviciosMapping = [
+                        'Anal' => 'Anal',
+                        'Atencion a domicilio' => 'Atención a domicilio',
+                        'Atencion en hoteles' => 'Atención en hoteles',
+                        'Baile erotico' => 'Baile Erótico',
+                        'Besos' => 'Besos',
+                        'Cambio de rol' => 'Cambio de rol',
+                        'Departamento propio' => 'Departamento Propio',
+                        'Disfraces' => 'Disfraces',
+                        'Ducha erotica' => 'Ducha Erótica',
+                        'Eventos y cenas' => 'Eventos y Cenas',
+                        'Eyaculacion cuerpo' => 'Eyaculación Cuerpo',
+                        'Eyaculacion facial' => 'Eyaculación Facial',
+                        'Hetero' => 'Hetero',
+                        'Juguetes' => 'Juguetes',
+                        'Lesbico' => 'Lésbico',
+                        'Lluvia dorada' => 'Lluvia dorada',
+                        'Masaje erotico' => 'Masaje Erótico',
+                        'Masaje prostatico' => 'Masaje prostático',
+                        'Masaje tantrico' => 'Masaje Tántrico',
+                        'Masaje thai' => 'Masaje Thai',
+                        'Masajes con final feliz' => 'Masajes con final feliz',
+                        'Masajes desnudos' => 'Masajes desnudos',
+                        'Masajes eroticos' => 'Masajes Eróticos',
+                        'Masajes para hombres' => 'Masajes para hombres',
+                        'Masajes sensitivos' => 'Masajes sensitivos',
+                        'Masajes sexuales' => 'Masajes sexuales',
+                        'Masturbacion rusa' => 'Masturbación Rusa',
+                        'Oral americana' => 'Oral Americana',
+                        'Oral con preservativo' => 'Oral con preservativo',
+                        'Oral sin preservativo' => 'Oral sin preservativo',
+                        'Orgias' => 'Orgías',
+                        'Parejas' => 'Parejas',
+                        'Trio' => 'Trío'
+                        ];
+                        @endphp
 
-<div class="admin-form-group">
-    <div class="admin-services-wrapper">
-        <label class="admin-services-label">Servicios Adicionales<span class="required-asterisk">*</span></label>
-        <div class="publicate-services-grid">
-            @php
-            $serviciosAdicionalesActuales = json_decode($usuario->servicios_adicionales, true) ?? [];
-            
-            // Array asociativo de valores normalizados => textos de visualización
-            $serviciosAdicionalesMapping = [
-                'Anal' => 'Anal',
-                'Atencion a domicilio' => 'Atención a domicilio',
-                'Atencion en hoteles' => 'Atención en hoteles',
-                'Baile erotico' => 'Baile Erótico',
-                'Besos' => 'Besos',
-                'Cambio de rol' => 'Cambio de rol',
-                'Departamento propio' => 'Departamento Propio',
-                'Disfraces' => 'Disfraces',
-                'Ducha erotica' => 'Ducha Erótica',
-                'Eventos y cenas' => 'Eventos y Cenas',
-                'Eyaculacion cuerpo' => 'Eyaculación Cuerpo',
-                'Eyaculacion facial' => 'Eyaculación Facial',
-                'Hetero' => 'Hetero',
-                'Juguetes' => 'Juguetes',
-                'Lesbico' => 'Lésbico',
-                'Lluvia dorada' => 'Lluvia dorada',
-                'Masaje erotico' => 'Masaje Erótico',
-                'Masaje prostatico' => 'Masaje prostático',
-                'Masaje tantrico' => 'Masaje Tántrico',
-                'Masaje thai' => 'Masaje Thai',
-                'Masajes con final feliz' => 'Masajes con final feliz',
-                'Masajes desnudos' => 'Masajes desnudos',
-                'Masajes eroticos' => 'Masajes Eróticos',
-                'Masajes para hombres' => 'Masajes para hombres',
-                'Masajes sensitivos' => 'Masajes sensitivos',
-                'Masajes sexuales' => 'Masajes sexuales',
-                'Masturbacion rusa' => 'Masturbación Rusa',
-                'Oral americana' => 'Oral Americana',
-                'Oral con preservativo' => 'Oral con preservativo',
-                'Oral sin preservativo' => 'Oral sin preservativo',
-                'Orgias' => 'Orgías',
-                'Parejas' => 'Parejas',
-                'Trio' => 'Trío'
-            ];
-            @endphp
+                        @foreach($serviciosMapping as $valorNormalizado => $textoMostrado)
+                        <label class="admin-service-item">
+                            <input type="checkbox"
+                                name="servicios[]"
+                                value="{{ $valorNormalizado }}"
+                                {{ in_array($valorNormalizado, $serviciosActuales) ? 'checked' : '' }}>
+                            <span>{{ $textoMostrado }}</span>
+                        </label>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
 
-            @foreach($serviciosAdicionalesMapping as $valorNormalizado => $textoMostrado)
-                <label class="admin-service-item">
-                    <input type="checkbox" 
-                           name="servicios_adicionales[]" 
-                           value="{{ $valorNormalizado }}"
-                           {{ in_array($valorNormalizado, $serviciosAdicionalesActuales) ? 'checked' : '' }}>
-                    <span>{{ $textoMostrado }}</span>
-                </label>
-            @endforeach
-        </div>
-    </div>
-</div>
+            <div class="admin-form-group">
+                <div class="admin-services-wrapper">
+                    <label class="admin-services-label">Servicios Adicionales<span class="required-asterisk">*</span></label>
+                    <div class="publicate-services-grid">
+                        @php
+                        $serviciosAdicionalesActuales = json_decode($usuario->servicios_adicionales, true) ?? [];
 
-<div class="admin-form-group">
-    <div class="admin-services-wrapper">
-        <label class="admin-services-label">Atributos<span class="required-asterisk">*</span></label>
-        <div class="publicate-services-grid">
-            @php
-            $atributosActuales = json_decode($usuario->atributos, true) ?? [];
-            
-            // Array asociativo de valores normalizados => textos de visualización
-            $atributosMapping = [
-                'Busto grande' => 'Busto Grande',
-                'Busto mediano' => 'Busto Mediano',
-                'Busto pequeño' => 'Busto Pequeño',
-                'Cara visible' => 'Cara Visible',
-                'Cola grande' => 'Cola Grande',
-                'Cola mediana' => 'Cola Mediana',
-                'Cola pequeña' => 'Cola Pequeña',
-                'Con video' => 'Con Video',
-                'Contextura delgada' => 'Contextura Delgada',
-                'Contextura grande' => 'Contextura Grande',
-                'Contextura mediana' => 'Contextura Mediana',
-                'Depilacion full' => 'Depilación Full',
-                'Depto propio' => 'Depto Propio',
-                'En promocion' => 'En Promoción',
-                'English' => 'English',
-                'Escort independiente' => 'Escort Independiente',
-                'Español' => 'Español',
-                'Estatura alta' => 'Estatura Alta',
-                'Estatura mediana' => 'Estatura Mediana',
-                'Estatura pequeña' => 'Estatura Pequeña',
-                'Hentai' => 'Hentai',
-                'Morena' => 'Morena',
-                'Mulata' => 'Mulata',
-                'No fuma' => 'No fuma',
-                'Ojos claros' => 'Ojos Claros',
-                'Ojos oscuros' => 'Ojos Oscuros',
-                'Peliroja' => 'Peliroja',
-                'Portugues' => 'Portugues',
-                'Relato erotico' => 'Relato Erótico',
-                'Rubia' => 'Rubia',
-                'Tatuajes' => 'Tatuajes',
-                'Trigueña' => 'Trigueña'
-            ];
-            @endphp
+                        // Array asociativo de valores normalizados => textos de visualización
+                        $serviciosAdicionalesMapping = [
+                        'Anal' => 'Anal',
+                        'Atencion a domicilio' => 'Atención a domicilio',
+                        'Atencion en hoteles' => 'Atención en hoteles',
+                        'Baile erotico' => 'Baile Erótico',
+                        'Besos' => 'Besos',
+                        'Cambio de rol' => 'Cambio de rol',
+                        'Departamento propio' => 'Departamento Propio',
+                        'Disfraces' => 'Disfraces',
+                        'Ducha erotica' => 'Ducha Erótica',
+                        'Eventos y cenas' => 'Eventos y Cenas',
+                        'Eyaculacion cuerpo' => 'Eyaculación Cuerpo',
+                        'Eyaculacion facial' => 'Eyaculación Facial',
+                        'Hetero' => 'Hetero',
+                        'Juguetes' => 'Juguetes',
+                        'Lesbico' => 'Lésbico',
+                        'Lluvia dorada' => 'Lluvia dorada',
+                        'Masaje erotico' => 'Masaje Erótico',
+                        'Masaje prostatico' => 'Masaje prostático',
+                        'Masaje tantrico' => 'Masaje Tántrico',
+                        'Masaje thai' => 'Masaje Thai',
+                        'Masajes con final feliz' => 'Masajes con final feliz',
+                        'Masajes desnudos' => 'Masajes desnudos',
+                        'Masajes eroticos' => 'Masajes Eróticos',
+                        'Masajes para hombres' => 'Masajes para hombres',
+                        'Masajes sensitivos' => 'Masajes sensitivos',
+                        'Masajes sexuales' => 'Masajes sexuales',
+                        'Masturbacion rusa' => 'Masturbación Rusa',
+                        'Oral americana' => 'Oral Americana',
+                        'Oral con preservativo' => 'Oral con preservativo',
+                        'Oral sin preservativo' => 'Oral sin preservativo',
+                        'Orgias' => 'Orgías',
+                        'Parejas' => 'Parejas',
+                        'Trio' => 'Trío'
+                        ];
+                        @endphp
 
-            @foreach($atributosMapping as $valorNormalizado => $textoMostrado)
-                <label class="admin-service-item">
-                    <input type="checkbox" 
-                           name="atributos[]" 
-                           value="{{ $valorNormalizado }}"
-                           {{ in_array($valorNormalizado, $atributosActuales) ? 'checked' : '' }}>
-                    <span>{{ $textoMostrado }}</span>
-                </label>
-            @endforeach
-        </div>
-    </div>
-</div>
+                        @foreach($serviciosAdicionalesMapping as $valorNormalizado => $textoMostrado)
+                        <label class="admin-service-item">
+                            <input type="checkbox"
+                                name="servicios_adicionales[]"
+                                value="{{ $valorNormalizado }}"
+                                {{ in_array($valorNormalizado, $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>{{ $textoMostrado }}</span>
+                        </label>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-form-group">
+                <div class="admin-services-wrapper">
+                    <label class="admin-services-label">Atributos<span class="required-asterisk">*</span></label>
+                    <div class="publicate-services-grid">
+                        @php
+                        $atributosActuales = json_decode($usuario->atributos, true) ?? [];
+
+                        // Array asociativo de valores normalizados => textos de visualización
+                        $atributosMapping = [
+                        'Busto grande' => 'Busto Grande',
+                        'Busto mediano' => 'Busto Mediano',
+                        'Busto pequeño' => 'Busto Pequeño',
+                        'Cara visible' => 'Cara Visible',
+                        'Cola grande' => 'Cola Grande',
+                        'Cola mediana' => 'Cola Mediana',
+                        'Cola pequeña' => 'Cola Pequeña',
+                        'Con video' => 'Con Video',
+                        'Contextura delgada' => 'Contextura Delgada',
+                        'Contextura grande' => 'Contextura Grande',
+                        'Contextura mediana' => 'Contextura Mediana',
+                        'Depilacion full' => 'Depilación Full',
+                        'Depto propio' => 'Depto Propio',
+                        'En promocion' => 'En Promoción',
+                        'English' => 'English',
+                        'Escort independiente' => 'Escort Independiente',
+                        'Español' => 'Español',
+                        'Estatura alta' => 'Estatura Alta',
+                        'Estatura mediana' => 'Estatura Mediana',
+                        'Estatura pequeña' => 'Estatura Pequeña',
+                        'Hentai' => 'Hentai',
+                        'Morena' => 'Morena',
+                        'Mulata' => 'Mulata',
+                        'No fuma' => 'No fuma',
+                        'Ojos claros' => 'Ojos Claros',
+                        'Ojos oscuros' => 'Ojos Oscuros',
+                        'Peliroja' => 'Peliroja',
+                        'Portugues' => 'Portugues',
+                        'Relato erotico' => 'Relato Erótico',
+                        'Rubia' => 'Rubia',
+                        'Tatuajes' => 'Tatuajes',
+                        'Trigueña' => 'Trigueña'
+                        ];
+                        @endphp
+
+                        @foreach($atributosMapping as $valorNormalizado => $textoMostrado)
+                        <label class="admin-service-item">
+                            <input type="checkbox"
+                                name="atributos[]"
+                                value="{{ $valorNormalizado }}"
+                                {{ in_array($valorNormalizado, $atributosActuales) ? 'checked' : '' }}>
+                            <span>{{ $textoMostrado }}</span>
+                        </label>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
 
             <div class="form-group">
                 <label for="cuentanos">Cuéntanos sobre ti</label>
@@ -517,7 +517,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            
                             <!-- Fotos Adicionales -->
                             <div>
                                 <h6 class="border-bottom pb-2">Fotos/Videos Adicionales</h6>
@@ -527,8 +527,16 @@
 
                                     <div class="fotos-actuales" id="previewContainer" data-user-id="{{ $usuario->id }}">
                                         @if(!empty(json_decode($usuario->fotos)))
-                                        @foreach(array_slice(json_decode($usuario->fotos) ?? [], 1) as $foto)
-                                        <div class="publicate-preview-item" data-foto="{{ $foto }}" data-user-id="{{ $usuario->id }}">
+                                        @foreach(array_slice(json_decode($usuario->fotos), 1) as $foto)
+                                        <div class="publicate-preview-item"
+                                            data-foto="{{ $foto }}"
+                                            data-user-id="{{ $usuario->id }}"
+                                            data-position="{{ json_decode($usuario->foto_positions, true)[$foto] ?? 'center' }}">
+
+                                            <div class="content-overlay" style="display: {{ in_array($foto, json_decode($usuario->blocked_images ?? '[]', true)) ? 'flex' : 'none' }}">
+                                                <span>Contenido bloqueado</span>
+                                            </div>
+
                                             @php
                                             $extension = pathinfo($foto, PATHINFO_EXTENSION);
                                             $isVideo = in_array(strtolower($extension), ['mp4', 'webm', 'ogg']);
@@ -546,7 +554,13 @@
                                                 class="foto-preview"
                                                 onerror="this.src='{{ asset('images/default-image.png') }}'">
                                             @endif
+
                                             <button type="button" class="publicate-remove-button" onclick="removeExistingPhoto('{{ $foto }}', this)">&times;</button>
+                                            <button type="button"
+                                                class="publicate-block-button {{ in_array($foto, json_decode($usuario->blocked_images ?? '[]', true)) ? 'active' : '' }}"
+                                                onclick="toggleContentBlock(this)">
+                                                {{ in_array($foto, json_decode($usuario->blocked_images ?? '[]', true)) ? 'Desbloquear' : 'Bloquear' }}
+                                            </button>
                                         </div>
                                         @endforeach
                                         @endif

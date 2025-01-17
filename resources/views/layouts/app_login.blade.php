@@ -1831,4 +1831,48 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+<script>
+function toggleContentBlock(button) {
+    const previewItem = button.closest('.publicate-preview-item');
+    const overlay = previewItem.querySelector('.content-overlay');
+    const userId = previewItem.dataset.userId;
+    const foto = previewItem.dataset.foto;
+    
+    const isCurrentlyBlocked = overlay.style.display === 'flex';
+    
+    fetch('/usuarios-publicate/toggle-image-block', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+            user_id: userId,
+            image: foto,
+            blocked: !isCurrentlyBlocked // Invertimos el estado actual
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (overlay.style.display === 'none' || overlay.style.display === '') {
+                overlay.style.display = 'flex';
+                button.textContent = 'Desbloquear';
+                button.classList.add('active');
+            } else {
+                overlay.style.display = 'none';
+                button.textContent = 'Bloquear';
+                button.classList.remove('active');
+            }
+            console.log('Estado actual:', data); // Para debug
+        } else {
+            alert('Error al actualizar el estado de bloqueo');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al procesar la solicitud');
+    });
+}
+</script>
 </html>

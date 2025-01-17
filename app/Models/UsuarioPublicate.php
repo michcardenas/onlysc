@@ -36,7 +36,9 @@ class UsuarioPublicate extends Model
         'nacionalidad', // Nueva columna agregada
         'atributos',    // Nueva columna agregada
         'foto_positions',
+        'blocked_images',
     ];
+
 
     
     /**

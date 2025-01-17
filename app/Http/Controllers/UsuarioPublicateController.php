@@ -475,4 +475,43 @@ class UsuarioPublicateController extends Controller
         }
     }
 
+    public function toggleImageBlock(Request $request)
+    {
+        try {
+            $usuario = UsuarioPublicate::findOrFail($request->user_id);
+            
+            // Inicializar blocked_images como array si es null
+            $blockedImages = json_decode($usuario->blocked_images, true) ?? [];
+            
+            if ($request->blocked) {
+                // Agregar imagen al array si no existe
+                if (!in_array($request->image, $blockedImages)) {
+                    $blockedImages[] = $request->image;
+                }
+            } else {
+                // Remover imagen del array si existe
+                $blockedImages = array_values(array_filter($blockedImages, function($img) use ($request) {
+                    return $img !== $request->image;
+                }));
+            }
+            
+            $usuario->blocked_images = json_encode($blockedImages);
+            $usuario->save();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Estado de bloqueo actualizado',
+                'blocked_images' => $blockedImages,
+                'estado_blocked' => $request->blocked, // Para debug
+                'imagen' => $request->image // Para debug
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error en toggleImageBlock: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar el estado: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
 }
