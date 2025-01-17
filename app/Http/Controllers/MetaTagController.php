@@ -26,6 +26,8 @@ class MetaTagController extends Controller
                 'heading_h2_secondary' => 'nullable|max:255',
                 'additional_text' => 'nullable',
                 'additional_text_more' => 'nullable',
+                'texto_zonas' => 'nullable', // Validación para texto_zonas
+                'titulo_tarjetas' => 'nullable|max:255', // Validación para titulo_tarjetas
                 'fondo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             ]);
     

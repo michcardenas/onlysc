@@ -36,7 +36,9 @@ class HomeController extends Controller
                'heading_h2_secondary' => '', // Agregado nuevo campo
             'additional_text' => '',
             'additional_text_more' => '',
-            'fondo' => '' // Agregado el nuevo campo fondo
+            'fondo' => '',
+            'texto_zonas' => '', // Agregado nuevo campo
+            'titulo_tarjetas' => '' // Agregado nuevo campo
             ]);
         }
     

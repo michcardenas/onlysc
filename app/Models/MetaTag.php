@@ -22,6 +22,8 @@ class MetaTag extends Model
         'heading_h2_secondary', 
         'additional_text',
         'additional_text_more',
-        'fondo'
+        'fondo',
+        'texto_zonas', // Nueva columna
+        'titulo_tarjetas'
     ];
 }

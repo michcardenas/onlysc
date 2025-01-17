@@ -444,6 +444,37 @@ select.form-control option {
         </div>
     @enderror
 </div>
+<!-- Texto Zonas -->
+<div class="form-group template-group">
+    <label for="texto_zonas" class="text-white">Texto Zonas</label>
+    <textarea class="form-control bg-dark text-white @error('texto_zonas') is-invalid @enderror"
+              id="texto_zonas"
+              name="texto_zonas"
+              rows="4"
+              placeholder="Ingrese el texto para las zonas">{{ old('texto_zonas', $meta->texto_zonas ?? '') }}</textarea>
+    @error('texto_zonas')
+        <div class="invalid-feedback">
+            {{ $message }}
+        </div>
+    @enderror
+</div>
+
+<!-- Título Tarjetas -->
+<div class="form-group template-group">
+    <label for="titulo_tarjetas" class="text-white">Título Tarjetas</label>
+    <input type="text"
+           class="form-control bg-dark text-white @error('titulo_tarjetas') is-invalid @enderror"
+           id="titulo_tarjetas"
+           name="titulo_tarjetas"
+           placeholder="Ingrese el título para las tarjetas"
+           value="{{ old('titulo_tarjetas', $meta->titulo_tarjetas ?? '') }}">
+    @error('titulo_tarjetas')
+        <div class="invalid-feedback">
+            {{ $message }}
+        </div>
+    @enderror
+</div>
+
 <!-- Imagen de Fondo -->
 <div class="form-group template-group">
     <label for="fondo" class="text-white">Imagen de Fondo</label>

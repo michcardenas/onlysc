@@ -73,7 +73,7 @@
 }
 
 .zona-card {
-    background: rgba(255, 255, 255, 0.1); /* Fondo semitransparente */
+    background: rgba(255, 255, 255, 0.5); /* Fondo semitransparente */
     color: #fff;
     padding: 15px;
     border-radius: 12px;
@@ -92,13 +92,22 @@
 }
 
 .zona-card h3 {
-    font-size: 1.5em;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-    margin-bottom: 10px;
-    padding-bottom: 5px;
+    font-size: 1.5rem;
     font-weight: bold;
+    margin-bottom: 0.5rem;
+    text-align: center;
 }
-
+.texto-adicional {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8); /* Ajustar color del texto adicional */
+    margin-bottom: 1rem;
+    text-align: center;
+}
+.divider {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.3); /* Línea divisoria semitransparente */
+    margin: 1rem 0;
+}
 .zona-card ul {
     list-style: none;
     padding: 0;
@@ -107,7 +116,20 @@
 .zona-card ul li {
     margin-bottom: 10px;
 }
+.ciudades {
+    font-size: 0.9rem;
+    text-align: left;
+    color: rgba(255, 255, 255, 0.9); /* Ajustar color del texto de las ciudades */
+}
 
+.ciudades a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+}
+
+.ciudades a:hover {
+    text-decoration: underline;
+}
 .zona-card ul li a {
     color: #fff; /* Texto blanco */
     text-decoration: none;
@@ -267,6 +289,22 @@
 }
 
 /* Estilos de las tarjetas */
+.zona-card p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.zona-card a {
+    color:rgb(242, 243, 243); /* Color azul para los enlaces */
+    text-decoration: none;
+}
+
+.zona-card a:hover {
+    text-decoration: underline;
+    color: #e00037;
+}
+
 .zona-card {
     flex: 0 0 auto;
     padding: 20px;
@@ -274,7 +312,7 @@
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 /* Estilos base del carrusel */
@@ -444,14 +482,24 @@
             @if(isset($ciudadesPorZona[$zona]) && $ciudadesPorZona[$zona]->isNotEmpty())
                 <div class="swiper-slide">
                     <div class="zona-card glass">
+                        <!-- Título de la zona -->
                         <h3>{{ $zona }}</h3>
-                        <ul>
-                            @foreach($ciudadesPorZona[$zona]->sortBy('posicion') as $ciudad)
-                                <li>
-                                    <a href="/escorts-{{ strtolower($ciudad->url) }}">{{ $ciudad->nombre }}</a>
-                                </li>
+                        
+                        <!-- Texto adicional debajo del título -->
+                        <p class="texto-adicional">
+                            {{ $meta->texto_zonas }}
+                        </p>
+
+                        <!-- Línea divisoria -->
+                        <hr class="divider" />
+
+                        <!-- Ciudades en formato separado por comas -->
+                        <p class="ciudades">
+                            @foreach($ciudadesPorZona[$zona]->sortBy('posicion') as $index => $ciudad)
+                                <a href="/escorts-{{ strtolower($ciudad->url) }}">{{ $ciudad->nombre }}</a>
+                                @if(!$loop->last), @endif
                             @endforeach
-                        </ul>
+                        </p>
                     </div>
                 </div>
             @endif
@@ -463,6 +511,7 @@
     <div class="swiper-button-prev zonas-prev"></div>
     <div class="swiper-button-next zonas-next"></div>
 </div>
+
 
         <!-- Contenedor para las tarjetas -->
         <div class="cards-container">
