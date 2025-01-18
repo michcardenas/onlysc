@@ -204,6 +204,11 @@
 }
 
 @media (max-width: 768px) {
+    .foro-search-container {
+   
+    margin: 2rem 0px 1rem 1rem;
+ 
+}
     
     .foro-card-image img {
   
@@ -346,6 +351,65 @@
 });
 
 document.addEventListener('DOMContentLoaded', function() {
+    const searchBtn = document.getElementById('foro-search-btn');
+    const searchInput = document.getElementById('foro-search-input');
+
+    if (searchBtn && searchInput) {
+        searchBtn.addEventListener('click', function () {
+            const query = searchInput.value;
+
+            if (query.trim() !== '') {
+    fetch(`/buscar?q=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(foros => {
+            const resultsContainer = document.querySelector('.foro-grid'); // Seleccionamos el contenedor de tarjetas
+            resultsContainer.innerHTML = ''; // Limpiamos las tarjetas existentes
+
+            if (foros.length > 0) {
+                foros.forEach(foro => {
+                    // Crear la tarjeta con la misma estructura existente
+                    const foroElement = document.createElement('a');
+                    foroElement.href = `/foro/${foro.id}`;
+                    foroElement.classList.add('foro-card');
+                    foroElement.innerHTML = `
+                        <div class="foro-card-content">
+                            <h3 class="foro-card-title">${foro.titulo}</h3>
+                            <p class="foro-card-description">${foro.subtitulo}</p>
+                        </div>
+                        <div class="foro-card-image">
+                            ${
+                                foro.foto
+                                    ? `<img src="/storage/${foro.foto}" alt="${foro.titulo}">`
+                                    : `<img src="/images/default-foro.jpg" alt="Imagen por defecto">`
+                            }
+                        </div>
+                        <div class="foro-card-footer">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z"/>
+                            </svg>
+                            <span>Por: ${foro.nombre_usuario}</span>
+                            <span class="ml-2">${foro.fecha}</span>
+                        </div>
+                    `;
+                    // Añadimos la tarjeta al contenedor
+                    resultsContainer.appendChild(foroElement);
+                });
+            } else {
+                // Mostrar un mensaje si no hay resultados
+                resultsContainer.innerHTML = '<p>No se encontraron resultados.</p>';
+            }
+        })
+        .catch(error => console.error('Error al buscar:', error));
+}
+
+        });
+    } else {
+        console.error('No se encontraron los elementos necesarios');
+    }
+
+
+
+
     // Primero verificamos que existan los elementos necesarios
     const contenido = document.querySelector('.blog-text');
     const contenidosDinamicos = document.getElementById('contenidos-dinamicos');
@@ -421,6 +485,36 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+document.getElementById('foro-search-btn').addEventListener('click', function() {
+    const query = document.getElementById('foro-search-input').value;
+
+    if (query.trim() !== '') {
+        fetch(`/buscar?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(foros => {
+                const resultsContainer = document.getElementById('foro-results');
+                resultsContainer.innerHTML = ''; // Limpia los resultados previos
+
+                if (foros.length > 0) {
+                    foros.forEach(foro => {
+                        const foroElement = document.createElement('div');
+                        foroElement.classList.add('foro-card');
+                        foroElement.innerHTML = `
+                            <h3>${foro.titulo}</h3>
+                            <p>${foro.subtitulo}</p>
+                            <p>${foro.contenido}</p>
+                        `;
+                        resultsContainer.appendChild(foroElement);
+                    });
+                } else {
+                    resultsContainer.innerHTML = '<p>No se encontraron resultados.</p>';
+                }
+            })
+            .catch(error => console.error('Error al buscar:', error));
+    }
+});
+
 </script>
 
 
