@@ -366,4 +366,17 @@ class ForoController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
+    public function buscar(Request $request)
+{
+    $query = $request->input('q'); // Obtener el término de búsqueda
+
+    $foros = Foro::where('titulo', 'like', '%' . $query . '%')
+                ->orWhere('subtitulo', 'like', '%' . $query . '%')
+                ->orWhere('contenido', 'like', '%' . $query . '%')
+                ->get();
+
+    return response()->json($foros); // Devuelve los resultados en formato JSON
+}
+
 }

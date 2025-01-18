@@ -58,7 +58,7 @@
 .foro-search-container {
     width: 100%;
     max-width: 400px;
-    margin: 2rem 0px 1rem 16rem;
+    margin: 2rem 0px 1rem 6rem;
     position: relative;
     z-index: 10;
     grid-template-columns: 1fr 300px;

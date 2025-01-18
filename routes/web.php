@@ -92,6 +92,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/posts/{id}/toggle-fixed', [ForoController::class, 'toggleFixed'])->name('posts.toggle-fixed');
     });
 });
+Route::get('/buscar', [ForoController::class, 'buscar'])->name('foro.buscar');
 
 // Rutas para visualización pública
 Route::get('/blog', [BlogController::class, 'showBlog'])->name('blog');
