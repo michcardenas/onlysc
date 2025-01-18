@@ -2053,7 +2053,7 @@ video:not(.banner-img):not(.historia-circle video) {
 /* Contenedor del horario */
 .escortperfil-schedule {
     position: absolute;
-    right: 318px;
+    right: 4px;
     top: 784px;
     background-color: #fff;
     padding: 25px;
@@ -3837,7 +3837,8 @@ video:not(.banner-img):not(.historia-circle video) {
     padding: 2px 8px;
     cursor: pointer;
     font-size: 12px;
-    z-index: 20; /* Asegurarse que esté por encima del overlay */
+    z-index: 20;
+    /* Asegurarse que esté por encima del overlay */
 }
 
 .publicate-block-button.active {
@@ -3864,14 +3865,20 @@ video:not(.banner-img):not(.historia-circle video) {
     }
 
     .inicio-container {
-        /* max-width: 1200px; */
-        /* margin: auto; */
-        /* padding: 20px; */
+        max-width: 1280px;
+        margin: auto;
+        padding: 10px;
     }
 
     .estados-historias {
         padding: 15px 42px;
     }
+
+    .volvieronyprimera-card {
+        width: 307px;
+    }
+
+    
 }
 
 /* Grid para desktop */
@@ -4266,8 +4273,7 @@ video:not(.banner-img):not(.historia-circle video) {
         padding: 0;
     }
 
-    .escortperfil-breadcrumb {
-    }
+    .escortperfil-breadcrumb {}
 
     .escortperfil-btn.contactar {
         background-color: #e00037;
@@ -4930,7 +4936,7 @@ video:not(.banner-img):not(.historia-circle video) {
         font-size: 1.5em;
         line-height: 1;
     }
-    
+
     .share-button {
         top: 606px;
     }
@@ -4947,7 +4953,7 @@ video:not(.banner-img):not(.historia-circle video) {
     .escortperfil-swiper .carousel-control.prev {
         left: 5px;
     }
-    
+
     .escortperfil-swiper .carousel-control.next {
         right: 25px;
     }
@@ -4960,7 +4966,7 @@ video:not(.banner-img):not(.historia-circle video) {
     .escortperfil-schedule {
         margin: 12px 50px;
     }
-    
+
     .escortperfil-map-section {
         margin-top: 0px;
     }
@@ -5051,7 +5057,7 @@ video:not(.banner-img):not(.historia-circle video) {
         font-size: 1.5em;
         line-height: 1;
     }
-    
+
     .share-button {
         top: 606px;
     }
@@ -5068,7 +5074,7 @@ video:not(.banner-img):not(.historia-circle video) {
     .escortperfil-swiper .carousel-control.prev {
         left: 5px;
     }
-    
+
     .escortperfil-swiper .carousel-control.next {
         right: 25px;
     }
@@ -5081,7 +5087,7 @@ video:not(.banner-img):not(.historia-circle video) {
     .escortperfil-schedule {
         margin: 12px 58px;
     }
-    
+
     .escortperfil-map-section {
         margin-top: 0px;
     }
@@ -5111,7 +5117,7 @@ video:not(.banner-img):not(.historia-circle video) {
     .escortperfil-breadcrumb {
         margin: 50 20 20 12;
     }
-    
+
 }
 
 @media screen and (max-width: 413px) {
@@ -5191,7 +5197,7 @@ video:not(.banner-img):not(.historia-circle video) {
         font-size: 1.5em;
         line-height: 1;
     }
-    
+
     .share-button {
         top: 606px;
     }
@@ -5208,7 +5214,7 @@ video:not(.banner-img):not(.historia-circle video) {
     .escortperfil-swiper .carousel-control.prev {
         left: 5px;
     }
-    
+
     .escortperfil-swiper .carousel-control.next {
         right: 25px;
     }
@@ -5221,7 +5227,7 @@ video:not(.banner-img):not(.historia-circle video) {
     .escortperfil-schedule {
         margin: 12px 50px;
     }
-    
+
     .escortperfil-map-section {
         margin-top: 0px;
     }
@@ -5330,7 +5336,7 @@ video:not(.banner-img):not(.historia-circle video) {
         font-size: 1.5em;
         line-height: 1;
     }
-    
+
     .share-button {
         top: 606px;
     }
@@ -5347,7 +5353,7 @@ video:not(.banner-img):not(.historia-circle video) {
     .escortperfil-swiper .carousel-control.prev {
         left: 5px;
     }
-    
+
     .escortperfil-swiper .carousel-control.next {
         right: 25px;
     }
@@ -5360,7 +5366,7 @@ video:not(.banner-img):not(.historia-circle video) {
     .escortperfil-schedule {
         margin: 12px 54px;
     }
-    
+
     .escortperfil-map-section {
         margin-top: 0px;
     }
@@ -5479,7 +5485,7 @@ video:not(.banner-img):not(.historia-circle video) {
         font-size: 1.5em;
         line-height: 1;
     }
-    
+
     .share-button {
         top: 606px;
     }
@@ -5496,7 +5502,7 @@ video:not(.banner-img):not(.historia-circle video) {
     .escortperfil-swiper .carousel-control.prev {
         left: 5px;
     }
-    
+
     .escortperfil-swiper .carousel-control.next {
         right: 25px;
     }
@@ -5509,7 +5515,7 @@ video:not(.banner-img):not(.historia-circle video) {
     .escortperfil-schedule {
         margin: 12px 50px;
     }
-    
+
     .escortperfil-map-section {
         margin-top: 0px;
     }
@@ -5634,7 +5640,7 @@ video:not(.banner-img):not(.historia-circle video) {
         font-size: 1.5em;
         line-height: 1;
     }
-    
+
     .share-button {
         top: 606px;
         right: 190px;
@@ -5652,7 +5658,7 @@ video:not(.banner-img):not(.historia-circle video) {
     .escortperfil-swiper .carousel-control.prev {
         left: 5px;
     }
-    
+
     .escortperfil-swiper .carousel-control.next {
         right: 30px;
     }
@@ -5684,7 +5690,7 @@ video:not(.banner-img):not(.historia-circle video) {
         font-size: 0.95em;
         width: 155%;
     }
-    
+
     .escortperfil-map-section {
         margin-top: 0px;
     }
@@ -5776,7 +5782,7 @@ video:not(.banner-img):not(.historia-circle video) {
         font-size: 1.5em;
         line-height: 1;
     }
-    
+
     .share-button {
         top: 606px;
         right: 186px;
@@ -5794,7 +5800,7 @@ video:not(.banner-img):not(.historia-circle video) {
     .escortperfil-swiper .carousel-control.prev {
         left: 5px;
     }
-    
+
     .escortperfil-swiper .carousel-control.next {
         right: 35px;
     }
@@ -5808,7 +5814,7 @@ video:not(.banner-img):not(.historia-circle video) {
         margin: 0px 0px;
         width: 85%;
     }
-    
+
     .escortperfil-map-section {
         margin-top: 0px;
     }
@@ -5840,11 +5846,11 @@ video:not(.banner-img):not(.historia-circle video) {
     }
 }
 
-@media screen and (min-width: 1024px) and (max-width: 1439px) {
+@media screen and (min-width: 1024px) and (max-width: 1280px) {
     .inicio-container {
-        /* max-width: 960px; */
+        max-width: 1024px; 
         margin: auto;
-        /* padding: 0 2rem; */
+        padding: 10px; 
     }
 
 
@@ -5874,7 +5880,7 @@ video:not(.banner-img):not(.historia-circle video) {
     }
 
     .escortperfil-nombre {
-        left: 0px;
+        left: 40px;
     }
 
     .share-button {
@@ -5889,7 +5895,7 @@ video:not(.banner-img):not(.historia-circle video) {
         font-size: 14px;
         transition: transform 0.2s;
         position: absolute;
-        top: 626px;
+        top: 620px;
         right: 179px;
         flex-direction: column;
         min-width: 8px;
@@ -5924,7 +5930,7 @@ video:not(.banner-img):not(.historia-circle video) {
         outline: none;
         background: transparent;
         position: absolute;
-        top: 648px;
+        top: 641px;
         right: 39px;
         display: flex;
         flex-direction: column;
@@ -5942,10 +5948,120 @@ video:not(.banner-img):not(.historia-circle video) {
         /* O el ancho que prefieras */
         margin-bottom: 40px;
     }
-    
 
     /* Aquí van tus estilos específicos para 1024px */
 }
+
+@media screen and (min-width: 1093px) and (max-width: 1279px){
+    .inicio-container {
+        max-width: 1090px;
+        margin: auto;
+        padding: 10px;
+    }
+
+}
+
+@media screen and (min-width: 1281px) and (max-width: 1320px) {
+    .share-button {
+        right: 179px;
+    }
+
+    .escortperfil-actions {
+        right: 28px;
+    }
+
+    .inicio-container {
+        max-width: 1366px;
+        margin: auto;
+        padding: 10px;
+    }
+
+
+    .volvieronyprimera-card {
+        width: 307px;
+    }
+
+    .inicio-featured-card {
+        right: -1px;
+    }
+
+    /* Panel de chicas online */
+    .online-panel {
+        width: 200px;
+        background-color: transparent;
+        border-radius: 4px;
+        padding: 10px;
+        font-family: 'Montserrat', sans-serif;
+        position: absolute;
+        top: 824px;
+        right: -6px;
+        z-index: 10;
+    }
+
+    .escortperfil-nombre {
+        left: 14px;
+    }
+
+
+}
+
+/* Rango 1366px - 1439px */
+@media screen and (min-width: 1321px) and (max-width: 1439px) {
+    .share-button {
+        right: 179px;
+    }
+
+    .escortperfil-actions {
+        right: 28px;
+    }
+
+    .inicio-container {
+        max-width: 1360px;
+        margin: auto;
+        padding: 10px;
+    }
+
+    .volvieronyprimera-card {
+        position: relative;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        height: 204px;
+        background: #000;
+        width: 326px;
+    }
+
+    .inicio-featured-card {
+        right: 19px;
+    }
+
+    /* Panel de chicas online */
+    .online-panel {
+        width: 200px;
+        background-color: transparent;
+        border-radius: 4px;
+        padding: 10px;
+        font-family: 'Montserrat', sans-serif;
+        position: absolute;
+        top: 824px;
+        right: 10px;
+        z-index: 10;
+    }
+
+    .escortperfil-nombre {
+        left: 81px;
+    }
+
+    .share-button {
+        right: 200px;
+    }
+
+    .favorite-button {
+        right: 50px;
+    }
+
+}
+
+
 
 @media screen and (min-width: 1440px) and (max-width: 1919px) {
     .inicio-container {
@@ -6053,5 +6169,4 @@ video:not(.banner-img):not(.historia-circle video) {
         /* text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); */
         transition: transform 0.2s ease;
     }
-    
 }
