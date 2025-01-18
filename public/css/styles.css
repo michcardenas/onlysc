@@ -6111,62 +6111,24 @@ video:not(.banner-img):not(.historia-circle video) {
     }
 
     .share-button {
-        padding: 12px 20px;
-        border: none;
-        background: transparent;
-        color: #ffffff;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 14px;
-        transition: transform 0.2s;
-        position: absolute;
         top: 626px;
         right: 394px;
-        flex-direction: column;
-        min-width: 8px;
     }
 
     .escortperfil-actions {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        position: absolute;
         right: 230px;
         top: 730px;
-        /* Ajusta según necesites */
-        z-index: 3;
-        width: auto;
-        /* En lugar de un ancho fijo */
     }
 
     .escortperfil-schedule {
-        position: absolute;
         right: 205px;
         top: 784px;
-        background-color: #fff;
-        padding: 25px;
-        border-radius: 10px;
-        width: 340px;
-        margin-top: 52px;
     }
 
     .favorite-button {
-        border: none;
-        outline: none;
-        background: transparent;
-        position: absolute;
         top: 648px;
         right: 270px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        color: white;
-        text-align: center;
-        cursor: pointer;
-        z-index: 10;
         /* text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); */
-        transition: transform 0.2s ease;
     }
+
 }
