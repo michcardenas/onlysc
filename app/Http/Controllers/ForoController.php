@@ -12,6 +12,7 @@ use App\Models\Foro;
 use App\Models\Posts;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use App\Models\MetaTag;
 
 class ForoController extends Controller
 {
@@ -22,15 +23,19 @@ class ForoController extends Controller
             ->select('foro.*', 'users.name as nombre_usuario')
             ->leftJoin('users', 'foro.id_usuario', '=', 'users.id')
             ->orderBy('posicion', 'asc')
-            ->paginate(4); // Cambiado a paginate(4)
-            $foros->defaultView('vendor.pagination.default');
-
-        // Solo obtenemos las ciudades que necesita el foro
+            ->paginate(4);
+        $foros->defaultView('vendor.pagination.default');
+    
+        // Obtenemos las ciudades
         $ciudades = Ciudad::all();
+    
+        // Obtenemos la información de MetaTag para la página 'foro'
+        $metaTags = MetaTag::where('page', 'foro')->first();
     
         return view('foro', [
             'foros' => $foros,
-            'ciudades' => $ciudades
+            'ciudades' => $ciudades,
+            'metaTags' => $metaTags // Agregamos los metaTags a la vista
         ]);
     }
     

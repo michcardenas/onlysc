@@ -276,6 +276,7 @@
 .swiper {
     width: 100%;
     height: auto;
+    margin-bottom: 20px;
 }
 
 .swiper-wrapper {
@@ -510,6 +511,7 @@
 
 /* Diseño responsivo */
 @media (max-width: 768px) {
+
     .glass-container {
         flex-direction: column;
         align-items: center;
@@ -533,6 +535,13 @@
     .btn-glass {
         width: 100%; /* Botón ocupa todo el ancho en móvil */
     }
+    .meta-inicio-titulos .main-title {
+        font-size: 2rem;
+    }
+
+    .meta-inicio-titulos .title-secondary h2 {
+        font-size: 1.5rem;
+    }
 }
 /* Estilo del título */
 /* Estilo del título */
@@ -551,6 +560,79 @@
     color: #e63946; /* Cambia este color según tu diseño */
 }
 
+.meta-inicio-titulos h1{
+    font-size: 5rem;
+  
+}
+.meta-inicio-titulos h2 {
+    font-weight: normal;
+    max-width: 50rem;
+    margin: 0 auto;
+}
+.titulosec{
+    text-align: justify !important;
+
+}
+.meta-inicio-titulos {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.meta-inicio-titulos .main-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+
+
+
+.meta-inicio-titulos .title-secondary h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.4;
+    font-weight: normal;
+
+}
+.content{
+    background: #000;
+}
+.ciudades-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    justify-content: flex-start;
+}
+
+.ciudad-item {
+    width: calc(50% - 10px);
+    margin-bottom: 8px;
+}
+
+/* Centramos el último elemento cuando es impar */
+.ciudades-container .ciudad-item:last-child:nth-child(odd) {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+/* Aseguramos que los enlaces mantengan sus estilos */
+.ciudad-item a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ciudad-item a:hover {
+    text-decoration: underline;
+}
 
     </style>
 
@@ -562,39 +644,37 @@
     <p class="loading-text">onlyescorts.cl</p>
     </div>
 </div>
-    <header>
-        <div class="logo-container1">
-            <img src="{{ asset('images/logo_XL-2.png') }}" alt="Logo" class="logo1">
-        </div>
-    </header>
-
-    <!-- Contenedor del selector centrado -->
-    <main class="content">
-    <div class="meta-inicio-titulos">
-    @if(isset($meta))
-                @if($meta->heading_h1)
-                    <h1>{{ $meta->heading_h1 }}</h1>
-                @endif
-
-                @if($meta->heading_h2)
-                    <h2>{{ $meta->heading_h2 }}</h2>
-                @endif
-            @endif
+<header style="position: fixed; top: 0; left: 0; width: 100%; background-color: #000; z-index: 1000;">
+    <div class="logo-container1" style="padding-bottom: 10px; display: flex; justify-content: center; align-items: center;">
+        <img src="{{ asset('images/logo_XL-2.png') }}" alt="Logo" style="max-width: 200px; height: auto;">
     </div>
-        <div class="selector-container">
+</header>
+<div class="selector-container">
             <!-- El contenido del selector se carga desde la vista 'home.blade.php' -->
             @yield('selector')
         </div>
-        <div class="swiper swiper-zonas">
+        <div class="meta-inicio-titulos">
+    @if(isset($meta))
+        @if($meta->heading_h1)
+            <h1 class="main-title">{{ $meta->heading_h1 }}</h1>
+        @endif
+
+        @if($meta->heading_h2)
+            <div class="title-secondary">
+                <h2>{{ $meta->heading_h2 }}</h2>
+            </div>
+        @endif
+    @endif
+</div>
+
+<div class="swiper swiper-zonas">
     <div class="swiper-wrapper">
         @foreach(['Zona Norte', 'Zona Centro', 'Zona Sur'] as $zona)
             @if(isset($ciudadesPorZona[$zona]) && $ciudadesPorZona[$zona]->isNotEmpty())
                 <div class="swiper-slide">
                     <div class="zona-card glass">
-                        <!-- Título de la zona -->
                         <h3>{{ $zona }}</h3>
                         
-                        <!-- Texto adicional debajo del título -->
                         <p class="texto-adicional">
                             @if($zona === 'Zona Norte')
                                 {{ $meta->texto_zonas }}
@@ -604,28 +684,30 @@
                                 {{ $meta->texto_zonas_sur }}
                             @endif
                         </p>
-
-                        <!-- Línea divisoria -->
+                        
                         <hr class="divider" />
-
-                        <!-- Ciudades en formato separado por comas -->
-                        <p class="ciudades">
-                            @foreach($ciudadesPorZona[$zona]->sortBy('posicion') as $index => $ciudad)
-                                <a href="/escorts-{{ strtolower($ciudad->url) }}">{{ $ciudad->nombre }}</a>
-                                @if(!$loop->last), @endif
+                        
+                        <div class="ciudades-container">
+                            @foreach($ciudadesPorZona[$zona]->sortBy('posicion') as $ciudad)
+                                <div class="ciudad-item">
+                                    <a href="/escorts-{{ strtolower($ciudad->url) }}">{{ $ciudad->nombre }}</a>
+                                </div>
                             @endforeach
-                        </p>
+                        </div>
                     </div>
                 </div>
             @endif
         @endforeach
     </div>
-    <!-- Paginación -->
     <div class="swiper-pagination zonas-pagination"></div>
-    <!-- Botones de navegación -->
     <div class="swiper-button-prev zonas-prev"></div>
     <div class="swiper-button-next zonas-next"></div>
 </div>
+</div>
+    <!-- Contenedor del selector centrado -->
+    <main class="content" >
+   
+   
 
 <!-- titulo tarjetas aqui-->
         <!-- Contenedor para las tarjetas -->

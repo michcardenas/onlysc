@@ -37,9 +37,14 @@
             <label for="telefono">Teléfono</label>
         </div>
         <div class="publicate-input-wrapper">
-            <input type="text" id="ubicacion" name="ubicacion" placeholder=" " required>
-            <label for="ubicacion">Ubicación</label>
+            <select id="ubicacion" name="ubicacion" required class="styled-select">
+                <option value="" disabled selected>Seleccione una ciudad</option>
+                @foreach($ciudades as $ciudad)
+                    <option value="{{ $ciudad->nombre }}">{{ $ciudad->nombre }}</option>
+                @endforeach
+            </select>
         </div>
+
     </div>
     
     <div class="publicate-form-group">

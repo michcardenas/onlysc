@@ -26,32 +26,41 @@ class MetaTagController extends Controller
                 'heading_h2_secondary' => 'nullable|max:255',
                 'additional_text' => 'nullable',
                 'additional_text_more' => 'nullable',
-                'texto_zonas' => 'nullable', // Validación para texto_zonas
-                'titulo_tarjetas' => 'nullable|max:255', // Validación para titulo_tarjetas
+                'texto_zonas' => 'nullable',
+                'titulo_tarjetas' => 'nullable|max:255',
                 'fondo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-                'texto_zonas_centro' => 'nullable', // Validación para texto_zonas_centro
-                'texto_zonas_sur' => 'nullable' // Validación para texto_zonas_sur
+                'marca_agua' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048', // Nueva validación
+                'texto_zonas_centro' => 'nullable',
+                'texto_zonas_sur' => 'nullable'
             ]);
     
             \Log::info('Datos validados:', $validated);
     
-            // Remover fondo de los datos validados ya que se procesará por separado
+            // Remover archivos de los datos validados
             $imageFile = $request->file('fondo');
+            $marcaAguaFile = $request->file('marca_agua'); // Nuevo
             unset($validated['fondo']);
+            unset($validated['marca_agua']); // Nuevo
     
             // Buscar el registro existente o crear uno nuevo
             $meta = MetaTag::firstOrNew(['page' => $page]);
     
-            // Procesar la imagen si se proporcionó una nueva
+            // Procesar la imagen de fondo si se proporcionó una nueva
             if ($imageFile) {
-                // Eliminar la imagen anterior si existe
                 if ($meta->fondo && Storage::exists('public/' . $meta->fondo)) {
                     Storage::delete('public/' . $meta->fondo);
                 }
-    
-                // Guardar la nueva imagen
                 $imagePath = $imageFile->store('images/fondos', 'public');
                 $validated['fondo'] = $imagePath;
+            }
+    
+            // Procesar la marca de agua si se proporcionó una nueva
+            if ($marcaAguaFile) {
+                if ($meta->marca_agua && Storage::exists('public/' . $meta->marca_agua)) {
+                    Storage::delete('public/' . $meta->marca_agua);
+                }
+                $marcaAguaPath = $marcaAguaFile->store('images/marca_agua', 'public');
+                $validated['marca_agua'] = $marcaAguaPath;
             }
     
             // Actualizar los datos
@@ -73,4 +82,11 @@ class MetaTagController extends Controller
                 ->withInput();
         }
     }
+
+
+    public function getMetaTagByCiudad($ciudad_id)
+{
+    $metatag = MetaTag::where('page', 'inicio-' . $ciudad_id)->first();
+    return response()->json($metatag);
+}
 }

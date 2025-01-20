@@ -42,7 +42,7 @@
     <!-- Encabezado H2 con texto descriptivo -->
     <div class="wrapper">
     <div class="glass-container">
-        <h2 class="mission-title">{{ $meta->heading_h2 }}</h2>
+        <h2 class="mission-title">{{ $meta->heading_h2_secondary }}</h2>
         <div class="content-wrapper">
             <div class="mission-text" id="mission-text">
                 {!! $meta->additional_text !!}

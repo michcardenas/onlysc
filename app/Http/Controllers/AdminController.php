@@ -15,22 +15,50 @@ class AdminController extends Controller
 {
     public function index()
     {
+        // Obtener todas las ciudades únicas
+        $ciudades = UsuarioPublicate::distinct('ubicacion')
+            ->pluck('ubicacion')
+            ->sort();
+        
         // Obtener usuarios con estadop = 0
         $usuariosInactivos = UsuarioPublicate::where('estadop', 0)
-            ->select('id', 'fantasia', 'nombre','edad', 'ubicacion', 'categorias', 'estadop', 'posicion', 'precio')
+            ->select('id', 'fantasia', 'nombre', 'edad', 'ubicacion', 'categorias', 'estadop', 'posicion', 'precio')
             ->get();
         
-        // Obtener usuarios con estadop = 1
+        // Obtener usuarios con estadop = 1 o 3
         $usuariosActivos = UsuarioPublicate::whereIn('estadop', [1, 3])
-        ->select('id', 'fantasia', 'nombre', 'edad', 'ubicacion', 'categorias', 'estadop', 'posicion', 'precio')
-        ->orderBy('posicion', 'asc')  // Esto ordenará por posición de mayor a menor
-        ->get();
+            ->select('id', 'fantasia', 'nombre', 'edad', 'ubicacion', 'categorias', 'estadop', 'posicion', 'precio')
+            ->orderBy('posicion', 'asc')
+            ->get();
         
-        // Obtener el usuario autenticado
         $usuarioAutenticado = Auth::user();
     
-        // Pasar los datos a la vista
-        return view('admin.dashboard', compact('usuariosInactivos', 'usuariosActivos', 'usuarioAutenticado'));
+        return view('admin.dashboard', compact('usuariosInactivos', 'usuariosActivos', 'usuarioAutenticado', 'ciudades'));
+    }
+
+    public function getUsersByCity(Request $request)
+    {
+        $ciudad = $request->ciudad;
+        
+        $usuariosActivos = UsuarioPublicate::whereIn('estadop', [1, 3])
+            ->when($ciudad !== 'todas', function($query) use ($ciudad) {
+                return $query->where('ubicacion', $ciudad);
+            })
+            ->select('id', 'fantasia', 'nombre', 'edad', 'ubicacion', 'categorias', 'estadop', 'posicion', 'precio')
+            ->orderBy('posicion', 'asc')
+            ->get();
+            
+        $usuariosInactivos = UsuarioPublicate::where('estadop', 0)
+            ->when($ciudad !== 'todas', function($query) use ($ciudad) {
+                return $query->where('ubicacion', $ciudad);
+            })
+            ->select('id', 'fantasia', 'nombre', 'edad', 'ubicacion', 'categorias', 'estadop', 'posicion', 'precio')
+            ->get();
+            
+        return response()->json([
+            'activos' => view('admin.partials.tabla-usuarios', ['usuarios' => $usuariosActivos])->render(),
+            'inactivos' => view('admin.partials.tabla-usuarios', ['usuarios' => $usuariosInactivos])->render()
+        ]);
     }
     
     public function Perfiles()

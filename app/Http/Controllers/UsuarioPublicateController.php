@@ -15,6 +15,8 @@ use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
+
 
 class UsuarioPublicateController extends Controller
 {
@@ -164,7 +166,13 @@ class UsuarioPublicateController extends Controller
                 'cuentanos' => 'nullable|string',
                 'estadop' => 'required|integer|in:0,1,3',
                 'categorias' => 'required|string|in:deluxe,premium,VIP,masajes',
-                'posicion' => 'nullable|integer|unique:usuarios_publicate,posicion,' . $usuario->id,
+                'posicion' => [
+                    'nullable',
+                    'integer',
+                    Rule::unique('usuarios_publicate', 'posicion')
+                        ->where('ubicacion', $request->ubicacion) // Asegura la unicidad dentro de la misma ciudad
+                        ->ignore($usuario->id), // Ignora el registro actual al actualizar
+                ],
                 'precio' => 'nullable|numeric|min:0',
                 'fotos.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'foto_destacada' => 'nullable|file|mimes:jpeg,png,jpg,gif,mp4,webm|max:2048',
@@ -182,7 +190,11 @@ class UsuarioPublicateController extends Controller
             ]);
     
             Log::info("Validación completada para el usuario con ID: $id");
-    
+            Log::info('Validación de posición', [
+                'ubicacion' => $request->ubicacion,
+                'posicion' => $request->posicion,
+            ]);
+            
             // Iniciar transacción de base de datos
             DB::beginTransaction();
     

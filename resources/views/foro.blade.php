@@ -8,12 +8,29 @@
     </video>
     <div class="foro-banner-content">
         <div class="foro-texto_banner">
-            <h1>
-                <span class="700">Nuestros Foros</span>
-            </h1>
+            @if($metaTags)
+                <h1>
+                    <span class="700">{{ $metaTags->heading_h1 ?? 'Nuestros Foros' }}</span>
+                </h1>
+                @if($metaTags->heading_h2)
+                    <h2>
+                        <span>{{ $metaTags->heading_h2 }}</span>
+                    </h2>
+                @endif
+                @if($metaTags->heading_h2_secondary)
+                    <h2>
+                        <span>{{ $metaTags->heading_h2_secondary }}</span>
+                    </h2>
+                @endif
+            @else
+                <h1>
+                    <span class="700">Nuestros Foros</span>
+                </h1>
+            @endif
         </div>
     </div>
 </div>
+<div class="pruebaflex">
 <div class="foro-search-container">
     <input type="text" id="foro-search-input" class="foro-search-input" placeholder="Buscar tema...">
     <button id="foro-search-btn" class="foro-search-btn">
@@ -83,5 +100,5 @@
 <div class="foro-pagination">
     {{ $foros->links() }}
 </div>
-
+</div>
 @endsection
