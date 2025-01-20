@@ -81,8 +81,8 @@
     transform: translate(-50%, -50%);
     width: 150px;
     height: 150px;
-    background-image: url('{{ Storage::url($meta->marca_agua) ?? asset('images/logo_XL-2.png') }}');
-    background-size: contain;
+    background-image: url('{{ isset($meta->marca_agua) ? Storage::url($meta->marca_agua) : asset('images/logo_XL-2.png') }}');
+        background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
     opacity: 0.2;
@@ -106,8 +106,8 @@
 
 /* Estilo de la marca de agua */
 .watermark {
-    background-image: url('{{ Storage::url($meta->marca_agua) ?? asset('images/logo_XL-2.png') }}');
-    background-size: contain;
+    background-image: url('{{ isset($meta->marca_agua) ? Storage::url($meta->marca_agua) : asset('images/logo_XL-2.png') }}');
+        background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
     width: 100px;
