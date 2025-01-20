@@ -2,7 +2,7 @@
 
 @section('content')
 <header class="banner">
-    <img src="{{ Storage::url($meta->fondo) ?? asset('images/banner1.jpg') }}" alt="Banner Image" class="banner-img">
+<img src="{{ isset($meta->fondo) ? Storage::url($meta->fondo) : asset('images/banner1.jpg') }}" alt="Banner Image" class="banner-img">
     <div class="banner-content">
         <div class="texto_banner">
             <div class="heading-container">
