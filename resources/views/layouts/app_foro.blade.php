@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Foro - Escorts</title>
+   
     <link rel="icon" href="{{ asset('images/icono.png') }}" type="image/png">
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -15,7 +15,31 @@
     <link rel="stylesheet" href="{{ asset('css/foro.css') }}">
     <link rel="stylesheet" href="{{ asset('css/blog.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    @if($metaTags)
+        {{-- Meta título --}}
+        <title>{{ $metaTags->meta_title }}</title>
+        
+        {{-- Meta tags principales --}}
+        <meta name="description" content="{{ $metaTags->meta_description }}">
+        <meta name="keywords" content="{{ $metaTags->meta_keywords }}">
+        
+        {{-- Meta tags adicionales --}}
+        <meta name="author" content="{{ $metaTags->meta_author }}">
+        <meta name="robots" content="{{ $metaTags->meta_robots }}">
+        
+        {{-- URL Canónica --}}
+        @if($metaTags->canonical_url)
+            <link rel="canonical" href="{{ $metaTags->canonical_url }}" />
+        @endif
+        
+        {{-- Open Graph tags para redes sociales --}}
+        <meta property="og:title" content="{{ $metaTags->meta_title }}">
+        <meta property="og:description" content="{{ $metaTags->meta_description }}">
+        <meta property="og:type" content="website">
+        @if($metaTags->canonical_url)
+            <meta property="og:url" content="{{ $metaTags->canonical_url }}">
+        @endif
+    @endif
     <!-- Scripts -->
     <script src="https://cdn.tiny.cloud/1/z94ao1xzansr93pi0qe5kfxgddo1f4ltb8q7qa8pw9g52txs/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <style>
@@ -187,7 +211,30 @@
     border-color: #dee2e6;
     pointer-events: none;
 }
+.foro-banner-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
 
+    .foro-texto_banner {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* Espacio entre los elementos */
+    }
+
+    .foro-texto_banner h1 {
+        margin: 0; /* Elimina márgenes por defecto */
+    }
+
+    .foro-texto_banner h2 {
+        margin: 0; /* Elimina márgenes por defecto */
+        font-size: 1.5rem;
+        color: #ffffff;
+    }
 /* Media queries para responsividad */
 @media (max-width: 1024px) {
     .foro-layout {

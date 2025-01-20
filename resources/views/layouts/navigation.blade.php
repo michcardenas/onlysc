@@ -1,3 +1,5 @@
+<link rel="icon" href="{{ asset('images/icono.png') }}" type="image/png">
+
 <style>
     /* Estilos para navegación móvil */
     .mobile-nav {

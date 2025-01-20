@@ -1596,6 +1596,23 @@ function confirmarEliminarPerfil(id) {
 
 
 <script>
+
+document.getElementById('seoForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const ciudadSeleccionada = document.getElementById('ciudad').value;
+    const page = 'inicio-' + ciudadSeleccionada;
+    
+    // Construir la URL correctamente
+    const baseUrl = '{{ route('seo.update', ':page') }}';
+    const finalUrl = baseUrl.replace(':page', page);
+    
+    // Actualizar la acción del formulario
+    this.action = finalUrl;
+    
+    // Enviar el formulario
+    this.submit();
+});
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('templatesForm');
     const ciudadSelect = document.getElementById('global_ciudad');
@@ -1765,8 +1782,7 @@ function loadTemplatesByCiudad(ciudadId) {
             console.error('Error cargando templates:', error);
         });
 }
-</script>
-<script>
+
 document.addEventListener('DOMContentLoaded', function() {
     tinymce.init({
         selector: '.tinymce-editor',
@@ -1830,8 +1846,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-</script>
-<script>
+
 function toggleContentBlock(button) {
     const previewItem = button.closest('.publicate-preview-item');
     const overlay = previewItem.querySelector('.content-overlay');
@@ -1874,5 +1889,6 @@ function toggleContentBlock(button) {
         alert('Error al procesar la solicitud');
     });
 }
+
 </script>
 </html>

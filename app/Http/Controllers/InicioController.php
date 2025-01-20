@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use App\Models\MetaTag;
 
 
 class InicioController extends Controller
@@ -868,6 +869,7 @@ if (request()->segment(1) === 'escorts' && request()->segment(2)) {
             } catch (\Exception $e) {
                 Log::error('Error generating SEO text', ['error' => $e->getMessage()]);
             }
+            $metaTag = MetaTag::where('page', 'inicio-' . $ciudadSeleccionada->id)->first();
 
             return view('inicio', array_merge([
                 'ciudades' => $ciudades,
@@ -884,7 +886,9 @@ if (request()->segment(1) === 'escorts' && request()->segment(2)) {
                 'blogArticles' => $blogArticles,
                 'volvieron' => $volvieron,
                 'experiencias' => $experiencias,
-                'ubicacionesMostradas' => $ubicacionesMostradas
+                'ubicacionesMostradas' => $ubicacionesMostradas,
+                'meta' => $metaTag,
+                'now' => \Carbon\Carbon::now()
             ], $seoText ? [
                 'seoTitle' => $seoText['title'],
                 'seoDescription' => $seoText['description']

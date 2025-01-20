@@ -2,13 +2,17 @@
 
 @section('content')
 <header class="banner">
-    <img src="{{ asset('images/banner1.jpg') }}" alt="Banner Image" class="banner-img">
+    <img src="{{ Storage::url($meta->fondo) ?? asset('images/banner1.jpg') }}" alt="Banner Image" class="banner-img">
     <div class="banner-content">
         <div class="texto_banner">
-            <h1>
-                <span class="thin">Encuentra tu</span>
-                <span class="bold">experiencia perfecta</span>
-            </h1>
+            <div class="heading-container">
+                <h1 class="thin">
+                    {{ $meta->heading_h1 ?? 'Encuentra tu' }}
+                </h1>
+                <h2 class="bold">
+                    {{ $meta->heading_h2 ?? 'experiencia perfecta' }}
+                </h2>
+            </div>
         </div>
     </div>
 </header>
@@ -108,7 +112,7 @@
                     $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
                     $posicionFoto = in_array(($positions[$primeraFoto] ?? ''), ['left', 'right', 'center']) ? $positions[$primeraFoto] : 'center';
 
-                    $now = Carbon\Carbon::now();
+                   
                     $currentDay = strtolower($now->locale('es')->dayName);
                     $isAvailable = false;
                     foreach ($usuario->disponibilidad as $disponibilidad) {
@@ -330,6 +334,10 @@
                     @endphp
                     <a href="{{ route('perfil.show', ['nombre' => $usuario->fantasia . '-' . $usuario->id]) }}" class="swiper-slide2" style="flex: 0 0 auto; margin-right: 0;">
                         <div class="volvieronyprimera-card">
+                        <div class="watermark-container">
+        <div class="watermark"></div>
+    </div>
+
                             <div class="volvieronyprimera-vip-tag">{{ strtoupper($usuario->categorias) }}</div>
                             @php
                             $fotos = json_decode($usuario->fotos, true);
@@ -418,6 +426,9 @@
                     @endphp
                     <a href="{{ route('perfil.show', ['nombre' => $usuario->fantasia . '-' . $usuario->id]) }}" class="swiper-slide2" style="flex: 0 0 auto; margin-right: 0;">
                         <div class="volvieronyprimera-card">
+                        <div class="watermark-container">
+        <div class="watermark"></div>
+    </div>
                             <div class="volvieronyprimera-vip-tag">{{ strtoupper($usuario->categorias) }}</div>
                             @php
                             $fotos = json_decode($usuario->fotos, true);

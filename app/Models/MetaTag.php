@@ -26,6 +26,7 @@ class MetaTag extends Model
         'texto_zonas', // Nueva columna
         'titulo_tarjetas',
         'texto_zonas_centro', // Nueva columna
-        'texto_zonas_sur' // Nueva columna
+        'texto_zonas_sur', // Nueva columna
+        'marca_agua'
     ];
 }

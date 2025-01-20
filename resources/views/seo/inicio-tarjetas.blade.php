@@ -244,6 +244,7 @@ select.form-control option {
     background-color: #343a40;
     color: white;
 }
+
 </style>
 <header>
     <nav class="navbar-admin">
@@ -282,9 +283,11 @@ select.form-control option {
 <div class="container mt-4">
     <div class="card custom-card">
         <div class="card-header">
-            <h2 class="text-white">Editar Etiquetas Meta - Página Foro</h2>
+            <h2 class="text-white">Configuracion y etiquetas Meta del inicio</h2>
         </div>
         <div class="card-body">
+        
+
         @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -302,10 +305,17 @@ select.form-control option {
             </button>
         </div>
     @endif
-        <form action="{{ route('seo.update', ['page' => 'foro']) }}" method="POST">
-        @csrf
+    
+<form id="seoForm" method="POST" enctype="multipart/form-data">
+      @csrf
                 @method('PUT')
-                
+                <!-- Select de ciudades -->
+                <select name="ciudad" id="ciudad" class="form-control" required>
+                    <option value="">Seleccione una ciudad</option>
+                    @foreach($ciudades as $ciudad)
+                        <option value="{{ $ciudad->id }}">{{ $ciudad->nombre }}</option>
+                    @endforeach
+                </select>
                 <!-- Meta Title -->
                 <div class="form-group template-group">
                     <label for="meta_title" class="text-white">Título Meta</label>
@@ -378,37 +388,82 @@ select.form-control option {
                         @enderror
                     </div>
 
-                    <!-- Heading H2 -->
-                    <div class="form-group template-group">
-                        <label for="heading_h2" class="text-white">Encabezado H2</label>
-                        <input type="text" 
-                            class="form-control bg-dark text-white @error('heading_h2') is-invalid @enderror" 
-                            id="heading_h2" 
-                            name="heading_h2" 
-                            placeholder="Ingrese el encabezado H2" 
-                            value="{{ old('heading_h2', $meta->heading_h2 ?? '') }}">
-                        @error('heading_h2')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
+                   <!-- Heading H2 Original -->
+                <div class="form-group template-group">
+                    <label for="heading_h2" class="text-white">Encabezado H2</label>
+                    <input type="text"
+                        class="form-control bg-dark text-white @error('heading_h2') is-invalid @enderror"
+                        id="heading_h2"
+                        name="heading_h2"
+                        placeholder="Ingrese el encabezado H2"
+                        value="{{ old('heading_h2', $meta->heading_h2 ?? '') }}">
+                    @error('heading_h2')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
 
-                    <!-- Additional Text -->
-                    <div class="form-group template-group">
-                        <label for="additional_text" class="text-white">Texto Adicional</label>
-                        <textarea class="form-control bg-dark text-white @error('additional_text') is-invalid @enderror" 
-                                id="additional_text" 
-                                name="additional_text" 
-                                rows="4" 
-                                placeholder="Ingrese texto adicional">{{ old('additional_text', $meta->additional_text ?? '') }}</textarea>
-                        @error('additional_text')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
 
+
+
+
+
+
+
+
+<!-- Imagen de Fondo -->
+<div class="form-group template-group">
+    <label for="fondo" class="text-white">Imagen de banner</label>
+    <div class="input-group">
+        <input type="file" 
+               class="form-control bg-dark text-white @error('fondo') is-invalid @enderror"
+               id="fondo"
+               name="fondo"
+               accept="image/jpeg,image/png,image/jpg,image/webp">
+        @error('fondo')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+        @enderror
+    </div>
+    
+    @if(isset($meta->fondo))
+        <div class="mt-2">
+            <img src="{{ asset('storage/' . $meta->fondo) }}" 
+                 alt="Imagen de fondo actual" 
+                 class="img-thumbnail" 
+                 style="max-height: 100px">
+            <p class="text-white-50 small mt-1">Imagen actual: {{ basename($meta->fondo) }}</p>
+        </div>
+    @endif
+</div>
+<!-- Marca de Agua -->
+<div class="form-group template-group">
+    <label for="marca_agua" class="text-white">Marca de Agua</label>
+    <div class="input-group">
+        <input type="file" 
+               class="form-control bg-dark text-white @error('marca_agua') is-invalid @enderror"
+               id="marca_agua"
+               name="marca_agua"
+               accept="image/jpeg,image/png,image/jpg,image/webp">
+        @error('marca_agua')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+        @enderror
+    </div>
+    
+    @if(isset($meta->marca_agua))
+        <div class="mt-2">
+            <img src="{{ asset('storage/' . $meta->marca_agua) }}" 
+                 alt="Marca de agua actual" 
+                 class="img-thumbnail" 
+                 style="max-height: 100px">
+            <p class="text-white-50 small mt-1">Imagen actual: {{ basename($meta->marca_agua) }}</p>
+        </div>
+    @endif
+</div>
                 <!-- Botones de Acción -->
                 <div class="form-group text-right">
                     <button type="submit" class="btn custom-button">Guardar Cambios</button>
@@ -423,4 +478,94 @@ select.form-control option {
 <footer class="footer-admin">
     <p class="text-white">&copy; {{ date('Y') }} OnlyEscorts Chile. Todos los derechos reservados.</p>
 </footer>
+<script>
+document.getElementById('ciudad').addEventListener('change', function() {
+    const ciudadId = this.value;
+    if(!ciudadId) return;
+
+    // Obtener el token CSRF
+    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    fetch(`/get-metatag/${ciudadId}`, {
+        method: 'GET',
+        headers: {
+            'X-CSRF-TOKEN': token,
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data) {
+            // Campos de texto
+            document.getElementById('meta_title').value = data.meta_title || '';
+            document.getElementById('meta_description').value = data.meta_description || '';
+            document.getElementById('meta_keywords').value = data.meta_keywords || '';
+            document.getElementById('canonical_url').value = data.canonical_url || '';
+            
+            // Select de meta robots
+            const metaRobotsSelect = document.getElementById('meta_robots');
+            if(metaRobotsSelect) {
+                metaRobotsSelect.value = data.meta_robots || 'index, follow';
+            }
+
+            // Encabezados
+            document.getElementById('heading_h1').value = data.heading_h1 || '';
+            document.getElementById('heading_h2').value = data.heading_h2 || '';
+
+            // Imágenes
+            // Para la imagen de fondo
+            if(data.fondo) {
+                const fondoContainer = document.querySelector('#fondo').closest('.form-group');
+                const imgPreview = fondoContainer.querySelector('img');
+                const imgText = fondoContainer.querySelector('.text-white-50');
+                
+                if(imgPreview) {
+                    imgPreview.src = `/storage/${data.fondo}`;
+                } else {
+                    const newImgDiv = document.createElement('div');
+                    newImgDiv.className = 'mt-2';
+                    newImgDiv.innerHTML = `
+                        <img src="/storage/${data.fondo}" 
+                             alt="Imagen de fondo actual" 
+                             class="img-thumbnail" 
+                             style="max-height: 100px">
+                        <p class="text-white-50 small mt-1">Imagen actual: ${data.fondo.split('/').pop()}</p>
+                    `;
+                    fondoContainer.appendChild(newImgDiv);
+                }
+            }
+
+            // Para la marca de agua
+            if(data.marca_agua) {
+                const marcaAguaContainer = document.querySelector('#marca_agua').closest('.form-group');
+                const imgPreview = marcaAguaContainer.querySelector('img');
+                const imgText = marcaAguaContainer.querySelector('.text-white-50');
+                
+                if(imgPreview) {
+                    imgPreview.src = `/storage/${data.marca_agua}`;
+                } else {
+                    const newImgDiv = document.createElement('div');
+                    newImgDiv.className = 'mt-2';
+                    newImgDiv.innerHTML = `
+                        <img src="/storage/${data.marca_agua}" 
+                             alt="Marca de agua actual" 
+                             class="img-thumbnail" 
+                             style="max-height: 100px">
+                        <p class="text-white-50 small mt-1">Imagen actual: ${data.marca_agua.split('/').pop()}</p>
+                    `;
+                    marcaAguaContainer.appendChild(newImgDiv);
+                }
+            }
+
+            // Limpiar los inputs de tipo file para evitar confusiones
+            document.getElementById('fondo').value = '';
+            document.getElementById('marca_agua').value = '';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Hubo un error al cargar los datos. Por favor, intente nuevamente.');
+    });
+});
+</script>
 @endsection

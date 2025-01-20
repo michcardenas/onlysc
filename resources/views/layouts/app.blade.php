@@ -2,20 +2,36 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <meta charset="utf-8">
+<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <!-- Título de la pestaña -->
-    <title>{{ $pageTitle ?? 'OnlyEscorts' }}</title>
 
+    <!-- Título de la pestaña -->
+         <link rel="icon" href="{{ asset('images/icono.png') }}?v=2" type="image/png">    
+
+    <title>
+    @if($pageTitle && str_contains($pageTitle, 'Escorts en') && str_ends_with($pageTitle, '| OnlyEscorts'))
+        {{ $meta->meta_title ?? 'OnlyEscorts' }}
+    @else
+        {{ $pageTitle ?? ($meta->meta_title ?? 'OnlyEscorts') }}
+    @endif
+</title>
     <!-- Icono de la pestaña (favicon) -->
-    <link rel="icon" href="{{ asset('images/icono.png') }}" type="image/png">
+    <!-- Meta tags dinámicos -->
+    <meta name="description" content="{{ $metaDescription ?? ($meta->meta_description ?? '') }}">
+    <meta name="keywords" content="{{ $metaKeywords ?? ($meta->meta_keywords ?? '') }}">
+    <meta name="robots" content="{{ $metaRobots ?? ($meta->meta_robots ?? 'index,follow') }}">
+
+    <!-- Canonical URL -->
+    @if(isset($canonicalUrl) || (isset($meta) && $meta->canonical_url))
+    <link rel="canonical" href="{{ $canonicalUrl ?? $meta->canonical_url }}" />
+    @endif
+
     <!--Iconos-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-
+    
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
@@ -25,17 +41,83 @@
 
     <!-- Scripts -->
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
-    @isset($canonicalUrl)
-    <link rel="canonical" href="{{ $canonicalUrl }}" />
-@endisset
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/es.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/9.3.2/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <meta name="robots" content="{{ $metaRobots ?? 'index,follow' }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style>
+        .heading-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* Espacio entre h1 y h2 */
+}
+
+.texto_banner h1 {
+    margin: 0; /* Reset margin */
+}
+
+.texto_banner h2 {
+    margin: 0; /* Reset margin */
+}
+
+.thin {
+    font-weight: 300;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+/* cARDS */
+.inicio-card::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px;
+    height: 150px;
+    background-image: url('{{ Storage::url($meta->marca_agua) ?? asset('images/logo_XL-2.png') }}');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.2;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Contenedor para la marca de agua */
+.watermark-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Estilo de la marca de agua */
+.watermark {
+    background-image: url('{{ Storage::url($meta->marca_agua) ?? asset('images/logo_XL-2.png') }}');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100px;
+    height: 100px;
+    opacity: 0.9;
+}
+
+            /* Opcional: Múltiples marcas de agua */
+
+    </style>
 </head>
 
 <body>
@@ -46,18 +128,18 @@
             </div>
 
             <div class="navbar-right">
-    <div class="location-dropdown">
-        <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon">
-        <select name="location" id="location">
-            <option value="" disabled>Seleccionar ciudad</option>
-            @foreach($ciudades as $ciudad)
-                <option value="{{ strtolower($ciudad->url) }}" 
-                    {{ session('ciudad_actual') == $ciudad->nombre ? 'selected' : '' }}>
-                    {{ ucfirst($ciudad->nombre) }}
-                </option>
-            @endforeach
-        </select>
-    </div>
+            <div class="location-dropdown">
+                <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon">
+                <select name="location" id="location">
+                    <option value="" disabled>Seleccionar ciudad</option>
+                    @foreach($ciudades as $ciudad)
+                        <option value="{{ strtolower($ciudad->url) }}" 
+                            {{ session('ciudad_actual') == $ciudad->nombre ? 'selected' : '' }}>
+                            {{ ucfirst($ciudad->nombre) }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
 
                 @if(Auth::check())
@@ -370,8 +452,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-    </script>
-    <script>
+
 // Variables globales
 let currentHistorias = [];
 let currentIndex = 0;

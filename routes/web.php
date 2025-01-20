@@ -158,6 +158,7 @@ Route::post('/ciudades', [CiudadController::class, 'store'])->name('ciudades.sto
 Route::get('/seo', [SEOController::class, 'index'])->name('seo');
 Route::get('/seo-paginas', [SEOPaginasController::class, 'index'])->name('seo.paginas');
 Route::get('/seo-inicio', [SEOController::class, 'home'])->name('seo.home');
+Route::get('/seo-inicio-tarjetas', [SEOController::class, 'inicio'])->name('seo.inicio-tarjetas');
 Route::get('/seo-foro', [SEOController::class, 'foroadmin'])->name('seo.foroadmin');
 Route::get('/seo-blog', [SEOController::class, 'blogadmin'])->name('seo.blogadmin');
 Route::get('/seo-publicar', [SEOController::class, 'publicateForm'])->name('seo.publicate.form');
@@ -167,6 +168,7 @@ Route::delete('/seo/templates/{id}', [AdminController::class, 'deleteSeoTemplate
 Route::get('/seo/templates/ciudad/{ciudadId}', [AdminController::class, 'getTemplatesByCiudad'])->name('seo.templates.by-ciudad');
 Route::post('/seo/templates/update-all', [AdminController::class, 'updateAllTemplates'])->name('seo.templates.update.all');
 Route::put('/seo/update/{page}', [MetaTagController::class, 'update'])->name('seo.update');
+Route::get('/get-metatag/{ciudad_id}', [MetaTagController::class, 'getMetaTagByCiudad'])->name('metatag.by.ciudad');
 Route::get('/admin/tarjetas', [TarjetaController::class, 'index'])->name('tarjetas.index');
 Route::get('/admin/tarjetas/create', [TarjetaController::class, 'create'])->name('tarjetas.create');
 Route::post('/admin/tarjetas', [TarjetaController::class, 'store'])->name('tarjetas.store');
