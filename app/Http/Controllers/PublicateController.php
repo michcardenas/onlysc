@@ -7,14 +7,17 @@ use Illuminate\Support\Facades\Log;
 use App\Models\UsuarioPublicate;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Arr; // Añadido para usar Arr::except
+use Illuminate\Support\Arr; 
+use App\Models\Ciudad;
 
 class PublicateController extends Controller
 {
     public function showRegistrationForm()
     {
-        Log::info('Accediendo al formulario de registro');
-        return view('publicate');
+
+        $ciudades = Ciudad::all();
+
+        return view('publicate', compact('ciudades'));
     }
 
     public function store(Request $request)

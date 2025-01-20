@@ -21,6 +21,37 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <style>
+        .styled-select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #333;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.styled-select:focus {
+    border-color: #f00; /* Ajusta el color según el diseño */
+}
+
+.publicate-input-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.publicate-input-wrapper label {
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    font-size: 14px;
+    pointer-events: none;
+}
+
+    </style>
 </head>
 <body class="publicate-body">
 

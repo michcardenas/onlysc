@@ -56,6 +56,7 @@ Route::post('/rta', [InicioController::class, 'rta'])->name('rta.store');
 
 //panel
 Route::get('/panel-control', [AdminController::class, 'index'])->name('panel_control');
+Route::get('/admin/users-by-city', [AdminController::class, 'getUsersByCity'])->name('admin.users-by-city');
 // Agregar en el grupo de rutas con middleware auth
 Route::post('/usuarios-publicate/toggle-image-block', [UsuarioPublicateController::class, 'toggleImageBlock'])
     ->name('usuarios_publicate.toggleImageBlock');

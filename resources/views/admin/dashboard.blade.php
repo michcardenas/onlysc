@@ -37,38 +37,30 @@
 <main>
     <section>
     <h2  style="color:white;">Usuarios Publicate - Activos</h2>
-    <table class="table-admin">
-            <thead>
-                <tr>
-                    <th>Fantasia</th>
-                    <th>Nombre</th>
-                    <th>Ubicación</th>
-                    <th>Edad</th>
-                    <th>Categoría</th>
-                    <th>Posición</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($usuariosActivos as $usuario)
-                    <tr>
-                        <td>
-                            <a href="{{ route('usuarios_publicate.edit', ['id' => $usuario->id]) }}">
-                                {{ $usuario->fantasia }}
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{{ route('usuarios_publicate.edit', ['id' => $usuario->id]) }}">
-                                {{ $usuario->nombre }}
-                            </a>
-                        </td>
-                        <td>{{ $usuario->ubicacion }}</td>
-                        <td>{{ $usuario->edad }}</td>
-                        <td>{{ ucfirst($usuario->categorias) }}</td>
-                        <td>{{ $usuario->posicion ?? 'Sin posición' }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+    <main>
+    <div class="city-filter" style="margin-bottom: 20px;">
+        <select id="citySelect" class="form-control">
+            <option value="todas">Todas las ciudades</option>
+            @foreach($ciudades as $ciudad)
+                <option value="{{ $ciudad }}">{{ $ciudad }}</option>
+            @endforeach
+        </select>
+    </div>
+
+    <section>
+        <h2 style="color:white;">Usuarios Publicate - Activos</h2>
+        <div id="tablaActivos">
+            @include('admin.partials.tabla-usuarios', ['usuarios' => $usuariosActivos])
+        </div>
+    </section>
+
+    <section>
+        <h2 style="color:white;">Usuarios Publicate - Inactivos</h2>
+        <div id="tablaInactivos">
+            @include('admin.partials.tabla-usuarios', ['usuarios' => $usuariosInactivos])
+        </div>
+    </section>
+</main>
     </section>
 
     <section>
@@ -111,4 +103,25 @@
 <footer class="footer-admin">
 <p>&copy; {{ date('Y') }} Only scorts chile. Todos los derechos reservados.</p>
 </footer>
+<script>
+document.getElementById('citySelect').addEventListener('change', function() {
+    const ciudad = this.value;
+    
+    // Mostrar indicador de carga si lo deseas
+    // document.getElementById('loading').style.display = 'block';
+    
+    fetch(`/admin/users-by-city?ciudad=${encodeURIComponent(ciudad)}`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('tablaActivos').innerHTML = data.activos;
+        document.getElementById('tablaInactivos').innerHTML = data.inactivos;
+    })
+    .catch(error => console.error('Error:', error));
+});
+</script>
 @endsection
