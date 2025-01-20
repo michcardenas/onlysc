@@ -115,7 +115,7 @@
     opacity: 0.9;
 }
 
-            /* Opcional: Múltiples marcas de agua */
+
 
     </style>
 </head>
