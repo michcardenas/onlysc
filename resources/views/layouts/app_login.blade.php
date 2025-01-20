@@ -1875,4 +1875,73 @@ function toggleContentBlock(button) {
     });
 }
 </script>
+<script>
+// Validación para el tamaño de los videos
+document.getElementById('videosInput').addEventListener('change', function(e) {
+    const maxSize = 20 * 1024 * 1024; // 20MB en bytes
+    const files = e.target.files;
+    
+    for(let i = 0; i < files.length; i++) {
+        if(files[i].size > maxSize) {
+            alert('El video ' + files[i].name + ' excede el tamaño máximo permitido de 20MB');
+            e.target.value = ''; // Limpiar la selección
+            return;
+        }
+    }
+});
+
+// Función para eliminar videos existentes
+function removeExistingVideo(videoName, button) {
+    if(confirm('¿Está seguro de que desea eliminar este video?')) {
+        const userId = button.closest('[data-user-id]').dataset.userId;
+        
+        fetch('/admin/eliminar-video', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({
+                video: videoName,
+                user_id: userId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                button.closest('.video-item').remove();
+            } else {
+                alert('Error al eliminar el video');
+            }
+        });
+    }
+}
+
+// Función para alternar el bloqueo de videos
+function toggleVideoBlock(button) {
+    const videoItem = button.closest('.video-item');
+    const userId = videoItem.dataset.userId;
+    const videoName = videoItem.dataset.video;
+    
+    fetch('/admin/toggle-video-block', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+            video: videoName,
+            user_id: userId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            button.classList.toggle('active');
+            button.textContent = button.classList.contains('active') ? 'Desbloquear' : 'Bloquear';
+            videoItem.querySelector('.content-overlay').style.display = button.classList.contains('active') ? 'flex' : 'none';
+        }
+    });
+}
+</script>
 </html>

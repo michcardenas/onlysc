@@ -156,7 +156,7 @@
                                     <span class="inicio-card-age">{{ $usuario->edad }}</span>
                                 </h3>
                                 <div class="inicio-card-location">
-                                    <i class="fa fa-map-marker"></i>
+                                    <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2">
                                     @if($ciudadSeleccionada->url === 'santiago')
                                     {{-- Mostrar siempre el sector derivado o seleccionado --}}
                                     {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}
@@ -228,7 +228,7 @@
                         </h3>
                         <div class="location-price">
                             <span class="inicio-featured-location">
-                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                            <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2" aria-hidden="true"></i>
                                 @if($ciudadSeleccionada->url === 'santiago')
                                 {{ $ubicacionesMostradas[$usuarioDestacado->id] ?? 'Sector no disponible' }}
                                 @else
@@ -354,7 +354,7 @@
                                     </div>
                                     <div class="volvieronyprimera-location-price">
                                         <div class="location-container">
-                                            <i class="fa fa-map-marker"></i>
+                                        <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2">
                                             <span class="volvieronyprimera-location">
                                                 @if($ciudadSeleccionada->url === 'santiago')
                                                 {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}
@@ -442,7 +442,7 @@
                                     </div>
                                     <div class="volvieronyprimera-location-price">
                                         <div class="location-container">
-                                            <i class="fa fa-map-marker"></i>
+                                        <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2">
                                             <span class="volvieronyprimera-location">
                                                 @if($ciudadSeleccionada->url === 'santiago')
                                                 {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}

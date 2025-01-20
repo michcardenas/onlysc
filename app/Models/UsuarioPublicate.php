@@ -37,6 +37,9 @@ class UsuarioPublicate extends Model
         'atributos',    // Nueva columna agregada
         'foto_positions',
         'blocked_images',
+        'videos',
+        'u1',
+        'u2',
     ];
 
 

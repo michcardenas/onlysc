@@ -1615,6 +1615,29 @@ const initBlogSwiper = () => {
 // Asegurarnos de que el Swiper se inicialice correctamente
 document.addEventListener('DOMContentLoaded', initBlogSwiper);
 </script>
+<script>
+ document.addEventListener('DOMContentLoaded', function() {
+    const bullets = document.querySelectorAll('.swiper-pagination-bullet');
+    const video = document.querySelector('.escortperfil-video');
+    
+    bullets.forEach((bullet) => {
+        bullet.addEventListener('click', function() {
+            const videoUrl = this.dataset.video;
+            
+            // Actualizar video solo si cambia la URL
+            if(video.src !== videoUrl) {
+                video.src = videoUrl;
+                video.load(); // Recargar el video
+                video.play(); // Opcional: reproducir automáticamente al cambiar
+            }
+            
+            // Actualizar bullet activo
+            bullets.forEach(b => b.classList.remove('swiper-pagination-bullet-active'));
+            this.classList.add('swiper-pagination-bullet-active');
+        });
+    });
+});
+</script>
 </body>
 
 </html>

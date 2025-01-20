@@ -13,34 +13,34 @@ $pageTitle = $usuarioPublicate->fantasia . ' Escort ' .
         <div class="escortperfil-swiper">
             <div class="escortperfil-swiper-wrapper swiper-wrapper">
                 @php
-$fotos = json_decode($usuarioPublicate->fotos, true) ?? [];
-$blockedImages = json_decode($usuarioPublicate->blocked_images, true) ?? [];
+                $fotos = json_decode($usuarioPublicate->fotos, true) ?? [];
+                $blockedImages = json_decode($usuarioPublicate->blocked_images, true) ?? [];
 
-// Solo aplicamos el reemplazo si el usuario NO está autenticado
-if (!Auth::check()) {
-    foreach ($fotos as $key => $foto) {
-        if (is_array($blockedImages) && in_array($foto, $blockedImages)) {
-            $fotos[$key] = 'Exclusivo-para-miembros.png';
-        }
-    }
-}
-@endphp
+                // Solo aplicamos el reemplazo si el usuario NO está autenticado
+                if (!Auth::check()) {
+                foreach ($fotos as $key => $foto) {
+                if (is_array($blockedImages) && in_array($foto, $blockedImages)) {
+                $fotos[$key] = 'Exclusivo-para-miembros.png';
+                }
+                }
+                }
+                @endphp
 
-@foreach($fotos as $foto)
-    <div class="escortperfil-swiper-slide swiper-slide">
-        @if($foto === 'Exclusivo-para-miembros.png')
-            <img src="{{ asset('storage/chicas/Exclusivo-para-miembros.png') }}"
-                alt="Contenido exclusivo"
-                class="escortperfil-banner-img"
-                onclick="openEscortModal(this.src)">
-        @else
-            <img src="{{ asset("storage/chicas/{$usuarioPublicate->id}/{$foto}") }}"
-                alt="Foto de {{ $usuarioPublicate->fantasia }}"
-                class="escortperfil-banner-img"
-                onclick="openEscortModal(this.src)">
-        @endif
-    </div>
-@endforeach
+                @foreach($fotos as $foto)
+                <div class="escortperfil-swiper-slide swiper-slide">
+                    @if($foto === 'Exclusivo-para-miembros.png')
+                    <img src="{{ asset('storage/chicas/Exclusivo-para-miembros.png') }}"
+                        alt="Contenido exclusivo"
+                        class="escortperfil-banner-img"
+                        onclick="openEscortModal(this.src)">
+                    @else
+                    <img src="{{ asset("storage/chicas/{$usuarioPublicate->id}/{$foto}") }}"
+                        alt="Foto de {{ $usuarioPublicate->fantasia }}"
+                        class="escortperfil-banner-img"
+                        onclick="openEscortModal(this.src)">
+                    @endif
+                </div>
+                @endforeach
 
             </div>
 
@@ -53,6 +53,10 @@ if (!Auth::check()) {
 
         <h1 class="escortperfil-nombre">
             {{ strtoupper($usuarioPublicate->fantasia) }}
+        </h1>
+
+        <h1 class="escortperfil-nombrechikito">
+            {{ strtoupper($usuarioPublicate->categorias) }}
         </h1>
     </header>
 
@@ -218,24 +222,55 @@ if (!Auth::check()) {
 
         </aside>
         <div class="escortperfil-content">
-            <div class="escortperfil-section">
-                <h2 class="escortperfil-section-title">Sobre mí</h2>
-                <p class="escortperfil-description-text">{{ $usuarioPublicate->cuentanos }}</p>
-            </div>
+    <div class="escortperfil-section">
+        <h2 class="escortperfil-section-title">Sobre mí</h2>
+        <p class="escortperfil-description-text">{{ $usuarioPublicate->cuentanos }}</p>
+    </div>
 
-            <div class="escortperfil-section">
-                <h2 class="escortperfil-section-title">Atributos</h2>
-                <div class="escortperfil-attributes-list">
-                    @php
-                    $atributos = json_decode($usuarioPublicate->atributos, true);
-                    $atributos = is_array($atributos) ? $atributos : [];
-                    @endphp
-                    @foreach($atributos as $atributo)
-                    <span class="escortperfil-attribute-item">{{ $atributo }}</span>
-                    @endforeach
-                </div>
+    <!-- Estas dos secciones deberían estar agrupadas -->
+    <div>
+        <div class="escortperfil-section">
+            <h2 class="escortperfil-section-title">Atributos</h2>
+            <div class="escortperfil-attributes-list">
+                @php
+                $atributos = json_decode($usuarioPublicate->atributos, true);
+                $atributos = is_array($atributos) ? $atributos : [];
+                @endphp
+                @foreach($atributos as $atributo)
+                <span class="escortperfil-attribute-item">{{ $atributo }}</span>
+                @endforeach
             </div>
         </div>
+
+        <div class="escortperfil-section">
+    <h2 class="escortperfil-section-title">Datos de ubicación</h2>
+    <div class="escortperfil-description">
+        <h3 class="escortperfil-subtitle">Ubicaciones donde atiendo</h3>
+        @if(!empty($usuarioPublicate->u1))
+            <div class="escortperfil-locations-list">
+                <div class="escortperfil-location-item">
+                    {{ $usuarioPublicate->u1 }}
+                </div>
+            </div>
+        @else
+            <p class="text-center">No hay ubicaciones disponibles</p>
+        @endif
+
+        <h3 class="escortperfil-subtitle">Servicios del sitio</h3>
+        @if(!empty($usuarioPublicate->u2))
+            <div class="escortperfil-locations-list">
+                <div class="escortperfil-location-item">
+                    {{ $usuarioPublicate->u2 }}
+                </div>
+            </div>
+        @else
+            <p class="text-center">No hay servicios disponibles</p>
+        @endif
+    </div>
+</div>
+</div>
+</div>
+            
 
         <!-- Sección de Servicios -->
         <div class="escortperfil-section">
@@ -344,6 +379,30 @@ if (!Auth::check()) {
                 @endforeach
             </div>
         </div>
+
+        <div class="escortperfil-section">
+    <h2 class="escortperfil-section-title">Videos</h2>
+    @if(!empty($videos = json_decode($usuarioPublicate->videos)))
+        <div class="escortperfil-videos-list">
+            <div class="escortperfil-video-item">
+                <video class="escortperfil-video" controls preload="auto"
+                    src="{{ asset('storage/chicas/'.$usuarioPublicate->id.'/videos/'.($videos[0] ?? '')) }}">
+                    Tu navegador no soporta el elemento de video.
+                </video>
+            </div>
+        </div>
+        
+        <div class="swiper-pagination">
+            @foreach($videos as $index => $video)
+                <button class="swiper-pagination-bullet {{ $index === 0 ? 'swiper-pagination-bullet-active' : '' }}" 
+                        data-video="{{ asset('storage/chicas/'.$usuarioPublicate->id.'/videos/'.$video) }}">
+                </button>
+            @endforeach
+        </div>
+    @else
+        <p class="text-center">No hay videos disponibles</p>
+    @endif
+</div>
 
     </div>
     @endsection

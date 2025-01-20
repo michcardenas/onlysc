@@ -176,6 +176,9 @@ class UsuarioPublicateController extends Controller
                 'latitud' => 'required|numeric|between:-90,90',
                 'longitud' => 'required|numeric|between:-180,180',
                 'direccion_mapa' => 'required|string|max:255',
+                'videos.*' => 'nullable|file|mimes:mp4,webm,ogg|max:20480',
+                'u1' => 'nullable|string|max:50',
+                'u2' => 'nullable|string|max:50',
             ]);
     
             Log::info("Validación completada para el usuario con ID: $id");
@@ -205,6 +208,8 @@ class UsuarioPublicateController extends Controller
                     'categorias' => $request->categorias,
                     'posicion' => $request->posicion,
                     'precio' => $request->precio,
+                    'u1' => $request->u1,
+                    'u2' => $request->u2,
                 ]);
     
                 // Actualizar o crear la ubicación en el mapa
@@ -284,6 +289,35 @@ class UsuarioPublicateController extends Controller
                     }
                 }
 
+                 // Procesar videos
+        if ($request->hasFile('videos')) {
+            $nombresVideos = json_decode($usuario->videos, true) ?: [];
+            
+            foreach ($request->file('videos') as $video) {
+                $nombreVideo = time() . '_' . uniqid() . '.' . $video->getClientOriginalExtension();
+                
+                // Crear directorio para videos si no existe
+                $videoPath = storage_path("app/public/chicas/{$usuario->id}/videos");
+                if (!File::exists($videoPath)) {
+                    File::makeDirectory($videoPath, 0755, true);
+                }
+                
+                // Mover el video
+                $video->move($videoPath, $nombreVideo);
+                $nombresVideos[] = $nombreVideo;
+                
+                Log::info('Nuevo video procesado:', ['nombre' => $nombreVideo]);
+            }
+            
+            // Asegurar que el array esté correctamente indexado
+            $nombresVideos = array_values(array_unique($nombresVideos));
+            
+            // Actualizar los videos en la base de datos
+            $usuario->update(['videos' => json_encode($nombresVideos)]);
+        }
+    
+
+
                 Log::info('Estado final de fotos:', ['fotos' => $nombresFotos]);
 
                 // Asegurar que el array esté correctamente indexado antes de guardarlo
@@ -319,7 +353,8 @@ class UsuarioPublicateController extends Controller
                     return response()->json([
                         'success' => true,
                         'message' => 'Usuario actualizado correctamente',
-                        'fotos' => $nombresFotos // Devolver el array de fotos actualizado
+                        'fotos' => $nombresFotos, // Devolver el array de fotos actualizado
+                        'videos' => $nombresVideos ?? [] // Agregar videos a la respuesta
                     ]);
                 }
 
@@ -513,5 +548,32 @@ class UsuarioPublicateController extends Controller
             ], 500);
         }
     }
+
+    public function eliminarVideo(Request $request)
+{
+    try {
+        $usuario = UsuarioPublicate::findOrFail($request->user_id);
+        $videos = json_decode($usuario->videos) ?? [];
+        
+        // Eliminar el video del array
+        $videos = array_values(array_filter($videos, function($video) use ($request) {
+            return $video !== $request->video;
+        }));
+        
+        // Actualizar el registro en la base de datos
+        $usuario->videos = json_encode($videos);
+        $usuario->save();
+        
+        // Eliminar el archivo físico
+        $path = storage_path('app/public/chicas/' . $usuario->id . '/videos/' . $request->video);
+        if (File::exists($path)) {
+            File::delete($path);
+        }
+        
+        return response()->json(['success' => true]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'error' => $e->getMessage()]);
+    }
+}
 
 }

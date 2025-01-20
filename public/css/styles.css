@@ -706,7 +706,7 @@ label .required {
 
 /* Estilo general para videos */
 iframe,
-video:not(.banner-img):not(.historia-circle video) {
+video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video) {
     background-color: transparent;
     width: 100%;
     max-width: 560px;
@@ -1624,7 +1624,7 @@ video:not(.banner-img):not(.historia-circle video) {
 
 .escortperfil-nombre {
     position: absolute;
-    bottom: 25px;
+    bottom: 50px;
     left: 360px;
     color: #fff;
     font-size: 2.25rem;
@@ -1634,6 +1634,21 @@ video:not(.banner-img):not(.historia-circle video) {
     /* margin: 5 1 5px 1; */
     padding: 0;
     line-height: 2.5rem;
+}
+
+.escortperfil-nombrechikito {
+    position: absolute;
+    bottom: 18px;
+    left: 360px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5), 1px 1px 2px rgba(0, 0, 0, 0.2), 2px 2px 4px rgba(0, 0, 0, 0.25), 1px 1px 10px rgba(0, 0, 0, 0.25), -2px -2px 10px rgba(0, 0, 0, 0.25);
+    z-index: 2;
+    /* margin: 5 1 5px 1; */
+    padding: 0;
+    line-height: 2.5rem;
+    opacity: 88%;
 }
 
 .escortperfil-info-bar {
@@ -1697,6 +1712,33 @@ video:not(.banner-img):not(.historia-circle video) {
     width: auto;
     /* En lugar de un ancho fijo */
 }
+
+.escortperfil-subtitle {
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    color: #9a9fa8;
+}
+
+.escortperfil-videos-list {
+    width: 100%;
+}
+
+.escortperfil-video-item {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 16 / 9; /* Mantiene proporción del video */
+}
+
+.escortperfil-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
 
 .escortperfil-btn {
     text-decoration: none;
@@ -1864,7 +1906,7 @@ video:not(.banner-img):not(.historia-circle video) {
     font-size: 14px;
     transition: transform 0.2s;
     position: absolute;
-    top: 630px;
+    top: 612px;
     right: 531px;
     flex-direction: column;
     min-width: 8px;
@@ -2053,7 +2095,7 @@ video:not(.banner-img):not(.historia-circle video) {
 /* Contenedor del horario */
 .escortperfil-schedule {
     position: absolute;
-    right: 4px;
+    right: 316px;
     top: 784px;
     background-color: #fff;
     padding: 25px;
@@ -2135,7 +2177,7 @@ video:not(.banner-img):not(.historia-circle video) {
     outline: none;
     background: transparent;
     position: absolute;
-    top: 640px;
+    top: 621px;
     right: 360px;
     display: flex;
     flex-direction: column;
@@ -4155,31 +4197,60 @@ video:not(.banner-img):not(.historia-circle video) {
         text-transform: uppercase;
         /* height: 40px; */
         position: absolute;
+        display: flex;
         right: -349px;
         top: -29px;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        margin: auto;
     }
 
     .escortperfil-info-bar {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-        height: 4%;
-        width: 90%;
-        background-color: #fff;
-        border-radius: 5px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        padding: 12px 10px;
-        margin-top: 61px;
+        background-color: #e5e7eb;
         position: relative;
         z-index: 2;
-        margin: 13px;
+        border-radius: 10px;
+        margin: auto;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         top: 47px;
+        gap: 0; /* Eliminamos cualquier gap */
+        align-items: center;
+        height: 16px;
+        width: 100%;
+    /* Cambiamos space-between por un gap pequeño */
+        justify-content: flex-start;
+        padding: 0px 0px;
+        margin-bottom: 170px;
     }
 
+.escortperfil-info-bar > div {
+    background-color: #fff;
+    padding: 15px 20px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-right: 0;
+    border-bottom: 0;
+}
+
+/* Línea vertical del medio */
+.escortperfil-info-bar > div:nth-child(2n-1) {
+    border-right: 3px solid #e5e7eb;
+}
+
+/* Línea horizontal del medio */
+.escortperfil-info-bar > div:nth-child(-n+2) {
+    border-bottom: 3px solid #e5e7eb;
+}
+
     .escortperfil-section {
-        width: 367px;
+        width: 363px;
         /* O el ancho que prefieras */
-        /* margin-bottom: 40px; */
+        margin-bottom: 40px;
         margin: 13px;
     }
 
@@ -4263,10 +4334,22 @@ video:not(.banner-img):not(.historia-circle video) {
 
     .escortperfil-nombre {
         position: absolute;
-        bottom: 80px;
+        bottom: 100px;
         left: 19px;
         color: #fff;
         font-size: 3em;
+        font-weight: bold;
+        z-index: 2;
+        margin: 0;
+        padding: 0;
+    }
+
+    .escortperfil-nombrechikito {
+        position: absolute;
+        bottom: 60px;
+        left: 19px;
+        color: #fff;
+        font-size: 1em;
         font-weight: bold;
         z-index: 2;
         margin: 0;
@@ -4286,7 +4369,7 @@ video:not(.banner-img):not(.historia-circle video) {
 
     .escortperfil-content {
         flex-direction: column;
-        margin-top: 30px;
+        /* margin-top: 0px; */
     }
 
     .escort-map {
@@ -4513,8 +4596,8 @@ video:not(.banner-img):not(.historia-circle video) {
     }
 
     .swiper-pagination .swiper-pagination-bullet {
-        width: 8px;
-        height: 8px;
+        width: 17px;
+        height: 17px;
         background: rgb(49 49 49 / 20%);
         border-radius: 50%;
         opacity: 1;
@@ -4857,9 +4940,21 @@ video:not(.banner-img):not(.historia-circle video) {
     .mobile-blog {
         display: block;
     }
+
+    .escortperfil-section {
+        width: 326px;
+        /* O el ancho que prefieras */
+        margin-bottom: 40px;
+    }
 }
 
 @media screen and (max-width: 430px) {
+ .escortperfil-section {
+        width: 326px;
+        /* O el ancho que prefieras */
+        margin-bottom: 40px;
+    }
+
     .inicio-card {
         height: 340px;
         width: 208px;
@@ -4889,8 +4984,8 @@ video:not(.banner-img):not(.historia-circle video) {
     }
 
     .escortperfil-btn {
-        width: 372px;
-        right: -327px;
+        width: 388px;
+        right: -314px;
         top: -29px;
     }
 
@@ -4907,9 +5002,9 @@ video:not(.banner-img):not(.historia-circle video) {
     }
 
     .escortperfil-info-bar {
-        height: 5%;
-        width: 90%;
-        margin: 20px;
+        /* height: 5%; */
+        /* width: 90%; */
+        /* margin: 20px; */
     }
 
 
@@ -4960,11 +5055,11 @@ video:not(.banner-img):not(.historia-circle video) {
 
     .escortperfil-content {
         flex-direction: column;
-        margin-top: 50px;
+        /* margin-top: 0px; */
     }
 
     .escortperfil-schedule {
-        margin: 12px 50px;
+        margin: 251px 60px;
     }
 
     .escortperfil-map-section {
@@ -4981,6 +5076,12 @@ video:not(.banner-img):not(.historia-circle video) {
 }
 
 @media screen and (max-width: 415px) {
+    .escortperfil-section {
+        width: 326px;
+        /* O el ancho que prefieras */
+        margin-bottom: 40px;
+    }
+
     .inicio-card {
         height: 340px;
         width: 202px;
@@ -4994,8 +5095,8 @@ video:not(.banner-img):not(.historia-circle video) {
 
     .escortperfil-container {
         max-width: 415px;
-        height: 2727px;
-        margin: 0 auto;
+        height: 2852px;
+        /* margin: 0 auto; */
         font-family: 'Montserrat', sans-serif;
     }
 
@@ -5028,9 +5129,9 @@ video:not(.banner-img):not(.historia-circle video) {
     }
 
     .escortperfil-info-bar {
-        height: 5%;
-        width: 92%;
-        margin: 14px;
+        /* height: 5%; */
+        /* width: 92%; */
+        /* margin: 14px; */
     }
 
 
@@ -5081,11 +5182,11 @@ video:not(.banner-img):not(.historia-circle video) {
 
     .escortperfil-content {
         flex-direction: column;
-        margin-top: 50px;
+        /* margin-top: 0px; */
     }
 
     .escortperfil-schedule {
-        margin: 12px 58px;
+        margin: 225px 58px;
     }
 
     .escortperfil-map-section {
@@ -5121,6 +5222,14 @@ video:not(.banner-img):not(.historia-circle video) {
 }
 
 @media screen and (max-width: 413px) {
+    .escortperfil-section {
+        width: 326px;
+        /* O el ancho que prefieras */
+        margin-bottom: 40px;
+        margin-right: 12px;
+        margin-left: 2px;
+    }
+
     .inicio-card {
         height: 340px;
         width: 201px;
@@ -5134,7 +5243,7 @@ video:not(.banner-img):not(.historia-circle video) {
 
     .escortperfil-container {
         max-width: 390px;
-        height: 2727px;
+        height: 2890px;
         margin: 0 auto;
         font-family: 'Montserrat', sans-serif;
     }
@@ -5168,9 +5277,9 @@ video:not(.banner-img):not(.historia-circle video) {
     }
 
     .escortperfil-info-bar {
-        height: 5%;
-        width: 94%;
-        margin: 14px;
+        /* height: 5%; */
+        /* width: 100%; */
+        /* margin: 14px; */
     }
 
 
@@ -5221,11 +5330,12 @@ video:not(.banner-img):not(.historia-circle video) {
 
     .escortperfil-content {
         flex-direction: column;
-        margin-top: 50px;
+        /* margin-top: 0px; */
     }
 
     .escortperfil-schedule {
-        margin: 12px 50px;
+        margin: 278px 58px;
+        margin-left: px;
     }
 
     .escortperfil-map-section {
@@ -5260,6 +5370,14 @@ video:not(.banner-img):not(.historia-circle video) {
 }
 
 @media screen and (max-width: 393px) {
+    .escortperfil-section {
+        width: 326px;
+        /* O el ancho que prefieras */
+        margin-bottom: 40px;
+        margin-right: 12px;
+        margin-left: 10px;
+    }
+
     .inicio-container {
         padding: 0;
         margin: 5 5 5 5;
@@ -5273,7 +5391,7 @@ video:not(.banner-img):not(.historia-circle video) {
 
     .escortperfil-container {
         max-width: 390px;
-        height: 2727px;
+        height: 2856px;
         margin: 0 auto;
         font-family: 'Montserrat', sans-serif;
     }
@@ -5307,9 +5425,9 @@ video:not(.banner-img):not(.historia-circle video) {
     }
 
     .escortperfil-info-bar {
-        height: 5%;
-        width: 91%;
-        margin: 14px;
+        /* height: 5%; */
+        /* width: 91%; */
+        /* margin: 14px; */
     }
 
 
@@ -5360,11 +5478,12 @@ video:not(.banner-img):not(.historia-circle video) {
 
     .escortperfil-content {
         flex-direction: column;
-        margin-top: 50px;
+        /* margin-top: 0px; */
     }
 
     .escortperfil-schedule {
-        margin: 12px 54px;
+        margin: 276px 54px;
+        /* margin-top:80px; */
     }
 
     .escortperfil-map-section {
@@ -5400,6 +5519,13 @@ video:not(.banner-img):not(.historia-circle video) {
 
 
 @media screen and (max-width: 391px) {
+    .escortperfil-section {
+        width: 326px;
+        /* O el ancho que prefieras */
+        margin-bottom: 40px;
+        margin-left: 10px;
+    }
+
     .inicio-card-container {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -5422,7 +5548,7 @@ video:not(.banner-img):not(.historia-circle video) {
 
     .escortperfil-container {
         max-width: 390px;
-        height: 2727px;
+        height: 2843px;
         margin: 0 auto;
         font-family: 'Montserrat', sans-serif;
     }
@@ -5456,9 +5582,9 @@ video:not(.banner-img):not(.historia-circle video) {
     }
 
     .escortperfil-info-bar {
-        height: 5%;
-        width: 92%;
-        margin: 14px;
+        /* height: 5%; */
+        /* width: 92%; */
+        /* margin: 14px; */
     }
 
 
@@ -5509,11 +5635,11 @@ video:not(.banner-img):not(.historia-circle video) {
 
     .escortperfil-content {
         flex-direction: column;
-        margin-top: 50px;
+        /* margin-top: 0px; */
     }
 
     .escortperfil-schedule {
-        margin: 12px 50px;
+        margin: 251px 54px;
     }
 
     .escortperfil-map-section {
@@ -5551,6 +5677,13 @@ video:not(.banner-img):not(.historia-circle video) {
 
 /* Móviles muy pequeños (320px y menor) */
 @media screen and (max-width: 375px) {
+    .escortperfil-section {
+        width: 326px;
+        /* O el ancho que prefieras */
+        margin-bottom: 40px;
+        margin-left: 10px;
+    }
+
     .inicio-card {
         height: 340px;
         width: 182px;
@@ -5577,7 +5710,7 @@ video:not(.banner-img):not(.historia-circle video) {
 
     .escortperfil-container {
         max-width: 390px;
-        height: 2727px;
+        height: 2882px;
         margin: 0 auto;
         font-family: 'Montserrat', sans-serif;
     }
@@ -5611,9 +5744,9 @@ video:not(.banner-img):not(.historia-circle video) {
     }
 
     .escortperfil-info-bar {
-        height: 5%;
-        width: 92%;
-        margin: 14px;
+        /* height: 5%; */
+        /* width: 92%; */
+        /* margin: 14px; */
     }
 
 
@@ -5665,12 +5798,12 @@ video:not(.banner-img):not(.historia-circle video) {
 
     .escortperfil-content {
         flex-direction: column;
-        margin-top: 50px;
+        /* margin-top: 50px; */
         /* width: 100%; */
     }
 
     .escortperfil-schedule {
-        margin: 12px 48px;
+        margin: 303px 48px;
     }
 
     .escort-map {
@@ -5706,6 +5839,13 @@ video:not(.banner-img):not(.historia-circle video) {
 
 /* Móviles muy pequeños (320px y menor) */
 @media screen and (max-width: 361px) {
+    .escortperfil-section {
+        width: 326px;
+        margin-bottom: 40px;
+        margin-right: auto;
+        margin-left: 10px;
+    }
+
     .inicio-card {
         height: 340px;
         width: 175px;
@@ -5719,7 +5859,7 @@ video:not(.banner-img):not(.historia-circle video) {
 
     .escortperfil-container {
         max-width: 360px;
-        height: 2727px;
+        height: 2868px;
         margin: 0 auto;
         font-family: 'Montserrat', sans-serif;
     }
@@ -5753,9 +5893,9 @@ video:not(.banner-img):not(.historia-circle video) {
     }
 
     .escortperfil-info-bar {
-        height: 5%;
+        /* height: 5%;
         width: 90%;
-        margin: 16px;
+        margin: 16px; */
     }
 
 
@@ -5807,12 +5947,15 @@ video:not(.banner-img):not(.historia-circle video) {
 
     .escortperfil-content {
         flex-direction: column;
-        margin-top: 50px;
+        /* margin-top: 16px; */
     }
 
     .escortperfil-schedule {
-        margin: 0px 0px;
+        margin: 288px 2px;
         width: 85%;
+        margin-bottom: auto;
+        /* margin-right: auto; */
+        /* margin-left: auto; */
     }
 
     .escortperfil-map-section {

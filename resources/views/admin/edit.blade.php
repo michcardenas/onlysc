@@ -157,6 +157,17 @@
             </div>
 
             <div class="form-group">
+                <label for="u1">Ubicaciones donde atiendo</label>
+                <input type="text" name="u1" value="{{ old('u1', $usuario->u1) }}">
+            </div>
+
+            <div class="form-group">
+                <label for="u2">Servicios del Sitio</label>
+                <input type="text" name="u2" value="{{ old('u1', $usuario->u2) }}">
+            </div>
+
+
+            <div class="form-group">
                 <label for="nacionalidad">Nacionalidad</label>
                 <select name="nacionalidad" id="nacionalidad" class="form-select" required>
                     <option value="">Seleccionar nacionalidad</option>
@@ -517,6 +528,32 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Videos -->
+                <div class="mb-4">
+                    <h6 class="border-bottom pb-2">Videos</h6>
+                    <div class="form-group">
+                        <input type="file" name="videos[]" multiple id="videosInput" accept="video/*" class="form-control">
+                        <small class="form-text text-muted">Puede subir múltiples videos. Tamaño máximo por video: 20MB. Formatos aceptados: MP4, WEBM, OGG</small>
+
+                        <div class="videos-actuales mt-2" id="videoPreviewContainer" data-user-id="{{ $usuario->id }}">
+                            @if(!empty(json_decode($usuario->videos)))
+                            @foreach(json_decode($usuario->videos) as $video)
+                            <div class="publicate-preview-item video-item"
+                                data-video="{{ $video }}"
+                                data-user-id="{{ $usuario->id }}">
+                                <video src="{{ asset('storage/chicas/'.$usuario->id.'/videos/'.$video) }}"
+                                    controls
+                                    class="video-preview"
+                                    onerror="this.src='{{ asset('images/default-video.png') }}'">
+                                </video>
+                                <button type="button" class="publicate-remove-button" onclick="removeExistingVideo('{{ $video }}', this)">&times;</button>
+                            </div>
+                            @endforeach
+                            @endif
+                        </div>
+                    </div>
+                </div>
                             
                             <!-- Fotos Adicionales -->
                             <div>
