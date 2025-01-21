@@ -315,6 +315,8 @@ label .required {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
+    font-family: 'Montserrat';
+
 }
 
 /* Flecha del select */
@@ -333,6 +335,7 @@ label .required {
     margin-left: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    font-family: 'Montserrat';
 }
 
 .location-selector .btn-location:hover {

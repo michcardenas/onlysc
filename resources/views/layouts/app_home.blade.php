@@ -146,14 +146,14 @@
     justify-content: center; /* Centrar horizontalmente */
     align-items: center; /* Centrar verticalmente */
     width: 100%; /* Ancho completo */
-    margin: 0;
+    margin-top: 50px;
     padding: 0;
     background: url('https://via.placeholder.com/1920x1080') no-repeat center center/cover; /* Fondo de ejemplo */
 }
 
 /* Estilo para el contenedor glass */
 .glass-container {
-    background: rgba(255, 255, 255, 0.1); /* Transparencia para glassmorphism */
+    background: rgba(105, 93, 93, 0.1); /* Transparencia para glassmorphism */
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
@@ -217,7 +217,7 @@
     background-position: center;
     background-attachment: fixed;
     height: 100vh;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Montserrat';
 }
 .preloader {
     position: fixed;
@@ -225,7 +225,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgb(0, 0, 0);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -313,7 +313,7 @@
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.2);
     min-height: 20rem;
 }
@@ -445,8 +445,8 @@
 
 /* Contenedor principal */
 .glass-container {
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 16px;
+    background: rgb(16 14 14);
+        border-radius: 16px;
     padding: 24px;
     max-width: 900px;
     width: 100%;
@@ -514,7 +514,7 @@
 
     .glass-container {
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
         text-align: center;
     }
 
@@ -529,7 +529,7 @@
     }
 
     .mission-text {
-        text-align: center;
+        text-align: left;
     }
 
     .btn-glass {
@@ -542,14 +542,18 @@
     .meta-inicio-titulos .title-secondary h2 {
         font-size: 1.5rem;
     }
+    
 }
 /* Estilo del título */
 /* Estilo del título */
+.tarjetasflex {
+    display: flex;
+    margin-bottom: 20px;
+    width: 100%;
+}
 .titulo-tarjetas {
-    font-family: 'Poppins', sans-serif;
     font-size: 2.5rem; /* Tamaño del texto */
     font-weight: 400; /* Peso regular para el texto */
-    text-align: center; /* Centrado */
     color: #ffff; /* Color del texto principal */
     margin-bottom: 20px; /* Espaciado inferior */
 }
@@ -644,11 +648,12 @@
     <p class="loading-text">onlyescorts.cl</p>
     </div>
 </div>
-<header style="position: fixed; top: 0; left: 0; width: 100%; background-color: #000; z-index: 1000;">
-    <div class="logo-container1" style="padding-bottom: 10px; display: flex; justify-content: center; align-items: center;">
+<header style="position: fixed; top: 0; left: 0; width: 100%; background-color: #000; z-index: 1000; border-bottom: 1px solid #ffffff78;">
+    <div class="logo-container1" style="padding-bottom: 3px; display: flex; justify-content: center; align-items: center;"> 
         <img src="{{ asset('images/logo_XL-2.png') }}" alt="Logo" style="max-width: 200px; height: auto;">
     </div>
 </header>
+
 <div class="selector-container">
             <!-- El contenido del selector se carga desde la vista 'home.blade.php' -->
             @yield('selector')
@@ -714,10 +719,11 @@
       
 
         <div class="cards-container">
+            <div class="tarjetasflex">
         <h2 class="titulo-tarjetas">
     {!! preg_replace('/\s(\S+)$/', ' <span class="highlight">$1</span>', e($meta->titulo_tarjetas ?? 'Sin título definido')) !!}
 </h2>
-
+</div>
             <!-- Aquí se insertan las tarjetas desde la vista 'home.blade.php' -->
             @yield('content')
         </div>
