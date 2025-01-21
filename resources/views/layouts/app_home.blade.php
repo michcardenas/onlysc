@@ -646,7 +646,7 @@
 <body class="custom-background">
 <div id="preloader" class="preloader">
     <div class="loader-content">
-    <img src="{{ asset('images/logo_S.png') }}" alt="Cargando..." class="loading-logo" />
+    <img src="{{ asset('images/icono.png') }}" alt="Cargando..." class="loading-logo" />
     <p class="loading-text">onlyescorts.cl</p>
     </div>
 </div>
