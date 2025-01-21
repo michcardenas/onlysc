@@ -24,6 +24,37 @@ Auth::routes();
 Route::get('/', function () {
     return redirect()->route('home')->with('showLoader', true);
 });
+Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
+    Route::get('/panel-control', [AdminController::class, 'index'])->name('panel_control');
+    Route::get('/perfiles', [AdminController::class, 'Perfiles'])->name('admin.perfiles');
+    Route::middleware(['auth'])->group(function () {
+        // Rutas para CRUD de foros
+        Route::prefix('foroadmin')->group(function () {
+            Route::get('/', [ForoController::class, 'foroadmin'])->name('foroadmin');
+            Route::get('/edit/{id}', [ForoController::class, 'edit'])->name('foroadmin.edit');
+            Route::put('/update/{id}', [ForoController::class, 'update'])->name('foroadmin.update');
+            Route::delete('/delete/{id}', [ForoController::class, 'destroy'])->name('foroadmin.destroy');
+            Route::get('/create', [ForoController::class, 'create'])->name('foroadmin.create');
+            Route::post('/store', [ForoController::class, 'store'])->name('foroadmin.store');
+    
+            // Rutas para administración de posts
+            Route::get('/posts/{id_blog?}', [ForoController::class, 'showPosts'])->name('foroadmin.posts');
+            Route::get('/createpost/{id_blog}', [ForoController::class, 'createpost'])->name('foroadmin.createpost');
+            Route::post('/storepost', [ForoController::class, 'storepost'])->name('foroadmin.storepost');
+            Route::get('/post/{id}/edit', [ForoController::class, 'editpost'])->name('foroadmin.editpost');
+            Route::put('/post/{id}', [ForoController::class, 'updatepost'])->name('foroadmin.updatepost');
+            Route::delete('/post/{id}', [ForoController::class, 'destroypost'])->name('foroadmin.destroypost');
+            Route::post('/posts/{id}/toggle-fixed', [ForoController::class, 'toggleFixed'])->name('posts.toggle-fixed');
+        });
+    });
+
+});
+
+
+
+
+
+
 Route::get('/', [App\Http\Controllers\HomeController::class, 'showHome'])->name('home');
 Route::post('/escorts-{nombreCiudad}/aplicar-filtros', [InicioController::class, 'filterUsuarios'])
 ->name('inicio.filtrar');
@@ -55,7 +86,6 @@ Route::get('/rta', [InicioController::class, 'RTA'])->name('rta');
 Route::post('/rta', [InicioController::class, 'rta'])->name('rta.store');
 
 //panel
-Route::get('/panel-control', [AdminController::class, 'index'])->name('panel_control');
 Route::get('/admin/users-by-city', [AdminController::class, 'getUsersByCity'])->name('admin.users-by-city');
 // Agregar en el grupo de rutas con middleware auth
 Route::post('/usuarios-publicate/toggle-image-block', [UsuarioPublicateController::class, 'toggleImageBlock'])
@@ -67,32 +97,12 @@ Route::post('/validate-fantasia', [UsuarioPublicateController::class, 'validateF
 Route::post('/actualizar-posicion-foto', [UsuarioPublicateController::class, 'actualizarPosicionFoto'])->name('actualizar.posicion.foto');
 
 //Perfiles en general
-Route::get('/perfiles', [AdminController::class, 'Perfiles'])->name('admin.perfiles');
 Route::get('/perfiles/login-as/{id}', [AdminController::class, 'loginAsUser'])->name('admin.login.as.user');
 Route::get('/perfiles/return-to-admin', [AdminController::class, 'returnToAdmin'])->name('admin.return');
 Route::delete('/perfil/{id}/eliminar', [AdminController::class, 'eliminarPerfil'])->name('admin.perfil.eliminar');
 
 //Foro Admin y Posts
-Route::middleware(['auth'])->group(function () {
-    // Rutas para CRUD de foros
-    Route::prefix('foroadmin')->group(function () {
-        Route::get('/', [ForoController::class, 'foroadmin'])->name('foroadmin');
-        Route::get('/edit/{id}', [ForoController::class, 'edit'])->name('foroadmin.edit');
-        Route::put('/update/{id}', [ForoController::class, 'update'])->name('foroadmin.update');
-        Route::delete('/delete/{id}', [ForoController::class, 'destroy'])->name('foroadmin.destroy');
-        Route::get('/create', [ForoController::class, 'create'])->name('foroadmin.create');
-        Route::post('/store', [ForoController::class, 'store'])->name('foroadmin.store');
 
-        // Rutas para administración de posts
-        Route::get('/posts/{id_blog?}', [ForoController::class, 'showPosts'])->name('foroadmin.posts');
-        Route::get('/createpost/{id_blog}', [ForoController::class, 'createpost'])->name('foroadmin.createpost');
-        Route::post('/storepost', [ForoController::class, 'storepost'])->name('foroadmin.storepost');
-        Route::get('/post/{id}/edit', [ForoController::class, 'editpost'])->name('foroadmin.editpost');
-        Route::put('/post/{id}', [ForoController::class, 'updatepost'])->name('foroadmin.updatepost');
-        Route::delete('/post/{id}', [ForoController::class, 'destroypost'])->name('foroadmin.destroypost');
-        Route::post('/posts/{id}/toggle-fixed', [ForoController::class, 'toggleFixed'])->name('posts.toggle-fixed');
-    });
-});
 Route::get('/buscar', [ForoController::class, 'buscar'])->name('foro.buscar');
 
 // Rutas para visualización pública
