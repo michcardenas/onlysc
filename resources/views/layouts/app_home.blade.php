@@ -521,7 +521,6 @@
     .mission-title {
         font-size: 2rem;
         margin-bottom: 16px;
-        text-align: center;
     }
 
     .content-wrapper {
