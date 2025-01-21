@@ -744,7 +744,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video) {
     padding: 20px 0;
     font-size: 14px;
     font-family: 'Montserrat', sans-serif;
-    background-color: #000;
+    background-color: #0c0c0c;
     width: 100%;
     margin: 0;
     position: relative;
