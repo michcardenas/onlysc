@@ -15,31 +15,45 @@
     <link rel="stylesheet" href="{{ asset('css/foro.css') }}">
     <link rel="stylesheet" href="{{ asset('css/blog.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    @if($metaTags)
-        {{-- Meta título --}}
+    @if(isset($metaTags))
+    {{-- Meta título --}}
+    @if(isset($metaTags->meta_title))
         <title>{{ $metaTags->meta_title }}</title>
-        
-        {{-- Meta tags principales --}}
-        <meta name="description" content="{{ $metaTags->meta_description }}">
-        <meta name="keywords" content="{{ $metaTags->meta_keywords }}">
-        
-        {{-- Meta tags adicionales --}}
-        <meta name="author" content="{{ $metaTags->meta_author }}">
-        <meta name="robots" content="{{ $metaTags->meta_robots }}">
-        
-        {{-- URL Canónica --}}
-        @if($metaTags->canonical_url)
-            <link rel="canonical" href="{{ $metaTags->canonical_url }}" />
-        @endif
-        
-        {{-- Open Graph tags para redes sociales --}}
-        <meta property="og:title" content="{{ $metaTags->meta_title }}">
-        <meta property="og:description" content="{{ $metaTags->meta_description }}">
-        <meta property="og:type" content="website">
-        @if($metaTags->canonical_url)
-            <meta property="og:url" content="{{ $metaTags->canonical_url }}">
-        @endif
     @endif
+    
+    {{-- Meta tags principales --}}
+    @if(isset($metaTags->meta_description))
+        <meta name="description" content="{{ $metaTags->meta_description }}">
+    @endif
+    @if(isset($metaTags->meta_keywords))
+        <meta name="keywords" content="{{ $metaTags->meta_keywords }}">
+    @endif
+    
+    {{-- Meta tags adicionales --}}
+    @if(isset($metaTags->meta_author))
+        <meta name="author" content="{{ $metaTags->meta_author }}">
+    @endif
+    @if(isset($metaTags->meta_robots))
+        <meta name="robots" content="{{ $metaTags->meta_robots }}">
+    @endif
+    
+    {{-- URL Canónica --}}
+    @if(isset($metaTags->canonical_url))
+        <link rel="canonical" href="{{ $metaTags->canonical_url }}" />
+    @endif
+    
+    {{-- Open Graph tags para redes sociales --}}
+    @if(isset($metaTags->meta_title))
+        <meta property="og:title" content="{{ $metaTags->meta_title }}">
+    @endif
+    @if(isset($metaTags->meta_description))
+        <meta property="og:description" content="{{ $metaTags->meta_description }}">
+    @endif
+    <meta property="og:type" content="website">
+    @if(isset($metaTags->canonical_url))
+        <meta property="og:url" content="{{ $metaTags->canonical_url }}">
+    @endif
+@endif
     <!-- Scripts -->
     <script src="https://cdn.tiny.cloud/1/z94ao1xzansr93pi0qe5kfxgddo1f4ltb8q7qa8pw9g52txs/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <style>

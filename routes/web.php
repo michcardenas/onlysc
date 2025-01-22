@@ -50,6 +50,27 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
 
 });
 
+// Rutas del foro separadas con su propio middleware
+Route::middleware(['auth', \App\Http\Middleware\ForoMiddleware::class])->group(function () {
+    Route::prefix('foroadmin')->group(function () {
+        Route::get('/', [ForoController::class, 'foroadmin'])->name('foroadmin');
+        Route::get('/edit/{id}', [ForoController::class, 'edit'])->name('foroadmin.edit');
+        Route::put('/update/{id}', [ForoController::class, 'update'])->name('foroadmin.update');
+        Route::delete('/delete/{id}', [ForoController::class, 'destroy'])->name('foroadmin.destroy');
+        Route::get('/create', [ForoController::class, 'create'])->name('foroadmin.create');
+        Route::post('/store', [ForoController::class, 'store'])->name('foroadmin.store');
+
+        // Rutas para administración de posts
+        Route::get('/posts/{id_blog?}', [ForoController::class, 'showPosts'])->name('foroadmin.posts');
+        Route::get('/createpost/{id_blog}', [ForoController::class, 'createpost'])->name('foroadmin.createpost');
+        Route::post('/storepost', [ForoController::class, 'storepost'])->name('foroadmin.storepost');
+        Route::get('/post/{id}/edit', [ForoController::class, 'editpost'])->name('foroadmin.editpost');
+        Route::put('/post/{id}', [ForoController::class, 'updatepost'])->name('foroadmin.updatepost');
+        Route::delete('/post/{id}', [ForoController::class, 'destroypost'])->name('foroadmin.destroypost');
+        Route::post('/posts/{id}/toggle-fixed', [ForoController::class, 'toggleFixed'])->name('posts.toggle-fixed');
+    });
+});
+
 
 
 

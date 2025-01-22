@@ -218,8 +218,8 @@
 
 
 .swiper-slide .blog-card {
-    width: 95%;
-    height: 197px;
+    width: 100%;
+    height: 196px;
     /* Volvemos a la altura original */
     margin: 0;
     position: relative;
