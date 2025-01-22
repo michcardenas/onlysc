@@ -1596,7 +1596,6 @@ function confirmarEliminarPerfil(id) {
 
 
 <script>
-
 document.getElementById('seoForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
@@ -1613,7 +1612,123 @@ document.getElementById('seoForm').addEventListener('submit', function(e) {
     // Enviar el formulario
     this.submit();
 });
-document.addEventListener('DOMContentLoaded', function() {
+
+
+function toggleContentBlock(button) {
+    const previewItem = button.closest('.publicate-preview-item');
+    const overlay = previewItem.querySelector('.content-overlay');
+    const userId = previewItem.dataset.userId;
+    const foto = previewItem.dataset.foto;
+    
+    const isCurrentlyBlocked = overlay.style.display === 'flex';
+    
+    fetch('/usuarios-publicate/toggle-image-block', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+            user_id: userId,
+            image: foto,
+            blocked: !isCurrentlyBlocked // Invertimos el estado actual
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (overlay.style.display === 'none' || overlay.style.display === '') {
+                overlay.style.display = 'flex';
+                button.textContent = 'Desbloquear';
+                button.classList.add('active');
+            } else {
+                overlay.style.display = 'none';
+                button.textContent = 'Bloquear';
+                button.classList.remove('active');
+            }
+            console.log('Estado actual:', data); // Para debug
+        } else {
+            alert('Error al actualizar el estado de bloqueo');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al procesar la solicitud');
+    });
+}
+
+</script>
+<script>
+// Validación para el tamaño de los videos
+document.getElementById('videosInput').addEventListener('change', function(e) {
+    const maxSize = 20 * 1024 * 1024; // 20MB en bytes
+    const files = e.target.files;
+    
+    for(let i = 0; i < files.length; i++) {
+        if(files[i].size > maxSize) {
+            alert('El video ' + files[i].name + ' excede el tamaño máximo permitido de 20MB');
+            e.target.value = ''; // Limpiar la selección
+            return;
+        }
+    }
+});
+
+// Función para eliminar videos existentes
+function removeExistingVideo(videoName, button) {
+    if(confirm('¿Está seguro de que desea eliminar este video?')) {
+        const userId = button.closest('[data-user-id]').dataset.userId;
+        
+        fetch('/admin/eliminar-video', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({
+                video: videoName,
+                user_id: userId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                button.closest('.video-item').remove();
+            } else {
+                alert('Error al eliminar el video');
+            }
+        });
+    }
+}
+
+// Función para alternar el bloqueo de videos
+function toggleVideoBlock(button) {
+    const videoItem = button.closest('.video-item');
+    const userId = videoItem.dataset.userId;
+    const videoName = videoItem.dataset.video;
+    
+    fetch('/admin/toggle-video-block', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+            video: videoName,
+            user_id: userId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            button.classList.toggle('active');
+            button.textContent = button.classList.contains('active') ? 'Desbloquear' : 'Bloquear';
+            videoItem.querySelector('.content-overlay').style.display = button.classList.contains('active') ? 'flex' : 'none';
+        }
+    });
+}
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('templatesForm');
     const ciudadSelect = document.getElementById('global_ciudad');
     const selectedCiudadInput = document.getElementById('selected_ciudad_id');
@@ -1846,118 +1961,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-
-function toggleContentBlock(button) {
-    const previewItem = button.closest('.publicate-preview-item');
-    const overlay = previewItem.querySelector('.content-overlay');
-    const userId = previewItem.dataset.userId;
-    const foto = previewItem.dataset.foto;
-    
-    const isCurrentlyBlocked = overlay.style.display === 'flex';
-    
-    fetch('/usuarios-publicate/toggle-image-block', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({
-            user_id: userId,
-            image: foto,
-            blocked: !isCurrentlyBlocked // Invertimos el estado actual
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            if (overlay.style.display === 'none' || overlay.style.display === '') {
-                overlay.style.display = 'flex';
-                button.textContent = 'Desbloquear';
-                button.classList.add('active');
-            } else {
-                overlay.style.display = 'none';
-                button.textContent = 'Bloquear';
-                button.classList.remove('active');
-            }
-            console.log('Estado actual:', data); // Para debug
-        } else {
-            alert('Error al actualizar el estado de bloqueo');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error al procesar la solicitud');
-    });
-}
-
-</script>
-<script>
-// Validación para el tamaño de los videos
-document.getElementById('videosInput').addEventListener('change', function(e) {
-    const maxSize = 20 * 1024 * 1024; // 20MB en bytes
-    const files = e.target.files;
-    
-    for(let i = 0; i < files.length; i++) {
-        if(files[i].size > maxSize) {
-            alert('El video ' + files[i].name + ' excede el tamaño máximo permitido de 20MB');
-            e.target.value = ''; // Limpiar la selección
-            return;
-        }
-    }
-});
-
-// Función para eliminar videos existentes
-function removeExistingVideo(videoName, button) {
-    if(confirm('¿Está seguro de que desea eliminar este video?')) {
-        const userId = button.closest('[data-user-id]').dataset.userId;
-        
-        fetch('/admin/eliminar-video', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify({
-                video: videoName,
-                user_id: userId
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.success) {
-                button.closest('.video-item').remove();
-            } else {
-                alert('Error al eliminar el video');
-            }
-        });
-    }
-}
-
-// Función para alternar el bloqueo de videos
-function toggleVideoBlock(button) {
-    const videoItem = button.closest('.video-item');
-    const userId = videoItem.dataset.userId;
-    const videoName = videoItem.dataset.video;
-    
-    fetch('/admin/toggle-video-block', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({
-            video: videoName,
-            user_id: userId
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data.success) {
-            button.classList.toggle('active');
-            button.textContent = button.classList.contains('active') ? 'Desbloquear' : 'Bloquear';
-            videoItem.querySelector('.content-overlay').style.display = button.classList.contains('active') ? 'flex' : 'none';
-        }
-    });
-}
-</script>
+    </script>
 </html>

@@ -699,6 +699,8 @@
     color: #0077b5;
 }
 
+
+
 @media screen and (max-width: 1280px) {
     .blog-blade-sidebar {
         width: 217px;
@@ -713,6 +715,19 @@
     }
 }
 
+
+@media screen and (max-width: 1400px) {
+    .blog-blade-sidebar {
+        width: 200px;
+        margin-left: 0px;
+        flex-shrink: 0px;
+    }
+    
+    .swiper {
+        width: 120%;
+        padding: 0;
+    }
+}
 /* Media queries para diferentes tamaños de pantalla */
 @media screen and (max-width: 768px) {
     .blog-carousel-container {

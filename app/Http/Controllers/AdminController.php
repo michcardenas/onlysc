@@ -10,6 +10,7 @@ use App\Models\UsuarioPublicate;
 use App\Models\Ciudad; 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\QueryException;
 
 class AdminController extends Controller
 {
@@ -196,6 +197,7 @@ public function eliminarPerfil($id)
             ->with('error', 'Error al eliminar el perfil: ' . $e->getMessage());
     }
 }
+
 public function seoTemplates()
     {
         $ciudades = Ciudad::all();
@@ -246,9 +248,16 @@ public function seoTemplates()
             'filtro' => 'nullable|string',
             'ciudad_id' => 'required|exists:ciudades,id'
         ]);
-
+    
         try {
-            SeoTemplate::updateOrCreate(
+            Log::info('Starting single SEO template update', [
+                'ciudad_id' => $request->ciudad_id,
+                'tipo' => $request->tipo,
+                'filtro' => $request->filtro,
+                'user_id' => auth()->id()
+            ]);
+    
+            $template = SeoTemplate::updateOrCreate(
                 [
                     'ciudad_id' => $request->ciudad_id,
                     'tipo' => $request->tipo,
@@ -258,18 +267,28 @@ public function seoTemplates()
                     'description_template' => $request->description_template
                 ]
             );
-
+    
+            Log::info('SEO template updated successfully', [
+                'template_id' => $template->id,
+                'ciudad_id' => $request->ciudad_id,
+                'tipo' => $request->tipo,
+                'filtro' => $request->filtro
+            ]);
+    
             return redirect()->back()->with('success', 'Template SEO actualizado correctamente');
-
+    
         } catch (\Exception $e) {
-            Log::error('Error en template SEO', [
+            Log::error('SEO template update failed', [
+                'ciudad_id' => $request->ciudad_id,
+                'tipo' => $request->tipo,
+                'filtro' => $request->filtro,
                 'error' => $e->getMessage(),
                 'line' => $e->getLine(),
-                'file' => $e->getFile()
+                'file' => $e->getFile(),
+                'trace' => $e->getTraceAsString()
             ]);
-
-            return redirect()->back()
-                ->with('error', 'Error al procesar el template SEO: ' . $e->getMessage());
+    
+            return redirect()->back()->with('error', 'Error al procesar el template SEO: ' . $e->getMessage());
         }
     }
 
@@ -329,72 +348,74 @@ public function seoTemplates()
 {
     $request->validate([
         'ciudad_id' => 'required|exists:ciudades,id',
-        'templates' => 'required|array',
-        'templates.*.tipo' => 'required|string',
-        'templates.*.description_template' => 'required|string',
+        'templates' => 'required|array'
     ]);
 
     try {
         DB::beginTransaction();
+        
+        Log::info('Starting SEO template batch update', [
+            'ciudad_id' => $request->ciudad_id,
+            'template_count' => count($request->templates)
+        ]);
+
+        $filtroTypes = ['ciudad', 'nacionalidad', 'edad', 'precio', 'atributos', 
+                       'servicios', 'disponible', 'resena', 'categorias'];
 
         foreach ($request->templates as $templateData) {
-            // Lista de tipos que son filtros
-            $filtroTypes = [
-                'ciudad', 'nacionalidad', 'edad', 'precio', 
-                'atributos', 'servicios', 'disponible', 
-                'resena', 'categorias'
+            $isFilter = in_array($templateData['tipo'], $filtroTypes);
+            $updateData = [
+                'ciudad_id' => $request->ciudad_id,
+                'tipo' => $isFilter ? 'filtro' : $templateData['tipo'],
+                'filtro' => $isFilter ? $templateData['tipo'] : null
             ];
 
-            // Determinar si es un filtro o un tipo general
-            $isFilter = in_array($templateData['tipo'], $filtroTypes);
+            try {
+                $template = SeoTemplate::updateOrCreate(
+                    $updateData,
+                    ['description_template' => $templateData['description_template']]
+                );
 
-            if ($isFilter) {
-                // Si es un filtro, guardamos el tipo como 'filtro'
-                SeoTemplate::updateOrCreate(
-                    [
-                        'ciudad_id' => $request->ciudad_id,
-                        'tipo' => 'filtro',
-                        'filtro' => $templateData['tipo']
-                    ],
-                    [
-                        'description_template' => $templateData['description_template']
-                    ]
-                );
-            } else {
-                // Si es un tipo general, guardamos sin filtro
-                SeoTemplate::updateOrCreate(
-                    [
-                        'ciudad_id' => $request->ciudad_id,
-                        'tipo' => $templateData['tipo'],
-                        'filtro' => null
-                    ],
-                    [
-                        'description_template' => $templateData['description_template']
-                    ]
-                );
+                Log::info('SEO Template updated', [
+                    'ciudad_id' => $request->ciudad_id,
+                    'template_id' => $template->id,
+                    'tipo' => $updateData['tipo'],
+                    'filtro' => $updateData['filtro']
+                ]);
+            } catch (QueryException $qe) {
+                Log::error('SEO Template update failed', [
+                    'ciudad_id' => $request->ciudad_id,
+                    'tipo' => $updateData['tipo'],
+                    'filtro' => $updateData['filtro'],
+                    'sql' => $qe->getSql(),
+                    'bindings' => $qe->getBindings(),
+                    'error' => $qe->getMessage()
+                ]);
+                throw $qe;
             }
         }
 
         DB::commit();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Templates actualizados correctamente'
+        Log::info('SEO Template batch update completed', [
+            'ciudad_id' => $request->ciudad_id
         ]);
+
+        return response()->json(['success' => true]);
 
     } catch (\Exception $e) {
         DB::rollBack();
-        Log::error('Error al actualizar templates SEO', [
+        Log::error('SEO Template batch update failed', [
+            'ciudad_id' => $request->ciudad_id,
             'error' => $e->getMessage(),
-            'line' => $e->getLine(),
-            'file' => $e->getFile()
+            'trace' => $e->getTraceAsString()
         ]);
 
         return response()->json([
             'success' => false,
-            'message' => 'Error al actualizar los templates: ' . $e->getMessage()
+            'message' => $e->getMessage()
         ], 500);
     }
 }
+    
 
 }

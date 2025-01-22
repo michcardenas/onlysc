@@ -6285,6 +6285,71 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video) {
 
 }
 
+/* Rango 1366px - 1439px */
+@media screen and (min-width: 1366px) and (max-width: 1400px) {
+    .share-button {
+        right: 179px;
+    }
+
+    .escortperfil-actions {
+        right: 28px;
+    }
+
+/* Contenedor del horario */
+.escortperfil-schedule {
+    right: 5px;
+}
+
+    .inicio-container {
+        max-width: 1360px;
+        margin: auto;
+        padding: 10px;
+    }
+
+    .volvieronyprimera-card {
+        position: relative;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        height: 204px;
+        background: #000;
+        width: 326px;
+    }
+
+    .inicio-featured-card {
+        right: 19px;
+    }
+
+    /* Panel de chicas online */
+    .online-panel {
+        width: 200px;
+        background-color: transparent;
+        border-radius: 4px;
+        padding: 10px;
+        font-family: 'Montserrat', sans-serif;
+        position: absolute;
+        top: 824px;
+        right: 10px;
+        z-index: 10;
+    }
+
+    .escortperfil-nombre {
+        left: 81px;
+    }
+
+    .share-button {
+        right: 200px;
+    }
+
+    .favorite-button {
+        right: 50px;
+    }
+
+    .escortperfil-nombrechikito {
+        left: 83px;
+    }
+
+}
+
 
 
 @media screen and (min-width: 1440px) and (max-width: 1919px) {
