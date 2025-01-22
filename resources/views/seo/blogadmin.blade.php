@@ -302,7 +302,7 @@ select.form-control option {
             </button>
         </div>
     @endif
-        <form action="{{ route('seo.update', ['page' => 'home']) }}" method="POST">
+        <form action="{{ route('seo.update', ['page' => 'blog']) }}" method="POST"  enctype="multipart/form-data">
         @csrf
                 @method('PUT')
                 
@@ -394,19 +394,32 @@ select.form-control option {
                         @enderror
                     </div>
 
-                    <!-- Additional Text -->
+                                    
+                    <!-- Imagen de Fondo -->
                     <div class="form-group template-group">
-                        <label for="additional_text" class="text-white">Texto Adicional</label>
-                        <textarea class="form-control bg-dark text-white @error('additional_text') is-invalid @enderror" 
-                                id="additional_text" 
-                                name="additional_text" 
-                                rows="4" 
-                                placeholder="Ingrese texto adicional">{{ old('additional_text', $meta->additional_text ?? '') }}</textarea>
-                        @error('additional_text')
-                            <div class="invalid-feedback">
-                                {{ $message }}
+                        <label for="fondo" class="text-white">Imagen de banner</label>
+                        <div class="input-group">
+                            <input type="file" 
+                                class="form-control bg-dark text-white @error('fondo') is-invalid @enderror"
+                                id="fondo"
+                                name="fondo"
+                                accept="image/jpeg,image/png,image/jpg,image/webp">
+                            @error('fondo')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        
+                        @if(isset($meta->fondo))
+                            <div class="mt-2">
+                                <img src="{{ asset('storage/' . $meta->fondo) }}" 
+                                    alt="Imagen de fondo actual" 
+                                    class="img-thumbnail" 
+                                    style="max-height: 100px">
+                                <p class="text-white-50 small mt-1">Imagen actual: {{ basename($meta->fondo) }}</p>
                             </div>
-                        @enderror
+                        @endif
                     </div>
 
                 <!-- Botones de Acción -->

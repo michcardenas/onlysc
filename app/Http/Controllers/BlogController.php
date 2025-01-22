@@ -10,52 +10,90 @@ use App\Models\BlogTag;
 use App\Models\Ciudad;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\MetaTag;
 
 class BlogController extends Controller
 {
     public function showBlog()
     {
+        // Obtener artículos del blog
         $articulos = BlogArticle::with(['user', 'categories', 'tags'])
             ->where('estado', 'publicado')
             ->orderBy('fecha_publicacion', 'desc')
             ->get();
-
-
+    
+        // Obtener ciudades, categorías y tags
         $ciudades = Ciudad::all();
         $categorias = BlogCategory::all();
         $tags = BlogTag::all();
-
+    
+        // Obtener los metadatos específicos para la página 'blog'
+        $meta = MetaTag::where('page', 'blog')->first();
+    
+        // Si no existe un registro de meta para 'blog', crear un objeto vacío con valores por defecto
+        if (!$meta) {
+            $meta = new MetaTag([
+                'page' => 'blog',
+                'meta_title' => 'Blog - Descubre las últimas novedades',
+                'meta_description' => 'Explora artículos interesantes sobre diversos temas en nuestro blog.',
+                'meta_keywords' => 'blog, artículos, novedades',
+                'meta_robots' => 'index, follow',
+                'canonical_url' => url()->current(),
+            ]);
+        }
+    
+        // Pasar los datos a la vista
         return view('blog', [
             'articulos' => $articulos,
             'ciudades' => $ciudades,
             'categorias' => $categorias,
-            'tags' => $tags
+            'tags' => $tags,
+            'meta' => $meta, // Pasar el objeto meta para usar en el head
         ]);
     }
 
-    public function show_article($id)
+    public function show_article($slug)
     {
-        $articulo = BlogArticle::with(['categories', 'tags'])->findOrFail($id);
+        // Buscar artículo por slug
+        $articulo = BlogArticle::with(['categories', 'tags'])->where('slug', $slug)->firstOrFail();
+    
+        // Incrementar visitas
         $articulo->increment('visitas');
-
+    
+        // Obtener artículos relacionados y otros datos
         $articulos = BlogArticle::with(['user', 'categories', 'tags'])
             ->where('estado', 'publicado')
             ->orderBy('fecha_publicacion', 'desc')
             ->get();
-
+    
         $ciudades = Ciudad::all();
         $categorias = BlogCategory::all();
         $tags = BlogTag::all();
-
+    
+        $meta = MetaTag::where('page', 'blog')->first();
+    
+        if (!$meta) {
+            $meta = new MetaTag([
+                'page' => 'blog',
+                'meta_title' => 'Blog - Descubre las últimas novedades',
+                'meta_description' => 'Explora artículos interesantes sobre diversos temas en nuestro blog.',
+                'meta_keywords' => 'blog, artículos, novedades',
+                'meta_robots' => 'index, follow',
+                'canonical_url' => url()->current(),
+            ]);
+        }
+    
         return view('showblog', [
             'articulo' => $articulo,
             'articulos' => $articulos,
             'ciudades' => $ciudades,
             'categorias' => $categorias,
             'tags' => $tags,
-            'usuarioAutenticado' => Auth::user()
+            'meta' => $meta,
+            'usuarioAutenticado' => Auth::user(),
         ]);
     }
+    
 
     public function blogadmin()
     {
@@ -426,15 +464,15 @@ class BlogController extends Controller
         }
     }
 
-    public function showCategory($id)
+    public function showCategory($slug)
     {
-        // Obtener la categoría específica con sus artículos relacionados
-        $categoria = BlogCategory::findOrFail($id);
+        // Obtener la categoría específica por slug con sus artículos relacionados
+        $categoria = BlogCategory::where('slug', $slug)->firstOrFail();
         
         // Obtener los artículos de esta categoría
         $articulos = BlogArticle::with(['user', 'categories', 'tags'])
-            ->whereHas('categories', function($query) use ($id) {
-                $query->where('blog_categories.id', $id);
+            ->whereHas('categories', function($query) use ($categoria) {
+                $query->where('blog_categories.id', $categoria->id);
             })
             ->where('estado', 'publicado')
             ->orderBy('fecha_publicacion', 'desc')
@@ -447,13 +485,29 @@ class BlogController extends Controller
     
         $ciudades = Ciudad::all();
         $tags = BlogTag::all();
+
+         
+        $meta = MetaTag::where('page', 'blog')->first();
+    
+        if (!$meta) {
+            $meta = new MetaTag([
+                'page' => 'blog',
+                'meta_title' => 'Blog - Descubre las últimas novedades',
+                'meta_description' => 'Explora artículos interesantes sobre diversos temas en nuestro blog.',
+                'meta_keywords' => 'blog, artículos, novedades',
+                'meta_robots' => 'index, follow',
+                'canonical_url' => url()->current(),
+            ]);
+        }
     
         return view('showcategory', [
             'articulos' => $articulos,
             'ciudades' => $ciudades,
             'categorias' => $categorias,
             'tags' => $tags,
+            'metaTags' => $meta, 
             'categoria' => $categoria
         ]);
     }
+    
 }

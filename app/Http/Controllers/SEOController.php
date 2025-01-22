@@ -40,7 +40,15 @@ class SEOController extends Controller
 
     public function blogadmin()
     {
-        return view('seo.blogadmin'); // Vista para el blog
+            
+        
+              $meta = MetaTag::where('page', 'blog')->first();
+              if (!$meta) {
+                  $meta = new MetaTag();
+                  $meta->page = 'blogadmin';
+              }
+              
+              return view('seo.blogadmin', compact('meta'));
     }
 
     public function publicateForm()
