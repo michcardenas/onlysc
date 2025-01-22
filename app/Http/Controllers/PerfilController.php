@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\View;
+use App\Models\MetaTag;
+use App\Models\Tarjeta;
 
 class PerfilController extends Controller
 {
@@ -34,28 +37,97 @@ class PerfilController extends Controller
     public function showFavorites()
     {
         try {
+            // Verificar autenticación
             $user = auth()->user();
-
-            $favorites = Favorite::with('usuarioPublicate')
+            if (!$user) {
+                Log::info('showFavorites: Usuario no autenticado');
+                return redirect()->route('login');
+            }
+    
+            // Obtener favoritos con paginación
+            $favorites = Favorite::with(['usuarioPublicate' => function ($query) {
+                $query->select([
+                    'id',
+                    'fantasia',
+                    'email',
+                    'nombre',
+                    'telefono',
+                    'ubicacion',
+                    'edad',
+                    'color_ojos',
+                    'altura',
+                    'peso',
+                    'disponibilidad',
+                    'servicios',
+                    'servicios_adicionales',
+                    'fotos',
+                    'cuentanos',
+                    'estadop',
+                    'categorias',
+                    'posicion',
+                    'precio',
+                    'nacionalidad',
+                    'atributos',
+                    'foto_positions'
+                ]);
+            }])
                 ->where('user_id', $user->id)
                 ->paginate(12);
-
-            $ciudades = Ciudad::all(); // Añadimos esta línea
-
-            return view('showfavorites', compact('favorites', 'ciudades'));
+    
+            // Obtener ciudades
+            $ciudades = Ciudad::all();
+    
+            // Agrupar las ciudades por zona
+            $ciudadesPorZona = $ciudades->groupBy('zona');
+    
+            // Obtener todas las tarjetas
+            $tarjetas = Tarjeta::all();
+    
+            // Obtener los meta datos específicos para 'favorites'
+            $meta = MetaTag::where('page', 'favoritos')->first();
+    
+            // Si no existe un registro de meta para favorites, creamos uno vacío con valores por defecto
+            if (!$meta) {
+                $meta = new MetaTag([
+                    'page' => 'favorites',
+                    'meta_title' => 'OnlyEscorts',
+                    'meta_description' => 'Descubre los mejores favoritos en OnlyEscorts.',
+                    'meta_keywords' => 'escorts, favoritos, OnlyEscorts',
+                    'meta_robots' => 'index, follow',
+                    'canonical_url' => url()->current(),
+                ]);
+            }
+    
+            // Definir datos adicionales para la vista
+            $seoText = [
+                'title' => $meta->meta_title ?? 'OnlyEscorts',
+                'description' => $meta->meta_description ?? '',
+            ];
+    
+            // Retornar vista con array_merge para combinar los datos
+            return view('showfavorites', array_merge([
+                'favorites' => $favorites,
+                'ciudades' => $ciudades,
+                'ciudadesPorZona' => $ciudadesPorZona,
+                'tarjetas' => $tarjetas,
+                'meta' => $meta,
+                'totalOnline' => $favorites->count(), // Ejemplo de otro dato adicional
+                'now' => \Carbon\Carbon::now()
+            ], $seoText));
         } catch (\Exception $e) {
-            Log::error('Error al mostrar favoritos', [
-                'error' => $e->getMessage(),
-                'line' => $e->getLine(),
-                'file' => $e->getFile()
+            Log::error('showFavorites: Error general', [
+                'mensaje' => $e->getMessage(),
+                'linea' => $e->getLine(),
+                'archivo' => $e->getFile(),
+                'trace' => $e->getTraceAsString()
             ]);
-
-            return redirect()
-                ->route('home')
-                ->with('error', 'Hubo un error al cargar tus favoritos');
+    
+            return response()->json([
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ], 500);
         }
     }
-
     public function index()
     {
         $usuarioAutenticado = auth()->user();

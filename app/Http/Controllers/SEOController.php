@@ -61,4 +61,15 @@ class SEOController extends Controller
         // Pasar las ciudades a la vista
         return view('seo.inicio-tarjetas', compact('meta', 'ciudades'));
     }
+
+    public function favoritos()
+    {
+        $meta = MetaTag::where('page', 'favoritos')->first();
+        if (!$meta) {
+            $meta = new MetaTag();
+            $meta->page = 'favoritos';
+        }
+        return view('seo.favoritos', compact('meta')); // Pasa $meta a la vista
+    }
+    
 }

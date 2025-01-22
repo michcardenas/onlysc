@@ -172,6 +172,7 @@ Route::get('/seo-inicio', [SEOController::class, 'home'])->name('seo.home');
 Route::get('/seo-inicio-tarjetas', [SEOController::class, 'inicio'])->name('seo.inicio-tarjetas');
 Route::get('/seo-foro', [SEOController::class, 'foroadmin'])->name('seo.foroadmin');
 Route::get('/seo-blog', [SEOController::class, 'blogadmin'])->name('seo.blogadmin');
+Route::get('/seo-favoritos', [SEOController::class, 'favoritos'])->name('seo.favoritos');
 Route::get('/seo-publicar', [SEOController::class, 'publicateForm'])->name('seo.publicate.form');
 Route::get('/seo/templates', [AdminController::class, 'seoTemplates'])->name('seo.template');
 Route::post('/seo/update', [AdminController::class, 'updateSeoTemplate'])->name('seo.templates.update');

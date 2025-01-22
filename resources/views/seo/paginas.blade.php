@@ -45,6 +45,8 @@
         <a href="{{ route('seo.foroadmin') }}" class="btn-seo">Foro</a>
         <a href="{{ route('seo.blogadmin') }}" class="btn-seo">Blog</a>
         <a href="{{ route('seo.publicate.form') }}" class="btn-seo">Publicar</a>
+        <a href="{{ route('seo.favoritos') }}" class="btn-seo">Favoritos</a>
+
     </div>
 </section>
 
