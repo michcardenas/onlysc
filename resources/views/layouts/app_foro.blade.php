@@ -570,22 +570,26 @@ document.getElementById('foro-search-btn').addEventListener('click', function() 
 </head>
 
 <body>
-    <header>
+<header>
         <nav class="navbar navbar-top">
             <div class="navbar-left">
                 <button class="btn-publish">PUBLICATE</button>
             </div>
 
             <div class="navbar-right">
-                <div class="location-dropdown">
-                    <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon">
-                    <select name="location" id="location">
-                        <option value="" disabled selected>Seleccionar ciudad</option>
-                        @foreach($ciudades as $ciudad)
-                        <option value="{{ strtolower($ciudad->nombre) }}">{{ ucfirst($ciudad->nombre) }}</option>
-                        @endforeach
-                    </select>
-                </div>
+            <div class="location-dropdown">
+                <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon">
+                <select name="location" id="location">
+                    <option value="" disabled>Seleccionar ciudad</option>
+                    @foreach($ciudades as $ciudad)
+                        <option value="{{ strtolower($ciudad->url) }}" 
+                            {{ session('ciudad_actual') == $ciudad->nombre ? 'selected' : '' }}>
+                            {{ ucfirst($ciudad->nombre) }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
 
                 @if(Auth::check())
                 @if(Auth::user()->rol === '1')
@@ -611,28 +615,35 @@ document.getElementById('foro-search-btn').addEventListener('click', function() 
                     <img src="{{ asset('images/logo_v2.png') }}" alt="Logo" class="logo1">
                 </a>
 
-                <div class="search-bar">
-                    <input type="text" placeholder="Buscar por nombre, servicio o atributo...">
-                    <button type="submit" class="btn-search">
-                        <img src="{{ asset('images/search.svg') }}" alt="search icon" class="search-icon">
-                    </button>
-                </div>
 
                 <button class="btn-filters">
-                    <img src="{{ asset('images/filtro.svg') }}" alt="Filtros" class="icon-filter"> Filtros
+                    <img src="{{ asset('images/filtro.svg') }}" alt="Filtros" class="icon-filter"> Filtro Avanzado
                 </button>
             </div>
 
             <div class="navbar-right">
                 <a href="/" class="nav-link">INICIO</a>
 
-                <select name="categorias" id="categorias" class="nav-link">
-                    <option value="" disabled selected>CATEGORÍAS</option>
-                    <option value="DELUXE">DELUXE</option>
-                    <option value="VIP">VIP</option>
-                    <option value="PREMIUM">PREMIUM</option>
-                    <option value="MASAJES">MASAJES</option>
-                </select>
+                <div class="dropdown">
+    <button class="dropdown-button nav-link">CIUDADES</button>
+    <div class="dropdown-content">
+        @php
+            $ciudadesPorZona = $ciudades->groupBy('zona');
+        @endphp
+
+        @foreach($ciudadesPorZona as $zona => $ciudadesZona)
+            <div class="dropdown-column">
+                <h3>{{ $zona }}</h3>
+                @foreach($ciudadesZona as $ciudad)
+                    <a href="/escorts-{{ $ciudad->url }}" 
+                       class="ciudad-link">
+                        {{ strtoupper($ciudad->nombre) }}
+                    </a>
+                @endforeach
+            </div>
+        @endforeach
+    </div>
+</div>
 
                 <a href="/mis-favoritos/" class="nav-link">FAVORITOS</a>
                 <a href="/blog/" class="nav-link">BLOG</a>
@@ -640,6 +651,156 @@ document.getElementById('foro-search-btn').addEventListener('click', function() 
             </div>
         </div>
     </header>
+
+<!-- Modal -->
+<div class="modal fade filtro-modal" id="filterModal" tabindex="-1">
+<div class="filtro-alert-container"></div>
+   <div class="modal-dialog modal-lg">
+       <div class="modal-content">
+           <div class="modal-header">
+               <h5 class="modal-title">Filtros</h5>
+               <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+           </div>
+
+<!-- Añade un div contenedor -->
+<div class="filters-container">
+    <div class="filter-ciudad">
+        <div class="filter-section">
+            <h6 class="range-title">Ciudad</h6>
+            <select id="ciudadSelect" class="form-select" required>
+                <option value="">Seleccionar ciudad</option>
+                @foreach($ciudades as $ciudad)
+                    <option value="{{ $ciudad->url }}" {{ isset($ciudadSeleccionada) && $ciudadSeleccionada->url == $ciudad->url ? 'selected' : '' }}>
+                        {{ $ciudad->nombre }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+
+
+    <div class="filtro-nac" id="barrioContainer" style="display: none;">
+    <h6 class="range-title">Sector</h6>
+    <select id="barrioSelect" class="form-select">
+        <option value="">Seleccionar sector</option>
+        @foreach($barriosSantiago ?? [] as $barrio)
+            <option value="{{ $barrio }}" {{ isset($sectorSeleccionado) && $sectorSeleccionado == $barrio ? 'selected' : '' }}>
+                {{ $barrio }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+    <div class="filtro-nac">
+        <div class="filter-section">
+            <h6 class="range-title">Nacionalidad</h6>
+            <select name="nacionalidad" id="nacionalidadSelect" class="form-select">
+                <option value="">Todas las nacionalidades</option>
+                <option value="argentina">Argentina</option>
+                <option value="brasil">Brasileña</option>
+                <option value="chile">Chilena</option>
+                <option value="colombia">Colombiana</option>
+                <option value="ecuador">Ecuatoriana</option>
+                <option value="uruguay">Uruguaya</option>
+            </select>
+        </div>
+    </div>
+</div>
+           <form id="filterForm">
+               <div class="modal-body">
+                   <!-- Rango de edad -->
+                   <div class="filter-section">
+                       <h6 class="range-title">Edad</h6>
+                       <div class="range-container">
+                           <div id="edadRange"></div>
+                           <div class="range-values">
+                               <span>18 años</span>
+                               <span>50 años</span>
+                           </div>
+                       </div>
+                       <input type="hidden" name="edadMin" id="edadMin">
+                       <input type="hidden" name="edadMax" id="edadMax">
+                   </div>
+
+                   <!-- Rango de precio -->
+                   <div class="filter-section">
+    <h6 class="range-title">Precio</h6>
+    <div class="price-categories">
+    <div class="price-category" data-min="0" data-max="300000" data-categorias="Under" style="visibility: hidden; pointer-events: none;">
+            <span class="category-name">Under</span>
+        </div>
+        <div class="price-category" data-min="0" data-max="300000" data-categorias="Under">
+            <span class="category-name">Under</span>
+        </div>
+        <div class="price-category" data-min="0" data-max="300000" data-categorias="Under" style="visibility: hidden; pointer-events: none;">
+            <span class="category-name">Under</span>
+        </div>
+        </div>
+    <div class="price-categories">
+        <div class="price-category" data-min="0" data-max="70000" data-categorias="premium">
+            <span class="category-name">Premium</span>
+        </div>
+        <div class="price-category" data-min="70000" data-max="130000" data-categorias="vip">
+            <span class="category-name">VIP</span>
+        </div>
+        <div class="price-category" data-min="130000" data-max="250000" data-categorias="de_lujo">
+            <span class="category-name">De Lujo</span>
+        </div>
+
+    </div>
+    <input type="hidden" name="categorias" id="categoriasFilter">
+    <div class="range-container">
+        <div id="precioRange"></div>
+        <div class="range-values">
+            <span>$0</span>
+            <span>$300.000</span>
+        </div>
+    </div>
+    <input type="hidden" name="precioMin" id="precioMin">
+    <input type="hidden" name="precioMax" id="precioMax">
+</div>
+<!-- Nuevos checkboxes -->
+<div class="extra-filters">
+   <div class="filter-section" style="display: flex; gap: 20px;">
+       <div>
+           <h6 class="range-title">Disponibilidad</h6>
+           <div id="disponibleCheck" class="review-container">
+               <span class="review-text">Disponible</span>
+           </div>
+       </div>
+       <div>
+           <h6 class="range-title">Reseñas</h6>
+           <div id="resenaCheck" class="review-container">
+               <span class="review-text">Tiene una reseña</span>
+           </div>
+       </div>
+   </div>
+</div>
+                   <!-- Contenedores para checkboxes -->
+                   <!-- Removida la estructura de columnas -->
+                   <div class="filter-section1">
+   <h6 class="range-title1">Servicios</h6>
+   <div id="serviciosContainer" class="servicios-grid"></div>
+   <div class="review-container" id="showMoreServices">
+       <span class="review-text">Mostrar más</span>
+   </div>
+</div>
+<div class="filter-section1">
+   <h6 class="range-title1">Atributos</h6>
+   <div id="atributosContainer" class="servicios-grid"></div>
+   <div class="review-container" id="showMoreAttributes">
+       <span class="review-text">Mostrar más</span>
+   </div>
+</div>
+</div>
+               <div class="modal-footer">
+                   <button type="button" class="btn btn-secondary" id="resetFilters">Resetear</button>
+                   <button type="submit" class="btn btn-primary">Aplicar filtros</button>
+               </div>
+           </form>
+       </div>
+   </div>
+</div>
 
     <main>
         @yield('content')

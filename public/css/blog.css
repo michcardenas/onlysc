@@ -1,7 +1,6 @@
 /* Banner */
 .blog-banner {
     position: relative;
-    width: calc(100% - 10rem);
     height: 192px;
     overflow: hidden;
     margin: 0 auto 0;
@@ -93,8 +92,10 @@
     border-radius: 10px;
     z-index: 3;
     margin-top: 8px;
-    width: 32%; /* Asegura que tome todo el ancho */
-    text-align: center; /* Centra el texto */
+    width: 32%;
+    /* Asegura que tome todo el ancho */
+    text-align: center;
+    /* Centra el texto */
 }
 
 .blog-card-category span {
@@ -133,7 +134,10 @@
 }
 
 /* Colores específicos de cada red social */
-.linkedin, .twitter, .github, .email {
+.linkedin,
+.twitter,
+.github,
+.email {
     background-color: #e00037;
 }
 
@@ -208,16 +212,19 @@
     width: 348px;
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Espacio entre la tarjeta y la categoría */
+    gap: 10px;
+    /* Espacio entre la tarjeta y la categoría */
 }
 
 
 .swiper-slide .blog-card {
-    width: 100%;
-    height: 197px; /* Volvemos a la altura original */
+    width: 95%;
+    height: 197px;
+    /* Volvemos a la altura original */
     margin: 0;
     position: relative;
 }
+
 
 
 
@@ -301,7 +308,7 @@
 }
 
 .blog-author {
-    color:#666;
+    color: #666;
     font-weight: 500;
 }
 
@@ -328,6 +335,10 @@
     color: #e00037;
 }
 
+.swiper-wrapper {
+    height: auto;
+}
+
 .category-count {
     color: #333333;
 }
@@ -348,6 +359,12 @@
 
 .blog-popular-post-item:hover {
     color: #e00037;
+}
+
+.blog-blade-sidebar {
+    width: 250px;
+    margin-left: -100px;
+    flex-shrink: 0;
 }
 
 .blog-sidebar h3 {
@@ -680,4 +697,68 @@
 
 .linkedin-icon {
     color: #0077b5;
- }
+}
+
+@media screen and (max-width: 1280px) {
+    .blog-blade-sidebar {
+        width: 217px;
+        margin-left: 0px;
+        flex-shrink: 0;
+    }
+
+    .swiper {
+        width: 124%;
+        padding: 0 0px;
+        /* Espacio para los botones de navegación */
+    }
+}
+
+/* Media queries para diferentes tamaños de pantalla */
+@media screen and (max-width: 768px) {
+    .blog-carousel-container {
+        width: 95%;
+    }
+
+    .swiper {
+        padding: 0 15px;
+    }
+
+    .swiper-slide {
+        max-width: 300px;
+    }
+}
+
+@media screen and (max-width: 415px) {
+    /* Contenedor principal */
+    .blog-container {
+        padding: 10px;
+    }
+
+    .blog-carousel-container {
+        width: 50%;
+    }
+
+    .swiper {
+        padding: 0 10px;
+    }
+
+    .swiper-slide {
+        max-width: 260px;
+    }
+
+    .swiper-slide .blog-card {
+        min-height: 180px;
+    }
+
+    .blog-blade-sidebar {
+        display: none;
+    }
+
+    .blog-banner-img {
+        width: 100%;
+        height: 12rem;
+        background-size: cover;
+        background-position: center ; 
+    }
+
+}

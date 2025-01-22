@@ -114,9 +114,6 @@
     height: 100px;
     opacity: 0.9;
 }
-
-
-
     </style>
 </head>
 
@@ -166,28 +163,35 @@
                     <img src="{{ asset('images/logo_v2.png') }}" alt="Logo" class="logo1">
                 </a>
 
-                <div class="search-bar">
-                    <input type="text" placeholder="Buscar por nombre, servicio o atributo...">
-                    <button type="submit" class="btn-search">
-                        <img src="{{ asset('images/search.svg') }}" alt="search icon" class="search-icon">
-                    </button>
-                </div>
 
                 <button class="btn-filters">
-                    <img src="{{ asset('images/filtro.svg') }}" alt="Filtros" class="icon-filter"> Filtros
+                    <img src="{{ asset('images/filtro.svg') }}" alt="Filtros" class="icon-filter"> Filtro Avanzado
                 </button>
             </div>
 
             <div class="navbar-right">
                 <a href="/" class="nav-link">INICIO</a>
 
-                <select name="categorias" id="categorias" class="nav-link">
-                    <option value="" disabled selected>CATEGORÍAS</option>
-                    <option value="DELUXE">DELUXE</option>
-                    <option value="VIP">VIP</option>
-                    <option value="PREMIUM">PREMIUM</option>
-                    <option value="MASAJES">MASAJES</option>
-                </select>
+                <div class="dropdown">
+    <button class="dropdown-button nav-link">CIUDADES</button>
+    <div class="dropdown-content">
+        @php
+            $ciudadesPorZona = $ciudades->groupBy('zona');
+        @endphp
+
+        @foreach($ciudadesPorZona as $zona => $ciudadesZona)
+            <div class="dropdown-column">
+                <h3>{{ $zona }}</h3>
+                @foreach($ciudadesZona as $ciudad)
+                    <a href="/escorts-{{ $ciudad->url }}" 
+                       class="ciudad-link">
+                        {{ strtoupper($ciudad->nombre) }}
+                    </a>
+                @endforeach
+            </div>
+        @endforeach
+    </div>
+</div>
 
                 <a href="/mis-favoritos/" class="nav-link">FAVORITOS</a>
                 <a href="/blog/" class="nav-link">BLOG</a>
@@ -1716,6 +1720,83 @@ document.addEventListener('DOMContentLoaded', initBlogSwiper);
             bullets.forEach(b => b.classList.remove('swiper-pagination-bullet-active'));
             this.classList.add('swiper-pagination-bullet-active');
         });
+    });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dropdownButton = document.querySelector('.dropdown-button');
+    const dropdownContent = document.querySelector('.dropdown-content');
+    const dropdownLinks = document.querySelectorAll('.dropdown-content a');
+    const dropdown = document.querySelector('.dropdown');
+
+    // Deshabilitar el comportamiento por defecto del botón
+    dropdownButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation(); // Prevenir que el evento se propague
+    });
+
+    // Manejar hover en dispositivos no móviles
+    if (!('ontouchstart' in window)) {
+        dropdown.addEventListener('mouseenter', function() {
+            dropdownContent.style.display = 'flex';
+        });
+
+        dropdown.addEventListener('mouseleave', function() {
+            dropdownContent.style.display = 'none';
+        });
+    }
+
+    // Cerrar el menú al hacer clic fuera
+    document.addEventListener('click', function(e) {
+        if (!dropdown.contains(e.target)) {
+            dropdownContent.style.display = 'none';
+        }
+    });
+
+    // Manejar la selección de ciudad y cambiar el texto del botón
+    dropdownLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation(); // Prevenir que el evento se propague
+            const selectedText = this.textContent.trim();
+            dropdownButton.textContent = selectedText;
+            
+            // Guardar la selección en localStorage (opcional)
+            localStorage.setItem('selectedCity', selectedText);
+            
+            // Obtener y navegar a la URL del enlace
+            const href = this.getAttribute('href');
+            window.location.href = href;
+        });
+    });
+
+    // Soporte específico para dispositivos móviles
+    if ('ontouchstart' in window) {
+        dropdownButton.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropdownContent.style.display = 
+                dropdownContent.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // Cerrar al tocar fuera en móviles
+        document.addEventListener('touchstart', function(e) {
+            if (!dropdown.contains(e.target)) {
+                dropdownContent.style.display = 'none';
+            }
+        });
+    }
+
+    // Restaurar la ciudad seleccionada previamente (opcional)
+    const savedCity = localStorage.getItem('selectedCity');
+    if (savedCity) {
+        dropdownButton.textContent = savedCity;
+    }
+
+    // Prevenir que los clicks dentro del dropdown cierren el menú
+    dropdownContent.addEventListener('click', function(e) {
+        e.stopPropagation();
     });
 });
 </script>
