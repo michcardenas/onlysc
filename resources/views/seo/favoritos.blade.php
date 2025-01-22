@@ -244,6 +244,7 @@ select.form-control option {
     background-color: #343a40;
     color: white;
 }
+
 </style>
 <header>
     <nav class="navbar-admin">
@@ -282,9 +283,11 @@ select.form-control option {
 <div class="container mt-4">
     <div class="card custom-card">
         <div class="card-header">
-            <h2 class="text-white">Editar Etiquetas Meta - Página Blog</h2>
+            <h2 class="text-white">Configuracion y etiquetas Meta de los favoritos</h2>
         </div>
         <div class="card-body">
+        
+
         @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -302,10 +305,13 @@ select.form-control option {
             </button>
         </div>
     @endif
-        <form action="{{ route('seo.update', ['page' => 'blog']) }}" method="POST"  enctype="multipart/form-data">
-        @csrf
+    
+    <form action="{{ route('seo.update', ['page' => 'favoritos']) }}" 
+      method="POST" 
+      enctype="multipart/form-data">  
+      @csrf
                 @method('PUT')
-                
+          
                 <!-- Meta Title -->
                 <div class="form-group template-group">
                     <label for="meta_title" class="text-white">Título Meta</label>
@@ -378,49 +384,56 @@ select.form-control option {
                         @enderror
                     </div>
 
-                    <!-- Heading H2 -->
-                    <div class="form-group template-group">
-                        <label for="heading_h2" class="text-white">Encabezado H2</label>
-                        <input type="text" 
-                            class="form-control bg-dark text-white @error('heading_h2') is-invalid @enderror" 
-                            id="heading_h2" 
-                            name="heading_h2" 
-                            placeholder="Ingrese el encabezado H2" 
-                            value="{{ old('heading_h2', $meta->heading_h2 ?? '') }}">
-                        @error('heading_h2')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-
-                                    
-                    <!-- Imagen de Fondo -->
-                    <div class="form-group template-group">
-                        <label for="fondo" class="text-white">Imagen de banner</label>
-                        <div class="input-group">
-                            <input type="file" 
-                                class="form-control bg-dark text-white @error('fondo') is-invalid @enderror"
-                                id="fondo"
-                                name="fondo"
-                                accept="image/jpeg,image/png,image/jpg,image/webp">
-                            @error('fondo')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
+                   <!-- Heading H2 Original -->
+                <div class="form-group template-group">
+                    <label for="heading_h2" class="text-white">Encabezado H2</label>
+                    <input type="text"
+                        class="form-control bg-dark text-white @error('heading_h2') is-invalid @enderror"
+                        id="heading_h2"
+                        name="heading_h2"
+                        placeholder="Ingrese el encabezado H2"
+                        value="{{ old('heading_h2', $meta->heading_h2 ?? '') }}">
+                    @error('heading_h2')
+                        <div class="invalid-feedback">
+                            {{ $message }}
                         </div>
-                        
-                        @if(isset($meta->fondo))
-                            <div class="mt-2">
-                                <img src="{{ asset('storage/' . $meta->fondo) }}" 
-                                    alt="Imagen de fondo actual" 
-                                    class="img-thumbnail" 
-                                    style="max-height: 100px">
-                                <p class="text-white-50 small mt-1">Imagen actual: {{ basename($meta->fondo) }}</p>
-                            </div>
-                        @endif
-                    </div>
+                    @enderror
+                </div>
+
+
+
+
+
+
+
+
+
+<!-- Imagen de Fondo -->
+<div class="form-group template-group">
+    <label for="fondo" class="text-white">Imagen de banner</label>
+    <div class="input-group">
+        <input type="file" 
+               class="form-control bg-dark text-white @error('fondo') is-invalid @enderror"
+               id="fondo"
+               name="fondo"
+               accept="image/jpeg,image/png,image/jpg,image/webp">
+        @error('fondo')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+        @enderror
+    </div>
+    
+    @if(isset($meta->fondo))
+        <div class="mt-2">
+            <img src="{{ asset('storage/' . $meta->fondo) }}" 
+                 alt="Imagen de fondo actual" 
+                 class="img-thumbnail" 
+                 style="max-height: 100px">
+            <p class="text-white-50 small mt-1">Imagen actual: {{ basename($meta->fondo) }}</p>
+        </div>
+    @endif
+</div>
 
                 <!-- Botones de Acción -->
                 <div class="form-group text-right">
@@ -436,4 +449,5 @@ select.form-control option {
 <footer class="footer-admin">
     <p class="text-white">&copy; {{ date('Y') }} OnlyEscorts Chile. Todos los derechos reservados.</p>
 </footer>
+
 @endsection

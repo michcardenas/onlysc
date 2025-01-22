@@ -75,4 +75,15 @@ class BlogArticle extends Model
     {
         return $this->belongsToMany(BlogCategory::class, 'blog_article_category', 'blog_article_id', 'blog_category_id');
     }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($article) {
+            if (empty($article->slug)) {
+                $article->slug = Str::slug($article->titulo, '-');
+            }
+        });
+    }
 }

@@ -11,8 +11,8 @@
     <!-- Título de la pestaña -->
          <link rel="icon" href="{{ asset('images/icono.png') }}?v=2" type="image/png">    
 
-    <title>
-    @if($pageTitle && str_contains($pageTitle, 'Escorts en') && str_ends_with($pageTitle, '| OnlyEscorts'))
+         <title>
+    @if(isset($pageTitle) && str_contains($pageTitle, 'Escorts en') && str_ends_with($pageTitle, '| OnlyEscorts'))
         {{ $meta->meta_title ?? 'OnlyEscorts' }}
     @else
         {{ $pageTitle ?? ($meta->meta_title ?? 'OnlyEscorts') }}

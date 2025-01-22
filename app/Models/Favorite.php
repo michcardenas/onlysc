@@ -15,6 +15,6 @@ class Favorite extends Model
 
     public function usuarioPublicate()
     {
-        return $this->belongsTo(UsuarioPublicate::class);
+        return $this->belongsTo(UsuarioPublicate::class, 'usuario_publicate_id');
     }
 }

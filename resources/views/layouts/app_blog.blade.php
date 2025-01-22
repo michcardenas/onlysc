@@ -5,7 +5,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Blog') - Escorts</title>
     <link rel="icon" href="{{ asset('images/icono.png') }}" type="image/png">
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -14,6 +13,14 @@
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="stylesheet" href="{{ asset('css/blog.css') }}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>{{ $meta->meta_title ?? 'Blog - Escorts' }}</title>
+<meta name="description" content="{{ $meta->meta_description ?? 'Descripción predeterminada' }}">
+<meta name="keywords" content="{{ $meta->meta_keywords ?? 'Palabras clave predeterminadas' }}">
+<meta name="robots" content="{{ $meta->meta_robots ?? 'index, follow' }}">
+@if($meta->canonical_url)
+    <link rel="canonical" href="{{ $meta->canonical_url }}">
+@endif
+
 </head>
 
 <body>

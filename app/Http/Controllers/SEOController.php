@@ -40,7 +40,15 @@ class SEOController extends Controller
 
     public function blogadmin()
     {
-        return view('seo.blogadmin'); // Vista para el blog
+            
+        
+              $meta = MetaTag::where('page', 'blog')->first();
+              if (!$meta) {
+                  $meta = new MetaTag();
+                  $meta->page = 'blogadmin';
+              }
+              
+              return view('seo.blogadmin', compact('meta'));
     }
 
     public function publicateForm()
@@ -61,4 +69,15 @@ class SEOController extends Controller
         // Pasar las ciudades a la vista
         return view('seo.inicio-tarjetas', compact('meta', 'ciudades'));
     }
+
+    public function favoritos()
+    {
+        $meta = MetaTag::where('page', 'favoritos')->first();
+        if (!$meta) {
+            $meta = new MetaTag();
+            $meta->page = 'favoritos';
+        }
+        return view('seo.favoritos', compact('meta')); // Pasa $meta a la vista
+    }
+    
 }
