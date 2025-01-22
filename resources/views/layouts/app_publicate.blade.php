@@ -50,6 +50,22 @@
     font-size: 14px;
     pointer-events: none;
 }
+@media (max-width: 768px) {
+    .publicate-input-wrapper label {
+        top: -15px;
+        left: 15px;
+        font-size: 16px;
+    }
+    .publicate-image-section {
+     display: none;
+    }
+    .publicate-logo{
+        width: 100%;
+    }
+    .publicate-form-section{
+        width: 100%;
+    }
+}
 
     </style>
 </head>

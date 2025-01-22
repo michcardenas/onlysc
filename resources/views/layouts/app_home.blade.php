@@ -62,6 +62,8 @@
     flex-direction: column;
     align-items: center;
     color: #fff;
+    margin-bottom: 4rem;
+
     
    
 }
@@ -84,6 +86,7 @@
     width: 250px;
     text-align: left;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+
 }
 
 .zona-card:hover {
@@ -439,7 +442,7 @@
 /* Responsivo */
 @media (max-width: 768px) {
     .zona-card {
-        width: 90%;
+        width: 75%;
     }
 }
 
@@ -576,7 +579,7 @@
     text-align: justify !important;
 
 }
-.meta-inicio-titulos {
+ {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem 1rem;
@@ -648,8 +651,8 @@
     </div>
 </div>
 <header style="position: fixed; top: 0; left: 0; width: 100%; background-color: #000; z-index: 1000; border-bottom: 1px solid #ffffff78;">
-    <div class="logo-container1" style="padding-bottom: 3px; display: flex; justify-content: center; align-items: center;"> 
-        <img src="{{ asset('images/logo_XL-2.png') }}" alt="Logo" style="max-width: 200px; height: auto;">
+    <div class="logo-container1" style="padding-bottom: 6px; display: flex; justify-content: center; align-items: center;"> 
+        <img src="{{ asset('images/logo_S.png') }}" alt="Logo" style="max-width: 200px; height: auto;">
     </div>
 </header>
 
