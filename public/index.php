@@ -9,8 +9,6 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
     require $maintenance;
 }
 
-file_put_contents('debug.log', print_r($_SERVER, true));
-
 // Register the Composer autoloader...
 require __DIR__.'/../vendor/autoload.php';
 
