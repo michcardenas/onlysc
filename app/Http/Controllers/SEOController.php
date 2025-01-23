@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MetaTag;
 use App\Models\Ciudad;
+use Illuminate\Support\Facades\Storage;
+
 
 class SEOController extends Controller
 {
@@ -79,5 +81,35 @@ class SEOController extends Controller
         }
         return view('seo.favoritos', compact('meta')); // Pasa $meta a la vista
     }
-    
+    public function showRobots()
+    {
+        $content = Storage::disk('local')->exists('robots.txt') 
+            ? Storage::disk('local')->get('robots.txt') 
+            : "User-agent: *\nDisallow:";
+
+        return response($content, 200)
+            ->header('Content-Type', 'text/plain');
+    }
+
+    // Mostrar formulario de edición para el robots.txt
+    public function editRobots()
+    {
+        $content = Storage::disk('local')->exists('robots.txt') 
+            ? Storage::disk('local')->get('robots.txt') 
+            : "User-agent: *\nDisallow:";
+
+        return view('seo.edit_robots', compact('content'));
+    }
+
+    // Guardar cambios en robots.txt
+    public function updateRobots(Request $request)
+    {
+        $validated = $request->validate([
+            'content' => 'required|string',
+        ]);
+
+        Storage::disk('local')->put('robots.txt', $validated['content']);
+
+        return redirect()->route('seo.edit_robots')->with('success', 'El archivo robots.txt se ha actualizado correctamente.');
+    }
 }
