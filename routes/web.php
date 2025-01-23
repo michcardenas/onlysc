@@ -208,3 +208,9 @@ Route::post('/admin/tarjetas', [TarjetaController::class, 'store'])->name('tarje
 Route::get('/admin/tarjetas/{id}/edit', [TarjetaController::class, 'edit'])->name('tarjetas.edit');
 Route::put('/admin/tarjetas/{id}', [TarjetaController::class, 'update'])->name('tarjetas.update');
 Route::delete('/admin/tarjetas/{id}', [TarjetaController::class, 'destroy'])->name('tarjetas.destroy');
+
+
+//robots
+Route::get('/robots.txt', [SEOController::class, 'showRobots'])->name('seo.robots');
+Route::get('/admin/robots', [SEOController::class, 'editRobots'])->name('seo.edit_robots'); // Vista de edición
+Route::post('/admin/robots', [SEOController::class, 'updateRobots'])->name('seo.update_robots'); // Guardar cambios
