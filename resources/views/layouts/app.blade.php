@@ -177,18 +177,21 @@
     <div class="dropdown-content">
         @php
             $ciudadesPorZona = $ciudades->groupBy('zona');
+            $ordenZonas = ['Zona Norte', 'Zona Centro', 'Zona Sur'];
         @endphp
 
-        @foreach($ciudadesPorZona as $zona => $ciudadesZona)
-            <div class="dropdown-column">
-                <h3>{{ $zona }}</h3>
-                @foreach($ciudadesZona as $ciudad)
-                    <a href="/escorts-{{ $ciudad->url }}" 
-                       class="ciudad-link">
-                        {{ strtoupper($ciudad->nombre) }}
-                    </a>
-                @endforeach
-            </div>
+        @foreach($ordenZonas as $zona)
+            @if(isset($ciudadesPorZona[$zona]))
+                <div class="dropdown-column">
+                    <h3>{{ $zona }}</h3>
+                    @foreach($ciudadesPorZona[$zona] as $ciudad)
+                        <a href="/escorts-{{ $ciudad->url }}" 
+                           class="ciudad-link">
+                            {{ strtoupper($ciudad->nombre) }}
+                        </a>
+                    @endforeach
+                </div>
+            @endif
         @endforeach
     </div>
 </div>

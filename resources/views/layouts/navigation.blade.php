@@ -193,6 +193,70 @@
             transition-delay: 0.5s;
         }
     }
+
+    @media (max-width: 767px) {
+   .dropdown-content {
+       display: none;
+       position: absolute;
+       flex-wrap: wrap;
+       background-color: rgba(255, 255, 255, 0.9);
+       width: 100%;
+       box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+       z-index: 10001;
+       max-height: 80vh;
+       overflow-y: auto;
+       border-radius: 8px;
+   }
+
+   .dropdown-button {
+   width: 100%;
+   text-align: center;
+   background: none;
+   border: none;
+   color: white;
+   font-size: 24px;
+   cursor: pointer;
+   font-family: 'Montserrat', sans-serif;
+}
+
+
+   @keyframes fadeIn {
+       from {
+           opacity: 0;
+           transform: translateY(-10px);
+       }
+       to {
+           opacity: 1;
+           transform: translateY(0);
+       }
+   }
+
+   .dropdown-column {
+       flex: 1;
+       padding: 15px;
+       min-width: 200px;
+   }
+
+   .dropdown-column h3 {
+       color: #7f7f7f;
+       margin-bottom: 10px;
+       font-size: 16px;
+       text-align: center;
+   }
+
+   .ciudad-link {
+       display: block;
+       padding: 8px 12px;
+       color: #333;
+       text-decoration: none;
+       font-size: 14px;
+       text-align: center;
+   }
+
+   .ciudad-link:hover {
+       background-color: #f5f5f5;
+   }
+}
 </style>
 
 
@@ -207,12 +271,34 @@
             </div>
 
             <div class="menu-links">
-                <a href="{{ route('inicio') }}" class="menu-link">Categorías</a>
-                <a href="{{ route('favoritos.show') }}" class="menu-link">Favoritos</a>
-                <a href="{{ route('blog') }}" class="menu-link">Blog</a>
-                <a href="{{ route('foro') }}" class="menu-link">Foro</a>
-                <a href="{{ route('publicate.form') }}" class="menu-link">Publícate</a>
-            </div>
+               <div class="dropdown">
+                   <button class="dropdown-button menu-link">CIUDADES</button>
+                   <div class="dropdown-content">
+                       @php
+                           $ciudadesPorZona = $ciudades->groupBy('zona');
+                           $ordenZonas = ['Zona Norte', 'Zona Centro', 'Zona Sur']; 
+                       @endphp
+
+                       @foreach($ordenZonas as $zona)
+                           @if(isset($ciudadesPorZona[$zona]))
+                               <div class="dropdown-column">
+                                   <h3>{{ $zona }}</h3>
+                                   @foreach($ciudadesPorZona[$zona] as $ciudad)
+                                       <a href="/escorts-{{ $ciudad->url }}" 
+                                          class="ciudad-link">
+                                           {{ strtoupper($ciudad->nombre) }}
+                                       </a>
+                                   @endforeach
+                               </div>
+                           @endif
+                       @endforeach
+                   </div>
+               </div>
+               <a href="{{ route('favoritos.show') }}" class="menu-link">Favoritos</a>
+               <a href="{{ route('blog') }}" class="menu-link">Blog</a>
+               <a href="{{ route('foro') }}" class="menu-link">Foro</a>
+               <a href="{{ route('publicate.form') }}" class="menu-link">Publícate</a>
+           </div>
         </div>
     </div>
 
@@ -272,5 +358,10 @@
                 }
             });
         });
+
+        document.querySelector('.dropdown-button').addEventListener('click', function(e) {
+    e.preventDefault();
+    this.classList.toggle('active');
+});
     </script>
 </div>
