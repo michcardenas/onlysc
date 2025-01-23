@@ -18,9 +18,7 @@ use App\Http\Controllers\SEOPaginasController;
 use App\Http\Controllers\MetaTagController;
 use App\Http\Controllers\TarjetaController;
 
-Route::get('/public/{any}', function ($any) {
-    return redirect('/' . $any);
-})->where('any', '.*');
+
 
 Auth::routes();
 Route::get('/', function () {
