@@ -8,14 +8,10 @@ class RedirectPublicUrls
 {
     public function handle(Request $request, Closure $next)
     {
-        Log::info([
-            'full_url' => $request->fullUrl(),
-            'path' => $request->path(),
-            'is_public' => $request->is('public/*')
-        ]);
-        
-        if ($request->is('public/*')) {
-            return redirect($request->path());
+        if (str_contains($request->url(), '/public/')) {
+            $newUrl = str_replace('/public/', '/', $request->url());
+            \Log::debug('Redirecting from: ' . $request->url() . ' to: ' . $newUrl);
+            return redirect($newUrl);
         }
         return $next($request);
     }
