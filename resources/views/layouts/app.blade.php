@@ -1729,11 +1729,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const dropdownContent = document.querySelector('.dropdown-content');
     const dropdownLinks = document.querySelectorAll('.dropdown-content a');
     const dropdown = document.querySelector('.dropdown');
+    const defaultText = 'CIUDADES';
+
+    // Asegurar que el texto inicial sea "CIUDADES"
+    dropdownButton.textContent = defaultText;
 
     // Deshabilitar el comportamiento por defecto del botón
     dropdownButton.addEventListener('click', function(e) {
         e.preventDefault();
-        e.stopPropagation(); // Prevenir que el evento se propague
+        e.stopPropagation();
     });
 
     // Manejar hover en dispositivos no móviles
@@ -1744,6 +1748,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         dropdown.addEventListener('mouseleave', function() {
             dropdownContent.style.display = 'none';
+            dropdownButton.textContent = defaultText; // Restaurar texto al salir
         });
     }
 
@@ -1751,19 +1756,18 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', function(e) {
         if (!dropdown.contains(e.target)) {
             dropdownContent.style.display = 'none';
+            dropdownButton.textContent = defaultText;
         }
     });
 
-    // Manejar la selección de ciudad y cambiar el texto del botón
+    // Manejar la selección de ciudad sin cambiar el texto del botón
     dropdownLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
-            e.stopPropagation(); // Prevenir que el evento se propague
-            const selectedText = this.textContent.trim();
-            dropdownButton.textContent = selectedText;
+            e.stopPropagation();
             
-            // Guardar la selección en localStorage (opcional)
-            localStorage.setItem('selectedCity', selectedText);
+            // Mantener el texto como "CIUDADES"
+            dropdownButton.textContent = defaultText;
             
             // Obtener y navegar a la URL del enlace
             const href = this.getAttribute('href');
@@ -1778,21 +1782,20 @@ document.addEventListener('DOMContentLoaded', function() {
             e.stopPropagation();
             dropdownContent.style.display = 
                 dropdownContent.style.display === 'flex' ? 'none' : 'flex';
+            dropdownButton.textContent = defaultText; // Mantener texto en móviles
         });
 
         // Cerrar al tocar fuera en móviles
         document.addEventListener('touchstart', function(e) {
             if (!dropdown.contains(e.target)) {
                 dropdownContent.style.display = 'none';
+                dropdownButton.textContent = defaultText;
             }
         });
     }
 
-    // Restaurar la ciudad seleccionada previamente (opcional)
-    const savedCity = localStorage.getItem('selectedCity');
-    if (savedCity) {
-        dropdownButton.textContent = savedCity;
-    }
+    // Asegurar que el texto siempre sea "CIUDADES"
+    dropdownButton.textContent = defaultText;
 
     // Prevenir que los clicks dentro del dropdown cierren el menú
     dropdownContent.addEventListener('click', function(e) {

@@ -9,15 +9,27 @@
             </a>
         </div>
         <ul class="nav-links-admin">
+            {{-- Inicio disponible para todos los roles --}}
             <li><a href="{{ route('home') }}">Inicio</a></li>
-            <li><a href="{{ route('panel_control') }}">Chicas</a></li>
 
+            {{-- Perfil disponible para todos los roles --}}
             <li><a href="{{ route('admin.profile') }}">Perfil</a></li>
+
+            @if($usuarioAutenticado->rol == 1)
+            {{-- Menú completo solo para rol 1 --}}
+            <li><a href="{{ route('panel_control') }}">Chicas</a></li>
             <li><a href="{{ route('admin.perfiles') }}">Perfiles</a></li>
             <li><a href="{{ route('publicate.form') }}">Publicar</a></li>
             <li><a href="{{ route('foroadmin') }}">Foro</a></li>
             <li><a href="{{ route('blogadmin') }}">Blog</a></li>
             <li><a href="{{ route('seo') }}">SEO</a></li>
+            @endif
+
+            @if($usuarioAutenticado->rol == 3)
+            {{-- Foro solo disponible para rol 3 --}}
+            <li><a href="{{ route('foroadmin') }}">Foro</a></li>
+            @endif
+
             <li>
                 <form method="POST" action="{{ route('logout') }}" class="d-inline">
                     @csrf
@@ -28,7 +40,15 @@
             </li>
         </ul>
         <div class="user-info-admin">
-            <p style="color:white;">Bienvenido, {{ $usuarioAutenticado->name }} ({{ $usuarioAutenticado->role == 2 ? 'Administrador' : 'Administrador' }})</p>
+            <p style="color:white;">Bienvenido, {{ $usuarioAutenticado->name }}
+                @if($usuarioAutenticado->rol == 1)
+                (Administrador)
+                @elseif($usuarioAutenticado->rol == 2)
+                (Chica)
+                @elseif($usuarioAutenticado->rol == 3)
+                (Usuario)
+                @endif
+            </p>
         </div>
     </nav>
 </header>
@@ -40,7 +60,7 @@
         <div id="listadoPosts" class="section-content">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2>Administración de Posts</h2>
-                @if(isset($id_blog))
+                @if(isset($id_blog) && ($usuarioAutenticado->rol == 1 || $usuarioAutenticado->rol == 3))
                 <button onclick="mostrarFormulario('crear')" class="btn-submit">
                     <i class="fas fa-plus-circle"></i> Nuevo Post
                 </button>
@@ -67,7 +87,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($posts as $post)
+                        @forelse($usuarioAutenticado->rol == 3 ? $posts->where('usuario_id', $usuarioAutenticado->id) : $posts as $post)
                         <tr>
                             <td>{{ $post->id }}</td>
                             <td>{{ $post->titulo }}</td>
@@ -79,12 +99,14 @@
                                     <button onclick="verPost({{ $post->id_blog }}, {{ $post->id }})" class="btn btn-info btn-sm" title="Ver Post">
                                         <i class="fas fa-eye"></i>
                                     </button>
+                                    @if($usuarioAutenticado->rol == 1 || ($usuarioAutenticado->rol == 3 && $post->usuario_id == $usuarioAutenticado->id))
                                     <button onclick="editarPost({{ $post->id }})" class="btn btn-warning btn-sm" title="Editar Post">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <button onclick="confirmarEliminar({{ $post->id }})" class="btn btn-danger btn-sm" title="Eliminar Post">
                                         <i class="fas fa-trash"></i>
                                     </button>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -94,7 +116,7 @@
                                 <div class="text-center">
                                     <i class="fas fa-comments fa-3x text-muted mb-3 d-block"></i>
                                     <p class="h5 text-muted mb-3">No hay posts disponibles</p>
-                                    @if(isset($id_blog))
+                                    @if(isset($id_blog) && ($usuarioAutenticado->rol == 1 || $usuarioAutenticado->rol == 3))
                                     <button onclick="mostrarFormulario('crear')" class="btn-submit">
                                         <i class="fas fa-plus-circle"></i> Crear el primer post
                                     </button>
@@ -108,7 +130,6 @@
             </div>
         </div>
 
-        <!-- Formulario de Post (Crear/Editar) -->
         <div id="formularioPost" class="section-content" style="display: none;">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 id="formularioTitulo">Nuevo Post</h2>
@@ -143,6 +164,7 @@
                     @enderror
                 </div>
 
+                @if($usuarioAutenticado->rol == 1)
                 <div class="form-group mb-4">
                     <div class="form-check">
                         <input type="checkbox"
@@ -156,7 +178,7 @@
                         </label>
                     </div>
                 </div>
-
+                @endif
 
                 <div class="flex items-center justify-between mt-6">
                     <button type="submit" class="btn-submit">

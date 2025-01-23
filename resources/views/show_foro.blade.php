@@ -30,6 +30,13 @@
     {!! $categoria->contenido !!}
 </div>
 
+{{-- Botón Crear Post --}}
+<div style="text-align: right;margin: 10 198px 10 10;">
+    <a href="{{ route('foroadmin') }}" class="inline-flex items-center px-4 py-2 rounded-md text-white font-semibold" style="background-color: #e00037;">
+        <i class="fas fa-plus-circle mr-2"></i>Crear Post
+    </a>
+</div>
+
 @if(isset($categoria->foros) && count($categoria->foros) > 0)
 @foreach($categoria->foros as $foro)
 <div class="foro-comments-table">

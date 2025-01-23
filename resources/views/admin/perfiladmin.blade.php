@@ -23,18 +23,27 @@
             </a>
         </div>
         <ul class="nav-links-admin">
+            {{-- Inicio disponible para todos los roles --}}
             <li><a href="{{ route('home') }}">Inicio</a></li>
 
+            {{-- Perfil disponible para todos los roles --}}
             <li><a href="{{ route('admin.profile') }}">Perfil</a></li>
-            @if($usuarioAutenticado->rol == 1)
-            <li><a href="{{ route('panel_control') }}">Chicas</a></li>
 
-            <li><a href="{{ route('admin.perfiles') }}">Perfiles</a></li>
-            <li><a href="{{ route('publicate.form') }}">Publicar</a></li>
-            <li><a href="{{ route('foroadmin') }}">Foro</a></li>
-            <li><a href="{{ route('blogadmin') }}">Blog</a></li>
-            <li><a href="{{ route('seo') }}">SEO</a></li>
+            @if($usuarioAutenticado->rol == 1)
+                {{-- Menú completo solo para rol 1 --}}
+                <li><a href="{{ route('panel_control') }}">Chicas</a></li>
+                <li><a href="{{ route('admin.perfiles') }}">Perfiles</a></li>
+                <li><a href="{{ route('publicate.form') }}">Publicar</a></li>
+                <li><a href="{{ route('foroadmin') }}">Foro</a></li>
+                <li><a href="{{ route('blogadmin') }}">Blog</a></li>
+                <li><a href="{{ route('seo') }}">SEO</a></li>
             @endif
+
+            @if($usuarioAutenticado->rol == 3)
+                {{-- Foro solo disponible para rol 3 --}}
+                <li><a href="{{ route('foroadmin') }}">Foro</a></li>
+            @endif
+
             <li>
                 <form method="POST" action="{{ route('logout') }}" class="d-inline">
                     @csrf
@@ -45,14 +54,18 @@
             </li>
         </ul>
         <div class="user-info-admin">
-            <p style="color:white;">Bienvenido, {{ $usuarioAutenticado->name }}
-                ({{ $usuarioAutenticado->rol == 1 ? 'Administrador' : 
-                    ($usuarioAutenticado->rol == 2 ? 'Chica' : 'Usuario') }})
+            <p style="color:white;">Bienvenido, {{ $usuarioAutenticado->name }} 
+                @if($usuarioAutenticado->rol == 1)
+                    (Administrador)
+                @elseif($usuarioAutenticado->rol == 2)
+                    (Chica)
+                @elseif($usuarioAutenticado->rol == 3)
+                    (Usuario)
+                @endif
             </p>
         </div>
     </nav>
 </header>
-
 <main>
     <section class="perfil-admin-section">
         @if($usuarioAutenticado->rol == 1)

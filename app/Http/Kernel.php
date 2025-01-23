@@ -90,4 +90,9 @@ class Kernel extends HttpKernel
         \Illuminate\Routing\Middleware\SubstituteBindings::class,
         \Illuminate\Auth\Middleware\Authorize::class,
     ];
+
+    protected $routeMiddleware = [
+        // ... otros middlewares ...
+        'foro' => \App\Http\Middleware\ForoMiddleware::class,
+    ];
 }
