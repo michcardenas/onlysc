@@ -23,11 +23,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
 
-        if (request()->segment(1) === 'public') {
-            header('Location: ' . substr(request()->path(), 7));
-            exit();
-        }
-
           // Compartir los barrios con todas las vistas
           View::composer('*', function ($view) {
             $barriosSantiago = Cache::remember('barrios_santiago', 24*60*60, function() {
