@@ -5,7 +5,7 @@ html {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Montserrat', sans-serif; 
 }
 
 ::-webkit-scrollbar {
@@ -2240,7 +2240,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video) {
 
 /* Horario */
 .schedule-time {
-    color: ##202020;
+    color: #202020;
     font-size: 0.9em;
 }
 
@@ -3304,6 +3304,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video) {
     right: 0;
     bottom: 0;
     z-index: 1050;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* Backdrop del modal */
@@ -3576,6 +3577,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video) {
     align-items: flex-start;
     width: 112%;
     flex-wrap: wrap;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .filter-ciudad,
