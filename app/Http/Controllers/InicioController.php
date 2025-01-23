@@ -407,7 +407,7 @@ class InicioController extends Controller
                     'estadop'
                 )
                 ->orderBy('posicion', 'asc')
-                ->paginate(12);
+                ->paginate(40);
 
             // Estados
             $estados = Estado::select('estados.*', 'u.foto as user_foto')
