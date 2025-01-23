@@ -694,3 +694,26 @@
 .foro-comentario-btn:hover {
     background-color: #c9302c;
 }
+
+@media screen and (max-width: 415px) {
+    .foro-breadcrumb {
+        margin-left: 10px;
+    }
+
+    .foro-description {
+        margin-left: 10px;
+    }
+
+    .foro-comments-author-cell {
+        display: none;
+    }
+    
+    main {
+        padding-top: calc(37px + 0rem);
+    }
+
+    .hide-mobile{
+        display: none; 
+    }
+
+}

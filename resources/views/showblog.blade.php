@@ -5,6 +5,18 @@
 @endsection
 
 @section('content')
+<style>
+@media (max-width: 415px) {
+    .blog-container {
+        flex-direction: column;
+    }
+
+
+.featured-image img {
+    object-fit: contain;
+}
+}
+</style>
 <div class="blog-container">
     {{-- Sección de compartir y tabla de contenidos --}}
     <div class="blog-sidebar">
