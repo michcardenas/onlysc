@@ -513,7 +513,7 @@
                 <div class="BlogInicio-grid swiper-wrapper">
                     @foreach($blogArticles as $article)
                     <div class="BlogInicio-item swiper-slide">
-                        <a href="{{ route('blog.show_article', $article->id) }}" class="BlogInicio-card">
+                        <a href="{{ route('blog.show_article', $article->slug) }}" class="BlogInicio-card">
                             <div class="BlogInicio-image-container">
                                 <img src="{{ $article->imagen ? asset('storage/' . $article->imagen) : asset('images/default-blog.png') }}"
                                     alt="{{ $article->titulo }}"
