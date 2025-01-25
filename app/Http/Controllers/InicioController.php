@@ -897,15 +897,6 @@ if (count($pathParts) > 1) {
     ->where('direccion', 'LIKE', '%' . $pathParts[1] . '%')
     ->exists();
 
-    // Debug zona
-    dump([
-        'pathParts[1]' => $pathParts[1] ?? null,
-        'isZona check' => [
-            'existe en DB?' => $isZona,
-            'direccion buscada' => DB::table('escort_locations')->where('direccion', $pathParts[1])->first()
-        ]
-    ]);
-
    // Determinar qué tipo de filtro es
    $isServicio = in_array($pathParts[1], [
        "anal",
