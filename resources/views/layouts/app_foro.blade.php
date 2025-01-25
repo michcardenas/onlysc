@@ -58,7 +58,7 @@
     @endif
 @endif
     <!-- Scripts -->
-    <script src="https://cdn.tiny.cloud/1/z94ao1xzansr93pi0qe5kfxgddo1f4ltb8q7qa8pw9g52txs/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/grz9xs9xkslcyiomigsaezo439rjdxjxzbl483z5a17k9z70/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 <style>
 /* Layout principal con flexbox */
 .foro-layout {

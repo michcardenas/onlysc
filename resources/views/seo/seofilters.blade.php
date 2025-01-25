@@ -15,13 +15,13 @@
 }
 
 .nav-link, .custom-button, a {
-    color: #e00037 ;
+    color: #ffffff ;
     transition: all 0.3s ease;
 }
 
-.nav-link:hover, .custom-button:hover, a:hover {
-    color: #ff1a1a;
-    opacity: 0.9;
+
+.nav-link:hover {
+ color: #ffffff;
 }
 
 .custom-button {
@@ -31,6 +31,7 @@
 
 .custom-button:hover {
     background-color: #ff1a1a;
+    color:#ffffff;
 }
 
 @media (max-width: 992px) {
