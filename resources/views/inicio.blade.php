@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <header class="banner">
 <img src="{{ isset($meta->fondo) ? Storage::url($meta->fondo) : asset('images/banner1.jpg') }}" alt="Banner Image" class="banner-img">
     <div class="banner-content">

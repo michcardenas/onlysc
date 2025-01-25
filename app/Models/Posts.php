@@ -11,6 +11,7 @@ class Posts extends Model
     protected $fillable = [
         'titulo',
         'id_blog',
+        'chica_id',
         'id_usuario',
         'comentario',
         'is_fixed',
@@ -39,4 +40,9 @@ class Posts extends Model
     {
         return $this->hasMany(Comentario::class, 'id_post');
     }
+
+    public function chica()
+{
+    return $this->belongsTo(UsuarioPublicate::class, 'chica_id');
+}
 }

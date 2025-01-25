@@ -12,15 +12,19 @@ use Illuminate\Support\Facades\Log;
 class ComentarioController extends Controller
 {
     public function showComentario($id_blog, $id_post)
-    {
-        // Cargar el foro y el post con sus relaciones
-        $foro = Foro::findOrFail($id_blog);
-        $post = Posts::with(['comentarios.usuario', 'foro'])
-                    ->where('id_blog', $id_blog)
-                    ->findOrFail($id_post);
+{
+   $foro = Foro::findOrFail($id_blog);
+   $post = Posts::with(['comentarios.usuario', 'foro', 'chica'])
+               ->where('id_blog', $id_blog)
+               ->findOrFail($id_post);
 
-        return view('showcomentario', compact('post', 'foro'));
-    }
+   $comentarios = Comentario::with(['usuario', 'post.chica'])
+                   ->where('id_post', $id_post)
+                   ->orderBy('created_at', 'asc')
+                   ->get();
+
+   return view('showcomentario', compact('post', 'foro', 'comentarios'));
+}
 
     public function store(Request $request)
     {

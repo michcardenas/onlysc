@@ -76,9 +76,12 @@ class ForoController extends Controller
             ->leftJoin('users', 'foro.id_usuario', '=', 'users.id')
             ->orderBy('fecha', 'desc')
             ->get();
-
+    
+        $chicas = DB::table('usuarios_publicate')->get(); // Add this line
+    
         return view('admin.foroadmin', [
             'foros' => $foros,
+            'chicas' => $chicas, // Add this
             'usuarioAutenticado' => Auth::user()
         ]);
     }
@@ -214,22 +217,30 @@ class ForoController extends Controller
 
     public function showPosts($id_blog = null)
     {
-        $query = Posts::with(['usuario', 'foro'])
-                      ->orderBy('is_fixed', 'desc')  // Primero ordenar por fijados
-                      ->orderBy('created_at', 'desc'); // Luego por fecha
-        
-        if ($id_blog) {
-            $query->where('id_blog', $id_blog);
-        }
-        
-        $posts = $query->get();
-        $usuarioAutenticado = Auth::user();
-        
-        return view('admin.posts', [
-            'posts' => $posts,
-            'id_blog' => $id_blog,
-            'usuarioAutenticado' => $usuarioAutenticado
-        ]);
+       $query = Posts::with(['usuario', 'foro'])
+                     ->orderBy('is_fixed', 'desc')
+                     ->orderBy('created_at', 'desc');
+       
+       if ($id_blog) {
+           $query->where('id_blog', $id_blog);
+       }
+       
+       $posts = $query->get();
+       $usuarioAutenticado = Auth::user();
+       $chicas = null;
+       
+       if ($id_blog == 16) {
+           $chicas = DB::table('usuarios_publicate')
+                      ->whereIn('estadop', [1, 3])
+                      ->get();
+       }
+       
+       return view('admin.posts', [
+           'posts' => $posts,
+           'chicas' => $chicas,
+           'id_blog' => $id_blog, 
+           'usuarioAutenticado' => $usuarioAutenticado
+       ]);
     }
     
     public function editpost($id)
@@ -257,38 +268,22 @@ class ForoController extends Controller
     
     public function storepost(Request $request)
     {
-        try {
-            $validated = $request->validate([
-                'titulo' => [
-                    'required',
-                    'max:255',
-                    'regex:/^(?!.*www)(?!.*https).*$/i'  // Validación para www y https
-                ],
-                'id_blog' => 'required|exists:foro,id',
-                'is_fixed' => 'nullable|boolean'
-            ], [
-                'titulo.regex' => 'El título no puede contener www ni https'
-            ]);
+        $validated = $request->validate([
+            'titulo' => 'required',
+            'id_blog' => 'required',
+            'chica_id' => $request->id_blog == 16 ? 'required' : 'nullable',
+        ]);
     
-            $post = Posts::create([
-                'titulo' => strip_tags($request->titulo),
-                'id_blog' => $request->id_blog,
-                'id_usuario' => Auth::id(),
-                'is_fixed' => $request->has('is_fixed')
-            ]);
+        Posts::create([
+            'titulo' => $request->titulo,
+            'id_blog' => $request->id_blog,
+            'id_usuario' => auth()->id(), // Cambiado de usuario_id a id_usuario
+            'usuario_id' => auth()->id(),
+            'chica_id' => $request->chica_id,
+            'is_fixed' => $request->has('is_fixed'),
+        ]);
     
-            if ($request->ajax()) {
-                return response()->json(['redirect' => route('foroadmin', ['id_blog' => $request->id_blog])]);
-            }
-            
-            return redirect()->route('foroadmin', ['id_blog' => $request->id_blog])
-                           ->with('success', 'Post creado exitosamente');
-        } catch (\Exception $e) {
-            if ($request->ajax()) {
-                return response()->json(['error' => $e->getMessage()], 422);
-            }
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        return redirect()->back()->with('success', 'Post creado exitosamente');
     }
     
     public function updatepost(Request $request, $id)

@@ -77,24 +77,31 @@
         @endif
 
         <div class="perfil-container">
-            <div class="foto-perfil">
-                @if($usuario->foto)
-                <img src="{{ Storage::url($usuario->foto) }}" alt="Foto de perfil" id="preview-foto">
-                @else
-                <img src="{{ asset('images/default-profile.png') }}" alt="Foto de perfil" id="preview-foto">
-                @endif
-                <form action="{{ route('admin.updatePhoto') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="custom-file-upload">
-                        <input type="file" name="foto" id="foto" accept="image/*" onchange="previewImage(this)" class="hidden-file-input">
-                        <label for="foto" class="file-upload-button">
-                            <i class="fas fa-cloud-upload-alt"></i> Seleccionar Imagen
-                        </label>
-                        <span class="selected-file-name" id="fileNameDisplay"></span>
-                    </div>
-                    <button type="submit" class="btn btn-secondary">Actualizar Foto</button>
-                </form>
-            </div>
+           <div class="foto-perfil">
+               <img 
+                   src="{{ $usuario->foto ? Storage::url($usuario->foto) : asset('images/default-profile.png') }}" 
+                   alt="Foto de perfil" 
+                   id="preview-foto"
+               >
+               
+               <form id="photoForm" action="{{ route('admin.updatePhoto') }}" method="POST" enctype="multipart/form-data">
+                   @csrf
+                   <div class="custom-file-upload">
+                       <input type="file" 
+                              name="foto" 
+                              id="foto" 
+                              accept="image/*" 
+                              onchange="previewImage(input)"
+                              class="hidden-file-input"
+                       >
+                       <label for="foto" class="file-upload-button">
+                           <i class="fas fa-cloud-upload-alt"></i> Seleccionar Imagen
+                       </label>
+                       <span id="fileNameDisplay"></span>
+                   </div>
+                   <button type="submit" class="btn btn-secondary">Actualizar Foto</button>
+               </form>
+           </div>
 
             <form action="{{ route('admin.updateProfile') }}" method="POST" class="form-admin">
                 @csrf

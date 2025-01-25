@@ -201,6 +201,10 @@ Route::delete('/seo/templates/{id}', [AdminController::class, 'deleteSeoTemplate
 Route::get('/seo/templates/ciudad/{ciudadId}', [AdminController::class, 'getTemplatesByCiudad'])->name('seo.templates.by-ciudad');
 Route::post('/seo/templates/update-all', [AdminController::class, 'updateAllTemplates'])->name('seo.templates.update.all');
 Route::put('/seo/update/{page}', [MetaTagController::class, 'update'])->name('seo.update');
+Route::get('seo/seofilters', [MetaTagController::class, 'index'])->name('seo.seofilters');
+Route::put('meta-tags/{page}', [MetaTagController::class, 'updateFilter'])->name('meta-tags.update');
+Route::put('/meta-tags/{page}/{filter?}', [MetaTagController::class, 'updateFilter'])
+    ->name('meta-tags.update');
 Route::get('/get-metatag/{ciudad_id}', [MetaTagController::class, 'getMetaTagByCiudad'])->name('metatag.by.ciudad');
 Route::get('/admin/tarjetas', [TarjetaController::class, 'index'])->name('tarjetas.index');
 Route::get('/admin/tarjetas/create', [TarjetaController::class, 'create'])->name('tarjetas.create');

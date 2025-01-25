@@ -163,6 +163,17 @@
                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
+                @if(isset($id_blog) && $id_blog == 16)
+   <div class="form-group mb-4">
+       <label for="chica_id" class="block text-sm font-medium text-gray-700">Seleccionar Chica</label>
+       <select name="chica_id" id="chica_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+           <option value="">Seleccionar chica</option>
+           @foreach($chicas->whereIn('estadop', [1, 3]) as $chica)
+               <option value="{{ $chica->id }}">{{ $chica->nombre }}</option>
+           @endforeach
+       </select>
+   </div>
+@endif
 
                 @if($usuarioAutenticado->rol == 1)
                 <div class="form-group mb-4">

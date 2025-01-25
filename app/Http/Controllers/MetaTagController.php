@@ -5,9 +5,112 @@ namespace App\Http\Controllers;
 use App\Models\MetaTag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class MetaTagController extends Controller
 {
+    private $servicios = ["Anal","Atencion a domicilio","Atencion en hoteles","Baile erotico","Besos","Cambio de rol","Departamento propio","Disfraces","Ducha erotica","Eventos y cenas","Eyaculacion cuerpo","Eyaculacion facial","Hetero","Juguetes","Lesbico","Lluvia dorada","Masaje erotico","Masaje prostatico","Masaje tantrico","Masaje thai","Masajes con final feliz","Masajes desnudos","Masajes eroticos","Masajes para hombres","Masajes sensitivos","Masajes sexuales","Masturbacion rusa","Oral americana","Oral con preservativo","Oral sin preservativo","Orgias","Parejas","Trio"];
+
+    private $atributos = ["Busto grande","Busto mediano","Busto pequeño","Cara visible","Cola grande","Cola mediana","Cola pequeña","Con video","Contextura delgada","Contextura grande","Contextura mediana","Depilacion full","Depto propio","En promocion","English","Escort independiente","Español","Estatura alta","Estatura mediana","Estatura pequeña","Hentai","Morena","Mulata","No fuma","Ojos claros","Ojos oscuros","Peliroja","Portugues","Relato erotico","Rubia","Tatuajes","Trigueña"];
+    
+    private $nacionalidades = ["argentina", "brasil", "chile", "colombia", "ecuador", "uruguay"];
+
+    private $categorias = ["premium", "vip", "de_lujo"];
+
+    public function index() 
+    {
+        $servicios = $this->servicios;
+        $atributos = $this->atributos;
+        $metaTags = MetaTag::all();
+
+        $usuarioAutenticado = Auth::user();
+        
+        return view('seo.seofilters', compact('servicios', 'atributos', 'usuarioAutenticado', 'metaTags'));
+    }
+
+    public function updateFilter(Request $request, $page, $filter = null) 
+    {
+        try {
+            $fullPath = $filter ? "$page/$filter" : $page;
+            
+            $validated = $request->validate([
+                'meta_title' => 'required',
+                'meta_description' => 'required',
+                'meta_robots' => 'required'
+            ]);
+    
+            $tipo = $this->determinarTipoFiltro(explode('/', $fullPath));
+    
+            MetaTag::updateOrCreate(
+                ['page' => $fullPath],
+                array_merge($validated, ['tipo' => $tipo])
+            );
+    
+            return redirect()->back()->with('success', 'SEO actualizado correctamente');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error al guardar: ' . $e->getMessage());
+        }
+    }
+
+    private function determinarTipoFiltro($parts) 
+    {
+       $path = implode('/', $parts);
+    
+       if (count($parts) == 1 && $parts[0] == 'seo') {
+           return 'sectores'; 
+       }
+    
+       if ($parts[1] == 'escorts-nacionalidad') {
+           return 'nacionalidad';
+       }
+    
+       if ($parts[1] == 'escorts-categoria') {
+           return 'categorias';
+       }
+
+       if ($parts[1] == 'edad') {
+        return 'edad';
+       }
+
+       if ($parts[1] == 'precio') {
+        return 'precio';
+    }
+       
+       if (str_starts_with($path, 'seo/servicios')) {
+           return 'servicios';
+       }
+    
+       if (str_starts_with($path, 'seo/atributos')) {
+           return 'atributos'; 
+       }
+       
+       $ultimoPart = end($parts);
+    
+       if (count($parts) == 2 && !str_contains($ultimoPart, 'escorts-')) {
+           return 'sector';
+       }
+
+       if (in_array($ultimoPart, $this->servicios)) return 'servicio';
+       if (in_array($ultimoPart, $this->atributos)) return 'atributo';
+    
+       foreach ($this->nacionalidades as $nacionalidad) {
+           if (str_contains($ultimoPart, "escorts-$nacionalidad")) {
+               return 'nacionalidad';
+           }
+       }
+    
+       if (str_contains($ultimoPart, 'escorts-con-resenas')) return 'resena';
+    
+       foreach ($this->categorias as $categoria) {
+           if (str_contains($ultimoPart, "escorts-$categoria")) {
+               return 'categoria';
+           }
+       }
+    
+       throw new \Exception('Tipo de filtro no reconocido');
+    }
+
     public function update(Request $request, $page)
     {
         \Log::info('Request recibido:', $request->all());

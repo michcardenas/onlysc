@@ -659,6 +659,14 @@
     margin-bottom: 15px;
 }
 
+.chica-url {
+    margin-bottom: 15px;
+}
+.chica-link {
+    color: #e00037;
+    text-decoration: none;
+}
+
 .foro-comentario-form-group {
     margin-bottom: 15px;
 }

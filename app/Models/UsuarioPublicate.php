@@ -84,6 +84,11 @@ class UsuarioPublicate extends Model
         return null;
     }
 
+    public function posts()
+{
+    return $this->hasMany(Posts::class, 'chica_id');
+}
+
     
 
     // /**

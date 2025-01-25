@@ -11,6 +11,7 @@ class MetaTag extends Model
 
     protected $fillable = [
         'page', 
+        'tipo', 
         'meta_title', 
         'meta_description', 
         'meta_keywords', 

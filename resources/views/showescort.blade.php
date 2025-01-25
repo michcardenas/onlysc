@@ -160,7 +160,7 @@ $pageTitle = $usuarioPublicate->fantasia . ' Escort ' .
 
     <div class="escortperfil-side-section">
         <div class="escortperfil-actions">
-            <a href="https://wa.me/{{ $usuarioPublicate->telefono }}" class="escortperfil-btn disponible" target="_blank">
+            <a href="https://wa.me/{{ $usuarioPublicate->telefono }}?text=Hola%20{{ $usuarioPublicate->fantasia }}!%20Vi%20tu%20anuncio%20en%20OnlyEscorts%20y%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20tus%20servicios.%20%C2%BFC%C3%B3mo%20est%C3%A1s?" class="escortperfil-btn disponible" target="_blank">
                 <i class="fab fa-whatsapp"></i> WHATSAPP
             </a>
             <button class="escortperfil-btn contactar">CONTACTAR</button>
@@ -222,55 +222,55 @@ $pageTitle = $usuarioPublicate->fantasia . ' Escort ' .
 
         </aside>
         <div class="escortperfil-content">
-    <div class="escortperfil-section">
-        <h2 class="escortperfil-section-title">Sobre mí</h2>
-        <p class="escortperfil-description-text">{{ $usuarioPublicate->cuentanos }}</p>
-    </div>
+            <div class="escortperfil-section">
+                <h2 class="escortperfil-section-title">Sobre mí</h2>
+                <p class="escortperfil-description-text">{{ $usuarioPublicate->cuentanos }}</p>
+            </div>
 
-    <!-- Estas dos secciones deberían estar agrupadas -->
-    <div>
-        <div class="escortperfil-section">
-            <h2 class="escortperfil-section-title">Atributos</h2>
-            <div class="escortperfil-attributes-list">
-                @php
-                $atributos = json_decode($usuarioPublicate->atributos, true);
-                $atributos = is_array($atributos) ? $atributos : [];
-                @endphp
-                @foreach($atributos as $atributo)
-                <span class="escortperfil-attribute-item">{{ $atributo }}</span>
-                @endforeach
+            <!-- Estas dos secciones deberían estar agrupadas -->
+            <div>
+                <div class="escortperfil-section">
+                    <h2 class="escortperfil-section-title">Atributos</h2>
+                    <div class="escortperfil-attributes-list">
+                        @php
+                        $atributos = json_decode($usuarioPublicate->atributos, true);
+                        $atributos = is_array($atributos) ? $atributos : [];
+                        @endphp
+                        @foreach($atributos as $atributo)
+                        <span class="escortperfil-attribute-item">{{ $atributo }}</span>
+                        @endforeach
+                    </div>
+                </div>
+
+                <div class="escortperfil-section">
+                    <h2 class="escortperfil-section-title">Datos de ubicación</h2>
+                    <div class="escortperfil-description">
+                        <h3 class="escortperfil-subtitle">Ubicaciones donde atiendo</h3>
+                        @if(!empty($usuarioPublicate->u1))
+                        <div class="escortperfil-locations-list">
+                            <div class="escortperfil-location-item">
+                                {{ $usuarioPublicate->u1 }}
+                            </div>
+                        </div>
+                        @else
+                        <p class="text-center">No hay ubicaciones disponibles</p>
+                        @endif
+
+                        <h3 class="escortperfil-subtitle">Servicios del sitio</h3>
+                        @if(!empty($usuarioPublicate->u2))
+                        <div class="escortperfil-locations-list">
+                            <div class="escortperfil-location-item">
+                                {{ $usuarioPublicate->u2 }}
+                            </div>
+                        </div>
+                        @else
+                        <p class="text-center">No hay servicios disponibles</p>
+                        @endif
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="escortperfil-section">
-    <h2 class="escortperfil-section-title">Datos de ubicación</h2>
-    <div class="escortperfil-description">
-        <h3 class="escortperfil-subtitle">Ubicaciones donde atiendo</h3>
-        @if(!empty($usuarioPublicate->u1))
-            <div class="escortperfil-locations-list">
-                <div class="escortperfil-location-item">
-                    {{ $usuarioPublicate->u1 }}
-                </div>
-            </div>
-        @else
-            <p class="text-center">No hay ubicaciones disponibles</p>
-        @endif
-
-        <h3 class="escortperfil-subtitle">Servicios del sitio</h3>
-        @if(!empty($usuarioPublicate->u2))
-            <div class="escortperfil-locations-list">
-                <div class="escortperfil-location-item">
-                    {{ $usuarioPublicate->u2 }}
-                </div>
-            </div>
-        @else
-            <p class="text-center">No hay servicios disponibles</p>
-        @endif
-    </div>
-</div>
-</div>
-</div>
-            
 
         <!-- Sección de Servicios -->
         <div class="escortperfil-section">
@@ -381,28 +381,79 @@ $pageTitle = $usuarioPublicate->fantasia . ' Escort ' .
         </div>
 
         <div class="escortperfil-section">
-    <h2 class="escortperfil-section-title">Videos</h2>
-    @if(!empty($videos = json_decode($usuarioPublicate->videos)))
-        <div class="escortperfil-videos-list">
-            <div class="escortperfil-video-item">
-                <video class="escortperfil-video" controls preload="auto"
-                    src="{{ asset('storage/chicas/'.$usuarioPublicate->id.'/videos/'.($videos[0] ?? '')) }}">
-                    Tu navegador no soporta el elemento de video.
-                </video>
+            <h2 class="escortperfil-section-title">Videos</h2>
+            @if(!empty($videos = json_decode($usuarioPublicate->videos)))
+            <div class="escortperfil-videos-list">
+                <div class="escortperfil-video-item">
+                    <video class="escortperfil-video" controls preload="auto"
+                        src="{{ asset('storage/chicas/'.$usuarioPublicate->id.'/videos/'.($videos[0] ?? '')) }}">
+                        Tu navegador no soporta el elemento de video.
+                    </video>
+                </div>
             </div>
-        </div>
-        
-        <div class="swiper-pagination">
-            @foreach($videos as $index => $video)
-                <button class="swiper-pagination-bullet {{ $index === 0 ? 'swiper-pagination-bullet-active' : '' }}" 
-                        data-video="{{ asset('storage/chicas/'.$usuarioPublicate->id.'/videos/'.$video) }}">
+
+            <div class="swiper-pagination">
+                @foreach($videos as $index => $video)
+                <button class="swiper-pagination-bullet {{ $index === 0 ? 'swiper-pagination-bullet-active' : '' }}"
+                    data-video="{{ asset('storage/chicas/'.$usuarioPublicate->id.'/videos/'.$video) }}">
                 </button>
-            @endforeach
+                @endforeach
+            </div>
+            @else
+            <p class="text-center">No hay videos disponibles</p>
+            @endif
         </div>
-    @else
-        <p class="text-center">No hay videos disponibles</p>
-    @endif
-</div>
+
+          <!-- Sección de Experiencias -->
+                  <!-- Sección de Experiencias -->
+        <div class="escortperfil-section">
+            <h2 class="escortperfil-section-title">Experiencias</h2>
+            @php
+            $experiencias = \App\Models\Posts::where('id_blog', 16)
+                ->where('chica_id', $usuarioPublicate->id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+            @endphp
+            
+            @if($experiencias->count() > 0)
+                <div class="escortperfil-experiences-table">
+                    <table>
+                        <tbody>
+                            @foreach($experiencias as $experiencia)
+                            <tr class="escortperfil-experience-row">
+                                <td class="escortperfil-experience-avatar-cell">
+                                    @if($experiencia->usuario && $experiencia->usuario->foto)
+                                        <img src="{{ asset('storage/' . $experiencia->usuario->foto) }}" 
+                                             alt="Avatar de {{ $experiencia->usuario->name }}"
+                                             class="escortperfil-experience-avatar-img">
+                                    @else
+                                        <div class="escortperfil-experience-avatar-default">
+                                            {{ $experiencia->usuario ? strtoupper(substr($experiencia->usuario->name, 0, 1)) : 'A' }}
+                                        </div>
+                                    @endif
+                                </td>
+                                <td class="escortperfil-experience-content-cell">
+                                    <div class="escortperfil-experience-author">
+                                        {{ $experiencia->usuario->name ?? 'Anónimo' }}
+                                    </div>
+                                    <a href="{{ route('post.show', ['id_blog' => $experiencia->id_blog, 'id' => $experiencia->id]) }}" 
+                                       class="escortperfil-experience-title-link">
+                                        <h3 class="escortperfil-experience-title">{{ $experiencia->titulo }}</h3>
+                                    </a>
+                                    <p class="escortperfil-experience-content">{{ $experiencia->contenido }}</p>
+                                </td>
+                                <td class="escortperfil-experience-date-cell">
+                                    {{ \Carbon\Carbon::parse($experiencia->created_at)->format('d/m/Y') }}
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <p class="text-center">No hay experiencias disponibles</p>
+            @endif
+        </div>
 
     </div>
     @endsection

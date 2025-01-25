@@ -13,6 +13,7 @@ class Comentario extends Model
     protected $fillable = [
         'id_blog',
         'id_post',
+        'chica_id',
         'id_usuario',
         'comentario'
     ];
@@ -33,4 +34,6 @@ class Comentario extends Model
     {
         return $this->belongsTo(Posts::class, 'id_post');
     }
+
+    
 }
