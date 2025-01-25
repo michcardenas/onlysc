@@ -52,7 +52,7 @@
             @if($post && $post->chica)
                 <div class="chica-url">
                     <a href="{{ route('perfil.show', ['nombre' => $post->chica->fantasia . '-' . $post->chica->id]) }}" class="chica-link">
-                        Perfil de {{ $post->chica->nombre }}
+                        Perfil de {{ $post->chica->fantasia }}
                     </a>
                 </div>
             @endif
