@@ -592,240 +592,241 @@ class InicioController extends Controller
                 ->take(4)
                 ->get();
 
-            // Procesar la ubicación para la vista
-            $ubicacionesMostradas = [];
+// Procesar la ubicación para la vista
+$ubicacionesMostradas = [];
 
-            // Procesar ubicaciones para usuarios principales
-            foreach ($usuarios as $usuario) {
-                if ($ciudadSeleccionada->url === 'santiago') {
-                    if ($sectorValido) {
-                        $ubicacionesMostradas[$usuario->id] = ucwords(str_replace('-', ' ', $sectorValido));
-                    } elseif ($usuario->location && $usuario->location->direccion) {
-                        $ubicacionesMostradas[$usuario->id] = $this->extraerSectorDeDireccion($usuario->location->direccion);
-                    } else {
-                        $ubicacionesMostradas[$usuario->id] = 'Sector no disponible';
-                    }
-                } else {
-                    $ubicacionesMostradas[$usuario->id] = $usuario->ubicacion;
-                }
-            }
+// Procesar ubicaciones para usuarios principales
+foreach ($usuarios as $usuario) {
+    if ($ciudadSeleccionada->url === 'santiago') {
+        if ($sectorValido) {
+            $ubicacionesMostradas[$usuario->id] = ucwords(str_replace('-', ' ', $sectorValido));
+        } elseif ($usuario->location && $usuario->location->direccion) {
+            $ubicacionesMostradas[$usuario->id] = $this->extraerSectorDeDireccion($usuario->location->direccion);
+        } else {
+            $ubicacionesMostradas[$usuario->id] = 'Sector no disponible';
+        }
+    } else {
+        $ubicacionesMostradas[$usuario->id] = $usuario->ubicacion;
+    }
+}
 
-            // Procesar ubicaciones para usuarios online
-            foreach ($usuariosOnline as $usuario) {
-                if ($ciudadSeleccionada->url === 'santiago') {
-                    if ($sectorValido) {
-                        $ubicacionesMostradas[$usuario->id] = ucwords(str_replace('-', ' ', $sectorValido));
-                    } elseif ($usuario->location && $usuario->location->direccion) {
-                        $ubicacionesMostradas[$usuario->id] = $this->extraerSectorDeDireccion($usuario->location->direccion);
-                    } else {
-                        $ubicacionesMostradas[$usuario->id] = 'Sector no disponible';
-                    }
-                } else {
-                    $ubicacionesMostradas[$usuario->id] = $usuario->ubicacion;
-                }
-            }
+// Procesar ubicaciones para usuarios online
+foreach ($usuariosOnline as $usuario) {
+    if ($ciudadSeleccionada->url === 'santiago') {
+        if ($sectorValido) {
+            $ubicacionesMostradas[$usuario->id] = ucwords(str_replace('-', ' ', $sectorValido));
+        } elseif ($usuario->location && $usuario->location->direccion) {
+            $ubicacionesMostradas[$usuario->id] = $this->extraerSectorDeDireccion($usuario->location->direccion);
+        } else {
+            $ubicacionesMostradas[$usuario->id] = 'Sector no disponible';
+        }
+    } else {
+        $ubicacionesMostradas[$usuario->id] = $usuario->ubicacion;
+    }
+}
 
-            // Procesar ubicaciones para primera vez
-            foreach ($primeraVez as $usuario) {
-                if ($ciudadSeleccionada->url === 'santiago') {
-                    if ($sectorValido) {
-                        $ubicacionesMostradas[$usuario->id] = ucwords(str_replace('-', ' ', $sectorValido));
-                    } elseif ($usuario->location && $usuario->location->direccion) {
-                        $ubicacionesMostradas[$usuario->id] = $this->extraerSectorDeDireccion($usuario->location->direccion);
-                    } else {
-                        $ubicacionesMostradas[$usuario->id] = 'Sector no disponible';
-                    }
-                } else {
-                    $ubicacionesMostradas[$usuario->id] = $usuario->ubicacion;
-                }
-            }
+// Procesar ubicaciones para primera vez
+foreach ($primeraVez as $usuario) {
+    if ($ciudadSeleccionada->url === 'santiago') {
+        if ($sectorValido) {
+            $ubicacionesMostradas[$usuario->id] = ucwords(str_replace('-', ' ', $sectorValido));
+        } elseif ($usuario->location && $usuario->location->direccion) {
+            $ubicacionesMostradas[$usuario->id] = $this->extraerSectorDeDireccion($usuario->location->direccion);
+        } else {
+            $ubicacionesMostradas[$usuario->id] = 'Sector no disponible';
+        }
+    } else {
+        $ubicacionesMostradas[$usuario->id] = $usuario->ubicacion;
+    }
+}
 
-            // Procesar ubicaciones para los que volvieron
-            foreach ($volvieron as $usuario) {
-                if ($ciudadSeleccionada->url === 'santiago') {
-                    if ($sectorValido) {
-                        $ubicacionesMostradas[$usuario->id] = ucwords(str_replace('-', ' ', $sectorValido));
-                    } elseif ($usuario->location && $usuario->location->direccion) {
-                        $ubicacionesMostradas[$usuario->id] = $this->extraerSectorDeDireccion($usuario->location->direccion);
-                    } else {
-                        $ubicacionesMostradas[$usuario->id] = 'Sector no disponible';
-                    }
-                } else {
-                    $ubicacionesMostradas[$usuario->id] = $usuario->ubicacion;
-                }
-            }
+// Procesar ubicaciones para los que volvieron
+foreach ($volvieron as $usuario) {
+    if ($ciudadSeleccionada->url === 'santiago') {
+        if ($sectorValido) {
+            $ubicacionesMostradas[$usuario->id] = ucwords(str_replace('-', ' ', $sectorValido));
+        } elseif ($usuario->location && $usuario->location->direccion) {
+            $ubicacionesMostradas[$usuario->id] = $this->extraerSectorDeDireccion($usuario->location->direccion);
+        } else {
+            $ubicacionesMostradas[$usuario->id] = 'Sector no disponible';
+        }
+    } else {
+        $ubicacionesMostradas[$usuario->id] = $usuario->ubicacion;
+    }
+}
 
-            // Procesar ubicación para usuario destacado si existe
-            if ($usuarioDestacado) {
-                if ($ciudadSeleccionada->url === 'santiago') {
-                    if ($sectorValido) {
-                        $ubicacionesMostradas[$usuarioDestacado->id] = ucwords(str_replace('-', ' ', $sectorValido));
-                    } elseif ($usuarioDestacado->location && $usuarioDestacado->location->direccion) {
-                        $ubicacionesMostradas[$usuarioDestacado->id] = $this->extraerSectorDeDireccion($usuarioDestacado->location->direccion);
-                    } else {
-                        $ubicacionesMostradas[$usuarioDestacado->id] = 'Sector no disponible';
-                    }
-                } else {
-                    $ubicacionesMostradas[$usuarioDestacado->id] = $usuarioDestacado->ubicacion;
-                }
-            }
+// Procesar ubicación para usuario destacado si existe
+if ($usuarioDestacado) {
+    if ($ciudadSeleccionada->url === 'santiago') {
+        if ($sectorValido) {
+            $ubicacionesMostradas[$usuarioDestacado->id] = ucwords(str_replace('-', ' ', $sectorValido));
+        } elseif ($usuarioDestacado->location && $usuarioDestacado->location->direccion) {
+            $ubicacionesMostradas[$usuarioDestacado->id] = $this->extraerSectorDeDireccion($usuarioDestacado->location->direccion);
+        } else {
+            $ubicacionesMostradas[$usuarioDestacado->id] = 'Sector no disponible';
+        }
+    } else {
+        $ubicacionesMostradas[$usuarioDestacado->id] = $usuarioDestacado->ubicacion;
+    }
+}
             // Construcción del título
-            if (request()->segment(1) === 'escorts' && request()->segment(2)) {
-                // Perfil individual 
-                $title = ucwords(strtolower($usuario->fantasia));
-
-                // Determinar si es masajista o escort
-                $esMasajista = in_array('Masajes eroticos', $usuario->servicios) ||
-                    in_array('Masajes sensitivos', $usuario->servicios) ||
-                    in_array('Masajes con final feliz', $usuario->servicios);
-
-                if ($esMasajista) {
-                    $title .= " Masajista";
-                } else {
-                    $title .= " Escort";
-
-                    // Agregar categoría solo si es escort
-                    if (!empty($usuario->categorias)) {
-                        $categoriaDisplay = match (strtolower($usuario->categorias)) {
-                            'vip' => 'VIP',
-                            'premium' => 'Premium',
-                            'de_lujo' => 'de Lujo',
-                            'under' => 'Under',
-                            default => ucwords($usuario->categorias)
-                        };
-                        $title .= " " . $categoriaDisplay;
-                    }
-                }
-
-                // Agregar ubicación
-                if ($usuario->ubicacion === 'Santiago') {
-                    $sector = $usuario->location ?
-                        $this->extraerSectorDeDireccion($usuario->location->direccion) :
-                        'Santiago';
-                    $title .= " en " . $sector;
-                } else {
-                    $title .= " en " . $usuario->ubicacion;
-                }
-
-                $title .= " | OnlyEscorts";
-            } else {
-                // Página de listado
-                $title = "Escorts ";
-
-                // Procesar categoría primero
-                if ($categoria = request()->get('categoria')) {
-                    $categoriaDisplay = match (strtolower($categoria)) {
-                        'vip' => 'VIP',
-                        'premium' => 'Premium',
-                        'de_lujo' => 'de Lujo',
-                        'under' => 'Under',
-                        default => ucwords(str_replace('_', ' ', $categoria))
-                    };
-                    $title .= $categoriaDisplay . " ";
-                }
-
-                // Agregar ciudad y sector
-                $title .= "en {$ciudadSeleccionada->nombre}";
-                if ($sector && $this->validarSector($sector)) {
-                    $title .= ", zona " . ucwords(str_replace('-', ' ', $sector));
-                }
-
-                // Procesar filtros específicos
-                $filtrosProcesados = [];
-
-                // Nacionalidad
-                if ($nacionalidad = request()->get('n')) {
-                    $nacionalidadDisplay = match ($nacionalidad) {
-                        'colombia' => 'colombianas',
-                        'argentina' => 'argentinas',
-                        'brasil' => 'brasileñas',
-                        'chile' => 'chilenas',
-                        'ecuador' => 'ecuatorianas',
-                        'uruguay' => 'uruguayas',
-                        'venezuela' => 'venezolanas',
-                        'paraguay' => 'paraguayas',
-                        'peru' => 'peruanas',
-                        default => $nacionalidad . 's'
-                    };
-                    $filtrosProcesados[] = $nacionalidadDisplay;
-                }
-
-                // Edad
-                if ($edad = request()->get('e')) {
-                    list($min, $max) = explode('-', $edad);
-                    $filtrosProcesados[] = "de {$min} a {$max} años";
-                }
-
-                // Precio
-                if ($precio = request()->get('p')) {
-                    list($min, $max) = explode('-', $precio);
-                    $filtrosProcesados[] = "tarifas $" . number_format($min, 0, ',', '.') . " a $" . number_format($max, 0, ',', '.');
-                }
-
-                // Disponibilidad
-                if (request()->has('disponible')) {
-                    $filtrosProcesados[] = "disponibles ahora";
-                }
-
-                // Atributos
-                if ($atributos = request()->get('a')) {
-                    $atributosArray = explode(',', $atributos);
-                    foreach ($atributosArray as $atributo) {
-                        $atributoDisplay = match (strtolower($atributo)) {
-                            'busto grande' => 'tetona',
-                            'cola grande' => 'culona',
-                            'contextura delgada' => 'delgada',
-                            'contextura mediana' => 'mediana',
-                            'contextura grande' => 'gordita',
-                            'estatura alta' => 'alta',
-                            'estatura pequeña' => 'petite',
-                            default => $atributo
-                        };
-                        $filtrosProcesados[] = $atributoDisplay;
-                    }
-                }
-
-                // Servicios
-                if ($servicios = request()->get('s')) {
-                    $serviciosArray = explode(',', $servicios);
-                    foreach ($serviciosArray as $servicio) {
-                        $servicioDisplay = str_replace(['masajes ', 'masaje '], '', strtolower($servicio));
-                        $filtrosProcesados[] = $servicioDisplay;
-                    }
-                }
-
-                // Reseñas verificadas
-                if (request()->has('resena')) {
-                    $filtrosProcesados[] = "con reseñas verificadas";
-                }
-
-                // Agregar filtros al título
-                if (!empty($filtrosProcesados)) {
-                    $title .= ", " . implode(', ', array_slice($filtrosProcesados, 0, 3));
-
-                    if (count($filtrosProcesados) > 3) {
-                        $title .= " y más filtros";
-                    }
-                }
-
-                // Filtros desde URL
-                if ($filtros) {
-                    $filtroDisplay = match (true) {
-                        str_contains($filtros, 'edad-') => "de " . str_replace('edad-', '', $filtros) . " años",
-                        str_contains($filtros, 'precio-') => "tarifas " . str_replace('precio-', '$', $filtros),
-                        $filtros === 'disponible' => "disponibles ahora",
-                        $filtros === 'resena-verificada' => "con reseñas verificadas",
-                        default => ucwords(str_replace('-', ' ', $filtros))
-                    };
-
-                    if (!str_contains($title, $filtroDisplay)) {
-                        $title .= ", " . $filtroDisplay;
-                    }
-                }
-
-                // Sufijo para listados
-                $title .= " | OnlyEscorts";
-            }
+if (request()->segment(1) === 'escorts' && request()->segment(2)) {
+    // Perfil individual 
+    $title = ucwords(strtolower($usuario->fantasia));
+    
+    // Determinar si es masajista o escort
+    $esMasajista = in_array('Masajes eroticos', $usuario->servicios) || 
+                   in_array('Masajes sensitivos', $usuario->servicios) ||
+                   in_array('Masajes con final feliz', $usuario->servicios);
+    
+    if ($esMasajista) {
+        $title .= " Masajista";
+    } else {
+        $title .= " Escort";
+        
+        // Agregar categoría solo si es escort
+        if (!empty($usuario->categorias)) {
+            $categoriaDisplay = match (strtolower($usuario->categorias)) {
+                'vip' => 'VIP',
+                'premium' => 'Premium',
+                'de_lujo' => 'de Lujo',
+                'under' => 'Under',
+                default => ucwords($usuario->categorias)
+            };
+            $title .= " " . $categoriaDisplay;
+        }
+    }
+    
+    // Agregar ubicación
+    if ($usuario->ubicacion === 'Santiago') {
+        $sector = $usuario->location ? 
+                 $this->extraerSectorDeDireccion($usuario->location->direccion) : 
+                 'Santiago';
+        $title .= " en " . $sector;
+    } else {
+        $title .= " en " . $usuario->ubicacion;
+    }
+    
+    $title .= " | OnlyEscorts";
+ 
+ } else {
+    // Página de listado
+    $title = "Escorts ";
+ 
+    // Procesar categoría primero
+    if ($categoria = request()->get('categoria')) {
+        $categoriaDisplay = match (strtolower($categoria)) {
+            'vip' => 'VIP',
+            'premium' => 'Premium',
+            'de_lujo' => 'de Lujo',
+            'under' => 'Under',
+            default => ucwords(str_replace('_', ' ', $categoria))
+        };
+        $title .= $categoriaDisplay . " ";
+    }
+ 
+    // Agregar ciudad y sector
+    $title .= "en {$ciudadSeleccionada->nombre}";
+    if ($sector && $this->validarSector($sector)) {
+        $title .= ", zona " . ucwords(str_replace('-', ' ', $sector));
+    }
+ 
+    // Procesar filtros específicos
+    $filtrosProcesados = [];
+ 
+    // Nacionalidad
+    if ($nacionalidad = request()->get('n')) {
+        $nacionalidadDisplay = match ($nacionalidad) {
+            'colombia' => 'colombianas',
+            'argentina' => 'argentinas',
+            'brasil' => 'brasileñas',
+            'chile' => 'chilenas',
+            'ecuador' => 'ecuatorianas',
+            'uruguay' => 'uruguayas',
+            'venezuela' => 'venezolanas',
+            'paraguay' => 'paraguayas',
+            'peru' => 'peruanas',
+            default => $nacionalidad . 's'
+        };
+        $filtrosProcesados[] = $nacionalidadDisplay;
+    }
+ 
+    // Edad
+    if ($edad = request()->get('e')) {
+        list($min, $max) = explode('-', $edad);
+        $filtrosProcesados[] = "de {$min} a {$max} años";
+    }
+ 
+    // Precio
+    if ($precio = request()->get('p')) {
+        list($min, $max) = explode('-', $precio);
+        $filtrosProcesados[] = "tarifas $" . number_format($min, 0, ',', '.') . " a $" . number_format($max, 0, ',', '.');
+    }
+ 
+    // Disponibilidad
+    if (request()->has('disponible')) {
+        $filtrosProcesados[] = "disponibles ahora";
+    }
+ 
+    // Atributos
+    if ($atributos = request()->get('a')) {
+        $atributosArray = explode(',', $atributos);
+        foreach ($atributosArray as $atributo) {
+            $atributoDisplay = match (strtolower($atributo)) {
+                'busto grande' => 'tetona',
+                'cola grande' => 'culona',
+                'contextura delgada' => 'delgada',
+                'contextura mediana' => 'mediana',
+                'contextura grande' => 'gordita',
+                'estatura alta' => 'alta',
+                'estatura pequeña' => 'petite',
+                default => $atributo
+            };
+            $filtrosProcesados[] = $atributoDisplay;
+        }
+    }
+ 
+    // Servicios
+    if ($servicios = request()->get('s')) {
+        $serviciosArray = explode(',', $servicios);
+        foreach ($serviciosArray as $servicio) {
+            $servicioDisplay = str_replace(['masajes ', 'masaje '], '', strtolower($servicio));
+            $filtrosProcesados[] = $servicioDisplay;
+        }
+    }
+ 
+    // Reseñas verificadas
+    if (request()->has('resena')) {
+        $filtrosProcesados[] = "con reseñas verificadas";
+    }
+ 
+    // Agregar filtros al título
+    if (!empty($filtrosProcesados)) {
+        $title .= ", " . implode(', ', array_slice($filtrosProcesados, 0, 3));
+        
+        if (count($filtrosProcesados) > 3) {
+            $title .= " y más filtros";
+        }
+    }
+ 
+    // Filtros desde URL
+    if ($filtros) {
+        $filtroDisplay = match (true) {
+            str_contains($filtros, 'edad-') => "de " . str_replace('edad-', '', $filtros) . " años",
+            str_contains($filtros, 'precio-') => "tarifas " . str_replace('precio-', '$', $filtros),
+            $filtros === 'disponible' => "disponibles ahora",
+            $filtros === 'resena-verificada' => "con reseñas verificadas",
+            default => ucwords(str_replace('-', ' ', $filtros))
+        };
+        
+        if (!str_contains($title, $filtroDisplay)) {
+            $title .= ", " . $filtroDisplay;
+        }
+    }
+ 
+    // Sufijo para listados
+    $title .= " | OnlyEscorts";
+ }
             // Compartir con la vista
             view()->share(['pageTitle' => $title]);
 
@@ -868,153 +869,7 @@ class InicioController extends Controller
             } catch (\Exception $e) {
                 Log::error('Error generating SEO text', ['error' => $e->getMessage()]);
             }
-
-            
-// Add $isPrecio variable initialization
-$isPrecio = false;
-$isEdad = false;
-$isCategorias = false;
-$isZona = false;
-// Reemplazar con:
-$pathParts = explode('/', trim(request()->path(), '/'));
-$routeKey = implode('/', $pathParts);
-
-// Verificar que exista el segundo segmento de la URL
-if (count($pathParts) > 1) {
-
-    $isEdad = preg_match('/^edad-\d+-\d+$/', $pathParts[1]);
-    $isPrecio = preg_match('/^precio-\d+-\d+$/', $pathParts[1]);
-
-    $isCategorias = in_array($pathParts[1], [
-        'vip',
-        'premium', 
-        'de_lujo',
-        'under'
-    ]);
-
- // Check if zona exists in table
- $isZona = DB::table('escort_locations')
-    ->where('direccion', 'LIKE', '%' . $pathParts[1] . '%')
-    ->exists();
-
-   // Determinar qué tipo de filtro es
-   $isServicio = in_array($pathParts[1], [
-       "anal",
-       "atencion domicilio",
-       "atencion hoteles", 
-       "baile erotico",
-       "besos",
-       "cambio rol",
-       "departamento propio",
-       "disfraces",
-       "ducha erotica", 
-       "eventos cenas",
-       "eyaculacion cuerpo",
-       "eyaculacion facial",
-       "hetero",
-       "juguetes",
-       "lesbico",
-       "lluvia dorada",
-       "masaje erotico",
-       "masaje prostatico",
-       "masaje tantrico",
-       "masaje thai",
-       "masajes final feliz",
-       "masajes desnudos",
-       "masajes eroticos",
-       "masajes hombres",
-       "masajes sensitivos",
-       "masajes sexuales",
-       "masturbacion rusa",
-       "oral americana",
-       "oral preservativo", 
-       "oral sin preservativo",
-       "orgias",
-       "parejas",
-       "trio"
-   ]);
-
-   $isNacionalidad = in_array($pathParts[1], [
-       'colombiana',
-       'argentina',
-       'brasilena',
-       'chilena',
-       'ecuatoriana',
-       'uruguaya',
-       'venezolana',
-       'paraguaya',
-       'peruana'
-   ]);
-
-   $isAtributo = in_array($pathParts[1], [
-       "busto-grande",
-       "busto-mediano",
-       "busto-pequeño",
-       "cara-visible",
-       "cola-grande",
-       "cola-mediana",
-       "cola-pequeña",
-       "con-video",
-       "contextura-delgada",
-       "contextura-grande", 
-       "contextura-mediana",
-       "depilacion-full",
-       "depto-propio",
-       "en-promocion",
-       "english",
-       "escort-independiente", 
-       "español",
-       "estatura-alta",
-       "estatura-mediana",
-       "estatura-pequeña",
-       "hentai",
-       "morena",
-       "mulata", 
-       "no-fuma",
-       "ojos-claros",
-       "ojos-oscuros",
-       "peliroja",
-       "portugues",
-       "relato-erotico",
-       "rubia",
-       "tatuajes",
-       "trigueña"
-   ]);
-   
-
-} else {
-   $isServicio = $isNacionalidad = $isAtributo = false;
-}
-
-
-$metaTag = MetaTag::firstWhere('page', $routeKey);
-if (!$metaTag) {
-   if ($isServicio) {
-       $metaTag = MetaTag::firstWhere('page', 'seo/servicios');
-   } elseif ($isNacionalidad) {
-       $metaTag = MetaTag::firstWhere('page', 'seo/escorts-nacionalidad');
-   } elseif ($isAtributo) {
-       $metaTag = MetaTag::firstWhere('page', 'seo/atributos');
-   } elseif ($isPrecio) {
-       $metaTag = MetaTag::firstWhere('page', 'seo/precio');
-   } elseif ($isEdad) {
-       $metaTag = MetaTag::firstWhere('page', 'seo/edad');
-   } elseif ($isCategorias) {
-       $metaTag = MetaTag::firstWhere('page', 'seo/escorts-categoria');
-   } elseif ($isZona) {
-    $metaTag = MetaTag::firstWhere('page', 'seo');
-}
-}
-
-
-view()->share([
-   'pageTitle' => $metaTag?->meta_title ?? $title,
-   'metaDescription' => $metaTag?->meta_description ?? '',
-   'metaKeywords' => $metaTag?->meta_keywords ?? '',
-   'metaRobots' => $metaTag?->meta_robots ?? ($shouldIndex ? 'index,follow' : 'noindex,follow'),
-   'canonicalUrl' => $canonicalUrl
-]);
-
+            $metaTag = MetaTag::where('page', 'inicio-' . $ciudadSeleccionada->id)->first();
 
             return view('inicio', array_merge([
                 'ciudades' => $ciudades,
@@ -1220,30 +1075,30 @@ view()->share([
     private function clasificarFiltro($filtro)
     {
         Log::info('Clasificando filtro: ' . $filtro);
-
-        $servicios = ["Anal", "Atencion a domicilio", "Atencion en hoteles", "Baile erotico", "Besos", "Cambio de rol", "Departamento propio", "Disfraces", "Ducha erotica", "Eventos y cenas", "Eyaculacion cuerpo", "Eyaculacion facial", "Hetero", "Juguetes", "Lesbico", "Lluvia dorada", "Masaje erotico", "Masaje prostatico", "Masaje tantrico", "Masaje thai", "Masajes con final feliz", "Masajes desnudos", "Masajes eroticos", "Masajes para hombres", "Masajes sensitivos", "Masajes sexuales", "Masturbacion rusa", "Oral americana", "Oral con preservativo", "Oral sin preservativo", "Orgias", "Parejas", "Trio"];
-
-        $atributos = ["Busto grande", "Busto mediano", "Busto pequeño", "Cara visible", "Cola grande", "Cola mediana", "Cola pequeña", "Con video", "Contextura delgada", "Contextura grande", "Contextura mediana", "Depilacion full", "Depto propio", "En promocion", "English", "Escort independiente", "Español", "Estatura alta", "Estatura mediana", "Estatura pequeña", "Hentai", "Morena", "Mulata", "No fuma", "Ojos claros", "Ojos oscuros", "Peliroja", "Portugues", "Relato erotico", "Rubia", "Tatuajes", "Trigueña"];
-
+    
+        $servicios = ["Anal","Atencion a domicilio","Atencion en hoteles","Baile erotico","Besos","Cambio de rol","Departamento propio","Disfraces","Ducha erotica","Eventos y cenas","Eyaculacion cuerpo","Eyaculacion facial","Hetero","Juguetes","Lesbico","Lluvia dorada","Masaje erotico","Masaje prostatico","Masaje tantrico","Masaje thai","Masajes con final feliz","Masajes desnudos","Masajes eroticos","Masajes para hombres","Masajes sensitivos","Masajes sexuales","Masturbacion rusa","Oral americana","Oral con preservativo","Oral sin preservativo","Orgias","Parejas","Trio"];
+    
+        $atributos = ["Busto grande","Busto mediano","Busto pequeño","Cara visible","Cola grande","Cola mediana","Cola pequeña","Con video","Contextura delgada","Contextura grande","Contextura mediana","Depilacion full","Depto propio","En promocion","English","Escort independiente","Español","Estatura alta","Estatura mediana","Estatura pequeña","Hentai","Morena","Mulata","No fuma","Ojos claros","Ojos oscuros","Peliroja","Portugues","Relato erotico","Rubia","Tatuajes","Trigueña"];
+    
         // Normalizar el filtro reemplazando TODOS los guiones
         $filtroNormalizado = strtolower(preg_replace('/-+/', ' ', $filtro));
         $serviciosNormalizados = array_map('strtolower', $servicios);
         $atributosNormalizados = array_map('strtolower', $atributos);
-
+    
         Log::info('Filtro normalizado: ' . $filtroNormalizado);
-
+        
         $index = array_search($filtroNormalizado, $serviciosNormalizados);
         if ($index !== false) {
             Log::info('Servicio encontrado: ' . $servicios[$index]);
             return ['tipo' => 'servicio', 'valor' => $servicios[$index]];
         }
-
+    
         $index = array_search($filtroNormalizado, $atributosNormalizados);
         if ($index !== false) {
             Log::info('Atributo encontrado: ' . $atributos[$index]);
             return ['tipo' => 'atributo', 'valor' => $atributos[$index]];
         }
-
+    
         Log::info('No se encontró coincidencia');
         return null;
     }
@@ -1408,18 +1263,19 @@ view()->share([
     {
         try {
             $id = substr($nombre, strrpos($nombre, '-') + 1);
-
+            
             $usuarioPublicate = UsuarioPublicate::with([
                 'disponibilidad',
                 'estados' => function ($query) {
                     $query->where('created_at', '>=', now()->subHours(24));
                 }
             ])->findOrFail($id);
-
+    
             // Agregamos la consulta de ciudades
             $ciudades = Ciudad::all(); // Asegúrate de tener el modelo importado: use App\Models\Ciudad;
-
+    
             return view('showescort', compact('usuarioPublicate', 'ciudades'));
+            
         } catch (\Exception $e) {
             \Log::error('Error en showPerfil: ' . $e->getMessage());
             return abort(404);
@@ -1502,7 +1358,7 @@ view()->share([
     private function generateSeoText($request, $ciudadSeleccionada, $sectorSeleccionado = null)
     {
         Log::info('Starting generateSeoText');
-
+    
         $nacionalidades = [
             'argentina' => 'argentinas',
             'brasil' => 'brasileñas',
@@ -1523,16 +1379,16 @@ view()->share([
             'paraguayas' => 'paraguayas',
             'peruanas' => 'peruanas'
         ];
-
+    
         $path = $request->path();
         $parts = explode('/', $path);
         $lastPart = strtolower(end($parts));
-
+    
         $clasificacionUrl = null;
         $singleFilter = null;
         $isNationalityFilter = false;
         $nacionalidadFromUrl = null;
-
+    
         // Detectar servicios en la URL
         if (str_contains($lastPart, 'anal')) {
             $singleFilter = 'servicios';
@@ -1543,7 +1399,8 @@ view()->share([
             } else {
                 $request->merge(['s' => 'Anal']);
             }
-        } elseif (str_starts_with($lastPart, 'escorts-')) {
+        }
+        elseif (str_starts_with($lastPart, 'escorts-')) {
             $posibleNacionalidad = str_replace('escorts-', '', $lastPart);
             if (isset($nacionalidades[$posibleNacionalidad])) {
                 $isNationalityFilter = true;
@@ -1552,24 +1409,29 @@ view()->share([
                 $singleFilter = 'nacionalidad';
                 $variableCount++;
             }
-        } elseif (preg_match('/^edad-(\d+)-(\d+)$/', $lastPart, $matches)) {
+        }
+        elseif (preg_match('/^edad-(\d+)-(\d+)$/', $lastPart, $matches)) {
             $request->merge(['e' => "{$matches[1]}-{$matches[2]}"]);
             $singleFilter = 'edad';
             $request->merge(['singleFilter' => 'edad']);
-        } elseif (preg_match('/^precio-(\d+)-(\d+)$/', $lastPart, $matches)) {
+        }
+        elseif (preg_match('/^precio-(\d+)-(\d+)$/', $lastPart, $matches)) {
             $request->merge(['p' => "{$matches[1]}-{$matches[2]}"]);
             $singleFilter = 'precio';
-        } elseif ($lastPart === 'disponible') {
+        }
+        elseif ($lastPart === 'disponible') {
             $request->merge(['disponible' => '1']);
             $singleFilter = 'disponible';
-        } elseif ($lastPart === 'resena-verificada') {
+        }
+        elseif ($lastPart === 'resena-verificada') {
             $request->merge(['resena' => '1']);
             $singleFilter = 'resena';
-        } elseif (in_array($lastPart, ['vip', 'premium', 'de_lujo', 'under'])) {
+        }
+        elseif (in_array($lastPart, ['vip', 'premium', 'de_lujo', 'under'])) {
             $request->merge(['categoria' => $lastPart]);
             $singleFilter = 'categoria';
         }
-
+    
         if (!$isNationalityFilter && !$singleFilter) {
             $filtroNormalizado = str_replace('-', ' ', $lastPart);
             $nacionalidadMap = [
@@ -1583,7 +1445,7 @@ view()->share([
                 'paraguaya' => 'paraguay',
                 'peruana' => 'peru'
             ];
-
+    
             if (array_key_exists($filtroNormalizado, $nacionalidadMap)) {
                 $isNationalityFilter = true;
                 $nacionalidadFromUrl = $nacionalidadMap[$filtroNormalizado];
@@ -1614,7 +1476,7 @@ view()->share([
                 }
             }
         }
-
+    
         $activeFilters = [
             'nacionalidad' => null,
             'edad' => null,
@@ -1625,7 +1487,7 @@ view()->share([
             'disponible' => false,
             'resena' => false
         ];
-
+    
         if ($request->has('n') || $isNationalityFilter) {
             $nacionalidad = $request->get('n') ?? $nacionalidadFromUrl;
             $activeFilters['nacionalidad'] = $nacionalidades[$nacionalidad] ?? null;
@@ -1633,12 +1495,12 @@ view()->share([
                 $singleFilter = 'nacionalidad';
             }
         }
-
+    
         if ($request->has('e')) {
             list($min, $max) = explode('-', $request->get('e'));
             $activeFilters['edad'] = ['min' => $min, 'max' => $max];
         }
-
+    
         if ($request->has('p')) {
             list($min, $max) = explode('-', $request->get('p'));
             $activeFilters['precio'] = [
@@ -1646,29 +1508,29 @@ view()->share([
                 'max' => number_format($max, 0, ',', '.')
             ];
         }
-
+    
         if ($request->has('a')) {
             $atributos = explode(',', $request->get('a'));
-            $activeFilters['atributos'] = array_map(function ($atributo) {
+            $activeFilters['atributos'] = array_map(function($atributo) {
                 return ucwords(str_replace('-', ' ', $atributo));
             }, $atributos);
         }
-
+    
         if ($request->has('s')) {
             $servicios = explode(',', $request->get('s'));
-            $activeFilters['servicios'] = array_map(function ($servicio) {
+            $activeFilters['servicios'] = array_map(function($servicio) {
                 return ucwords(str_replace('-', ' ', $servicio));
             }, $servicios);
         }
-
+    
         if ($request->has('categoria')) {
             $categoria = $request->get('categoria');
             $activeFilters['categoria'] = ucwords(str_replace('_', ' ', $categoria));
         }
-
+    
         $activeFilters['disponible'] = $request->has('disponible');
         $activeFilters['resena'] = $request->has('resena');
-
+    
         if ($clasificacionUrl) {
             if ($clasificacionUrl['tipo'] === 'servicio') {
                 $activeFilters['servicios'][] = ucwords($clasificacionUrl['valor']);
@@ -1676,7 +1538,7 @@ view()->share([
                 $activeFilters['atributos'][] = ucwords($clasificacionUrl['valor']);
             }
         }
-
+    
         $totalActiveFilters = 0;
         if (!empty($activeFilters['nacionalidad'])) $totalActiveFilters++;
         if (!empty($activeFilters['edad'])) $totalActiveFilters++;
@@ -1686,15 +1548,16 @@ view()->share([
         if (!empty($activeFilters['categoria'])) $totalActiveFilters++;
         if ($activeFilters['disponible'] === true) $totalActiveFilters++;
         if ($activeFilters['resena'] === true) $totalActiveFilters++;
-
+    
         if ($totalActiveFilters === 0) {
             $templateType = 'filtro';
             $filtroType = 'ciudad';
-        } elseif ($totalActiveFilters === 1) {
+        }
+        elseif ($totalActiveFilters === 1) {
             $templateType = 'filtro';
-            $filtroType = match ($singleFilter) {
+            $filtroType = match($singleFilter) {
                 'nacionalidad' => 'nacionalidad',
-                'edad' => 'edad',
+                'edad' => 'edad', 
                 'precio' => 'precio',
                 'disponible' => 'disponible',
                 'resena' => 'resena',
@@ -1703,14 +1566,16 @@ view()->share([
                 'atributos' => 'atributos',
                 default => $singleFilter
             };
-        } elseif ($totalActiveFilters >= 2 && $totalActiveFilters <= 4) {
+        }
+        elseif ($totalActiveFilters >= 2 && $totalActiveFilters <= 4) {
             $templateType = 'multiple';
             $filtroType = null;
-        } else {
+        }
+        else {
             $templateType = 'complex';
             $filtroType = null;
         }
-
+    
         Log::info('Template selection', [
             'tipo' => $templateType,
             'filtro' => $filtroType,
@@ -1718,27 +1583,27 @@ view()->share([
             'single_filter' => $singleFilter,
             'active_filters' => $activeFilters
         ]);
-
+    
         $templateQuery = SeoTemplate::query()
             ->where(function ($query) use ($ciudadSeleccionada) {
                 $query->where('ciudad_id', $ciudadSeleccionada->id)
-                    ->orWhereNull('ciudad_id');
+                      ->orWhereNull('ciudad_id');
             })
             ->where('tipo', $templateType);
-
+    
         if ($filtroType !== null) {
             $templateQuery->where('filtro', $filtroType);
         } else {
             $templateQuery->whereNull('filtro');
         }
-
+    
         $template = $templateQuery->orderBy('ciudad_id', 'desc')->first();
-
+    
         if (!$template) {
             Log::warning('No template found for SEO text');
             return null;
         }
-
+    
         $replacements = [
             '{ciudad}' => $ciudadSeleccionada->nombre,
             '{sector}' => $sectorSeleccionado ? ucwords($sectorSeleccionado) : '',
@@ -1753,35 +1618,35 @@ view()->share([
             '{resena}' => $activeFilters['resena'] ? 'verificada' : '',
             '{categorias}' => $activeFilters['categoria'] ?? ''
         ];
-
+    
         $title = $this->generateSeoTitle($ciudadSeleccionada, $sectorSeleccionado, $activeFilters, $singleFilter, $clasificacionUrl);
-
+    
         $description = $template->description_template;
         foreach ($replacements as $key => $value) {
             $description = str_replace($key, $value, $description);
         }
-
+    
         $description = preg_replace('/\{[^}]+\}/', '', $description);
         $description = trim($description);
-
+    
         Log::info('SEO text generado', [
             'title' => $title,
             'description' => $description,
             'template_type' => $templateType,
             'active_filters' => $activeFilters
         ]);
-
+    
         return [
             'title' => $title,
             'description' => $description
         ];
     }
-
+    
 
     private function generateSeoTitle($ciudad, $sector, $filters, $singleFilter = null, $clasificacionUrl = null)
     {
         $title = "Escorts";
-
+    
         if ($singleFilter) {
             switch ($singleFilter) {
                 case 'nacionalidad':
@@ -1867,12 +1732,14 @@ view()->share([
                 $title .= " con reseñas verificadas";
             }
         }
-
+    
         $title .= " en " . $ciudad->nombre;
         if ($sector) {
             $title .= " - " . ucwords($sector);
         }
-
+    
         return $title;
     }
+
+
 }
