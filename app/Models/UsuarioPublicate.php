@@ -42,8 +42,6 @@ class UsuarioPublicate extends Model
         'u2',
     ];
 
-
-    
     /**
      * Obtener la disponibilidad del usuario
      */

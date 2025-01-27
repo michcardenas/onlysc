@@ -18,6 +18,7 @@
     </div>
 </header>
 
+<!-- Sección de Historias -->
 <section class="estados-historias">
     <div class="historias-wrapper">
         <div class="historias-titulos">
@@ -27,43 +28,43 @@
 
         <div class="historias-container">
             @if($estados->isEmpty())
-            <p class="no-historias">No hay historias disponibles</p>
+                <p class="no-historias">No hay historias disponibles</p>
             @else
-            <div class="historias-scroll">
-                @php
-                $estadosAgrupados = $estados->groupBy('usuarios_publicate_id');
-                @endphp
+                <div class="historias-scroll">
+                    @php
+                        $estadosAgrupados = $estados->groupBy('usuarios_publicate_id');
+                    @endphp
 
-                @foreach($estadosAgrupados as $usuarioId => $estadosUsuario)
-                @php
-                $primerEstado = $estadosUsuario->first();
-                $vistoPorUsuarioActual = $primerEstado->vistoPor
-                ->where('id', auth()->id())
-                ->isNotEmpty();
-                $todasVistas = $estadosUsuario->every(function($estado) {
-                return $estado->vistoPor->where('id', auth()->id())->isNotEmpty();
-                });
-                @endphp
+                    @foreach($estadosAgrupados as $usuarioId => $estadosUsuario)
+                        @php
+                            $primerEstado = $estadosUsuario->first();
+                            $vistoPorUsuarioActual = $primerEstado->vistoPor
+                                ->where('id', auth()->id())
+                                ->isNotEmpty();
+                            $todasVistas = $estadosUsuario->every(function($estado) {
+                                return $estado->vistoPor->where('id', auth()->id())->isNotEmpty();
+                            });
+                        @endphp
 
-                @if($primerEstado->usuarioPublicate)
-                <div class="historia-item"
-                    data-usuario-id="{{ $usuarioId }}"
-                    onclick="mostrarHistorias({{ json_encode($estadosUsuario) }}, {{ auth()->id() }})">
-                    <div class="historia-circle {{ $todasVistas ? 'historia-vista todas-vistas' : ($vistoPorUsuarioActual ? 'historia-vista' : '') }}">
-                        @if($primerEstado->user_foto)
-                        <img src="{{ asset('storage/' . $primerEstado->user_foto) }}"
-                            alt="{{ $primerEstado->usuarioPublicate->fantasia }}">
-                        @else
-                        <img src="{{ asset('storage/profile_photos/default-avatar.jpg') }}"
-                            alt="{{ $primerEstado->usuarioPublicate->fantasia }}">
+                        @if($primerEstado->usuarioPublicate)
+                            <div class="historia-item" 
+                                 data-usuario-id="{{ $usuarioId }}"
+                                 data-estados='{{ json_encode($estadosUsuario) }}'>
+                                <div class="historia-circle {{ $todasVistas ? 'historia-vista todas-vistas' : ($vistoPorUsuarioActual ? 'historia-vista' : '') }}">
+                                    @if($primerEstado->user_foto)
+                                        <img src="{{ asset('storage/' . $primerEstado->user_foto) }}"
+                                             alt="{{ $primerEstado->usuarioPublicate->fantasia }}">
+                                    @else
+                                        <img src="{{ asset('storage/profile_photos/default-avatar.jpg') }}"
+                                             alt="{{ $primerEstado->usuarioPublicate->fantasia }}">
+                                    @endif
+                                </div>
+                                <span class="historia-nombre">{{ Str::lower($primerEstado->usuarioPublicate->fantasia) }}</span>
+                                <span class="historia-tiempo">hace {{ $primerEstado->created_at->diffForHumans(null, true) }}</span>
+                            </div>
                         @endif
-                    </div>
-                    <span class="historia-nombre">{{ Str::lower($primerEstado->usuarioPublicate->fantasia) }}</span>
-                    <span class="historia-tiempo">hace {{ $primerEstado->created_at->diffForHumans(null, true) }}</span>
+                    @endforeach
                 </div>
-                @endif
-                @endforeach
-            </div>
             @endif
         </div>
     </div>
@@ -85,8 +86,8 @@
             </div>
         </div>
         <div class="modal-navigation">
-            <button class="nav-btn prev-btn" onclick="previousHistoria()">&lt;</button>
-            <button class="nav-btn next-btn" onclick="nextHistoria()">&gt;</button>
+            <button class="nav-btn prev-btn">&lt;</button>
+            <button class="nav-btn next-btn">&gt;</button>
         </div>
         <div id="historia-contenido"></div>
         <div class="historia-indicators"></div>

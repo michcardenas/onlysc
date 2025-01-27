@@ -151,9 +151,7 @@ $pageTitle = $usuarioPublicate->fantasia . ' Escort ' .
     <div class="escortperfil-breadcrumb">
         <a href="/">Inicio</a>
         <span class="separator">/</span>
-        <a href="{{ strtolower($usuarioPublicate->ubicacion) }}">Escorts en {{ $usuarioPublicate->ubicacion }}</a>
-        <span class="separator">/</span>
-        <a href="{{ strtolower($usuarioPublicate->categorias) }}">{{ $usuarioPublicate->categorias }}</a>
+        <a href="{{ url('/escorts-' . $usuarioPublicate->ciudad_url) }}">Escorts en {{ $usuarioPublicate->ciudad_nombre }}</a>
         <span class="separator">/</span>
         <span>{{ $usuarioPublicate->fantasia }}</span>
     </div>

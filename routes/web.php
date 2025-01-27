@@ -62,11 +62,13 @@ Route::match(['get', 'post'], '/escorts-{nombreCiudad}/{filtros?}', [InicioContr
     ->where('nombreCiudad', '[^/]+')
     ->where('filtros', '.*')
     ->name('inicio');
+
 Route::get('/escorts-{nombreCiudad}/{categoria}', [InicioController::class, 'showByCategory'])->name('inicio.categoria');
 
 Route::post('/inicio', [InicioController::class, 'show'])->name('inicio');
+
 Route::get('/escorts/{nombre}', [InicioController::class, 'showPerfil'])
-    ->where('nombre', '.+') // Esto aceptará cualquier carácter
+    ->where('nombre', '.*-[0-9]+$') // Solo permitir URLs que terminen en -número
     ->name('perfil.show');
 
 //Publicate

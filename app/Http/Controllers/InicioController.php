@@ -25,7 +25,7 @@ class InicioController extends Controller
     {
         $seoText = null;
         try {
-            $ciudadSeleccionada = Ciudad::where('url', $nombreCiudad)->firstOrFail();
+            $ciudadSeleccionada = Ciudad::where('url', $nombreCiudad)->firstOrFail();            
             session(['ciudad_actual' => $ciudadSeleccionada->nombre]);
             $ciudades = Ciudad::all();
             $now = Carbon::now();
@@ -111,190 +111,203 @@ class InicioController extends Controller
             }
 
             // Procesamiento de filtros
-            if ($filtros) {
-                $variableCount++;
+            // Procesamiento de filtros
+if ($filtros) {
+    $variableCount++;
 
-                $filtroNormalizado = str_replace('-', ' ', $filtros);
-                $nacionalidadMap = [
-                    'colombiana' => 'colombia',
-                    'argentina' => 'argentina',
-                    'brasilena' => 'brasil',
-                    'chilena' => 'chile',
-                    'ecuatoriana' => 'ecuador',
-                    'uruguaya' => 'uruguay',
-                    'venezolana' => 'venezuela',
-                    'paraguaya' => 'paraguay',
-                    'peruana' => 'peru'
-                ];
+    $filtroNormalizado = str_replace('-', ' ', $filtros);
+    $nacionalidadMap = [
+        'colombiana' => 'colombia',
+        'argentina' => 'argentina',
+        'brasilena' => 'brasil',
+        'chilena' => 'chile',
+        'ecuatoriana' => 'ecuador',
+        'uruguaya' => 'uruguay',
+        'venezolana' => 'venezuela',
+        'paraguaya' => 'paraguay',
+        'peruana' => 'peru'
+    ];
 
-                if (array_key_exists($filtroNormalizado, $nacionalidadMap)) {
-                    Log::info('Aplicando filtro de nacionalidad', [
-                        'filtro' => $filtroNormalizado,
-                        'nacionalidad' => $nacionalidadMap[$filtroNormalizado]
-                    ]);
-                    $query->where('nacionalidad', $nacionalidadMap[$filtroNormalizado]);
-                }
-                // Procesar filtros de edad
-                else if (preg_match('/^edad-(\d+)-(\d+)$/', $filtros, $matches)) {
-                    $min = (int)$matches[1];
-                    $max = (int)$matches[2];
-                    $query->whereBetween('edad', [$min, $max]);
-                }
-                // Procesar filtros de precio
-                else if (preg_match('/^precio-(\d+)-(\d+)$/', $filtros, $matches)) {
-                    $min = (int)$matches[1];
-                    $max = (int)$matches[2];
-                    $query->whereBetween('precio', [$min, $max]);
-                }
-                // Procesar disponible
-                else if ($filtros === 'disponible') {
-                    $query->whereHas('disponibilidad', function ($query) use ($currentDay, $currentTime) {
-                        $query->where('dia', 'LIKE', $currentDay)
-                            ->where(function ($q) use ($currentTime) {
-                                $q->whereRaw("(hora_hasta < hora_desde AND ('$currentTime' >= hora_desde OR '$currentTime' <= hora_hasta))")
-                                    ->orWhereRaw("(hora_hasta >= hora_desde AND '$currentTime' BETWEEN hora_desde AND hora_hasta)");
-                            });
-                    });
-                }
-                // Procesar reseña verificada
-                else if ($filtros === 'resena-verificada') {
-                    $query->whereHas('posts', function ($query) {
-                        $query->where('id_blog', 16); // Filtra por posts con id_blog = 16
-                    });
-                }
-                // Procesar servicios y atributos
-                else {
-                    $filtroNormalizado = str_replace('-', ' ', $filtros);
-                    Log::info('Procesando filtro: ' . $filtroNormalizado);
+    $filtroEncontrado = false;
 
-                    $filtroNormalizado = $this->normalizarString($filtroNormalizado);
-                    $filtroNormalizado = normalizer_normalize(mb_strtolower($filtroNormalizado, 'UTF-8'));
+    if (array_key_exists($filtroNormalizado, $nacionalidadMap)) {
+        Log::info('Aplicando filtro de nacionalidad', [
+            'filtro' => $filtroNormalizado,
+            'nacionalidad' => $nacionalidadMap[$filtroNormalizado]
+        ]);
+        $query->where('nacionalidad', $nacionalidadMap[$filtroNormalizado]);
+        $filtroEncontrado = true;
+    }
+    // Procesar filtros de edad
+    else if (preg_match('/^edad-(\d+)-(\d+)$/', $filtros, $matches)) {
+        $min = (int)$matches[1];
+        $max = (int)$matches[2];
+        $query->whereBetween('edad', [$min, $max]);
+        $filtroEncontrado = true;
+    }
+    // Procesar filtros de precio
+    else if (preg_match('/^precio-(\d+)-(\d+)$/', $filtros, $matches)) {
+        $min = (int)$matches[1];
+        $max = (int)$matches[2];
+        $query->whereBetween('precio', [$min, $max]);
+        $filtroEncontrado = true;
+    }
+    // Procesar disponible
+    else if ($filtros === 'disponible') {
+        $query->whereHas('disponibilidad', function ($query) use ($currentDay, $currentTime) {
+            $query->where('dia', 'LIKE', $currentDay)
+                ->where(function ($q) use ($currentTime) {
+                    $q->whereRaw("(hora_hasta < hora_desde AND ('$currentTime' >= hora_desde OR '$currentTime' <= hora_hasta))")
+                        ->orWhereRaw("(hora_hasta >= hora_desde AND '$currentTime' BETWEEN hora_desde AND hora_hasta)");
+                });
+        });
+        $filtroEncontrado = true;
+    }
+    // Procesar reseña verificada
+    else if ($filtros === 'resena-verificada') {
+        $query->whereHas('posts', function ($query) {
+            $query->where('id_blog', 16);
+        });
+        $filtroEncontrado = true;
+    }
+    // Procesar servicios y atributos
+    else {
+        $filtroNormalizado = str_replace('-', ' ', $filtros);
+        Log::info('Procesando filtro: ' . $filtroNormalizado);
 
-                    // Lista de servicios y atributos exactos
-                    $servicios = [
-                        "Anal",
-                        "Atencion a domicilio",
-                        "Atencion en hoteles",
-                        "Baile erotico",
-                        "Besos",
-                        "Cambio de rol",
-                        "Departamento propio",
-                        "Disfraces",
-                        "Ducha erotica",
-                        "Eventos y cenas",
-                        "Eyaculacion cuerpo",
-                        "Eyaculacion facial",
-                        "Hetero",
-                        "Juguetes",
-                        "Lesbico",
-                        "Lluvia dorada",
-                        "Masaje erotico",
-                        "Masaje prostatico",
-                        "Masaje tantrico",
-                        "Masaje thai",
-                        "Masajes con final feliz",
-                        "Masajes desnudos",
-                        "Masajes eroticos",
-                        "Masajes para hombres",
-                        "Masajes sensitivos",
-                        "Masajes sexuales",
-                        "Masturbacion rusa",
-                        "Oral americana",
-                        "Oral con preservativo",
-                        "Oral sin preservativo",
-                        "Orgias",
-                        "Parejas",
-                        "Trio"
-                    ];
+        $filtroNormalizado = $this->normalizarString($filtroNormalizado);
+        $filtroNormalizado = normalizer_normalize(mb_strtolower($filtroNormalizado, 'UTF-8'));
 
-                    $atributos = [
-                        "Busto grande",
-                        "Busto mediano",
-                        "Busto pequeño",
-                        "Cara visible",
-                        "Cola grande",
-                        "Cola mediana",
-                        "Cola pequeña",
-                        "Con video",
-                        "Contextura delgada",
-                        "Contextura grande",
-                        "Contextura mediana",
-                        "Depilacion full",
-                        "Depto propio",
-                        "En promocion",
-                        "English",
-                        "Escort independiente",
-                        "Español",
-                        "Estatura alta",
-                        "Estatura mediana",
-                        "Estatura pequeña",
-                        "Hentai",
-                        "Morena",
-                        "Mulata",
-                        "No fuma",
-                        "Ojos claros",
-                        "Ojos oscuros",
-                        "Peliroja",
-                        "Portugues",
-                        "Relato erotico",
-                        "Rubia",
-                        "Tatuajes",
-                        "Trigueña"
-                    ];
+        // Lista de servicios y atributos exactos
+        $servicios = [
+            "Anal",
+            "Atencion a domicilio",
+            "Atencion en hoteles",
+            "Baile erotico",
+            "Besos",
+            "Cambio de rol",
+            "Departamento propio",
+            "Disfraces",
+            "Ducha erotica",
+            "Eventos y cenas",
+            "Eyaculacion cuerpo",
+            "Eyaculacion facial",
+            "Hetero",
+            "Juguetes",
+            "Lesbico",
+            "Lluvia dorada",
+            "Masaje erotico",
+            "Masaje prostatico",
+            "Masaje tantrico",
+            "Masaje thai",
+            "Masajes con final feliz",
+            "Masajes desnudos",
+            "Masajes eroticos",
+            "Masajes para hombres",
+            "Masajes sensitivos",
+            "Masajes sexuales",
+            "Masturbacion rusa",
+            "Oral americana",
+            "Oral con preservativo",
+            "Oral sin preservativo",
+            "Orgias",
+            "Parejas",
+            "Trio"
+        ];
 
-                    // Normalizar los arrays
-                    $serviciosNormalizados = array_map(function ($servicio) {
-                        return normalizer_normalize(mb_strtolower($servicio, 'UTF-8'));
-                    }, $servicios);
+        $atributos = [
+            "Busto grande",
+            "Busto mediano",
+            "Busto pequeño",
+            "Cara visible",
+            "Cola grande",
+            "Cola mediana",
+            "Cola pequeña",
+            "Con video",
+            "Contextura delgada",
+            "Contextura grande",
+            "Contextura mediana",
+            "Depilacion full",
+            "Depto propio",
+            "En promocion",
+            "English",
+            "Escort independiente",
+            "Español",
+            "Estatura alta",
+            "Estatura mediana",
+            "Estatura pequeña",
+            "Hentai",
+            "Morena",
+            "Mulata",
+            "No fuma",
+            "Ojos claros",
+            "Ojos oscuros",
+            "Peliroja",
+            "Portugues",
+            "Relato erotico",
+            "Rubia",
+            "Tatuajes",
+            "Trigueña"
+        ];
 
-                    $atributosNormalizados = array_map(function ($atributo) {
-                        return normalizer_normalize(mb_strtolower($atributo, 'UTF-8'));
-                    }, $atributos);
+        // Normalizar los arrays
+        $serviciosNormalizados = array_map(function ($servicio) {
+            return normalizer_normalize(mb_strtolower($servicio, 'UTF-8'));
+        }, $servicios);
 
-                    // Buscar coincidencia en servicios
-                    $servicioEncontrado = null;
-                    $servicioIndex = array_search($filtroNormalizado, $serviciosNormalizados);
-                    if ($servicioIndex !== false) {
-                        $servicioEncontrado = $servicios[$servicioIndex];
-                        Log::info('Servicio encontrado: ' . $servicioEncontrado);
-                    }
+        $atributosNormalizados = array_map(function ($atributo) {
+            return normalizer_normalize(mb_strtolower($atributo, 'UTF-8'));
+        }, $atributos);
 
-                    // Buscar coincidencia en atributos si no se encontró en servicios
-                    $atributoEncontrado = null;
-                    if ($servicioEncontrado === null) {
-                        $atributoIndex = array_search($filtroNormalizado, $atributosNormalizados);
-                        if ($atributoIndex !== false) {
-                            $atributoEncontrado = $atributos[$atributoIndex];
-                            Log::info('Atributo encontrado: ' . $atributoEncontrado);
-                        }
-                    }
+        // Buscar coincidencia en servicios
+        $servicioEncontrado = null;
+        $servicioIndex = array_search($filtroNormalizado, $serviciosNormalizados);
+        if ($servicioIndex !== false) {
+            $servicioEncontrado = $servicios[$servicioIndex];
+            Log::info('Servicio encontrado: ' . $servicioEncontrado);
+        }
 
-                    // Aplicar el filtro encontrado
-                    if ($servicioEncontrado) {
-                        Log::info('Aplicando filtro de servicio', [
-                            'servicio' => $servicioEncontrado,
-                            'sqlAntes' => $query->toSql(),
-                            'bindingsAntes' => $query->getBindings()
-                        ]);
-
-                        $query->where(function ($subQuery) use ($servicioEncontrado) {
-                            $subQuery->where(function ($q) use ($servicioEncontrado) {
-                                $q->whereRaw('JSON_CONTAINS(LOWER(servicios), ?, "$")', ['"' . mb_strtolower($servicioEncontrado, 'UTF-8') . '"'])
-                                    ->orWhereRaw('JSON_CONTAINS(LOWER(servicios_adicionales), ?, "$")', ['"' . mb_strtolower($servicioEncontrado, 'UTF-8') . '"']);
-                            });
-                        });
-
-                        Log::info('SQL después del filtro', [
-                            'sqlDespues' => $query->toSql(),
-                            'bindingsDespues' => $query->getBindings()
-                        ]);
-                    } elseif ($atributoEncontrado) {
-                        $query->whereRaw('LOWER(atributos) LIKE ?', ['%' . mb_strtolower($atributoEncontrado, 'UTF-8') . '%']);
-                    } else {
-                        Log::warning('No se encontró coincidencia para el filtro: ' . $filtroNormalizado);
-                    }
-                }
+        // Buscar coincidencia en atributos si no se encontró en servicios
+        $atributoEncontrado = null;
+        if ($servicioEncontrado === null) {
+            $atributoIndex = array_search($filtroNormalizado, $atributosNormalizados);
+            if ($atributoIndex !== false) {
+                $atributoEncontrado = $atributos[$atributoIndex];
+                Log::info('Atributo encontrado: ' . $atributoEncontrado);
             }
+        }
+
+        // Aplicar el filtro encontrado
+        if ($servicioEncontrado) {
+            Log::info('Aplicando filtro de servicio', [
+                'servicio' => $servicioEncontrado,
+                'sqlAntes' => $query->toSql(),
+                'bindingsAntes' => $query->getBindings()
+            ]);
+
+            $query->where(function ($subQuery) use ($servicioEncontrado) {
+                $subQuery->where(function ($q) use ($servicioEncontrado) {
+                    $q->whereRaw('JSON_CONTAINS(LOWER(servicios), ?, "$")', ['"' . mb_strtolower($servicioEncontrado, 'UTF-8') . '"'])
+                        ->orWhereRaw('JSON_CONTAINS(LOWER(servicios_adicionales), ?, "$")', ['"' . mb_strtolower($servicioEncontrado, 'UTF-8') . '"']);
+                });
+            });
+
+            Log::info('SQL después del filtro', [
+                'sqlDespues' => $query->toSql(),
+                'bindingsDespues' => $query->getBindings()
+            ]);
+            $filtroEncontrado = true;
+        } elseif ($atributoEncontrado) {
+            $query->whereRaw('LOWER(atributos) LIKE ?', ['%' . mb_strtolower($atributoEncontrado, 'UTF-8') . '%']);
+            $filtroEncontrado = true;
+        }
+    }
+
+    // Si no se encontró ningún filtro válido, devolver 404
+    if (!$filtroEncontrado) {
+        return response()->view('errors.404', [], 404);
+    }
+}
 
             // Procesar categoría si existe
             if ($categoria = request()->get('categoria')) {
@@ -412,6 +425,7 @@ class InicioController extends Controller
                 )
                 ->orderBy('posicion', 'asc')
                 ->paginate(40);
+                
 
             // Estados
             $estados = Estado::select('estados.*', 'u.foto as user_foto')
@@ -1419,17 +1433,20 @@ $isResenaVerificada = ($pathParts[1] ?? '') === 'resena-verificada';
     {
         try {
             $id = substr($nombre, strrpos($nombre, '-') + 1);
-
+    
             $usuarioPublicate = UsuarioPublicate::with([
                 'disponibilidad',
                 'estados' => function ($query) {
                     $query->where('created_at', '>=', now()->subHours(24));
                 }
-            ])->findOrFail($id);
-
-            // Agregamos la consulta de ciudades
-            $ciudades = Ciudad::all(); // Asegúrate de tener el modelo importado: use App\Models\Ciudad;
-
+            ])
+            ->leftJoin('ciudades', 'usuarios_publicate.ubicacion', '=', 'ciudades.nombre')
+            ->select('usuarios_publicate.*', 'ciudades.url as ciudad_url', 'ciudades.nombre as ciudad_nombre')
+            ->findOrFail($id);
+    
+    
+            $ciudades = Ciudad::all();
+    
             return view('showescort', compact('usuarioPublicate', 'ciudades'));
         } catch (\Exception $e) {
             \Log::error('Error en showPerfil: ' . $e->getMessage());
