@@ -2,7 +2,7 @@
 <html>
 <head>
    <meta name="robots" content="noindex,nofollow">
-   <title>404 - Página no encontrada</title>
+   <title>403 - Acceso Prohibido</title>
    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
    <style>
        .bg-custom-red {
@@ -19,12 +19,12 @@
        <div class="text-center">
            <img src="{{ asset('images/logo_v2.png') }}" alt="Logo" class="mx-auto mb-8 w-64">
            
-           <h1 class="text-9xl font-bold text-gray-800">404</h1>
+           <h1 class="text-9xl font-bold text-gray-800">403</h1>
            <h2 class="text-2xl md:text-4xl font-bold text-gray-700 mt-4">
-               ¡Página no encontrada!
+               ¡Acceso Prohibido!
            </h2>
            <p class="text-gray-500 mt-6 mb-8">
-               Lo sentimos, la página que estás buscando no existe o ha sido movida.
+               Lo sentimos, no tienes permisos para acceder a esta página.
            </p>
            
            <div class="flex flex-col sm:flex-row gap-4 justify-center">

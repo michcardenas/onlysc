@@ -8,6 +8,7 @@ use App\Models\SeoTemplate;
 use Illuminate\Support\Facades\Log;
 use App\Models\UsuarioPublicate;
 use App\Models\Ciudad; 
+use App\Models\TYC; 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
@@ -416,6 +417,42 @@ public function seoTemplates()
         ], 500);
     }
 }
+
+
+public function tycadmin()
+{
+    $tyc = TYC::first(); // Asumiendo que tienes un modelo TYC
+    $usuarioAutenticado = auth()->user();
+    
+    return view('admin.tycadmin', [
+        'tyc' => $tyc,
+        'usuarioAutenticado' => $usuarioAutenticado
+    ]);
+}
+
+public function update(Request $request)
+{
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'content' => 'required|string'
+    ]);
+
+    // Procesar el contenido para preservar los saltos de línea
+    $content = str_replace(["\r\n", "\r"], "\n", $request->content);
+
+    TYC::updateOrCreate(
+        ['id' => 1],
+        [
+            'title' => $request->title,
+            'content' => nl2br($content)
+        ]
+    );
+
+    return redirect()->route('tycadmin')
+        ->with('success', 'Términos y condiciones actualizados correctamente');
+}
+
+
     
 
 }

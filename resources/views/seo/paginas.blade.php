@@ -48,7 +48,7 @@
         <a href="{{ route('seo.publicate.form') }}" class="btn-seo">Publicar</a>
         <a href="{{ route('seo.favoritos') }}" class="btn-seo">Favoritos</a>
         <a href="{{ route('seo.edit_robots') }}" class="btn-seo">Robots</a>
-
+        <a href="{{ route('tycadmin') }}" class="btn-seo">Terminos y Condiciones</a>
 
     </div>
 </section>

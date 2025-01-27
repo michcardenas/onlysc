@@ -24,6 +24,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\ShareBarriosMiddleware::class,
         \App\Http\Middleware\DetectBlankPages::class,
         \App\Http\Middleware\RedirectPublicUrls::class,
+        \App\Http\Middleware\Convert404Middleware::class,
     ];
 
     /**

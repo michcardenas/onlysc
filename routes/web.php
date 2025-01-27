@@ -27,27 +27,6 @@ Route::get('/', function () {
 Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
     Route::get('/panel-control', [AdminController::class, 'index'])->name('panel_control');
     Route::get('/perfiles', [AdminController::class, 'Perfiles'])->name('admin.perfiles');
-    Route::middleware(['auth'])->group(function () {
-        // Rutas para CRUD de foros
-        Route::prefix('foroadmin')->group(function () {
-            Route::get('/', [ForoController::class, 'foroadmin'])->name('foroadmin');
-            Route::get('/edit/{id}', [ForoController::class, 'edit'])->name('foroadmin.edit');
-            Route::put('/update/{id}', [ForoController::class, 'update'])->name('foroadmin.update');
-            Route::delete('/delete/{id}', [ForoController::class, 'destroy'])->name('foroadmin.destroy');
-            Route::get('/create', [ForoController::class, 'create'])->name('foroadmin.create');
-            Route::post('/store', [ForoController::class, 'store'])->name('foroadmin.store');
-    
-            // Rutas para administración de posts
-            Route::get('/posts/{id_blog?}', [ForoController::class, 'showPosts'])->name('foroadmin.posts');
-            Route::get('/createpost/{id_blog}', [ForoController::class, 'createpost'])->name('foroadmin.createpost');
-            Route::post('/storepost', [ForoController::class, 'storepost'])->name('foroadmin.storepost');
-            Route::get('/post/{id}/edit', [ForoController::class, 'editpost'])->name('foroadmin.editpost');
-            Route::put('/post/{id}', [ForoController::class, 'updatepost'])->name('foroadmin.updatepost');
-            Route::delete('/post/{id}', [ForoController::class, 'destroypost'])->name('foroadmin.destroypost');
-            Route::post('/posts/{id}/toggle-fixed', [ForoController::class, 'toggleFixed'])->name('posts.toggle-fixed');
-        });
-    });
-
 });
 
 // Rutas del foro separadas con su propio middleware
@@ -102,6 +81,22 @@ Route::post('/comentarios', [ComentarioController::class, 'store'])->name('comen
 
 // Ruta GET para mostrar la vista
 Route::get('/rta', [InicioController::class, 'RTA'])->name('rta');
+Route::get('/tyc', [InicioController::class, 'tyc'])->name('tyc');
+// Ruta para mostrar el formulario de edición
+// Ruta para el panel de administración de TyC
+Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
+    // Ruta para mostrar el panel de administración de TyC
+    Route::get('/tycadmin', [AdminController::class, 'tycadmin'])
+        ->name('tycadmin');
+
+    // Ruta para procesar la actualización de TyC
+    Route::put('/tycadmin/update', [AdminController::class, 'update'])
+        ->name('tycadmin.update');
+});
+// En routes/web.php
+Route::get('/test-403', function () {
+    abort(403);
+});
 
 // Ruta POST si necesitas procesar algún formulario (mantén la que ya tienes)
 Route::post('/rta', [InicioController::class, 'rta'])->name('rta.store');
