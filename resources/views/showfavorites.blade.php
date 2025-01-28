@@ -61,7 +61,7 @@
                                             </h3>
                                             <div class="inicio-card-location">
                                                 <i class="fa fa-map-marker"></i> {{ $usuario->ubicacion }}
-                                                <span class="inicio-card-price">${{ number_format($usuario->precio, 0, ',', '.') }}</span>
+                                                <span class="inicio-card-price">{{ $usuario->precio > 0 ? '$' . number_format($usuario->precio, 0, ',', '.') : 'Consultar' }}</span>
                                             </div>
                                         </div>
                                     </div>
