@@ -88,15 +88,15 @@ $pageTitle = $usuarioPublicate->fantasia . ' Escort ' .
     <img src="{{ asset('images/precio.svg') }}" alt="Precio" class="escortperfil-info-icon">
     <div class="escortperfil-info-text">
         <span class="escortperfil-info-label">Precio</span>
-        @if($usuarioPublicate->precio)
-            <span class="escortperfil-info-value">{{ $usuarioPublicate->precio ? '$' . number_format($usuarioPublicate->precio, 0, ',', '.') : 'Consultar' }}</span>
-        @else
-            <a href="https://wa.me/{{ $usuarioPublicate->telefono }}?text=Hola%20{{ $usuarioPublicate->fantasia }}!%20Vi%20tu%20anuncio%20en%20OnlyEscorts%20y%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20tus%20servicios.%20%C2%BFC%C3%B3mo%20est%C3%A1s?" 
-               target="_blank" 
-               class="escortperfil-info-value text-decoration-none">
-                Consultar
-            </a>
-        @endif
+        @if($usuarioPublicate->precio > 0)
+        <span class="escortperfil-info-value">${{ number_format($usuarioPublicate->precio, 0, ',', '.') }}</span>
+    @else
+        <a href="https://wa.me/{{ $usuarioPublicate->telefono }}?text=Hola%20{{ $usuarioPublicate->fantasia }}!%20Vi%20tu%20anuncio%20en%20OnlyEscorts%20y%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20tus%20servicios.%20%C2%BFC%C3%B3mo%20est%C3%A1s?" 
+           target="_blank" 
+           class="escortperfil-info-value text-decoration-none">
+            Consultar
+        </a>
+    @endif
     </div>
 </div>
 

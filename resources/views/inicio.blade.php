@@ -171,7 +171,7 @@
                                     {{ $usuario->ubicacion }}
                                     @endif
                                     <span class="inicio-card-price">
-                                        {{ $usuario->precio ? '$' . number_format($usuario->precio, 0, ',', '.') : 'Consultar' }}
+                                        {{ $usuario->precio > 0 ? '$' . number_format($usuario->precio, 0, ',', '.') : 'Consultar' }}
                                     </span>
                                 </div>
                             </div>
@@ -377,7 +377,7 @@
                                                 @endif
                                             </span>
                                         </div>
-                                        <span class="volvieronyprimera-price">{{ $usuario->precio ? '$' . number_format($usuario->precio, 0, ',', '.') : 'Consultar' }}</span>
+                                        <span class="volvieronyprimera-price">{{ $usuario->precio > 0 ? '$' . number_format($usuario->precio, 0, ',', '.') : 'Consultar' }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -468,7 +468,7 @@
                                                 @endif
                                             </span>
                                         </div>
-                                        <span class="volvieronyprimera-price">{{ $usuario->precio ? '$' . number_format($usuario->precio, 0, ',', '.') : 'Consultar' }}</span>
+                                        <span class="volvieronyprimera-price">{{ $usuario->precio > 0 ? '$' . number_format($usuario->precio, 0, ',', '.') : 'Consultar' }}</span>
                                     </div>
                                 </div>
                             </div>
