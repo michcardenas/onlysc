@@ -17,4 +17,5 @@ class Convert404Middleware
         
         return $response;
     }
+    
 }

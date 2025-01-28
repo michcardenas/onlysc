@@ -3,7 +3,7 @@
 @section('content')
 
 <header class="banner">
-<img src="{{ isset($meta->fondo) ? Storage::url($meta->fondo) : asset('images/banner1.jpg') }}" alt="Banner Image" class="banner-img">
+    <img src="{{ isset($meta->fondo) ? Storage::url($meta->fondo) : asset('images/banner1.jpg') }}" alt="Banner Image" class="banner-img">
     <div class="banner-content">
         <div class="texto_banner">
             <div class="heading-container">
@@ -28,43 +28,43 @@
 
         <div class="historias-container">
             @if($estados->isEmpty())
-                <p class="no-historias">No hay historias disponibles</p>
+            <p class="no-historias">No hay historias disponibles</p>
             @else
-                <div class="historias-scroll">
-                    @php
-                        $estadosAgrupados = $estados->groupBy('usuarios_publicate_id');
-                    @endphp
+            <div class="historias-scroll">
+                @php
+                $estadosAgrupados = $estados->groupBy('usuarios_publicate_id');
+                @endphp
 
-                    @foreach($estadosAgrupados as $usuarioId => $estadosUsuario)
-                        @php
-                            $primerEstado = $estadosUsuario->first();
-                            $vistoPorUsuarioActual = $primerEstado->vistoPor
-                                ->where('id', auth()->id())
-                                ->isNotEmpty();
-                            $todasVistas = $estadosUsuario->every(function($estado) {
-                                return $estado->vistoPor->where('id', auth()->id())->isNotEmpty();
-                            });
-                        @endphp
+                @foreach($estadosAgrupados as $usuarioId => $estadosUsuario)
+                @php
+                $primerEstado = $estadosUsuario->first();
+                $vistoPorUsuarioActual = $primerEstado->vistoPor
+                ->where('id', auth()->id())
+                ->isNotEmpty();
+                $todasVistas = $estadosUsuario->every(function($estado) {
+                return $estado->vistoPor->where('id', auth()->id())->isNotEmpty();
+                });
+                @endphp
 
-                        @if($primerEstado->usuarioPublicate)
-                            <div class="historia-item" 
-                                 data-usuario-id="{{ $usuarioId }}"
-                                 data-estados='{{ json_encode($estadosUsuario) }}'>
-                                <div class="historia-circle {{ $todasVistas ? 'historia-vista todas-vistas' : ($vistoPorUsuarioActual ? 'historia-vista' : '') }}">
-                                    @if($primerEstado->user_foto)
-                                        <img src="{{ asset('storage/' . $primerEstado->user_foto) }}"
-                                             alt="{{ $primerEstado->usuarioPublicate->fantasia }}">
-                                    @else
-                                        <img src="{{ asset('storage/profile_photos/default-avatar.jpg') }}"
-                                             alt="{{ $primerEstado->usuarioPublicate->fantasia }}">
-                                    @endif
-                                </div>
-                                <span class="historia-nombre">{{ Str::lower($primerEstado->usuarioPublicate->fantasia) }}</span>
-                                <span class="historia-tiempo">hace {{ $primerEstado->created_at->diffForHumans(null, true) }}</span>
-                            </div>
+                @if($primerEstado->usuarioPublicate)
+                <div class="historia-item"
+                    data-usuario-id="{{ $usuarioId }}"
+                    data-estados='{{ json_encode($estadosUsuario) }}'>
+                    <div class="historia-circle {{ $todasVistas ? 'historia-vista todas-vistas' : ($vistoPorUsuarioActual ? 'historia-vista' : '') }}">
+                        @if($primerEstado->user_foto)
+                        <img src="{{ asset('storage/' . $primerEstado->user_foto) }}"
+                            alt="{{ $primerEstado->usuarioPublicate->fantasia }}">
+                        @else
+                        <img src="{{ asset('storage/profile_photos/default-avatar.jpg') }}"
+                            alt="{{ $primerEstado->usuarioPublicate->fantasia }}">
                         @endif
-                    @endforeach
+                    </div>
+                    <span class="historia-nombre">{{ Str::lower($primerEstado->usuarioPublicate->fantasia) }}</span>
+                    <span class="historia-tiempo">hace {{ $primerEstado->created_at->diffForHumans(null, true) }}</span>
                 </div>
+                @endif
+                @endforeach
+            </div>
             @endif
         </div>
     </div>
@@ -114,7 +114,7 @@
                     $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
                     $posicionFoto = in_array(($positions[$primeraFoto] ?? ''), ['left', 'right', 'center']) ? $positions[$primeraFoto] : 'center';
 
-                   
+
                     $currentDay = strtolower($now->locale('es')->dayName);
                     $isAvailable = false;
                     foreach ($usuario->disponibilidad as $disponibilidad) {
@@ -147,7 +147,7 @@
                     @endphp
 
                     <a href="{{ route('perfil.show', ['nombre' => $usuario->fantasia . '-' . $usuario->id]) }}" class="inicio-card">
-                    <div class="inicio-card-category">{{ strtoupper(str_replace('_', ' ', $usuario->categorias)) }}</div>
+                        <div class="inicio-card-category">{{ strtoupper(str_replace('_', ' ', $usuario->categorias)) }}</div>
                         <div class="inicio-card-image">
                             <div class="inicio-image"
                                 style="background-image: url('{{ $primeraFoto ? asset("storage/chicas/{$usuario->id}/{$primeraFoto}") : asset("images/default-avatar.png") }}');
@@ -170,7 +170,9 @@
                                     {{-- Para otras ciudades, mostrar la ubicación habitual --}}
                                     {{ $usuario->ubicacion }}
                                     @endif
-                                    <span class="inicio-card-price">${{ number_format($usuario->precio, 0, ',', '.') }}</span>
+                                    <span class="inicio-card-price">
+                                        {{ $usuario->precio ? '$' . number_format($usuario->precio, 0, ',', '.') : 'Consultar' }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -234,14 +236,16 @@
                         </h3>
                         <div class="location-price">
                             <span class="inicio-featured-location">
-                            <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2" aria-hidden="true"></i>
+                                <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2" aria-hidden="true"></i>
                                 @if($ciudadSeleccionada->url === 'santiago')
                                 {{ $ubicacionesMostradas[$usuarioDestacado->id] ?? 'Sector no disponible' }}
                                 @else
                                 {{ $usuarioDestacado->ubicacion }}
                                 @endif
                             </span>
-                            <span class="inicio-featured-price">${{ number_format($usuarioDestacado->precio, 0, ',', '.') }}</span>
+                            <span class="inicio-featured-price">
+                                {{ $usuarioDestacado->precio ? '$' . number_format($usuarioDestacado->precio, 0, ',', '.') : 'Consultar' }}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -336,9 +340,9 @@
                     @endphp
                     <a href="{{ route('perfil.show', ['nombre' => $usuario->fantasia . '-' . $usuario->id]) }}" class="swiper-slide2" style="flex: 0 0 auto; margin-right: 0;">
                         <div class="volvieronyprimera-card">
-                        <div class="watermark-container">
-        <div class="watermark"></div>
-    </div>
+                            <div class="watermark-container">
+                                <div class="watermark"></div>
+                            </div>
 
                             <div class="volvieronyprimera-vip-tag">{{ strtoupper(str_replace('_', ' ', $usuario->categorias)) }}</div>
                             @php
@@ -364,7 +368,7 @@
                                     </div>
                                     <div class="volvieronyprimera-location-price">
                                         <div class="location-container">
-                                        <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2">
+                                            <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2">
                                             <span class="volvieronyprimera-location">
                                                 @if($ciudadSeleccionada->url === 'santiago')
                                                 {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}
@@ -373,7 +377,7 @@
                                                 @endif
                                             </span>
                                         </div>
-                                        <span class="volvieronyprimera-price">${{ number_format($usuario->precio, 0, ',', '.') }}</span>
+                                        <span class="volvieronyprimera-price">{{ $usuario->precio ? '$' . number_format($usuario->precio, 0, ',', '.') : 'Consultar' }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -428,9 +432,9 @@
                     @endphp
                     <a href="{{ route('perfil.show', ['nombre' => $usuario->fantasia . '-' . $usuario->id]) }}" class="swiper-slide2" style="flex: 0 0 auto; margin-right: 0;">
                         <div class="volvieronyprimera-card">
-                        <div class="watermark-container">
-        <div class="watermark"></div>
-    </div>
+                            <div class="watermark-container">
+                                <div class="watermark"></div>
+                            </div>
                             <div class="volvieronyprimera-vip-tag">{{ strtoupper(str_replace('_', ' ', $usuario->categorias)) }}</div>
                             @php
                             $fotos = json_decode($usuario->fotos, true);
@@ -455,7 +459,7 @@
                                     </div>
                                     <div class="volvieronyprimera-location-price">
                                         <div class="location-container">
-                                        <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2">
+                                            <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2">
                                             <span class="volvieronyprimera-location">
                                                 @if($ciudadSeleccionada->url === 'santiago')
                                                 {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}
@@ -464,7 +468,7 @@
                                                 @endif
                                             </span>
                                         </div>
-                                        <span class="volvieronyprimera-price">${{ number_format($usuario->precio, 0, ',', '.') }}</span>
+                                        <span class="volvieronyprimera-price">{{ $usuario->precio ? '$' . number_format($usuario->precio, 0, ',', '.') : 'Consultar' }}</span>
                                     </div>
                                 </div>
                             </div>

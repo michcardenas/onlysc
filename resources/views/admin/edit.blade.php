@@ -471,16 +471,15 @@
             </div>
 
             <div class="form-group">
-                <label for="precio">Precio</label>
-                <div class="input-group">
-                    <input type="text"
-                        name="precio"
-                        value="CLP ${{ number_format(old('precio', $usuario->precio), 0, ',', '.') }}"
-                        placeholder="Ingrese el precio"
-                        class="precio-input">
-                </div>
-            </div>
-
+    <label for="precio">Precio</label>
+    <div class="input-group">
+        <input type="text"
+            name="precio"
+            value="{{ old('precio', $usuario->precio) ? 'CLP $' . number_format(old('precio', $usuario->precio), 0, ',', '.') : 'Consultar' }}"
+            placeholder="Ingrese el precio"
+            class="precio-input">
+    </div>
+</div>
 
 
             <!-- Botón para abrir el modal -->

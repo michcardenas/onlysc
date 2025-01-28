@@ -29,6 +29,73 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
     Route::get('/perfiles', [AdminController::class, 'Perfiles'])->name('admin.perfiles');
 });
 
+Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
+    // Ruta para mostrar el panel de administración de TyC
+    Route::get('/tycadmin', [AdminController::class, 'tycadmin'])
+        ->name('tycadmin');
+
+    // Ruta para procesar la actualización de TyC
+    Route::put('/tycadmin/update', [AdminController::class, 'update'])
+        ->name('tycadmin.update');
+
+Route::get('/perfiles/login-as/{id}', [AdminController::class, 'loginAsUser'])->name('admin.login.as.user');
+Route::get('/perfiles/return-to-admin', [AdminController::class, 'returnToAdmin'])->name('admin.return');
+Route::delete('/perfil/{id}/eliminar', [AdminController::class, 'eliminarPerfil'])->name('admin.perfil.eliminar');
+
+Route::get('/ciudades', [CiudadController::class, 'index'])->name('ciudades.index');
+Route::get('/ciudades/{id}/edit', [CiudadController::class, 'edit'])->name('ciudades.edit');
+Route::delete('/ciudades/{id}', [CiudadController::class, 'destroy'])->name('ciudades.destroy');
+Route::put('/ciudades/{id}', [CiudadController::class, 'update'])->name('ciudades.update');
+Route::get('/ciudades/create', [CiudadController::class, 'create'])->name('ciudades.create');
+Route::post('/ciudades', [CiudadController::class, 'store'])->name('ciudades.store');
+
+Route::get('/seo', [SEOController::class, 'index'])->name('seo');
+Route::get('/seo-paginas', [SEOPaginasController::class, 'index'])->name('seo.paginas');
+Route::get('/seo-inicio', [SEOController::class, 'home'])->name('seo.home');
+Route::get('/seo-inicio-tarjetas', [SEOController::class, 'inicio'])->name('seo.inicio-tarjetas');
+Route::get('/seo-foro', [SEOController::class, 'foroadmin'])->name('seo.foroadmin');
+Route::get('/seo-blog', [SEOController::class, 'blogadmin'])->name('seo.blogadmin');
+Route::get('/seo-favoritos', [SEOController::class, 'favoritos'])->name('seo.favoritos');
+Route::get('/seo-publicar', [SEOController::class, 'publicateForm'])->name('seo.publicate.form');
+Route::get('/seo/templates', [AdminController::class, 'seoTemplates'])->name('seo.template');
+Route::post('/seo/update', [AdminController::class, 'updateSeoTemplate'])->name('seo.templates.update');
+Route::delete('/seo/templates/{id}', [AdminController::class, 'deleteSeoTemplate'])->name('seo.templates.delete');
+Route::get('/seo/templates/ciudad/{ciudadId}', [AdminController::class, 'getTemplatesByCiudad'])->name('seo.templates.by-ciudad');
+Route::post('/seo/templates/update-all', [AdminController::class, 'updateAllTemplates'])->name('seo.templates.update.all');
+Route::put('/seo/update/{page}', [MetaTagController::class, 'update'])->name('seo.update');
+Route::get('seo/seofilters', [MetaTagController::class, 'index'])->name('seo.seofilters');
+Route::put('meta-tags/{page}', [MetaTagController::class, 'updateFilter'])->name('meta-tags.update');
+Route::put('/meta-tags/{page}/{filter?}', [MetaTagController::class, 'updateFilter'])
+    ->name('meta-tags.update');
+Route::get('/get-metatag/{ciudad_id}', [MetaTagController::class, 'getMetaTagByCiudad'])->name('metatag.by.ciudad');
+Route::get('/admin/tarjetas', [TarjetaController::class, 'index'])->name('tarjetas.index');
+Route::get('/admin/tarjetas/create', [TarjetaController::class, 'create'])->name('tarjetas.create');
+Route::post('/admin/tarjetas', [TarjetaController::class, 'store'])->name('tarjetas.store');
+Route::get('/admin/tarjetas/{id}/edit', [TarjetaController::class, 'edit'])->name('tarjetas.edit');
+Route::put('/admin/tarjetas/{id}', [TarjetaController::class, 'update'])->name('tarjetas.update');
+Route::delete('/admin/tarjetas/{id}', [TarjetaController::class, 'destroy'])->name('tarjetas.destroy');
+
+//robots
+Route::get('/robots.txt', [SEOController::class, 'showRobots'])->name('seo.robots');
+Route::get('/admin/robots', [SEOController::class, 'editRobots'])->name('seo.edit_robots'); // Vista de edición
+Route::post('/admin/robots', [SEOController::class, 'updateRobots'])->name('seo.update_robots'); // Guardar cambios
+
+Route::get('/admin/users-by-city', [AdminController::class, 'getUsersByCity'])->name('admin.users-by-city');
+// Agregar en el grupo de rutas con middleware auth
+Route::post('/usuarios-publicate/toggle-image-block', [UsuarioPublicateController::class, 'toggleImageBlock'])
+    ->name('usuarios_publicate.toggleImageBlock');
+Route::get('/usuarios-publicate/{id}/edit', [UsuarioPublicateController::class, 'edit'])->name('usuarios_publicate.edit');
+Route::put('/usuarios-publicate/{id}', [UsuarioPublicateController::class, 'update'])->name('usuarios_publicate.update');
+Route::post('/usuarios-publicate/eliminar-foto', [UsuarioPublicateController::class, 'eliminarFoto'])->name('usuarios_publicate.eliminarFoto');
+Route::post('/validate-fantasia', [UsuarioPublicateController::class, 'validateFantasia']);
+Route::post('/actualizar-posicion-foto', [UsuarioPublicateController::class, 'actualizarPosicionFoto'])->name('actualizar.posicion.foto');
+
+Route::get('/perfiles/login-as/{id}', [AdminController::class, 'loginAsUser'])->name('admin.login.as.user');
+Route::get('/perfiles/return-to-admin', [AdminController::class, 'returnToAdmin'])->name('admin.return');
+Route::delete('/perfil/{id}/eliminar', [AdminController::class, 'eliminarPerfil'])->name('admin.perfil.eliminar');
+
+
+});
 // Rutas del foro separadas con su propio middleware
 Route::middleware(['auth', \App\Http\Middleware\ForoMiddleware::class])->group(function () {
     Route::prefix('foroadmin')->group(function () {
@@ -49,11 +116,6 @@ Route::middleware(['auth', \App\Http\Middleware\ForoMiddleware::class])->group(f
         Route::post('/posts/{id}/toggle-fixed', [ForoController::class, 'toggleFixed'])->name('posts.toggle-fixed');
     });
 });
-
-
-
-
-
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'showHome'])->name('home');
 Route::post('/escorts-{nombreCiudad}/aplicar-filtros', [InicioController::class, 'filterUsuarios'])
@@ -84,17 +146,7 @@ Route::post('/comentarios', [ComentarioController::class, 'store'])->name('comen
 // Ruta GET para mostrar la vista
 Route::get('/rta', [InicioController::class, 'RTA'])->name('rta');
 Route::get('/tyc', [InicioController::class, 'tyc'])->name('tyc');
-// Ruta para mostrar el formulario de edición
-// Ruta para el panel de administración de TyC
-Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
-    // Ruta para mostrar el panel de administración de TyC
-    Route::get('/tycadmin', [AdminController::class, 'tycadmin'])
-        ->name('tycadmin');
 
-    // Ruta para procesar la actualización de TyC
-    Route::put('/tycadmin/update', [AdminController::class, 'update'])
-        ->name('tycadmin.update');
-});
 // En routes/web.php
 Route::get('/test-403', function () {
     abort(403);
@@ -102,22 +154,6 @@ Route::get('/test-403', function () {
 
 // Ruta POST si necesitas procesar algún formulario (mantén la que ya tienes)
 Route::post('/rta', [InicioController::class, 'rta'])->name('rta.store');
-
-//panel
-Route::get('/admin/users-by-city', [AdminController::class, 'getUsersByCity'])->name('admin.users-by-city');
-// Agregar en el grupo de rutas con middleware auth
-Route::post('/usuarios-publicate/toggle-image-block', [UsuarioPublicateController::class, 'toggleImageBlock'])
-    ->name('usuarios_publicate.toggleImageBlock');
-Route::get('/usuarios-publicate/{id}/edit', [UsuarioPublicateController::class, 'edit'])->name('usuarios_publicate.edit');
-Route::put('/usuarios-publicate/{id}', [UsuarioPublicateController::class, 'update'])->name('usuarios_publicate.update');
-Route::post('/usuarios-publicate/eliminar-foto', [UsuarioPublicateController::class, 'eliminarFoto'])->name('usuarios_publicate.eliminarFoto');
-Route::post('/validate-fantasia', [UsuarioPublicateController::class, 'validateFantasia']);
-Route::post('/actualizar-posicion-foto', [UsuarioPublicateController::class, 'actualizarPosicionFoto'])->name('actualizar.posicion.foto');
-
-//Perfiles en general
-Route::get('/perfiles/login-as/{id}', [AdminController::class, 'loginAsUser'])->name('admin.login.as.user');
-Route::get('/perfiles/return-to-admin', [AdminController::class, 'returnToAdmin'])->name('admin.return');
-Route::delete('/perfil/{id}/eliminar', [AdminController::class, 'eliminarPerfil'])->name('admin.perfil.eliminar');
 
 //Foro Admin y Posts
 
@@ -173,45 +209,3 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/usuario/{id}', [PerfilController::class, 'getUsuario'])->name('usuario.get');
-
-//ciudades
-Route::get('/ciudades', [CiudadController::class, 'index'])->name('ciudades.index');
-Route::get('/ciudades/{id}/edit', [CiudadController::class, 'edit'])->name('ciudades.edit');
-Route::delete('/ciudades/{id}', [CiudadController::class, 'destroy'])->name('ciudades.destroy');
-Route::put('/ciudades/{id}', [CiudadController::class, 'update'])->name('ciudades.update');
-Route::get('/ciudades/create', [CiudadController::class, 'create'])->name('ciudades.create');
-Route::post('/ciudades', [CiudadController::class, 'store'])->name('ciudades.store');
-
-
-//SEO
-Route::get('/seo', [SEOController::class, 'index'])->name('seo');
-Route::get('/seo-paginas', [SEOPaginasController::class, 'index'])->name('seo.paginas');
-Route::get('/seo-inicio', [SEOController::class, 'home'])->name('seo.home');
-Route::get('/seo-inicio-tarjetas', [SEOController::class, 'inicio'])->name('seo.inicio-tarjetas');
-Route::get('/seo-foro', [SEOController::class, 'foroadmin'])->name('seo.foroadmin');
-Route::get('/seo-blog', [SEOController::class, 'blogadmin'])->name('seo.blogadmin');
-Route::get('/seo-favoritos', [SEOController::class, 'favoritos'])->name('seo.favoritos');
-Route::get('/seo-publicar', [SEOController::class, 'publicateForm'])->name('seo.publicate.form');
-Route::get('/seo/templates', [AdminController::class, 'seoTemplates'])->name('seo.template');
-Route::post('/seo/update', [AdminController::class, 'updateSeoTemplate'])->name('seo.templates.update');
-Route::delete('/seo/templates/{id}', [AdminController::class, 'deleteSeoTemplate'])->name('seo.templates.delete');
-Route::get('/seo/templates/ciudad/{ciudadId}', [AdminController::class, 'getTemplatesByCiudad'])->name('seo.templates.by-ciudad');
-Route::post('/seo/templates/update-all', [AdminController::class, 'updateAllTemplates'])->name('seo.templates.update.all');
-Route::put('/seo/update/{page}', [MetaTagController::class, 'update'])->name('seo.update');
-Route::get('seo/seofilters', [MetaTagController::class, 'index'])->name('seo.seofilters');
-Route::put('meta-tags/{page}', [MetaTagController::class, 'updateFilter'])->name('meta-tags.update');
-Route::put('/meta-tags/{page}/{filter?}', [MetaTagController::class, 'updateFilter'])
-    ->name('meta-tags.update');
-Route::get('/get-metatag/{ciudad_id}', [MetaTagController::class, 'getMetaTagByCiudad'])->name('metatag.by.ciudad');
-Route::get('/admin/tarjetas', [TarjetaController::class, 'index'])->name('tarjetas.index');
-Route::get('/admin/tarjetas/create', [TarjetaController::class, 'create'])->name('tarjetas.create');
-Route::post('/admin/tarjetas', [TarjetaController::class, 'store'])->name('tarjetas.store');
-Route::get('/admin/tarjetas/{id}/edit', [TarjetaController::class, 'edit'])->name('tarjetas.edit');
-Route::put('/admin/tarjetas/{id}', [TarjetaController::class, 'update'])->name('tarjetas.update');
-Route::delete('/admin/tarjetas/{id}', [TarjetaController::class, 'destroy'])->name('tarjetas.destroy');
-
-
-//robots
-Route::get('/robots.txt', [SEOController::class, 'showRobots'])->name('seo.robots');
-Route::get('/admin/robots', [SEOController::class, 'editRobots'])->name('seo.edit_robots'); // Vista de edición
-Route::post('/admin/robots', [SEOController::class, 'updateRobots'])->name('seo.update_robots'); // Guardar cambios
