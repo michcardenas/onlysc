@@ -147,7 +147,7 @@
                     @endphp
 
                     <a href="{{ route('perfil.show', ['nombre' => $usuario->fantasia . '-' . $usuario->id]) }}" class="inicio-card">
-                        <div class="inicio-card-category">{{ strtoupper($usuario->categorias) }}</div>
+                    <div class="inicio-card-category">{{ strtoupper(str_replace('_', ' ', $usuario->categorias)) }}</div>
                         <div class="inicio-card-image">
                             <div class="inicio-image"
                                 style="background-image: url('{{ $primeraFoto ? asset("storage/chicas/{$usuario->id}/{$primeraFoto}") : asset("images/default-avatar.png") }}');
@@ -340,7 +340,7 @@
         <div class="watermark"></div>
     </div>
 
-                            <div class="volvieronyprimera-vip-tag">{{ strtoupper($usuario->categorias) }}</div>
+                            <div class="volvieronyprimera-vip-tag">{{ strtoupper(str_replace('_', ' ', $usuario->categorias)) }}</div>
                             @php
                             $fotos = json_decode($usuario->fotos, true);
                             $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
@@ -431,7 +431,7 @@
                         <div class="watermark-container">
         <div class="watermark"></div>
     </div>
-                            <div class="volvieronyprimera-vip-tag">{{ strtoupper($usuario->categorias) }}</div>
+                            <div class="volvieronyprimera-vip-tag">{{ strtoupper(str_replace('_', ' ', $usuario->categorias)) }}</div>
                             @php
                             $fotos = json_decode($usuario->fotos, true);
                             $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;

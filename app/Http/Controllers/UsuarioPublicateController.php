@@ -165,7 +165,7 @@ class UsuarioPublicateController extends Controller
                 'nacionalidad' => 'required|string|max:100',
                 'cuentanos' => 'nullable|string',
                 'estadop' => 'required|integer|in:0,1,3',
-                'categorias' => 'required|string|in:deluxe,premium,VIP,masajes',
+                'categorias' => 'required|string|in:deluxe,premium,VIP,masajes,de_lujo',
                 'posicion' => [
                     'nullable',
                     'integer',

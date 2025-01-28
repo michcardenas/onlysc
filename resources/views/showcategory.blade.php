@@ -26,7 +26,7 @@
             <h3>TEMAS</h3>
             @foreach($categorias as $cat)
             <div class="blogcategory-category-item">
-                <a href="{{ route('blog.show_category', $cat->id) }}" class="blogcategory-category-link">
+                <a href="{{ route('blog.show_category', $cat->slug) }}" class="blogcategory-category-link">
                     {{ $cat->nombre }}
                     <span class="category-count">
                         ({{ $cat->articles_count }})
@@ -39,7 +39,7 @@
         <div class="blogcategory-popular-posts">
             <h3>POSTS POPULARES</h3>
             @foreach($articulos->sortByDesc('visitas')->take(5) as $articulo)
-            <a href="{{ route('blog.show_article', $articulo->id) }}" class="blogcategory-popular-post-item">
+            <a href="{{ route('blog.show_article', $articulo->slug) }}" class="blogcategory-popular-post-item">
                 {{ $articulo->titulo }}
             </a>
             @endforeach
@@ -53,7 +53,7 @@
                 @foreach($articulos->where('destacado', 1)->sortByDesc('fecha_publicacion') as $articulo)
                 <div class="blogcategory-card-wrapper destacado">
                     <div class="blogcategory-card">
-                        <a href="{{ route('blog.show_article', $articulo->id) }}" class="blogcategory-card-content">
+                        <a href="{{ route('blog.show_article', $articulo->slug) }}" class="blogcategory-card-content">
                             <div class="blogcategory-card-image">
                                 <div class="blogcategory-image" style="background-image: url('{{ Storage::url($articulo->imagen) }}')"></div>
                                 <div class="destacado-badge">Destacado</div>
@@ -83,7 +83,7 @@
                 @foreach($articulos->where('destacado', 0)->sortByDesc('fecha_publicacion') as $articulo)
                 <div class="blogcategory-card-wrapper">
                     <div class="blogcategory-card">
-                        <a href="{{ route('blog.show_article', $articulo->id) }}" class="blogcategory-card-content">
+                        <a href="{{ route('blog.show_article', $articulo->slug) }}" class="blogcategory-card-content">
                             <div class="blogcategory-card-image">
                                 <div class="blogcategory-image" style="background-image: url('{{ Storage::url($articulo->imagen) }}')"></div>
                             </div>
@@ -97,7 +97,7 @@
                         @endforeach
                     </div>
                     <div class="blog-card-title-container">
-                        <a href="{{ route('blog.show_article', $articulo->id) }}" class="blog-card-title-link">
+                        <a href="{{ route('blog.show_article', $articulo->slug) }}" class="blog-card-title-link">
                             <h3 class="blog-card-title">{{ $articulo->titulo }}</h3>
                         </a>
                         <div class="blog-card-meta">

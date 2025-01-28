@@ -16,6 +16,7 @@
     <link href="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css/foro.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/blog.css') }}">
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 
     @if(isset($metaTags))

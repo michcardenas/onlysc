@@ -51,7 +51,7 @@
     <div class="blog-main">
         @foreach($categorias as $categoria)
         <div class="blog-section" id="{{ $categoria->id }}">
-            <a href="{{ route('blog.show_category', $categoria->id) }}" class="section-title-link">
+            <a href="{{ route('blog.show_category', $categoria->slug) }}" class="section-title-link">
                 <h2>{{ $categoria->nombre }}</h2>
             </a>
             @php

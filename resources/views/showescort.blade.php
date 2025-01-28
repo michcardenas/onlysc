@@ -56,7 +56,7 @@ $pageTitle = $usuarioPublicate->fantasia . ' Escort ' .
         </h1>
 
         <h1 class="escortperfil-nombrechikito">
-            {{ strtoupper($usuarioPublicate->categorias) }}
+        {{ strtoupper(str_replace('_', ' ', $usuarioPublicate->categorias)) }}
         </h1>
     </header>
 

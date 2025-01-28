@@ -111,7 +111,7 @@
                         </td>
                         <td>{{ $usuario->ubicacion }}</td>
                         <td>{{ $usuario->edad }}</td>
-                        <td>{{ ucfirst($usuario->categorias) }}</td>
+                        <td>{{ ucfirst(str_replace('_', ' ', $usuario->categorias)) }}</td>
                         <td>{{ $usuario->posicion ?? 'Sin posición' }}</td>
                     </tr>
                 @endforeach
