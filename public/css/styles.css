@@ -433,7 +433,7 @@ label .required {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: 10px 20px;
+    padding: 5px 20px;
     color: #fff;
     margin-bottom: 0;
     font-family: 'Montserrat', sans-serif;
