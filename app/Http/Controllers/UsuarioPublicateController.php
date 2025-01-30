@@ -200,11 +200,13 @@ class UsuarioPublicateController extends Controller
     
             try {
                 // Actualizar los datos del usuario
+                $telefono = '+56' . preg_replace('/\s+/', '', $request->telefono);
+
                 $usuario->update([
                     'fantasia' => $request->fantasia,
                     'nombre' => $request->nombre,
                     'email' => $request->email,
-                    'telefono' => $request->telefono,
+                    'telefono' => $telefono,
                     'ubicacion' => $request->ubicacion,
                     'edad' => $request->edad,
                     'color_ojos' => $request->color_ojos,
