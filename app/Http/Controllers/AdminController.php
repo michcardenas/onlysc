@@ -7,11 +7,15 @@ use App\Models\User;
 use App\Models\SeoTemplate;
 use Illuminate\Support\Facades\Log;
 use App\Models\UsuarioPublicate;
-use App\Models\Ciudad; 
-use App\Models\TYC; 
+use App\Models\Ciudad;
+use App\Models\Nacionalidad;
+use App\Models\TYC;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
+use App\Models\Sector;
+use App\Models\Servicio;
+use App\Models\Atributo;
 
 class AdminController extends Controller
 {
@@ -21,195 +25,192 @@ class AdminController extends Controller
         $ciudades = UsuarioPublicate::distinct('ubicacion')
             ->pluck('ubicacion')
             ->sort();
-        
+
         // Obtener usuarios con estadop = 0
         $usuariosInactivos = UsuarioPublicate::where('estadop', 0)
             ->select('id', 'fantasia', 'nombre', 'edad', 'ubicacion', 'categorias', 'estadop', 'posicion', 'precio')
             ->get();
-        
+
         // Obtener usuarios con estadop = 1 o 3
         $usuariosActivos = UsuarioPublicate::whereIn('estadop', [1, 3])
             ->select('id', 'fantasia', 'nombre', 'edad', 'ubicacion', 'categorias', 'estadop', 'posicion', 'precio')
             ->orderBy('posicion', 'asc')
             ->get();
-        
+
         $usuarioAutenticado = Auth::user();
-    
+
         return view('admin.dashboard', compact('usuariosInactivos', 'usuariosActivos', 'usuarioAutenticado', 'ciudades'));
     }
 
     public function getUsersByCity(Request $request)
     {
         $ciudad = $request->ciudad;
-        
+
         $usuariosActivos = UsuarioPublicate::whereIn('estadop', [1, 3])
-            ->when($ciudad !== 'todas', function($query) use ($ciudad) {
+            ->when($ciudad !== 'todas', function ($query) use ($ciudad) {
                 return $query->where('ubicacion', $ciudad);
             })
             ->select('id', 'fantasia', 'nombre', 'edad', 'ubicacion', 'categorias', 'estadop', 'posicion', 'precio')
             ->orderBy('posicion', 'asc')
             ->get();
-            
+
         $usuariosInactivos = UsuarioPublicate::where('estadop', 0)
-            ->when($ciudad !== 'todas', function($query) use ($ciudad) {
+            ->when($ciudad !== 'todas', function ($query) use ($ciudad) {
                 return $query->where('ubicacion', $ciudad);
             })
             ->select('id', 'fantasia', 'nombre', 'edad', 'ubicacion', 'categorias', 'estadop', 'posicion', 'precio')
             ->get();
-            
+
         return response()->json([
             'activos' => view('admin.partials.tabla-usuarios', ['usuarios' => $usuariosActivos])->render(),
             'inactivos' => view('admin.partials.tabla-usuarios', ['usuarios' => $usuariosInactivos])->render()
         ]);
     }
-    
+
     public function Perfiles()
     {
         $perfilesRol2 = User::select('users.*', 'usuarios_publicate.estadop as publicate_estado')
-            ->leftJoin('usuarios_publicate', function($join) {
+            ->leftJoin('usuarios_publicate', function ($join) {
                 $join->on('users.email', '=', 'usuarios_publicate.email')
                     ->orWhere('users.name', '=', 'usuarios_publicate.nombre')
                     ->orWhere('usuarios_publicate.email', 'LIKE', DB::raw('CONCAT("%", users.email, "%")'));
             })
             ->where('users.rol', 2)
             ->paginate(10);
-    
-            $usuarioAutenticado = Auth::user();
+
+        $usuarioAutenticado = Auth::user();
 
         $perfilesRol3 = User::where('rol', 3)->paginate(10);
-        
+
         return view('admin.perfiles', compact('perfilesRol2', 'perfilesRol3', 'usuarioAutenticado'));
     }
 
-public function loginAsUser($id)
-{
-    try {
-        $usuario = User::findOrFail($id);
-        
-        // Guardamos el ID del admin original en la sesión
-        session(['admin_original_id' => auth()->id()]);
-        
-        // Hacemos logout del admin
-        auth()->logout();
-        
-        // Hacemos login como el usuario seleccionado
-        auth()->login($usuario);
-        
-        Log::info('Admin logueado como usuario', [
-            'admin_id' => session('admin_original_id'),
-            'user_id' => $usuario->id
-        ]);
+    public function loginAsUser($id)
+    {
+        try {
+            $usuario = User::findOrFail($id);
 
-        // Redirigir al perfil del usuario
-        return redirect()->route('admin.profile')->with('success', 'Ahora estás editando el perfil de ' . $usuario->name);
+            // Guardamos el ID del admin original en la sesión
+            session(['admin_original_id' => auth()->id()]);
 
-    } catch (\Exception $e) {
-        Log::error('Error al hacer login como usuario', [
-            'error' => $e->getMessage(),
-            'line' => $e->getLine(),
-            'file' => $e->getFile()
-        ]);
+            // Hacemos logout del admin
+            auth()->logout();
 
-        return redirect()->back()->with('error', 'Error al acceder al perfil del usuario');
+            // Hacemos login como el usuario seleccionado
+            auth()->login($usuario);
+
+            Log::info('Admin logueado como usuario', [
+                'admin_id' => session('admin_original_id'),
+                'user_id' => $usuario->id
+            ]);
+
+            // Redirigir al perfil del usuario
+            return redirect()->route('admin.profile')->with('success', 'Ahora estás editando el perfil de ' . $usuario->name);
+        } catch (\Exception $e) {
+            Log::error('Error al hacer login como usuario', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
+
+            return redirect()->back()->with('error', 'Error al acceder al perfil del usuario');
+        }
     }
-}
 
-public function returnToAdmin()
-{
-    try {
-        // Verificamos si hay un ID de admin guardado
-        if (!session()->has('admin_original_id')) {
+    public function returnToAdmin()
+    {
+        try {
+            // Verificamos si hay un ID de admin guardado
+            if (!session()->has('admin_original_id')) {
+                return redirect()->route('admin.perfiles')
+                    ->with('error', 'No hay sesión de administrador para restaurar');
+            }
+
+            $adminId = session('admin_original_id');
+            $admin = User::findOrFail($adminId);
+
+            // Hacemos logout del usuario actual
+            auth()->logout();
+
+            // Hacemos login como admin
+            auth()->login($admin);
+
+            // Limpiamos la sesión
+            session()->forget('admin_original_id');
+
+            Log::info('Admin retornó a su cuenta', [
+                'admin_id' => $adminId
+            ]);
+
             return redirect()->route('admin.perfiles')
-                ->with('error', 'No hay sesión de administrador para restaurar');
+                ->with('success', 'Has vuelto a tu cuenta de administrador');
+        } catch (\Exception $e) {
+            Log::error('Error al retornar a cuenta admin', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
+
+            return redirect()->back()->with('error', 'Error al volver a la cuenta de administrador');
         }
-
-        $adminId = session('admin_original_id');
-        $admin = User::findOrFail($adminId);
-
-        // Hacemos logout del usuario actual
-        auth()->logout();
-        
-        // Hacemos login como admin
-        auth()->login($admin);
-        
-        // Limpiamos la sesión
-        session()->forget('admin_original_id');
-
-        Log::info('Admin retornó a su cuenta', [
-            'admin_id' => $adminId
-        ]);
-
-        return redirect()->route('admin.perfiles')
-            ->with('success', 'Has vuelto a tu cuenta de administrador');
-
-    } catch (\Exception $e) {
-        Log::error('Error al retornar a cuenta admin', [
-            'error' => $e->getMessage(),
-            'line' => $e->getLine(),
-            'file' => $e->getFile()
-        ]);
-
-        return redirect()->back()->with('error', 'Error al volver a la cuenta de administrador');
     }
-}
 
-public function eliminarPerfil($id)
-{
-    try {
-        // Buscar el usuario
-        $usuario = User::findOrFail($id);
-        
-        // Verificar si el usuario tiene un perfil en usuarios_publicate
-        $usuarioPublicate = UsuarioPublicate::where('email', $usuario->email)
-            ->orWhere('nombre', $usuario->name)
-            ->orWhere('email', 'LIKE', '%' . $usuario->email . '%')
-            ->first();
+    public function eliminarPerfil($id)
+    {
+        try {
+            // Buscar el usuario
+            $usuario = User::findOrFail($id);
 
-        DB::beginTransaction();
-        
-        // Eliminar el perfil de usuarios_publicate si existe
-        if ($usuarioPublicate) {
-            $usuarioPublicate->delete();
+            // Verificar si el usuario tiene un perfil en usuarios_publicate
+            $usuarioPublicate = UsuarioPublicate::where('email', $usuario->email)
+                ->orWhere('nombre', $usuario->name)
+                ->orWhere('email', 'LIKE', '%' . $usuario->email . '%')
+                ->first();
+
+            DB::beginTransaction();
+
+            // Eliminar el perfil de usuarios_publicate si existe
+            if ($usuarioPublicate) {
+                $usuarioPublicate->delete();
+            }
+
+            // Eliminar el usuario
+            $usuario->delete();
+
+            DB::commit();
+
+            Log::info('Perfil eliminado exitosamente', [
+                'user_id' => $id,
+                'admin_id' => auth()->id()
+            ]);
+
+            return redirect()->route('admin.perfiles')
+                ->with('success', 'Perfil eliminado exitosamente');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            Log::error('Error al eliminar perfil', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
+
+            return redirect()->back()
+                ->with('error', 'Error al eliminar el perfil: ' . $e->getMessage());
         }
-
-        // Eliminar el usuario
-        $usuario->delete();
-
-        DB::commit();
-
-        Log::info('Perfil eliminado exitosamente', [
-            'user_id' => $id,
-            'admin_id' => auth()->id()
-        ]);
-
-        return redirect()->route('admin.perfiles')
-            ->with('success', 'Perfil eliminado exitosamente');
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        
-        Log::error('Error al eliminar perfil', [
-            'error' => $e->getMessage(),
-            'line' => $e->getLine(),
-            'file' => $e->getFile()
-        ]);
-
-        return redirect()->back()
-            ->with('error', 'Error al eliminar el perfil: ' . $e->getMessage());
     }
-}
 
-public function seoTemplates()
+    public function seoTemplates()
     {
         $ciudades = Ciudad::all();
         $templates = [];
-        
+
         // Obtener todos los templates y organizarlos por tipo y ciudad
         $allTemplates = SeoTemplate::select('id', 'tipo', 'filtro', 'ciudad_id', 'description_template')
             ->orderBy('ciudad_id')
             ->orderBy('tipo')
             ->get();
-            
+
         foreach ($allTemplates as $template) {
             if ($template->filtro) {
                 $templates['filtros'][$template->filtro][$template->ciudad_id] = $template->description_template;
@@ -217,7 +218,7 @@ public function seoTemplates()
                 $templates[$template->tipo][$template->ciudad_id] = $template->description_template;
             }
         }
-        
+
         $defaultTemplates = [
             'ciudad' => 'Explora escorts en {ciudad}.',
             'nacionalidad' => 'Encuentra escorts {nacionalidad} en {ciudad}.',
@@ -232,7 +233,7 @@ public function seoTemplates()
             'multiple' => 'Encuentra escorts con tus filtros favoritos en {ciudad}.',
             'complex' => 'Personaliza tu búsqueda y encuentra escorts en {ciudad} que se adapten a todas tus preferencias.'
         ];
-        
+
         return view('seo.templates', [
             'templates' => $templates,
             'defaultTemplates' => $defaultTemplates,
@@ -249,7 +250,7 @@ public function seoTemplates()
             'filtro' => 'nullable|string',
             'ciudad_id' => 'required|exists:ciudades,id'
         ]);
-    
+
         try {
             Log::info('Starting single SEO template update', [
                 'ciudad_id' => $request->ciudad_id,
@@ -257,7 +258,7 @@ public function seoTemplates()
                 'filtro' => $request->filtro,
                 'user_id' => auth()->id()
             ]);
-    
+
             $template = SeoTemplate::updateOrCreate(
                 [
                     'ciudad_id' => $request->ciudad_id,
@@ -268,16 +269,15 @@ public function seoTemplates()
                     'description_template' => $request->description_template
                 ]
             );
-    
+
             Log::info('SEO template updated successfully', [
                 'template_id' => $template->id,
                 'ciudad_id' => $request->ciudad_id,
                 'tipo' => $request->tipo,
                 'filtro' => $request->filtro
             ]);
-    
+
             return redirect()->back()->with('success', 'Template SEO actualizado correctamente');
-    
         } catch (\Exception $e) {
             Log::error('SEO template update failed', [
                 'ciudad_id' => $request->ciudad_id,
@@ -288,7 +288,7 @@ public function seoTemplates()
                 'file' => $e->getFile(),
                 'trace' => $e->getTraceAsString()
             ]);
-    
+
             return redirect()->back()->with('error', 'Error al procesar el template SEO: ' . $e->getMessage());
         }
     }
@@ -300,7 +300,7 @@ public function seoTemplates()
     {
         try {
             $template = SeoTemplate::findOrFail($id);
-            
+
             // Log antes de eliminar
             Log::info('Template SEO eliminado', [
                 'admin_id' => auth()->id(),
@@ -313,7 +313,6 @@ public function seoTemplates()
             $template->delete();
 
             return redirect()->back()->with('success', 'Template SEO eliminado correctamente');
-
         } catch (\Exception $e) {
             Log::error('Error al eliminar template SEO', [
                 'error' => $e->getMessage(),
@@ -341,118 +340,331 @@ public function seoTemplates()
                 }
                 return $carry;
             }, []);
-    
+
         return response()->json($templates);
     }
 
     public function updateAllTemplates(Request $request)
-{
-    $request->validate([
-        'ciudad_id' => 'required|exists:ciudades,id',
-        'templates' => 'required|array'
-    ]);
-
-    try {
-        DB::beginTransaction();
-        
-        Log::info('Starting SEO template batch update', [
-            'ciudad_id' => $request->ciudad_id,
-            'template_count' => count($request->templates)
+    {
+        $request->validate([
+            'ciudad_id' => 'required|exists:ciudades,id',
+            'templates' => 'required|array'
         ]);
 
-        $filtroTypes = ['ciudad', 'nacionalidad', 'edad', 'precio', 'atributos', 
-                       'servicios', 'disponible', 'resena', 'categorias'];
+        try {
+            DB::beginTransaction();
 
-        foreach ($request->templates as $templateData) {
-            $isFilter = in_array($templateData['tipo'], $filtroTypes);
-            $updateData = [
+            Log::info('Starting SEO template batch update', [
                 'ciudad_id' => $request->ciudad_id,
-                'tipo' => $isFilter ? 'filtro' : $templateData['tipo'],
-                'filtro' => $isFilter ? $templateData['tipo'] : null
+                'template_count' => count($request->templates)
+            ]);
+
+            $filtroTypes = [
+                'ciudad',
+                'nacionalidad',
+                'edad',
+                'precio',
+                'atributos',
+                'servicios',
+                'disponible',
+                'resena',
+                'categorias'
             ];
 
-            try {
-                $template = SeoTemplate::updateOrCreate(
-                    $updateData,
-                    ['description_template' => $templateData['description_template']]
-                );
+            foreach ($request->templates as $templateData) {
+                $isFilter = in_array($templateData['tipo'], $filtroTypes);
+                $updateData = [
+                    'ciudad_id' => $request->ciudad_id,
+                    'tipo' => $isFilter ? 'filtro' : $templateData['tipo'],
+                    'filtro' => $isFilter ? $templateData['tipo'] : null
+                ];
 
-                Log::info('SEO Template updated', [
-                    'ciudad_id' => $request->ciudad_id,
-                    'template_id' => $template->id,
-                    'tipo' => $updateData['tipo'],
-                    'filtro' => $updateData['filtro']
-                ]);
-            } catch (QueryException $qe) {
-                Log::error('SEO Template update failed', [
-                    'ciudad_id' => $request->ciudad_id,
-                    'tipo' => $updateData['tipo'],
-                    'filtro' => $updateData['filtro'],
-                    'sql' => $qe->getSql(),
-                    'bindings' => $qe->getBindings(),
-                    'error' => $qe->getMessage()
-                ]);
-                throw $qe;
+                try {
+                    $template = SeoTemplate::updateOrCreate(
+                        $updateData,
+                        ['description_template' => $templateData['description_template']]
+                    );
+
+                    Log::info('SEO Template updated', [
+                        'ciudad_id' => $request->ciudad_id,
+                        'template_id' => $template->id,
+                        'tipo' => $updateData['tipo'],
+                        'filtro' => $updateData['filtro']
+                    ]);
+                } catch (QueryException $qe) {
+                    Log::error('SEO Template update failed', [
+                        'ciudad_id' => $request->ciudad_id,
+                        'tipo' => $updateData['tipo'],
+                        'filtro' => $updateData['filtro'],
+                        'sql' => $qe->getSql(),
+                        'bindings' => $qe->getBindings(),
+                        'error' => $qe->getMessage()
+                    ]);
+                    throw $qe;
+                }
             }
+
+            DB::commit();
+            Log::info('SEO Template batch update completed', [
+                'ciudad_id' => $request->ciudad_id
+            ]);
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('SEO Template batch update failed', [
+                'ciudad_id' => $request->ciudad_id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
         }
-
-        DB::commit();
-        Log::info('SEO Template batch update completed', [
-            'ciudad_id' => $request->ciudad_id
-        ]);
-
-        return response()->json(['success' => true]);
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        Log::error('SEO Template batch update failed', [
-            'ciudad_id' => $request->ciudad_id,
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ]);
-
-        return response()->json([
-            'success' => false,
-            'message' => $e->getMessage()
-        ], 500);
     }
-}
 
 
-public function tycadmin()
-{
-    $tyc = TYC::first(); // Asumiendo que tienes un modelo TYC
-    $usuarioAutenticado = auth()->user();
-    
-    return view('admin.tycadmin', [
-        'tyc' => $tyc,
-        'usuarioAutenticado' => $usuarioAutenticado
-    ]);
-}
+    public function tycadmin()
+    {
+        $tyc = TYC::first(); // Asumiendo que tienes un modelo TYC
+        $usuarioAutenticado = auth()->user();
 
-public function update(Request $request)
-{
-    $request->validate([
-        'title' => 'required|string|max:255',
-        'content' => 'required|string'
-    ]);
+        return view('admin.tycadmin', [
+            'tyc' => $tyc,
+            'usuarioAutenticado' => $usuarioAutenticado
+        ]);
+    }
 
-    // Procesar el contenido para preservar los saltos de línea
-    $content = str_replace(["\r\n", "\r"], "\n", $request->content);
+    public function update(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string'
+        ]);
 
-    TYC::updateOrCreate(
-        ['id' => 1],
-        [
-            'title' => $request->title,
-            'content' => nl2br($content)
-        ]
-    );
+        // Procesar el contenido para preservar los saltos de línea
+        $content = str_replace(["\r\n", "\r"], "\n", $request->content);
 
-    return redirect()->route('tycadmin')
-        ->with('success', 'Términos y condiciones actualizados correctamente');
-}
+        TYC::updateOrCreate(
+            ['id' => 1],
+            [
+                'title' => $request->title,
+                'content' => nl2br($content)
+            ]
+        );
+
+        return redirect()->route('tycadmin')
+            ->with('success', 'Términos y condiciones actualizados correctamente');
+    }
 
 
-    
+    // Funciones para Sectores
+    public function sectorIndex()
+    {
+        $sectores = Sector::all();
+        return view('sectores.indexsector', compact('sectores'));
+    }
 
+    public function sectorCreate()
+    {
+        return view('sectores.createsector');
+    }
+
+    public function sectorStore(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required',
+            'url' => 'required'
+        ]);
+
+        Sector::create($request->all());
+
+        return redirect()->route('sectores.indexsector')
+            ->with('success', 'Sector creado exitosamente.');
+    }
+
+    public function sectorEdit(Sector $sector)
+    {
+        return view('sectores.editsector', compact('sector'));
+    }
+
+    public function sectorUpdate(Request $request, Sector $sector)
+    {
+        $request->validate([
+            'nombre' => 'required',
+            'url' => 'required'
+        ]);
+
+        $sector->update($request->all());
+
+        return redirect()->route('sectores.indexsector')
+            ->with('success', 'Sector actualizado exitosamente.');
+    }
+
+    public function sectorDestroy(Sector $sector)
+    {
+        $sector->delete();
+        return redirect()->route('sectores.indexsector')
+            ->with('success', 'Sector eliminado exitosamente.');
+    }
+
+    // Funciones para Servicios
+    public function servicioIndex()
+    {
+        $servicios = Servicio::orderBy('posicion')->get();
+        return view('servicios.indexservicio', compact('servicios'));
+    }
+
+    public function servicioCreate()
+    {
+        return view('servicios.createservicio');
+    }
+
+    // Para Servicios
+    public function servicioStore(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required',
+            'posicion' => 'required|numeric',
+            'url' => 'required'
+        ]);
+
+        Servicio::create($request->all());
+
+        return redirect()->route('servicios.indexservicio')
+            ->with('success', 'Servicio creado exitosamente.');
+    }
+
+    public function servicioUpdate(Request $request, Servicio $servicio)
+    {
+        $request->validate([
+            'nombre' => 'required',
+            'posicion' => 'required|numeric',
+            'url' => 'required'
+        ]);
+
+        $servicio->update($request->all());
+
+        return redirect()->route('servicios.indexservicio')
+            ->with('success', 'Servicio actualizado exitosamente.');
+    }
+
+    public function servicioEdit(Servicio $servicio)
+    {
+        return view('servicios.editservicio', compact('servicio'));
+    }
+
+
+    public function servicioDestroy(Servicio $servicio)
+    {
+        $servicio->delete();
+        return redirect()->route('servicios.indexservicio')
+            ->with('success', 'Servicio eliminado exitosamente.');
+    }
+
+    // Funciones para Atributos
+    public function atributoIndex()
+    {
+        $atributos = Atributo::orderBy('posicion')->get();
+        return view('atributos.indexatributo', compact('atributos'));
+    }
+
+    public function atributoCreate()
+    {
+        return view('atributos.createatributo');
+    }
+
+    // Para Atributos
+    public function atributoStore(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required',
+            'posicion' => 'required|numeric',
+            'url' => 'required'
+        ]);
+
+        Atributo::create($request->all());
+
+        return redirect()->route('atributos.indexatributo')
+            ->with('success', 'Atributo creado exitosamente.');
+    }
+
+    public function atributoUpdate(Request $request, Atributo $atributo)
+    {
+        $request->validate([
+            'nombre' => 'required',
+            'posicion' => 'required|numeric',
+            'url' => 'required'
+        ]);
+
+        $atributo->update($request->all());
+
+        return redirect()->route('atributos.indexatributo')
+            ->with('success', 'Atributo actualizado exitosamente.');
+    }
+
+    public function atributoEdit(Atributo $atributo)
+    {
+        return view('atributos.editatributo', compact('atributo'));
+    }
+
+
+    public function atributoDestroy(Atributo $atributo)
+    {
+        $atributo->delete();
+        return redirect()->route('atributos.indexatributo')
+            ->with('success', 'Atributo eliminado exitosamente.');
+    }
+
+    // Funciones para Nacionalidades
+    public function nacionalidadIndex()
+    {
+        $nacionalidades = Nacionalidad::all();
+        return view('nacionalidades.indexnacionalidad', compact('nacionalidades'));
+    }
+
+    public function nacionalidadCreate()
+    {
+        return view('nacionalidades.createnacionalidad');
+    }
+
+    public function nacionalidadStore(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required',
+            'url' => 'required'
+        ]);
+
+        Nacionalidad::create($request->all());
+
+        return redirect()->route('nacionalidades.indexnacionalidad')
+            ->with('success', 'Nacionalidad creada exitosamente.');
+    }
+
+    public function nacionalidadEdit(Nacionalidad $nacionalidad)
+    {
+        return view('nacionalidades.editnacionalidad', compact('nacionalidad'));
+    }
+
+    public function nacionalidadUpdate(Request $request, Nacionalidad $nacionalidad)
+    {
+        $request->validate([
+            'nombre' => 'required',
+            'url' => 'required'
+        ]);
+
+        $nacionalidad->update($request->all());
+
+        return redirect()->route('nacionalidades.indexnacionalidad')
+            ->with('success', 'Nacionalidad actualizada exitosamente.');
+    }
+
+    public function nacionalidadDestroy(Nacionalidad $nacionalidad)
+    {
+        $nacionalidad->delete();
+        return redirect()->route('nacionalidades.indexnacionalidad')
+            ->with('success', 'Nacionalidad eliminada exitosamente.');
+    }
 }

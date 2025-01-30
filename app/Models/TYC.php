@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TYC extends Model
 {
-    protected $table = 't_y_c';
+    protected $table = 'tyc';
     
     protected $fillable = [
         'title',

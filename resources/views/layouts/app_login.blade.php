@@ -1961,5 +1961,303 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Selectores de formularios
+    const servicioSelect = document.getElementById('servicio_select');
+    const atributoSelect = document.getElementById('atributo_select');
+    const nacionalidadSelect = document.getElementById('nacionalidad_select');
+    const sectorSelect = document.getElementById('sector_select');
+    const servicioForm = document.getElementById('servicioForm');
+    const atributoForm = document.getElementById('atributoForm');
+    const nacionalidadForm = document.getElementById('nacionalidadForm');
+    const sectorForm = document.getElementById('sectorForm');
+
+    // Función para cargar datos SEO de servicios
+    function cargarDatosServicio(servicioId) {
+        if (!servicioId) return;
+
+        document.getElementById('servicio_id_input').value = servicioId;
+
+        fetch(`/seo/servicios/${servicioId}/seo`)
+            .then(response => {
+                if (!response.ok) throw new Error('Error al cargar los datos');
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('meta_title_servicio').value = data.meta_title || '';
+                document.getElementById('meta_description_servicio').value = data.meta_description || '';
+                document.getElementById('meta_keywords_servicio').value = data.meta_keywords || '';
+                document.getElementById('canonical_url_servicio').value = data.canonical_url || '';
+                document.getElementById('meta_robots_servicio').value = data.meta_robots || 'index, follow';
+                document.getElementById('heading_h1_servicio').value = data.heading_h1 || '';
+                document.getElementById('heading_h2_servicio').value = data.heading_h2 || '';
+                document.getElementById('additional_text_servicio').value = data.additional_text || '';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al cargar los datos del servicio');
+            });
+    }
+
+     // Función para cargar datos SEO de sectores
+     function cargarDatosSector(sectorId) {
+        if (!sectorId) return;
+
+        document.getElementById('sector_id_input').value = sectorId;
+
+        fetch(`/seo/sectores/${sectorId}/seo`)
+            .then(response => {
+                if (!response.ok) throw new Error('Error al cargar los datos');
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('meta_title_sector').value = data.meta_title || '';
+                document.getElementById('meta_description_sector').value = data.meta_description || '';
+                document.getElementById('meta_keywords_sector').value = data.meta_keywords || '';
+                document.getElementById('canonical_url_sector').value = data.canonical_url || '';
+                document.getElementById('meta_robots_sector').value = data.meta_robots || 'index, follow';
+                document.getElementById('heading_h1_sector').value = data.heading_h1 || '';
+                document.getElementById('heading_h2_sector').value = data.heading_h2 || '';
+                document.getElementById('additional_text_sector').value = data.additional_text || '';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al cargar los datos del sector');
+            });
+    }
+
+    // Función para cargar datos SEO de atributos
+    function cargarDatosAtributo(atributoId) {
+        if (!atributoId) return;
+
+        document.getElementById('atributo_id_input').value = atributoId;
+
+        fetch(`/seo/atributos/${atributoId}/seo`)
+            .then(response => {
+                if (!response.ok) throw new Error('Error al cargar los datos');
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('meta_title_atributo').value = data.meta_title || '';
+                document.getElementById('meta_description_atributo').value = data.meta_description || '';
+                document.getElementById('meta_keywords_atributo').value = data.meta_keywords || '';
+                document.getElementById('canonical_url_atributo').value = data.canonical_url || '';
+                document.getElementById('meta_robots_atributo').value = data.meta_robots || 'index, follow';
+                document.getElementById('heading_h1_atributo').value = data.heading_h1 || '';
+                document.getElementById('heading_h2_atributo').value = data.heading_h2 || '';
+                document.getElementById('additional_text_atributo').value = data.additional_text || '';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al cargar los datos del atributo');
+            });
+    }
+
+    // Función para cargar datos SEO de nacionalidades
+    function cargarDatosNacionalidad(nacionalidadId) {
+        if (!nacionalidadId) return;
+
+        document.getElementById('nacionalidad_id_input').value = nacionalidadId;
+
+        fetch(`/seo/nacionalidades/${nacionalidadId}/seo`)
+            .then(response => {
+                if (!response.ok) throw new Error('Error al cargar los datos');
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('meta_title_nacionalidad').value = data.meta_title || '';
+                document.getElementById('meta_description_nacionalidad').value = data.meta_description || '';
+                document.getElementById('meta_keywords_nacionalidad').value = data.meta_keywords || '';
+                document.getElementById('canonical_url_nacionalidad').value = data.canonical_url || '';
+                document.getElementById('meta_robots_nacionalidad').value = data.meta_robots || 'index, follow';
+                document.getElementById('heading_h1_nacionalidad').value = data.heading_h1 || '';
+                document.getElementById('heading_h2_nacionalidad').value = data.heading_h2 || '';
+                document.getElementById('additional_text_nacionalidad').value = data.additional_text || '';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al cargar los datos de la nacionalidad');
+            });
+    }
+
+    // Event Listeners para los selects
+    if (servicioSelect) {
+        servicioSelect.addEventListener('change', function() {
+            cargarDatosServicio(this.value);
+        });
+    }
+
+    if (atributoSelect) {
+        atributoSelect.addEventListener('change', function() {
+            cargarDatosAtributo(this.value);
+        });
+    }
+
+    if (nacionalidadSelect) {
+        nacionalidadSelect.addEventListener('change', function() {
+            cargarDatosNacionalidad(this.value);
+        });
+    }
+
+    if (sectorSelect) {
+        sectorSelect.addEventListener('change', function() {
+            cargarDatosSector(this.value);
+        });
+    }
+
+    
+
+    // Event Listener para el formulario de servicios
+    if (servicioForm) {
+        servicioForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const servicioId = document.getElementById('servicio_id_input').value;
+            if (!servicioId) {
+                alert('Por favor, seleccione un servicio');
+                return;
+            }
+
+            const formData = new FormData(this);
+            
+            fetch('/seo/servicios/update', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(Object.fromEntries(formData))
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('SEO de servicio actualizado correctamente');
+                    // Opcional: recargar datos
+                    cargarDatosServicio(servicioId);
+                } else {
+                    throw new Error(data.message || 'Error al actualizar');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message || 'Error al actualizar el SEO');
+            });
+        });
+    }
+
+    // Event Listener para el formulario de atributos
+    if (atributoForm) {
+        atributoForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const atributoId = document.getElementById('atributo_id_input').value;
+            if (!atributoId) {
+                alert('Por favor, seleccione un atributo');
+                return;
+            }
+
+            const formData = new FormData(this);
+            
+            fetch('/seo/atributos/update', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(Object.fromEntries(formData))
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('SEO de atributo actualizado correctamente');
+                    // Opcional: recargar datos
+                    cargarDatosAtributo(atributoId);
+                } else {
+                    throw new Error(data.message || 'Error al actualizar');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message || 'Error al actualizar el SEO');
+            });
+        });
+    }
+
+    // Event Listener para el formulario de nacionalidades
+    if (nacionalidadForm) {
+        nacionalidadForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nacionalidadId = document.getElementById('nacionalidad_id_input').value;
+            if (!nacionalidadId) {
+                alert('Por favor, seleccione una nacionalidad');
+                return;
+            }
+
+            const formData = new FormData(this);
+            
+            fetch('/seo/nacionalidades/update', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(Object.fromEntries(formData))
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('SEO de nacionalidad actualizado correctamente');
+                    // Opcional: recargar datos
+                    cargarDatosNacionalidad(nacionalidadId);
+                } else {
+                    throw new Error(data.message || 'Error al actualizar');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message || 'Error al actualizar el SEO');
+            });
+        });
+    }
+
+    if (sectorForm) {
+        sectorForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const sectorId = document.getElementById('sector_id_input').value;
+            if (!sectorId) {
+                alert('Por favor, seleccione un sector');
+                return;
+            }
+
+            const formData = new FormData(this);
+            
+            fetch('/seo/sectores/update', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(Object.fromEntries(formData))
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('SEO de sector actualizado correctamente');
+                    // Opcional: recargar datos
+                    cargarDatosSector(sectorId);
+                } else {
+                    throw new Error(data.message || 'Error al actualizar');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message || 'Error al actualizar el SEO');
+            });
+        });
+    }
+});
     </script>
 </html>

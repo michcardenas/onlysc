@@ -42,6 +42,7 @@
         <a href="{{ route('seo.home') }}" class="btn-seo">Home</a>
         <a href="{{ route('seo.inicio-tarjetas') }}" class="btn-seo">Inicio</a>
         <a href="{{ route('seo.template') }}" class="btn-seo">Filtro</a>
+        <a href="{{ route('seo.templates.unitarios') }}" class="btn-seo">Filtro Unitario</a>
         <a href="{{ route('seo.seofilters') }}" class="btn-seo">Meta Filtro</a>
         <a href="{{ route('seo.foroadmin') }}" class="btn-seo">Foro</a>
         <a href="{{ route('seo.blogadmin') }}" class="btn-seo">Blog</a>
