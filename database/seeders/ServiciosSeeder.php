@@ -48,7 +48,8 @@ class ServiciosSeeder extends Seeder
         foreach ($servicios as $index => $servicio) {
             Servicio::create([
                 'nombre' => $servicio,
-                'posicion' => $index + 1
+                'posicion' => $index + 1,
+                'url' => strtolower(str_replace(' ', '-', $servicio)) // Generar URL automática
             ]);
         }
     }

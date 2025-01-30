@@ -47,7 +47,8 @@ class AtributosSeeder extends Seeder
         foreach ($atributos as $index => $atributo) {
             Atributo::create([
                 'nombre' => $atributo,
-                'posicion' => $index + 1
+                'posicion' => $index + 1,
+                'url' => strtolower(str_replace(' ', '-', $atributo)) // Generar URL automática
             ]);
         }
     }
