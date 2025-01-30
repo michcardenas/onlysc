@@ -198,7 +198,7 @@
 
                 <a href="/mis-favoritos/" class="nav-link">FAVORITOS</a>
                 <a href="/blog/" class="nav-link">BLOG</a>
-                <a href="/foro/" class="nav-link">FORO</a>
+                <a href="/foro/" class="nav-link">FORO ESCORTS </a>
             </div>
         </div>
     </header>
@@ -371,7 +371,7 @@
                 <div class="custom-footer-middle">
                     <div class="custom-links">
                         <div class="custom-link-row">
-                            <a href="/foro/">FORO</a>
+                            <a href="/foro/">FORO ESCORTS</a>
                             <a href="/blog/">BLOG</a>
                         </div>
                         <div class="custom-link-row">

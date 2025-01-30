@@ -296,7 +296,7 @@
                </div>
                <a href="{{ route('favoritos.show') }}" class="menu-link">Favoritos</a>
                <a href="{{ route('blog') }}" class="menu-link">Blog</a>
-               <a href="{{ route('foro') }}" class="menu-link">Foro</a>
+               <a href="{{ route('foro') }}" class="menu-link">Foro Escorts</a>
                <a href="{{ route('publicate.form') }}" class="menu-link">Publícate</a>
            </div>
         </div>

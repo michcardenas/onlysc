@@ -433,7 +433,7 @@ label .required {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: 10px 20px;
+    padding: 5px 20px;
     color: #fff;
     margin-bottom: 0;
     font-family: 'Montserrat', sans-serif;
@@ -3996,10 +3996,13 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 }
 
 .seo-section {
-    border-radius: 0.5rem;
-    margin: 2rem 0;
-    padding: 1.5rem;
-    max-width: 100%;
+        display: flex;
+        border-radius: 0.5rem;
+        margin: 2rem 0;
+        padding: 1.5rem;
+        max-width: 100%;
+        flex-direction: column;
+        align-items: center;
 }
 
 .seo-title {
