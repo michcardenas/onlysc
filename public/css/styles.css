@@ -3996,7 +3996,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 }
 
 .seo-section {
-    display: flex;
+        display: flex;
         border-radius: 0.5rem;
         margin: 2rem 0;
         padding: 1.5rem;
