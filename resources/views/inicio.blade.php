@@ -550,14 +550,14 @@
 
 
 
-        @if(isset($seoTitle) && isset($seoDescription))
+       
+
+</main>
+@if(isset($seoTitle) && isset($seoDescription))
         <div class="seo-section">
             <h2 class="seo-title">{{ $seoTitle }}</h2>
             <div class="seo-description">{!! $seoDescription !!}</div>
         </div>
         @endif
-
-</main>
-
 @endsection
 @include('layouts.navigation')
