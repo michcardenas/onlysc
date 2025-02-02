@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\UsuarioPublicate;
+use App\Models\Servicio;
+use App\Models\Atributo;
+use App\Models\Sector;
+use App\Models\Nacionalidad;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr; 
@@ -16,8 +20,12 @@ class PublicateController extends Controller
     {
 
         $ciudades = Ciudad::all();
+        $servicios = Servicio::orderBy('posicion')->get();
+        $atributos = Atributo::orderBy('posicion')->get();
+        $nacionalidades = Nacionalidad::orderBy('posicion')->get();
+        $sectores = Sector::all();
 
-        return view('publicate', compact('ciudades'));
+        return view('publicate', compact('ciudades', "atributos", 'nacionalidades', 'servicios', 'sectores'));
     }
 
     public function store(Request $request)

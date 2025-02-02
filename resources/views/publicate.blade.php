@@ -1,4 +1,13 @@
 @extends('layouts.app_publicate')
+@php
+use App\Models\Servicio;
+use App\Models\Atributo;
+use App\Models\Nacionalidad;
+use App\Models\Sector;
+@endphp
+
+
+
 
 @section('content')
 <div class="publicate-container">
@@ -86,138 +95,17 @@
     <div class="publicate-services-wrapper">
         <label class="publicate-services-label">Servicios <span class="required-asterisk">*</span></label>
         <div class="publicate-services-grid">
+            @php
+            $servicios = Servicio::orderBy('posicion')->get();
+            @endphp
+            @foreach($servicios as $servicio)
             <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Anal">
-                <span>Anal</span>
+                <input type="checkbox" 
+                    name="servicios[]" 
+                    value="{{ $servicio->id }}">
+                <span>{{ $servicio->nombre }}</span>
             </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Atención a domicilio">
-                <span>Atención a domicilio</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Atención en hoteles">
-                <span>Atención en hoteles</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Baile Erotico">
-                <span>Baile Erótico</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Besos">
-                <span>Besos</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Cambio de rol">
-                <span>Cambio de rol</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Departamento Propio">
-                <span>Departamento Propio</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Disfraces">
-                <span>Disfraces</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Ducha Erotica">
-                <span>Ducha Erótica</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Eventos y Cenas">
-                <span>Eventos y Cenas</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Eyaculación Cuerpo">
-                <span>Eyaculación Cuerpo</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Eyaculación Facial">
-                <span>Eyaculación Facial</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Hetero">
-                <span>Hetero</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Juguetes">
-                <span>Juguetes</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Lesbico">
-                <span>Lésbico</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Lluvia dorada">
-                <span>Lluvia dorada</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Masaje Erotico">
-                <span>Masaje Erótico</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Masaje prostatico">
-                <span>Masaje prostático</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Masaje Tantrico">
-                <span>Masaje Tántrico</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Masaje Thai">
-                <span>Masaje Thai</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Masajes con final feliz">
-                <span>Masajes con final feliz</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Masajes desnudos">
-                <span>Masajes desnudos</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Masajes Eroticos">
-                <span>Masajes Eróticos</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Masajes para hombres">
-                <span>Masajes para hombres</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Masajes sensitivos">
-                <span>Masajes sensitivos</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Masajes sexuales">
-                <span>Masajes sexuales</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Masturbación Rusa">
-                <span>Masturbación Rusa</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Oral Americana">
-                <span>Oral Americana</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Oral con preservativo">
-                <span>Oral con preservativo</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Oral sin preservativo">
-                <span>Oral sin preservativo</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Orgias">
-                <span>Orgías</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Parejas">
-                <span>Parejas</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios[]" value="Trio">
-                <span>Trío</span>
-            </label>
+            @endforeach
         </div>
     </div>
 </div>
@@ -226,138 +114,36 @@
     <div class="publicate-services-wrapper">
         <label class="publicate-services-label">Servicios Adicionales<span class="required-asterisk">*</span></label>
         <div class="publicate-services-grid">
+            @php
+            $serviciosAdicionales = Servicio::orderBy('posicion')->get();
+            @endphp
+            @foreach($serviciosAdicionales as $servicio)
             <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Anal">
-                <span>Anal</span>
+                <input type="checkbox" 
+                    name="servicios_adicionales[]" 
+                    value="{{ $servicio->id }}">
+                <span>{{ $servicio->nombre }}</span>
             </label>
+            @endforeach
+        </div>
+    </div>
+</div>
+
+<div class="publicate-form-group">
+    <div class="publicate-services-wrapper">
+        <label class="publicate-services-label">Atributos<span class="required-asterisk">*</span></label>
+        <div class="publicate-services-grid">
+            @php
+            $atributos = Atributo::orderBy('posicion')->get();
+            @endphp
+            @foreach($atributos as $atributo)
             <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Atención a domicilio">
-                <span>Atención a domicilio</span>
+                <input type="checkbox" 
+                    name="atributos[]" 
+                    value="{{ $atributo->id }}">
+                <span>{{ $atributo->nombre }}</span>
             </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Atención en hoteles">
-                <span>Atención en hoteles</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Baile Erotico">
-                <span>Baile Erótico</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Besos">
-                <span>Besos</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Cambio de rol">
-                <span>Cambio de rol</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Departamento Propio">
-                <span>Departamento Propio</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Disfraces">
-                <span>Disfraces</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Ducha Erotica">
-                <span>Ducha Erótica</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Eventos y Cenas">
-                <span>Eventos y Cenas</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Eyaculación Cuerpo">
-                <span>Eyaculación Cuerpo</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Eyaculación Facial">
-                <span>Eyaculación Facial</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Hetero">
-                <span>Hetero</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Juguetes">
-                <span>Juguetes</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Lesbico">
-                <span>Lésbico</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Lluvia dorada">
-                <span>Lluvia dorada</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Masaje Erotico">
-                <span>Masaje Erótico</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Masaje prostatico">
-                <span>Masaje prostático</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Masaje Tantrico">
-                <span>Masaje Tántrico</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Masaje Thai">
-                <span>Masaje Thai</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Masajes con final feliz">
-                <span>Masajes con final feliz</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Masajes desnudos">
-                <span>Masajes desnudos</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Masajes Eroticos">
-                <span>Masajes Eróticos</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Masajes para hombres">
-                <span>Masajes para hombres</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Masajes sensitivos">
-                <span>Masajes sensitivos</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Masajes sexuales">
-                <span>Masajes sexuales</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Masturbación Rusa">
-                <span>Masturbación Rusa</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Oral Americana">
-                <span>Oral Americana</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Oral con preservativo">
-                <span>Oral con preservativo</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Oral sin preservativo">
-                <span>Oral sin preservativo</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Orgias">
-                <span>Orgías</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Parejas">
-                <span>Parejas</span>
-            </label>
-            <label class="publicate-service-item">
-                <input type="checkbox" name="servicios_adicionales[]" value="Trio">
-                <span>Trío</span>
-            </label>
+            @endforeach
         </div>
     </div>
 </div>

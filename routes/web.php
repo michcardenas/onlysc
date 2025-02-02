@@ -17,6 +17,9 @@ use App\Http\Controllers\SEOController;
 use App\Http\Controllers\SEOPaginasController;
 use App\Http\Controllers\MetaTagController;
 use App\Http\Controllers\TarjetaController;
+use App\Models\Servicio;
+use App\Models\Atributo;
+
 
 
 
@@ -106,8 +109,8 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
     Route::get('/sectores', [AdminController::class, 'sectorIndex'])->name('sectores.indexsector');
     Route::get('/sectores/create', [AdminController::class, 'sectorCreate'])->name('sectores.createsector');
     Route::post('/sectores', [AdminController::class, 'sectorStore'])->name('sectores.store');
-    Route::get('/sectores/{sector}/edit', [AdminController::class, 'sectorEdit'])->name('sectores.editsector');
-    Route::put('/sectores/{sector}', [AdminController::class, 'sectorUpdate'])->name('sectores.update');
+    Route::get('/sectores/{sector}/editsector', [AdminController::class, 'sectorEdit'])->name('sectores.editsector');
+    Route::put('/sectores/{sector}/sectorupdate', [AdminController::class, 'sectorUpdate'])->name('sectores.update');
     Route::delete('/sectores/{sector}', [AdminController::class, 'sectorDestroy'])->name('sectores.destroy');
 
     // Rutas para Servicios
@@ -275,3 +278,13 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/usuario/{id}', [PerfilController::class, 'getUsuario'])->name('usuario.get');
+
+Route::get('/get-filter-data', function () {
+    $servicios = Servicio::orderBy('posicion')->get();
+    $atributos = Atributo::orderBy('posicion')->get();
+
+    return response()->json([
+        'servicios' => $servicios,
+        'atributos' => $atributos,
+    ]);
+});

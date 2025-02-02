@@ -19,4 +19,8 @@ class Sector extends Model
         return $this->hasOne(MetaTag::class, 'page', 'id')
             ->where('tipo', 'sectores');
     }
+
+    public function usuariosPublicate() {
+        return $this->hasMany(UsuarioPublicate::class, 'sectores');
+    }
 }

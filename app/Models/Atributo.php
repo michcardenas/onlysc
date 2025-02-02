@@ -14,6 +14,6 @@ class Atributo extends Model
 
     public function metaTag()
     {
-        return $this->hasOne(MetaTag::class, 'tipo_id')->where('tipo', 'atributos');
+        return $this->hasOne(MetaTag::class, 'page', 'id')->where('tipo', 'atributos');
     }
 }

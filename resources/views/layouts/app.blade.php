@@ -203,154 +203,169 @@
         </div>
     </header>
 
+    @php
+    use App\Models\Servicio;
+    use App\Models\Atributo;
+    $servicios = Servicio::orderBy('posicion')->get();
+    $atributos = Atributo::orderBy('posicion')->get();
+@endphp
 <!-- Modal -->
 <div class="modal fade filtro-modal" id="filterModal" tabindex="-1">
-<div class="filtro-alert-container"></div>
-   <div class="modal-dialog modal-lg">
-       <div class="modal-content">
-           <div class="modal-header">
-               <h5 class="modal-title">Filtros</h5>
-               <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-           </div>
+    <div class="filtro-alert-container"></div>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Filtros</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
 
-<!-- Añade un div contenedor -->
-<div class="filters-container">
-    <div class="filter-ciudad">
-        <div class="filter-section">
-            <h6 class="range-title">Ciudad</h6>
-            <select id="ciudadSelect" class="form-select" required>
-                <option value="">Seleccionar ciudad</option>
-                @foreach($ciudades as $ciudad)
-                    <option value="{{ $ciudad->url }}" {{ isset($ciudadSeleccionada) && $ciudadSeleccionada->url == $ciudad->url ? 'selected' : '' }}>
-                        {{ $ciudad->nombre }}
-                    </option>
-                @endforeach
-            </select>
+            <div class="filters-container">
+                 <!-- Ciudad selection -->
+                 <div class="filter-ciudad">
+                    <div class="filter-section">
+                        <h6 class="range-title">Ciudad</h6>
+                        <select id="ciudadSelect" class="form-select" required>
+                            <option value="">Seleccionar ciudad</option>
+                            @foreach($ciudades as $ciudad)
+                                <option value="{{ $ciudad->url }}"
+                                    {{ isset($ciudadSeleccionada) && $ciudadSeleccionada->url == $ciudad->url ? 'selected' : '' }}>
+                                    {{ $ciudad->nombre }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Sector selection -->
+                <div class="filtro-nac" id="barrioContainer" style="display: none;">
+                    <h6 class="range-title">Sector</h6>
+                    <select id="barrioSelect" class="form-select">
+                        <option value="">Seleccionar sector</option>
+                        @foreach($sectores as $sector)
+                            <option value="{{ $sector->url }}" 
+                                {{ isset($sectorSeleccionado) && $sectorSeleccionado == $sector->url ? 'selected' : '' }}>
+                                {{ $sector->nombre }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Nationality selection -->
+                <div class="filtro-nac">
+    <div class="filter-section">
+        <h6 class="range-title">Nacionalidad</h6>
+        <select name="nacionalidad" id="nacionalidadSelect" class="form-select">
+            <option value="">Todas las nacionalidades</option>
+            @foreach($nacionalidades as $nacionalidad)
+                <option value="{{ $nacionalidad->url }}"
+                    {{ isset($nacionalidadSeleccionada) && $nacionalidadSeleccionada == $nacionalidad->id ? 'selected' : '' }}>
+                    {{ $nacionalidad->nombre }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+</div>
+            </div>
+
+            <form id="filterForm">
+                <div class="modal-body">
+                    <!-- Rango de edad -->
+                    <div class="filter-section">
+                        <h6 class="range-title">Edad</h6>
+                        <div class="range-container">
+                            <div id="edadRange"></div>
+                            <div class="range-values">
+                                <span>18 años</span>
+                                <span>50 años</span>
+                            </div>
+                        </div>
+                        <input type="hidden" name="edadMin" id="edadMin">
+                        <input type="hidden" name="edadMax" id="edadMax">
+                    </div>
+
+                    <!-- Rango de precio -->
+                    <div class="filter-section">
+                        <h6 class="range-title">Precio</h6>
+                        <div class="price-categories">
+                            <div class="price-category" data-min="0" data-max="300000" data-categorias="Under" style="visibility: hidden; pointer-events: none;">
+                                <span class="category-name">Under</span>
+                            </div>
+                            <div class="price-category" data-min="0" data-max="300000" data-categorias="Under">
+                                <span class="category-name">Under</span>
+                            </div>
+                            <div class="price-category" data-min="0" data-max="300000" data-categorias="Under" style="visibility: hidden; pointer-events: none;">
+                                <span class="category-name">Under</span>
+                            </div>
+                        </div>
+                        <div class="price-categories">
+                            <div class="price-category" data-min="0" data-max="70000" data-categorias="premium">
+                                <span class="category-name">Premium</span>
+                            </div>
+                            <div class="price-category" data-min="70000" data-max="130000" data-categorias="vip">
+                                <span class="category-name">VIP</span>
+                            </div>
+                            <div class="price-category" data-min="130000" data-max="250000" data-categorias="de_lujo">
+                                <span class="category-name">De Lujo</span>
+                            </div>
+                        </div>
+                        <input type="hidden" name="categorias" id="categoriasFilter">
+                        <div class="range-container">
+                            <div id="precioRange"></div>
+                            <div class="range-values">
+                                <span>$0</span>
+                                <span>$300.000</span>
+                            </div>
+                        </div>
+                        <input type="hidden" name="precioMin" id="precioMin">
+                        <input type="hidden" name="precioMax" id="precioMax">
+                    </div>
+
+                    <!-- Nuevos checkboxes -->
+                    <div class="extra-filters">
+                        <div class="filter-section" style="display: flex; gap: 20px;">
+                            <div>
+                                <h6 class="range-title">Disponibilidad</h6>
+                                <div id="disponibleCheck" class="review-container">
+                                    <span class="review-text">Disponible</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h6 class="range-title">Reseñas</h6>
+                                <div id="resenaCheck" class="review-container">
+                                    <span class="review-text">Tiene una reseña</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Services -->
+                    <div class="filter-section1">
+                        <h6 class="range-title1">Servicios</h6>
+                        <div id="serviciosContainer" class="servicios-grid">
+                        </div>
+                        <div class="review-container" id="showMoreServices">
+                            <span class="review-text">Mostrar más</span>
+                        </div>
+                    </div>
+
+                    <!-- Attributes -->
+                    <div class="filter-section1">
+                        <h6 class="range-title1">Atributos</h6>
+                        <div id="atributosContainer" class="servicios-grid">
+                        </div>
+                        <div class="review-container" id="showMoreAttributes">
+                            <span class="review-text">Mostrar más</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="resetFilters">Resetear</button>
+                    <button type="submit" class="btn btn-primary">Aplicar filtros</button>
+                </div>
+            </form>
         </div>
     </div>
-
-
-    <div class="filtro-nac" id="barrioContainer" style="display: none;">
-    <h6 class="range-title">Sector</h6>
-    <select id="barrioSelect" class="form-select">
-        <option value="">Seleccionar sector</option>
-        @foreach($barriosSantiago ?? [] as $barrio)
-            <option value="{{ $barrio }}" {{ isset($sectorSeleccionado) && $sectorSeleccionado == $barrio ? 'selected' : '' }}>
-                {{ $barrio }}
-            </option>
-        @endforeach
-    </select>
-</div>
-
-    <div class="filtro-nac">
-        <div class="filter-section">
-            <h6 class="range-title">Nacionalidad</h6>
-            <select name="nacionalidad" id="nacionalidadSelect" class="form-select">
-                <option value="">Todas las nacionalidades</option>
-                <option value="argentina">Argentina</option>
-                <option value="brasil">Brasileña</option>
-                <option value="chile">Chilena</option>
-                <option value="colombia">Colombiana</option>
-                <option value="ecuador">Ecuatoriana</option>
-                <option value="uruguay">Uruguaya</option>
-            </select>
-        </div>
-    </div>
-</div>
-           <form id="filterForm">
-               <div class="modal-body">
-                   <!-- Rango de edad -->
-                   <div class="filter-section">
-                       <h6 class="range-title">Edad</h6>
-                       <div class="range-container">
-                           <div id="edadRange"></div>
-                           <div class="range-values">
-                               <span>18 años</span>
-                               <span>50 años</span>
-                           </div>
-                       </div>
-                       <input type="hidden" name="edadMin" id="edadMin">
-                       <input type="hidden" name="edadMax" id="edadMax">
-                   </div>
-
-                   <!-- Rango de precio -->
-                   <div class="filter-section">
-    <h6 class="range-title">Precio</h6>
-    <div class="price-categories">
-    <div class="price-category" data-min="0" data-max="300000" data-categorias="Under" style="visibility: hidden; pointer-events: none;">
-            <span class="category-name">Under</span>
-        </div>
-        <div class="price-category" data-min="0" data-max="300000" data-categorias="Under">
-            <span class="category-name">Under</span>
-        </div>
-        <div class="price-category" data-min="0" data-max="300000" data-categorias="Under" style="visibility: hidden; pointer-events: none;">
-            <span class="category-name">Under</span>
-        </div>
-        </div>
-    <div class="price-categories">
-        <div class="price-category" data-min="0" data-max="70000" data-categorias="premium">
-            <span class="category-name">Premium</span>
-        </div>
-        <div class="price-category" data-min="70000" data-max="130000" data-categorias="vip">
-            <span class="category-name">VIP</span>
-        </div>
-        <div class="price-category" data-min="130000" data-max="250000" data-categorias="de_lujo">
-            <span class="category-name">De Lujo</span>
-        </div>
-
-    </div>
-    <input type="hidden" name="categorias" id="categoriasFilter">
-    <div class="range-container">
-        <div id="precioRange"></div>
-        <div class="range-values">
-            <span>$0</span>
-            <span>$300.000</span>
-        </div>
-    </div>
-    <input type="hidden" name="precioMin" id="precioMin">
-    <input type="hidden" name="precioMax" id="precioMax">
-</div>
-<!-- Nuevos checkboxes -->
-<div class="extra-filters">
-   <div class="filter-section" style="display: flex; gap: 20px;">
-       <div>
-           <h6 class="range-title">Disponibilidad</h6>
-           <div id="disponibleCheck" class="review-container">
-               <span class="review-text">Disponible</span>
-           </div>
-       </div>
-       <div>
-           <h6 class="range-title">Reseñas</h6>
-           <div id="resenaCheck" class="review-container">
-               <span class="review-text">Tiene una reseña</span>
-           </div>
-       </div>
-   </div>
-</div>
-                   <!-- Contenedores para checkboxes -->
-                   <!-- Removida la estructura de columnas -->
-                   <div class="filter-section1">
-   <h6 class="range-title1">Servicios</h6>
-   <div id="serviciosContainer" class="servicios-grid"></div>
-   <div class="review-container" id="showMoreServices">
-       <span class="review-text">Mostrar más</span>
-   </div>
-</div>
-<div class="filter-section1">
-   <h6 class="range-title1">Atributos</h6>
-   <div id="atributosContainer" class="servicios-grid"></div>
-   <div class="review-container" id="showMoreAttributes">
-       <span class="review-text">Mostrar más</span>
-   </div>
-</div>
-</div>
-               <div class="modal-footer">
-                   <button type="button" class="btn btn-secondary" id="resetFilters">Resetear</button>
-                   <button type="submit" class="btn btn-primary">Aplicar filtros</button>
-               </div>
-           </form>
-       </div>
-   </div>
 </div>
 
     <main>
@@ -1214,21 +1229,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const disponibleCheck = document.getElementById('disponibleCheck');
     const resenaCheck = document.getElementById('resenaCheck');
 
-    // Agregar esta función
-const handleModalClose = () => {
-    // Prevenir la recarga del formulario
-    form.reset();
-    window.history.replaceState({}, document.title, window.location.href);
-};
+    // Función para manejar el cierre del modal
+    const handleModalClose = () => {
+        form.reset();
+        window.history.replaceState({}, document.title, window.location.href);
+    };
 
-modal._element.addEventListener('hidden.bs.modal', handleModalClose);
-
-document.querySelector('.btn-close')?.addEventListener('click', () => {
-    modal.hide();
-});
+    modal._element.addEventListener('hidden.bs.modal', handleModalClose);
+    document.querySelector('.btn-close')?.addEventListener('click', () => modal.hide());
 
     // Funciones de normalización
     const normalizeText = (text) => {
+        if (!text) return '';
         return text.toLowerCase()
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "") // Remover acentos
@@ -1239,82 +1251,57 @@ document.querySelector('.btn-close')?.addEventListener('click', () => {
     };
 
     const normalizeString = (text) => {
+        if (!text) return '';
         return text.toLowerCase()
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "")
             .trim();
     };
 
+    // Función para mostrar alertas
     function showFiltroAlert(message) {
-    const alertContainer = document.querySelector('.filtro-alert-container');
-    const alertElement = document.createElement('div');
-    alertElement.className = 'filtro-custom-alert';
-    
-    alertElement.innerHTML = `
-        <span class="filtro-alert-message">${message}</span>
-        <button class="filtro-alert-close" onclick="this.parentElement.remove()">&times;</button>
-    `;
-    
-    alertContainer.appendChild(alertElement);
-    
-    // Auto cerrar después de 5 segundos
-    setTimeout(() => {
-        if (alertElement.parentElement) {
-            alertElement.classList.add('filtro-fade-out');
-            setTimeout(() => alertElement.remove(), 300);
-        }
-    }, 5000);
-}
+        const alertContainer = document.querySelector('.filtro-alert-container');
+        if (!alertContainer) return;
+
+        const alertElement = document.createElement('div');
+        alertElement.className = 'filtro-custom-alert';
+        alertElement.innerHTML = `
+            <span class="filtro-alert-message">${message}</span>
+            <button class="filtro-alert-close" onclick="this.parentElement.remove()">&times;</button>
+        `;
+        alertContainer.appendChild(alertElement);
+        setTimeout(() => {
+            if (alertElement.parentElement) {
+                alertElement.classList.add('filtro-fade-out');
+                setTimeout(() => alertElement.remove(), 300);
+            }
+        }, 5000);
+    }
 
     // Función para contar filtros actuales
     const countUrlFilters = () => {
         let filterCount = 0;
-        
-        // Si hay nacionalidad seleccionada
         if (nacionalidadSelect.value) filterCount++;
-        
-        // Si hay edad diferente del default
         const [edadMin, edadMax] = edadRange.noUiSlider.get().map(Number);
         if (edadMin !== 18 || edadMax !== 50) filterCount++;
-        
-        // Si hay precio/categoría seleccionada
         const selectedCategory = document.querySelector('.price-category.active');
-        if (selectedCategory || 
-            (precioRange.noUiSlider.get()[0] !== 0 || 
-             precioRange.noUiSlider.get()[1] !== 300000)) {
+        if (selectedCategory || (precioRange.noUiSlider.get()[0] !== 0 || precioRange.noUiSlider.get()[1] !== 300000)) {
             filterCount++;
         }
-        
-        // Si está disponible
         if (disponibleCheck.classList.contains('selected')) filterCount++;
-        
-        // Si hay atributos seleccionados
         const checkedAtributos = document.querySelectorAll('input[name="atributos[]"]:checked');
         if (checkedAtributos.length > 0) filterCount++;
-        
-        // Si hay servicios seleccionados
         const checkedServicios = document.querySelectorAll('input[name="servicios[]"]:checked');
         if (checkedServicios.length > 0) filterCount++;
-        
-        // Si tiene reseña verificada
         if (resenaCheck.classList.contains('selected')) filterCount++;
-        
         return filterCount;
     };
 
     // Función para determinar si un filtro debe ir en la URL
     const shouldAddToUrl = () => {
         if (hasAddedUrlFilter) return false;
-        
         const isSantiago = ciudadSelect.value.toLowerCase() === 'santiago';
-        const currentFilters = countUrlFilters();
-        
-        // Si es Santiago y tiene barrio seleccionado, permitimos una variable adicional
-        if (isSantiago && barrioSelect.value) {
-            return true; // Siempre permitimos el primer filtro después del barrio
-        }
-        
-        // Para otros casos, solo permitimos un filtro
+        if (isSantiago && barrioSelect.value) return true;
         return true;
     };
 
@@ -1324,10 +1311,7 @@ document.querySelector('.btn-close')?.addEventListener('click', () => {
         start: [18, 50],
         connect: true,
         step: 1,
-        range: {
-            'min': 18,
-            'max': 50
-        }
+        range: { 'min': 18, 'max': 50 }
     });
 
     const precioRange = document.getElementById('precioRange');
@@ -1335,56 +1319,11 @@ document.querySelector('.btn-close')?.addEventListener('click', () => {
         start: [0, 300000],
         connect: true,
         step: 1000,
-        range: {
-            'min': 0,
-            'max': 300000
-        }
-    });
-
-    // Gestión de categorías de precio
-    const handlePriceCategories = () => {
-        const priceCategories = document.querySelectorAll('.price-category');
-        const isSantiago = ciudadSelect.value.toLowerCase() === 'santiago';
-        
-        priceCategories.forEach(category => {
-            category.style.display = isSantiago ? 'block' : 'none';
-        });
-
-        if (!isSantiago) {
-            precioRange.noUiSlider.set([0, 300000]);
-            document.getElementById('categoriaFilter').value = '';
-            priceCategories.forEach(category => {
-                category.classList.remove('active');
-            });
-        }
-    };
-
-    ciudadSelect.addEventListener('change', handlePriceCategories);
-
-    // Event listeners para categorías de precio
-    document.querySelectorAll('.price-category').forEach(category => {
-        category.addEventListener('click', () => {
-            const min = parseInt(category.dataset.min);
-            const max = parseInt(category.dataset.max);
-            const categoriaValor = category.dataset.categoria;
-            
-            if (category.classList.contains('active')) {
-                category.classList.remove('active');
-                precioRange.noUiSlider.set([0, 300000]);
-                document.getElementById('categoriaFilter').value = '';
-            } else {
-                document.querySelectorAll('.price-category').forEach(cat => {
-                    cat.classList.remove('active');
-                });
-                category.classList.add('active');
-                precioRange.noUiSlider.set([min, max]);
-                document.getElementById('categoriaFilter').value = categoriaValor;
-            }
-        });
+        range: { 'min': 0, 'max': 300000 }
     });
 
     // Configuración de tooltips y actualizaciones de rangos
-    const setupRangeTooltips = (range, suffix = '') => {
+    const setupRangeTooltips = (range) => {
         const handles = range.querySelectorAll('.noUi-handle');
         handles.forEach(handle => {
             const tooltip = document.createElement('div');
@@ -1399,19 +1338,17 @@ document.querySelector('.btn-close')?.addEventListener('click', () => {
         const minElement = range.parentElement.querySelector('.range-values span:first-child');
         const maxElement = range.parentElement.querySelector('.range-values span:last-child');
         
-        tooltips[0].textContent = `${prefix}${min.toLocaleString()}${suffix}`;
-        tooltips[1].textContent = `${prefix}${max.toLocaleString()}${suffix}`;
-        minElement.textContent = `${prefix}${min.toLocaleString()}${suffix}`;
-        maxElement.textContent = `${prefix}${max.toLocaleString()}${suffix}`;
+        if (tooltips[0]) tooltips[0].textContent = `${prefix}${min.toLocaleString()}${suffix}`;
+        if (tooltips[1]) tooltips[1].textContent = `${prefix}${max.toLocaleString()}${suffix}`;
+        if (minElement) minElement.textContent = `${prefix}${min.toLocaleString()}${suffix}`;
+        if (maxElement) maxElement.textContent = `${prefix}${max.toLocaleString()}${suffix}`;
         
         return [min, max];
     };
 
-    // Configurar tooltips
     setupRangeTooltips(edadRange);
     setupRangeTooltips(precioRange);
 
-    // Event listeners para rangos
     edadRange.noUiSlider.on('update', (values) => {
         const [min, max] = updateRangeValues(edadRange, values, '', ' años');
         document.getElementById('edadMin').value = min;
@@ -1424,73 +1361,92 @@ document.querySelector('.btn-close')?.addEventListener('click', () => {
         document.getElementById('precioMax').value = max;
     });
 
-    // Arrays de atributos y servicios
-    const atributos = [
-        "Busto grande", "Busto mediano", "Busto pequeño", "Cara visible",
-        "Cola grande", "Cola mediana", "Cola pequeña", "Con video",
-        "Contextura delgada", "Contextura grande", "Contextura mediana",
-        "Depilacion full", "Depto propio", "En promocion", "English",
-        "Escort independiente", "Español", "Estatura alta", "Estatura mediana",
-        "Estatura pequeña", "Hentai", "Morena", "Mulata", "No fuma",
-        "Ojos claros", "Ojos oscuros", "Peliroja", "Portugues",
-        "Relato erotico", "Rubia", "Tatuajes", "Trigueña"
-    ];
-
-    const servicios = [
-        "Anal", "Atencion a domicilio", "Atencion en hoteles", "Baile erotico",
-        "Besos", "Cambio de rol", "Departamento propio", "Disfraces",
-        "Ducha erotica", "Eventos y cenas", "Eyaculacion cuerpo",
-        "Eyaculacion facial", "Hetero", "Juguetes", "Lesbico",
-        "Lluvia dorada", "Masaje erotico", "Masaje prostatico",
-        "Masaje tantrico", "Masaje thai", "Masajes con final feliz",
-        "Masajes desnudos", "Masajes eroticos", "Masajes para hombres",
-        "Masajes sensitivos", "Masajes sexuales", "Masturbacion rusa",
-        "Oral americana", "Oral con preservativo", "Oral sin preservativo",
-        "Orgias", "Parejas", "Trio"
-    ];
-
-    // Crear checkboxes con valores originales
-    const createCheckboxes = (items, containerId, name) => {
-        const container = document.getElementById(containerId);
-        const showCount = 8;
+    // Gestión de categorías de precio
+    const handlePriceCategories = () => {
+        const priceCategories = document.querySelectorAll('.price-category');
+        const isSantiago = ciudadSelect.value.toLowerCase() === 'santiago';
         
-        items.forEach((item, index) => {
-            const label = document.createElement('label');
-            label.className = 'checkbox-label';
-            if (index >= showCount) label.style.display = 'none';
-            
-            label.innerHTML = `
-                <input type="checkbox" name="${name}[]" value="${item}">
-                <span class="checkbox-text">${item}</span>
-            `;
-            container.appendChild(label);
+        priceCategories.forEach(category => {
+            if (!category.style.visibility) { // Solo modificar categorías visibles
+                category.style.display = isSantiago ? 'block' : 'none';
+            }
         });
+
+        if (!isSantiago) {
+            precioRange.noUiSlider.set([0, 300000]);
+            document.getElementById('categoriaFilter').value = '';
+            priceCategories.forEach(category => category.classList.remove('active'));
+        }
     };
 
-    // Gestión de mostrar más/menos
-    ['showMoreServices', 'showMoreAttributes'].forEach(id => {
-        document.getElementById(id).addEventListener('click', function() {
-            const container = document.getElementById(id === 'showMoreServices' ? 'serviciosContainer' : 'atributosContainer');
-            const labels = container.querySelectorAll('.checkbox-label');
-            const isExpanded = this.classList.contains('selected');
-            
-            labels.forEach((label, index) => {
-                if (index >= 8) label.style.display = isExpanded ? 'none' : 'block';
+    ciudadSelect.addEventListener('change', handlePriceCategories);
+
+    // Event listeners para categorías de precio
+    document.querySelectorAll('.price-category').forEach(category => {
+        if (!category.style.visibility) { // Solo agregar listeners a categorías visibles
+            category.addEventListener('click', () => {
+                const min = parseInt(category.dataset.min);
+                const max = parseInt(category.dataset.max);
+                const categoriaValor = category.dataset.categoria;
+
+                if (category.classList.contains('active')) {
+                    category.classList.remove('active');
+                    precioRange.noUiSlider.set([0, 300000]);
+                    document.getElementById('categoriaFilter').value = '';
+                } else {
+                    document.querySelectorAll('.price-category').forEach(cat => cat.classList.remove('active'));
+                    category.classList.add('active');
+                    precioRange.noUiSlider.set([min, max]);
+                    document.getElementById('categoriaFilter').value = categoriaValor;
+                }
             });
-            
-            this.classList.toggle('selected');
-            this.querySelector('.review-text').textContent = isExpanded ? 'Mostrar más' : 'Mostrar menos';
-        });
+        }
     });
 
-    // Crear los checkboxes
-    createCheckboxes(atributos, 'atributosContainer', 'atributos');
-    createCheckboxes(servicios, 'serviciosContainer', 'servicios');
+    // Función para crear checkboxes
+    const createCheckboxes = (items, container, name) => {
+    console.log(`Creando checkboxes para ${name}:`, items);
+    items.forEach((item, index) => {
+        const label = document.createElement('label');
+        label.className = 'checkbox-label';
+        if (index >= 8) label.style.display = 'none';
+        label.innerHTML = `
+            <input type="checkbox" name="${name}[]" value="${item.url}"> <!-- Usar item.url -->
+            <span class="checkbox-text">${item.nombre || item}</span>
+        `;
+        container.appendChild(label);
+    });
+};
+
+    // Obtener datos dinámicamente desde el backend
+    fetch('/get-filter-data')
+        .then(response => {
+            if (!response.ok) throw new Error(`Error en la solicitud: ${response.statusText}`);
+            return response.json();
+        })
+        .then(data => {
+            if (!data.servicios || !data.atributos) throw new Error('Los datos de servicios o atributos no están presentes en la respuesta.');
+            createCheckboxes(data.servicios, document.getElementById('serviciosContainer'), 'servicios');
+            createCheckboxes(data.atributos, document.getElementById('atributosContainer'), 'atributos');
+        })
+        .catch(error => {
+            console.error('Error al obtener los datos:', error);
+            // Fallback a datos estáticos si falla la petición
+            const serviciosContainer = document.getElementById('serviciosContainer');
+            const atributosContainer = document.getElementById('atributosContainer');
+
+            if (window.servicios) {
+                createCheckboxes(window.servicios, serviciosContainer, 'servicios');
+            }
+            if (window.atributos) {
+                createCheckboxes(window.atributos, atributosContainer, 'atributos');
+            }
+        });
 
     // Gestión de barrios
     const toggleBarrioContainer = () => {
-        const selectedCity = ciudadSelect.options[ciudadSelect.selectedIndex].text;
-        const isSantiago = selectedCity.toLowerCase().includes('santiago');
+        const selectedCity = ciudadSelect.options[ciudadSelect.selectedIndex]?.text;
+        const isSantiago = selectedCity?.toLowerCase().includes('santiago');
         
         barrioContainer.style.display = isSantiago ? 'block' : 'none';
         
@@ -1525,15 +1481,14 @@ document.querySelector('.btn-close')?.addEventListener('click', () => {
         hasAddedUrlFilter = false;
 
         if (!ciudadSelect.value) {
-    showFiltroAlert('Por favor seleccione una ciudad');
-    return;
-}
-        
+            showFiltroAlert('Por favor seleccione una ciudad');
+            return;
+        }
+
         let url = `/escorts-${ciudadSelect.value}`;
         const params = new URLSearchParams();
-        
         const isSantiago = ciudadSelect.options[ciudadSelect.selectedIndex].text.toLowerCase().includes('santiago');
-        
+
         // Agregar sector/comuna para Santiago
         if (isSantiago && barrioSelect.value) {
             const normalizedBarrio = normalizeText(barrioSelect.value);
@@ -1542,25 +1497,14 @@ document.querySelector('.btn-close')?.addEventListener('click', () => {
 
         // Procesar nacionalidad
         if (nacionalidadSelect.value) {
-            const gentilicios = {
-                'argentina': 'argentina',
-        'brasil': 'brasilena',
-        'chile': 'chilena',
-        'colombia': 'colombiana',
-        'ecuador': 'ecuatoriana',
-        'uruguay': 'uruguaya'
-            };
-            
-            const gentilicio = gentilicios[nacionalidadSelect.value.toLowerCase()] || 
-                              nacionalidadSelect.value.toLowerCase();
-            
-            if (shouldAddToUrl()) {
-                url += `/${gentilicio}`;
-                hasAddedUrlFilter = true;
-            } else {
-                params.append('n', nacionalidadSelect.value);
-            }
-        }
+    // Usamos directamente el value que debe contener la URL de la nacionalidad
+    if (shouldAddToUrl()) {
+        url += `/${nacionalidadSelect.value}`; // El value ya contiene la URL de la tabla
+        hasAddedUrlFilter = true;
+    } else {
+        params.append('n', nacionalidadSelect.value);
+    }
+}
 
         // Procesar edad
         const [edadMin, edadMax] = edadRange.noUiSlider.get().map(Number);
@@ -1574,28 +1518,28 @@ document.querySelector('.btn-close')?.addEventListener('click', () => {
         }
 
         // Procesar categoría de precio
-        const selectedCategory = document.querySelector('.price-category.active');
-        if (selectedCategory) {
-            const categoria = selectedCategory.querySelector('.category-name')
-                .textContent.toLowerCase().replace(/\s+/g, '_');
-            
-            if (shouldAddToUrl()) {
-                url += `/${categoria}`;
-                hasAddedUrlFilter = true;
-            } else {
-                params.append('categoria', categoria);
-            }
+const selectedCategory = document.querySelector('.price-category.active');
+if (selectedCategory) {
+    const categoria = selectedCategory.dataset.categorias; // Cambiamos de .dataset.categoria a .dataset.categorias
+    if (categoria && categoria !== 'undefined') {
+        if (shouldAddToUrl()) {
+            url += `/${categoria.toLowerCase()}`; // Añadimos .toLowerCase() para asegurar consistencia
+            hasAddedUrlFilter = true;
         } else {
-            const [precioMin, precioMax] = precioRange.noUiSlider.get().map(Number);
-            if (precioMin !== 0 || precioMax !== 300000) {
-                if (shouldAddToUrl()) {
-                    url += `/precio-${precioMin}-${precioMax}`;
-                    hasAddedUrlFilter = true;
-                } else {
-                    params.append('p', `${precioMin}-${precioMax}`);
-                }
-            }
+            params.append('categoria', categoria.toLowerCase());
         }
+    }
+} else {
+    const [precioMin, precioMax] = precioRange.noUiSlider.get().map(Number);
+    if (precioMin !== 0 || precioMax !== 300000) {
+        if (shouldAddToUrl()) {
+            url += `/precio-${precioMin}-${precioMax}`;
+            hasAddedUrlFilter = true;
+        } else {
+            params.append('p', `${precioMin}-${precioMax}`);
+        }
+    }
+}
 
         // Procesar disponibilidad
         if (disponibleCheck.classList.contains('selected')) {
@@ -1608,40 +1552,29 @@ document.querySelector('.btn-close')?.addEventListener('click', () => {
         }
 
         // Procesar atributos
-        const checkedAtributos = Array.from(document.querySelectorAll('input[name="atributos[]"]:checked'))
-            .map(cb => cb.value);
+        const checkedAtributos = Array.from(document.querySelectorAll('input[name="atributos[]"]:checked')).map(cb => cb.value);
         if (checkedAtributos.length > 0) {
             if (shouldAddToUrl()) {
-                const normalizedAtributo = normalizeText(checkedAtributos[0]);
-                url += `/${normalizedAtributo}`;
+                url += `/${checkedAtributos[0]}`;
                 hasAddedUrlFilter = true;
-                
-                // Si hay más atributos, los agregamos todos como parámetros
                 if (checkedAtributos.length > 1) {
                     params.append('a', checkedAtributos.slice(1).join(','));
                 }
             } else {
-                // Agregamos todos los atributos como parámetros
                 params.append('a', checkedAtributos.join(','));
             }
         }
 
         // Procesar servicios
-        const checkedServicios = Array.from(document.querySelectorAll('input[name="servicios[]"]:checked'))
-            .map(cb => cb.value);
+        const checkedServicios = Array.from(document.querySelectorAll('input[name="servicios[]"]:checked')).map(cb => cb.value);
         if (checkedServicios.length > 0) {
             if (shouldAddToUrl()) {
-                // Si podemos agregar a la URL, agregamos solo el primer servicio
-                const servicioParaUrl = normalizeText(checkedServicios[0]);
-                url += `/${servicioParaUrl}`;
+                url += `/${checkedServicios[0]}`;
                 hasAddedUrlFilter = true;
-                
-                // Si hay más servicios, los agregamos todos como parámetros
                 if (checkedServicios.length > 1) {
                     params.append('s', checkedServicios.slice(1).join(','));
                 }
             } else {
-                // Agregamos todos los servicios como parámetros
                 params.append('s', checkedServicios.join(','));
             }
         }
@@ -1683,10 +1616,39 @@ document.querySelector('.btn-close')?.addEventListener('click', () => {
         });
         precioRange.noUiSlider.set([0, 300000]);
         document.getElementById('categoriaFilter').value = '';
+
+        // Reset "mostrar más/menos" buttons
+        ['showMoreServices', 'showMoreAttributes'].forEach(id => {
+            const button = document.getElementById(id);
+            if (button && button.classList.contains('selected')) {
+                button.click(); // Esto volverá a ocultar los elementos extras
+            }
+        });
     });
 
     // Mostrar modal
     document.querySelector('.btn-filters').addEventListener('click', () => modal.show());
+
+    // Inicializar handlers de "mostrar más/menos" si existen
+    ['showMoreServices', 'showMoreAttributes'].forEach(id => {
+        const button = document.getElementById(id);
+        if (button) {
+            button.addEventListener('click', function() {
+                const container = document.getElementById(id === 'showMoreServices' ? 'serviciosContainer' : 'atributosContainer');
+                const labels = container.querySelectorAll('.checkbox-label');
+                const isExpanded = this.classList.contains('selected');
+                
+                labels.forEach((label, index) => {
+                    if (index >= 8) {
+                        label.style.display = isExpanded ? 'none' : 'block';
+                    }
+                });
+                
+                this.classList.toggle('selected');
+                this.querySelector('.review-text').textContent = isExpanded ? 'Mostrar más' : 'Mostrar menos';
+            });
+        }
+    });
 });
 </script>
 

@@ -23,6 +23,13 @@
 </div>
 @endif
 
+@php
+use App\Models\Servicio;
+use App\Models\Atributo;
+use App\Models\Nacionalidad;
+use App\Models\Sector;
+@endphp
+
 <header>
     <nav class="navbar-admin">
         <div class="logo-admin">
@@ -38,18 +45,18 @@
             <li><a href="{{ route('admin.profile') }}">Perfil</a></li>
 
             @if($usuarioAutenticado->rol == 1)
-                {{-- Menú completo solo para rol 1 --}}
-                <li><a href="{{ route('panel_control') }}">Chicas</a></li>
-                <li><a href="{{ route('admin.perfiles') }}">Perfiles</a></li>
-                <li><a href="{{ route('publicate.form') }}">Publicar</a></li>
-                <li><a href="{{ route('foroadmin') }}">Foro</a></li>
-                <li><a href="{{ route('blogadmin') }}">Blog</a></li>
-                <li><a href="{{ route('seo') }}">SEO</a></li>
+            {{-- Menú completo solo para rol 1 --}}
+            <li><a href="{{ route('panel_control') }}">Chicas</a></li>
+            <li><a href="{{ route('admin.perfiles') }}">Perfiles</a></li>
+            <li><a href="{{ route('publicate.form') }}">Publicar</a></li>
+            <li><a href="{{ route('foroadmin') }}">Foro</a></li>
+            <li><a href="{{ route('blogadmin') }}">Blog</a></li>
+            <li><a href="{{ route('seo') }}">SEO</a></li>
             @endif
 
             @if($usuarioAutenticado->rol == 3)
-                {{-- Foro solo disponible para rol 3 --}}
-                <li><a href="{{ route('foroadmin') }}">Foro</a></li>
+            {{-- Foro solo disponible para rol 3 --}}
+            <li><a href="{{ route('foroadmin') }}">Foro</a></li>
             @endif
 
             <li>
@@ -62,13 +69,13 @@
             </li>
         </ul>
         <div class="user-info-admin">
-            <p style="color:white;">Bienvenido, {{ $usuarioAutenticado->name }} 
+            <p style="color:white;">Bienvenido, {{ $usuarioAutenticado->name }}
                 @if($usuarioAutenticado->rol == 1)
-                    (Administrador)
+                (Administrador)
                 @elseif($usuarioAutenticado->rol == 2)
-                    (Chica)
+                (Chica)
                 @elseif($usuarioAutenticado->rol == 3)
-                    (Usuario)
+                (Usuario)
                 @endif
             </p>
         </div>
@@ -187,17 +194,29 @@
                 <input type="text" name="u2" value="{{ old('u1', $usuario->u2) }}">
             </div>
 
+            <div class="form-group">
+                <label for="sectores">Sector</label>
+                <select name="sectores" id="sectores" class="form-select" required>
+                    <option value="">Seleccionar sector</option>
+                    @foreach($sectores as $sector)
+                    <option value="{{ $sector->id }}"
+                        {{ old('sectores', $usuario->sectores) == $sector->id ? 'selected' : '' }}>
+                        {{ $sector->nombre }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
 
             <div class="form-group">
                 <label for="nacionalidad">Nacionalidad</label>
                 <select name="nacionalidad" id="nacionalidad" class="form-select" required>
                     <option value="">Seleccionar nacionalidad</option>
-                    <option value="argentina" {{ old('nacionalidad', $usuario->nacionalidad) == 'argentina' ? 'selected' : '' }}>Argentina</option>
-                    <option value="brasil" {{ old('nacionalidad', $usuario->nacionalidad) == 'brasil' ? 'selected' : '' }}>Brasil</option>
-                    <option value="chile" {{ old('nacionalidad', $usuario->nacionalidad) == 'chile' ? 'selected' : '' }}>Chile</option>
-                    <option value="colombia" {{ old('nacionalidad', $usuario->nacionalidad) == 'colombia' ? 'selected' : '' }}>Colombia</option>
-                    <option value="ecuador" {{ old('nacionalidad', $usuario->nacionalidad) == 'ecuador' ? 'selected' : '' }}>Ecuador</option>
-                    <option value="uruguay" {{ old('nacionalidad', $usuario->nacionalidad) == 'uruguay' ? 'selected' : '' }}>Uruguay</option>
+                    @foreach($nacionalidades as $nacionalidad)
+                    <option value="{{ $nacionalidad->id }}"
+                        {{ old('nacionalidad', $usuario->nacionalidad) == $nacionalidad->id ? 'selected' : '' }}>
+                        {{ $nacionalidad->nombre }}
+                    </option>
+                    @endforeach
                 </select>
             </div>
 
@@ -275,52 +294,16 @@
                     <div class="publicate-services-grid">
                         @php
                         $serviciosActuales = json_decode($usuario->servicios, true) ?? [];
-
-                        // Array asociativo de valores normalizados => textos de visualización
-                        $serviciosMapping = [
-                        'Anal' => 'Anal',
-                        'Atencion a domicilio' => 'Atención a domicilio',
-                        'Atencion en hoteles' => 'Atención en hoteles',
-                        'Baile erotico' => 'Baile Erótico',
-                        'Besos' => 'Besos',
-                        'Cambio de rol' => 'Cambio de rol',
-                        'Departamento propio' => 'Departamento Propio',
-                        'Disfraces' => 'Disfraces',
-                        'Ducha erotica' => 'Ducha Erótica',
-                        'Eventos y cenas' => 'Eventos y Cenas',
-                        'Eyaculacion cuerpo' => 'Eyaculación Cuerpo',
-                        'Eyaculacion facial' => 'Eyaculación Facial',
-                        'Hetero' => 'Hetero',
-                        'Juguetes' => 'Juguetes',
-                        'Lesbico' => 'Lésbico',
-                        'Lluvia dorada' => 'Lluvia dorada',
-                        'Masaje erotico' => 'Masaje Erótico',
-                        'Masaje prostatico' => 'Masaje prostático',
-                        'Masaje tantrico' => 'Masaje Tántrico',
-                        'Masaje thai' => 'Masaje Thai',
-                        'Masajes con final feliz' => 'Masajes con final feliz',
-                        'Masajes desnudos' => 'Masajes desnudos',
-                        'Masajes eroticos' => 'Masajes Eróticos',
-                        'Masajes para hombres' => 'Masajes para hombres',
-                        'Masajes sensitivos' => 'Masajes sensitivos',
-                        'Masajes sexuales' => 'Masajes sexuales',
-                        'Masturbacion rusa' => 'Masturbación Rusa',
-                        'Oral americana' => 'Oral Americana',
-                        'Oral con preservativo' => 'Oral con preservativo',
-                        'Oral sin preservativo' => 'Oral sin preservativo',
-                        'Orgias' => 'Orgías',
-                        'Parejas' => 'Parejas',
-                        'Trio' => 'Trío'
-                        ];
+                        $servicios = Servicio::orderBy('posicion')->get();
                         @endphp
 
-                        @foreach($serviciosMapping as $valorNormalizado => $textoMostrado)
+                        @foreach($servicios as $servicio)
                         <label class="admin-service-item">
                             <input type="checkbox"
                                 name="servicios[]"
-                                value="{{ $valorNormalizado }}"
-                                {{ in_array($valorNormalizado, $serviciosActuales) ? 'checked' : '' }}>
-                            <span>{{ $textoMostrado }}</span>
+                                value="{{ $servicio->id }}"
+                                {{ in_array($servicio->id, $serviciosActuales) ? 'checked' : '' }}>
+                            <span>{{ $servicio->nombre }}</span>
                         </label>
                         @endforeach
                     </div>
@@ -333,52 +316,16 @@
                     <div class="publicate-services-grid">
                         @php
                         $serviciosAdicionalesActuales = json_decode($usuario->servicios_adicionales, true) ?? [];
-
-                        // Array asociativo de valores normalizados => textos de visualización
-                        $serviciosAdicionalesMapping = [
-                        'Anal' => 'Anal',
-                        'Atencion a domicilio' => 'Atención a domicilio',
-                        'Atencion en hoteles' => 'Atención en hoteles',
-                        'Baile erotico' => 'Baile Erótico',
-                        'Besos' => 'Besos',
-                        'Cambio de rol' => 'Cambio de rol',
-                        'Departamento propio' => 'Departamento Propio',
-                        'Disfraces' => 'Disfraces',
-                        'Ducha erotica' => 'Ducha Erótica',
-                        'Eventos y cenas' => 'Eventos y Cenas',
-                        'Eyaculacion cuerpo' => 'Eyaculación Cuerpo',
-                        'Eyaculacion facial' => 'Eyaculación Facial',
-                        'Hetero' => 'Hetero',
-                        'Juguetes' => 'Juguetes',
-                        'Lesbico' => 'Lésbico',
-                        'Lluvia dorada' => 'Lluvia dorada',
-                        'Masaje erotico' => 'Masaje Erótico',
-                        'Masaje prostatico' => 'Masaje prostático',
-                        'Masaje tantrico' => 'Masaje Tántrico',
-                        'Masaje thai' => 'Masaje Thai',
-                        'Masajes con final feliz' => 'Masajes con final feliz',
-                        'Masajes desnudos' => 'Masajes desnudos',
-                        'Masajes eroticos' => 'Masajes Eróticos',
-                        'Masajes para hombres' => 'Masajes para hombres',
-                        'Masajes sensitivos' => 'Masajes sensitivos',
-                        'Masajes sexuales' => 'Masajes sexuales',
-                        'Masturbacion rusa' => 'Masturbación Rusa',
-                        'Oral americana' => 'Oral Americana',
-                        'Oral con preservativo' => 'Oral con preservativo',
-                        'Oral sin preservativo' => 'Oral sin preservativo',
-                        'Orgias' => 'Orgías',
-                        'Parejas' => 'Parejas',
-                        'Trio' => 'Trío'
-                        ];
+                        $serviciosAdicionales = Servicio::orderBy('posicion')->get();
                         @endphp
 
-                        @foreach($serviciosAdicionalesMapping as $valorNormalizado => $textoMostrado)
+                        @foreach($serviciosAdicionales as $servicio)
                         <label class="admin-service-item">
                             <input type="checkbox"
                                 name="servicios_adicionales[]"
-                                value="{{ $valorNormalizado }}"
-                                {{ in_array($valorNormalizado, $serviciosAdicionalesActuales) ? 'checked' : '' }}>
-                            <span>{{ $textoMostrado }}</span>
+                                value="{{ $servicio->id }}"
+                                {{ in_array($servicio->id, $serviciosAdicionalesActuales) ? 'checked' : '' }}>
+                            <span>{{ $servicio->nombre }}</span>
                         </label>
                         @endforeach
                     </div>
@@ -391,51 +338,16 @@
                     <div class="publicate-services-grid">
                         @php
                         $atributosActuales = json_decode($usuario->atributos, true) ?? [];
-
-                        // Array asociativo de valores normalizados => textos de visualización
-                        $atributosMapping = [
-                        'Busto grande' => 'Busto Grande',
-                        'Busto mediano' => 'Busto Mediano',
-                        'Busto pequeño' => 'Busto Pequeño',
-                        'Cara visible' => 'Cara Visible',
-                        'Cola grande' => 'Cola Grande',
-                        'Cola mediana' => 'Cola Mediana',
-                        'Cola pequeña' => 'Cola Pequeña',
-                        'Con video' => 'Con Video',
-                        'Contextura delgada' => 'Contextura Delgada',
-                        'Contextura grande' => 'Contextura Grande',
-                        'Contextura mediana' => 'Contextura Mediana',
-                        'Depilacion full' => 'Depilación Full',
-                        'Depto propio' => 'Depto Propio',
-                        'En promocion' => 'En Promoción',
-                        'English' => 'English',
-                        'Escort independiente' => 'Escort Independiente',
-                        'Español' => 'Español',
-                        'Estatura alta' => 'Estatura Alta',
-                        'Estatura mediana' => 'Estatura Mediana',
-                        'Estatura pequeña' => 'Estatura Pequeña',
-                        'Hentai' => 'Hentai',
-                        'Morena' => 'Morena',
-                        'Mulata' => 'Mulata',
-                        'No fuma' => 'No fuma',
-                        'Ojos claros' => 'Ojos Claros',
-                        'Ojos oscuros' => 'Ojos Oscuros',
-                        'Peliroja' => 'Peliroja',
-                        'Portugues' => 'Portugues',
-                        'Relato erotico' => 'Relato Erótico',
-                        'Rubia' => 'Rubia',
-                        'Tatuajes' => 'Tatuajes',
-                        'Trigueña' => 'Trigueña'
-                        ];
+                        $atributos = Atributo::orderBy('posicion')->get();
                         @endphp
 
-                        @foreach($atributosMapping as $valorNormalizado => $textoMostrado)
+                        @foreach($atributos as $atributo)
                         <label class="admin-service-item">
                             <input type="checkbox"
                                 name="atributos[]"
-                                value="{{ $valorNormalizado }}"
-                                {{ in_array($valorNormalizado, $atributosActuales) ? 'checked' : '' }}>
-                            <span>{{ $textoMostrado }}</span>
+                                value="{{ $atributo->id }}"
+                                {{ in_array($atributo->id, $atributosActuales) ? 'checked' : '' }}>
+                            <span>{{ $atributo->nombre }}</span>
                         </label>
                         @endforeach
                     </div>
@@ -471,15 +383,15 @@
             </div>
 
             <div class="form-group">
-    <label for="precio">Precio</label>
-    <div class="input-group">
-        <input type="text"
-            name="precio"
-            value="{{ old('precio', $usuario->precio) ? 'CLP $' . number_format(old('precio', $usuario->precio), 0, ',', '.') : 'Consultar' }}"
-            placeholder="Ingrese el precio"
-            class="precio-input">
-    </div>
-</div>
+                <label for="precio">Precio</label>
+                <div class="input-group">
+                    <input type="text"
+                        name="precio"
+                        value="{{ old('precio', $usuario->precio) ? 'CLP $' . number_format(old('precio', $usuario->precio), 0, ',', '.') : 'Consultar' }}"
+                        placeholder="Ingrese el precio"
+                        class="precio-input">
+                </div>
+            </div>
 
 
             <!-- Botón para abrir el modal -->
@@ -550,31 +462,31 @@
                             </div>
 
                             <!-- Videos -->
-                <div class="mb-4">
-                    <h6 class="border-bottom pb-2">Videos</h6>
-                    <div class="form-group">
-                        <input type="file" name="videos[]" multiple id="videosInput" accept="video/*" class="form-control">
-                        <small class="form-text text-muted">Puede subir múltiples videos. Tamaño máximo por video: 20MB. Formatos aceptados: MP4, WEBM, OGG</small>
+                            <div class="mb-4">
+                                <h6 class="border-bottom pb-2">Videos</h6>
+                                <div class="form-group">
+                                    <input type="file" name="videos[]" multiple id="videosInput" accept="video/*" class="form-control">
+                                    <small class="form-text text-muted">Puede subir múltiples videos. Tamaño máximo por video: 20MB. Formatos aceptados: MP4, WEBM, OGG</small>
 
-                        <div class="videos-actuales mt-2" id="videoPreviewContainer" data-user-id="{{ $usuario->id }}">
-                            @if(!empty(json_decode($usuario->videos)))
-                            @foreach(json_decode($usuario->videos) as $video)
-                            <div class="publicate-preview-item video-item"
-                                data-video="{{ $video }}"
-                                data-user-id="{{ $usuario->id }}">
-                                <video src="{{ asset('storage/chicas/'.$usuario->id.'/videos/'.$video) }}"
-                                    controls
-                                    class="video-preview"
-                                    onerror="this.src='{{ asset('images/default-video.png') }}'">
-                                </video>
-                                <button type="button" class="publicate-remove-button" onclick="removeExistingVideo('{{ $video }}', this)">&times;</button>
+                                    <div class="videos-actuales mt-2" id="videoPreviewContainer" data-user-id="{{ $usuario->id }}">
+                                        @if(!empty(json_decode($usuario->videos)))
+                                        @foreach(json_decode($usuario->videos) as $video)
+                                        <div class="publicate-preview-item video-item"
+                                            data-video="{{ $video }}"
+                                            data-user-id="{{ $usuario->id }}">
+                                            <video src="{{ asset('storage/chicas/'.$usuario->id.'/videos/'.$video) }}"
+                                                controls
+                                                class="video-preview"
+                                                onerror="this.src='{{ asset('images/default-video.png') }}'">
+                                            </video>
+                                            <button type="button" class="publicate-remove-button" onclick="removeExistingVideo('{{ $video }}', this)">&times;</button>
+                                        </div>
+                                        @endforeach
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
-                            @endforeach
-                            @endif
-                        </div>
-                    </div>
-                </div>
-                            
+
                             <!-- Fotos Adicionales -->
                             <div>
                                 <h6 class="border-bottom pb-2">Fotos/Videos Adicionales</h6>

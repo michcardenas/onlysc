@@ -48,7 +48,7 @@
     </div>
     @endif
 
-    <form action="{{ route('seo.servicios.update', $servicio->id) }}" method="POST">
+    <form action="{{ route('servicios.update', $servicio->id) }}" method="POST">
         @csrf
         @method('PUT')
 

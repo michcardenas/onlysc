@@ -13,6 +13,7 @@
 </div>
 @endif
 
+
 <header>
     <nav class="navbar-admin">
         <div class="logo-admin">
@@ -63,7 +64,7 @@
                     <span>https://onlyescorts.cl/{{ $sector->url }}</span>
                 </td>
                 <td>
-                    <a href="{{ route('sectores.edit', $sector->id) }}" class="btn btn-warning btn-sm">
+                <a href="{{ route('sectores.editsector', ['sector' => $sector]) }}" class="btn btn-warning btn-sm">
                         <i class="fas fa-edit"></i>
                     </a>
                     <form action="{{ route('sectores.destroy', $sector->id) }}" method="POST" style="display:inline;">

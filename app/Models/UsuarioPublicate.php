@@ -40,6 +40,7 @@ class UsuarioPublicate extends Model
         'videos',
         'u1',
         'u2',
+        'sectores'
     ];
 
     /**
@@ -83,11 +84,14 @@ class UsuarioPublicate extends Model
     }
 
     public function posts()
-{
-    return $this->hasMany(Posts::class, 'chica_id');
-}
+    {
+        return $this->hasMany(Posts::class, 'chica_id');
+    }
 
-    
+    public function sector() {    // Cambié el nombre a singular ya que es belongsTo
+        return $this->belongsTo(Sector::class, 'sectores', 'id');
+    }
+
 
     // /**
     //  * Get the route key for the model.

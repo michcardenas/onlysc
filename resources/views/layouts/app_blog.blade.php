@@ -169,6 +169,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <form id="filterForm">
                     <div class="modal-body">
                         <!-- Rango de edad -->
@@ -658,23 +659,12 @@
 
                 // Procesar nacionalidad
                 if (nacionalidadSelect.value) {
-                    const gentilicios = {
-                        'argentina': 'argentina',
-                        'brasil': 'brasilena',
-                        'chile': 'chilena',
-                        'colombia': 'colombiana',
-                        'ecuador': 'ecuatoriana',
-                        'uruguay': 'uruguaya'
-                    };
-
-                    const gentilicio = gentilicios[nacionalidadSelect.value.toLowerCase()] ||
-                        nacionalidadSelect.value.toLowerCase();
-
+                    const nacionalidadUrl = nacionalidadSelect.value; // Usar directamente el valor de la opción seleccionada
                     if (shouldAddToUrl()) {
-                        url += `/${gentilicio}`;
+                        url += `/${nacionalidadUrl}`;
                         hasAddedUrlFilter = true;
                     } else {
-                        params.append('n', nacionalidadSelect.value);
+                        params.append('n', nacionalidadUrl);
                     }
                 }
 

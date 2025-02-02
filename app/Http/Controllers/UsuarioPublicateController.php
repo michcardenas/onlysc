@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\UsuarioPublicate;
 use App\Models\EscortLocation;
+use App\Models\Servicio;
+use App\Models\Atributo;
+use App\Models\Sector;
 use App\Models\Disponibilidad;
+use App\Models\Nacionalidad;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use App\Models\User;
@@ -75,6 +79,12 @@ class UsuarioPublicateController extends Controller
             $diasDisponibles = $disponibilidad->pluck('dia')->toArray();
             $horarios = [];
 
+            $servicios = Servicio::orderBy('posicion')->get();
+            $atributos = Atributo::orderBy('posicion')->get();
+            $nacionalidades = Nacionalidad::orderBy('posicion')->get();
+            $sectores = Sector::all();
+            
+
             foreach ($disponibilidad as $disp) {
                 $horarios[$disp->dia] = [
                     'desde' => $disp->hora_desde,
@@ -96,7 +106,7 @@ class UsuarioPublicateController extends Controller
             }
 
             // Pasar a la vista incluyendo las posiciones
-            return view('admin.edit', compact('usuario', 'diasDisponibles', 'horarios', 'ciudades', 'positions', "usuarioAutenticado"));
+            return view('admin.edit', compact('usuario', 'diasDisponibles', 'horarios', 'ciudades', 'positions', "usuarioAutenticado", "atributos", 'nacionalidades', 'servicios', 'sectores'));
         } catch (\Exception $e) {
             Log::error("Error al cargar el formulario de edición: " . $e->getMessage());
             return redirect()->back()->with('error', 'Error al cargar el formulario.');
@@ -187,6 +197,7 @@ class UsuarioPublicateController extends Controller
                 'videos.*' => 'nullable|file|mimes:mp4,webm,ogg|max:20480',
                 'u1' => 'nullable|string|max:50',
                 'u2' => 'nullable|string|max:50',
+                'sectores' => 'required|exists:sectores,id',
             ]);
     
             Log::info("Validación completada para el usuario con ID: $id");
@@ -224,6 +235,7 @@ class UsuarioPublicateController extends Controller
                     'precio' => $request->precio,
                     'u1' => $request->u1,
                     'u2' => $request->u2,
+                    'sectores' => $request->sectores, // Añadido el campo sectores
                 ]);
     
                 // Actualizar o crear la ubicación en el mapa

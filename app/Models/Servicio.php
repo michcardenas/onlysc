@@ -15,6 +15,6 @@ class Servicio extends Model
     // En el modelo Servicio
     public function metaTag()
     {
-        return $this->hasOne(MetaTag::class, 'tipo_id')->where('tipo', 'servicios');
+        return $this->hasOne(MetaTag::class, 'page', 'id')->where('tipo', 'servicios');
     }
 }

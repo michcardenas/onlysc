@@ -492,13 +492,15 @@ class AdminController extends Controller
 
     public function sectorUpdate(Request $request, Sector $sector)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'nombre' => 'required',
             'url' => 'required'
         ]);
-
-        $sector->update($request->all());
-
+    
+        $sector->nombre = $validatedData['nombre'];
+        $sector->url = $validatedData['url'];
+        $sector->save();
+    
         return redirect()->route('sectores.indexsector')
             ->with('success', 'Sector actualizado exitosamente.');
     }

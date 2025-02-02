@@ -164,10 +164,12 @@
                                 <div class="inicio-card-location">
                                     <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2">
                                     @if($ciudadSeleccionada->url === 'santiago')
-                                    {{-- Mostrar siempre el sector derivado o seleccionado --}}
-                                    {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}
+                                    @if($usuario->sector)
+                                    {{ $usuario->sector->nombre }}
                                     @else
-                                    {{-- Para otras ciudades, mostrar la ubicación habitual --}}
+                                    {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}
+                                    @endif
+                                    @else
                                     {{ $usuario->ubicacion }}
                                     @endif
                                     <span class="inicio-card-price">
@@ -238,7 +240,11 @@
                             <span class="inicio-featured-location">
                                 <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2" aria-hidden="true"></i>
                                 @if($ciudadSeleccionada->url === 'santiago')
+                                @if($usuarioDestacado->sector)
+                                {{ $usuarioDestacado->sector->nombre }}
+                                @else
                                 {{ $ubicacionesMostradas[$usuarioDestacado->id] ?? 'Sector no disponible' }}
+                                @endif
                                 @else
                                 {{ $usuarioDestacado->ubicacion }}
                                 @endif
@@ -370,11 +376,15 @@
                                         <div class="location-container">
                                             <img src="{{ asset('images/location.svg') }}" alt="location-icon" class="location-icon2">
                                             <span class="volvieronyprimera-location">
-                                                @if($ciudadSeleccionada->url === 'santiago')
-                                                {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}
-                                                @else
-                                                {{ $usuario->ubicacion }}
-                                                @endif
+                                            @if($ciudadSeleccionada->url === 'santiago')
+    @if($usuario->sector)
+        {{ $usuario->sector->nombre }}
+    @else
+        {{ $ubicacionesMostradas[$usuario->id] ?? 'Sector no disponible' }}
+    @endif
+@else
+    {{ $usuario->ubicacion }}
+@endif
                                             </span>
                                         </div>
                                         <span class="volvieronyprimera-price">{{ $usuario->precio > 0 ? '$' . number_format($usuario->precio, 0, ',', '.') : 'Consultar' }}</span>
@@ -550,14 +560,14 @@
 
 
 
-       
+
 
 </main>
 @if(isset($seoTitle) && isset($seoDescription))
-        <div class="seo-section">
-            <h2 class="seo-title">{{ $seoTitle }}</h2>
-            <div class="seo-description">{!! $seoDescription !!}</div>
-        </div>
-        @endif
+<div class="seo-section">
+    <h2 class="seo-title">{{ $seoTitle }}</h2>
+    <div class="seo-description">{!! $seoDescription !!}</div>
+</div>
+@endif
 @endsection
 @include('layouts.navigation')

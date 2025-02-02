@@ -56,7 +56,7 @@ $pageTitle = $usuarioPublicate->fantasia . ' Escort ' .
         </h1>
 
         <h1 class="escortperfil-nombrechikito">
-        {{ strtoupper(str_replace('_', ' ', $usuarioPublicate->categorias)) }}
+            {{ strtoupper(str_replace('_', ' ', $usuarioPublicate->categorias)) }}
         </h1>
     </header>
 
@@ -85,20 +85,20 @@ $pageTitle = $usuarioPublicate->fantasia . ' Escort ' .
         </div>
         <div class="escortperfil-info-item">
 
-    <img src="{{ asset('images/precio.svg') }}" alt="Precio" class="escortperfil-info-icon">
-    <div class="escortperfil-info-text">
-        <span class="escortperfil-info-label">Precio</span>
-        @if($usuarioPublicate->precio > 0)
-        <span class="escortperfil-info-value">${{ number_format($usuarioPublicate->precio, 0, ',', '.') }}</span>
-    @else
-        <a href="https://wa.me/{{ $usuarioPublicate->telefono }}?text=Hola%20{{ $usuarioPublicate->fantasia }}!%20Vi%20tu%20anuncio%20en%20OnlyEscorts%20y%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20tus%20servicios.%20%C2%BFC%C3%B3mo%20est%C3%A1s?" 
-           target="_blank" 
-           class="escortperfil-info-value text-decoration-none">
-            Consultar
-        </a>
-    @endif
-    </div>
-</div>
+            <img src="{{ asset('images/precio.svg') }}" alt="Precio" class="escortperfil-info-icon">
+            <div class="escortperfil-info-text">
+                <span class="escortperfil-info-label">Precio</span>
+                @if($usuarioPublicate->precio > 0)
+                <span class="escortperfil-info-value">${{ number_format($usuarioPublicate->precio, 0, ',', '.') }}</span>
+                @else
+                <a href="https://wa.me/{{ $usuarioPublicate->telefono }}?text=Hola%20{{ $usuarioPublicate->fantasia }}!%20Vi%20tu%20anuncio%20en%20OnlyEscorts%20y%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20tus%20servicios.%20%C2%BFC%C3%B3mo%20est%C3%A1s?"
+                    target="_blank"
+                    class="escortperfil-info-value text-decoration-none">
+                    Consultar
+                </a>
+                @endif
+            </div>
+        </div>
 
         <div class="escortperfil-info-item">
             <img src="{{ asset('images/ubicacion.svg') }}" alt="Ubicación" class="escortperfil-info-icon">
@@ -241,11 +241,21 @@ $pageTitle = $usuarioPublicate->fantasia . ' Escort ' .
                     <h2 class="escortperfil-section-title">Atributos</h2>
                     <div class="escortperfil-attributes-list">
                         @php
-                        $atributos = json_decode($usuarioPublicate->atributos, true);
-                        $atributos = is_array($atributos) ? $atributos : [];
+                        // Decodificar los atributos del usuario
+                        $atributosIds = json_decode($usuarioPublicate->atributos, true);
+                        $atributosIds = is_array($atributosIds) ? $atributosIds : [];
+
+                        // Obtener los nombres de los atributos desde la base de datos
+                        $atributosNombres = \DB::table('atributos')
+                        ->whereIn('id', $atributosIds)
+                        ->pluck('nombre', 'id')
+                        ->toArray();
                         @endphp
-                        @foreach($atributos as $atributo)
-                        <span class="escortperfil-attribute-item">{{ $atributo }}</span>
+
+                        @foreach($atributosIds as $atributoId)
+                        @if(isset($atributosNombres[$atributoId]))
+                        <span class="escortperfil-attribute-item">{{ $atributosNombres[$atributoId] }}</span>
+                        @endif
                         @endforeach
                     </div>
                 </div>
@@ -285,53 +295,21 @@ $pageTitle = $usuarioPublicate->fantasia . ' Escort ' .
             <h2 class="escortperfil-section-title">Servicios</h2>
             <div class="escortperfil-services-list">
                 @php
-                $serviciosRaw = $usuarioPublicate->servicios;
+                // Decodificar los servicios del usuario
+                $serviciosIds = json_decode($usuarioPublicate->servicios, true);
+                $serviciosIds = is_array($serviciosIds) ? $serviciosIds : [];
 
-                // Limpiamos todas las barras invertidas y comillas extras
-                $serviciosClean = str_replace('\\', '', $serviciosRaw);
-                $serviciosClean = trim($serviciosClean, '"');
-
-                // Convertimos a array
-                $servicios = json_decode($serviciosClean, true);
-
-                // Si aún es null, intentamos una última limpieza
-                if (!is_array($servicios)) {
-                $serviciosClean = preg_replace('/["\\\]+/', '', $serviciosRaw);
-                $serviciosClean = trim($serviciosClean, '[]');
-                $servicios = explode(',', $serviciosClean);
-                }
-
-                // Limpiamos cada elemento del array y corregimos caracteres especiales
-                $servicios = array_map(function($item) {
-                $item = trim(str_replace(['\\', '"', '[', ']'], '', $item));
-                $item = htmlspecialchars_decode($item, ENT_QUOTES);
-
-                // Correcciones específicas para caracteres mal codificados
-                $replacements = [
-                'u00f3' => 'ó',
-                'u00e9' => 'é',
-                'u00e1' => 'á',
-                'u00ed' => 'í',
-                'u00fa' => 'ú',
-                'u00f1' => 'ñ',
-                'Erotico' => 'Erótico',
-                'Tantrico' => 'Tántrico',
-                'prostatico' => 'prostático',
-                'Lesbico' => 'Lésbico',
-                'Orgias' => 'Orgías',
-                'Trio' => 'Trío'
-                ];
-
-                return str_replace(array_keys($replacements), array_values($replacements), $item);
-                }, $servicios);
-
-                // Eliminamos elementos vacíos
-                $servicios = array_filter($servicios, function($item) {
-                return !empty($item);
-                });
+                // Obtener los nombres de los servicios desde la base de datos
+                $serviciosNombres = DB::table('servicios')
+                ->whereIn('id', $serviciosIds)
+                ->pluck('nombre', 'id')
+                ->toArray();
                 @endphp
-                @foreach($servicios as $servicio)
-                <span class="escortperfil-service-item">{{ $servicio }}</span>
+
+                @foreach($serviciosIds as $servicioId)
+                @if(isset($serviciosNombres[$servicioId]))
+                <span class="escortperfil-service-item">{{ $serviciosNombres[$servicioId] }}</span>
+                @endif
                 @endforeach
             </div>
         </div>
@@ -341,49 +319,21 @@ $pageTitle = $usuarioPublicate->fantasia . ' Escort ' .
             <h2 class="escortperfil-section-title">Servicios Adicionales</h2>
             <div class="escortperfil-services-list">
                 @php
-                $serviciosAdicionalesRaw = $usuarioPublicate->servicios_adicionales;
+                // Decodificar los servicios adicionales del usuario
+                $serviciosAdicionalesIds = json_decode($usuarioPublicate->servicios_adicionales, true);
+                $serviciosAdicionalesIds = is_array($serviciosAdicionalesIds) ? $serviciosAdicionalesIds : [];
 
-                // Aplicamos el mismo proceso de limpieza
-                $serviciosAdicionalesClean = str_replace('\\', '', $serviciosAdicionalesRaw);
-                $serviciosAdicionalesClean = trim($serviciosAdicionalesClean, '"');
-
-                $serviciosAdicionales = json_decode($serviciosAdicionalesClean, true);
-
-                if (!is_array($serviciosAdicionales)) {
-                $serviciosAdicionalesClean = preg_replace('/["\\\]+/', '', $serviciosAdicionalesRaw);
-                $serviciosAdicionalesClean = trim($serviciosAdicionalesClean, '[]');
-                $serviciosAdicionales = explode(',', $serviciosAdicionalesClean);
-                }
-
-                // Aplicamos las mismas correcciones de caracteres especiales
-                $serviciosAdicionales = array_map(function($item) {
-                $item = trim(str_replace(['\\', '"', '[', ']'], '', $item));
-                $item = htmlspecialchars_decode($item, ENT_QUOTES);
-
-                $replacements = [
-                'u00f3' => 'ó',
-                'u00e9' => 'é',
-                'u00e1' => 'á',
-                'u00ed' => 'í',
-                'u00fa' => 'ú',
-                'u00f1' => 'ñ',
-                'Erotico' => 'Erótico',
-                'Tantrico' => 'Tántrico',
-                'prostatico' => 'prostático',
-                'Lesbico' => 'Lésbico',
-                'Orgias' => 'Orgías',
-                'Trio' => 'Trío'
-                ];
-
-                return str_replace(array_keys($replacements), array_values($replacements), $item);
-                }, $serviciosAdicionales);
-
-                $serviciosAdicionales = array_filter($serviciosAdicionales, function($item) {
-                return !empty($item);
-                });
+                // Obtener los nombres de los servicios adicionales desde la tabla de servicios
+                $serviciosAdicionalesNombres = \DB::table('servicios')
+                ->whereIn('id', $serviciosAdicionalesIds)
+                ->pluck('nombre', 'id')
+                ->toArray();
                 @endphp
-                @foreach($serviciosAdicionales as $servicioAdicional)
-                <span class="escortperfil-service-item">{{ $servicioAdicional }}</span>
+
+                @foreach($serviciosAdicionalesIds as $servicioAdicionalId)
+                @if(isset($serviciosAdicionalesNombres[$servicioAdicionalId]))
+                <span class="escortperfil-service-item">{{ $serviciosAdicionalesNombres[$servicioAdicionalId] }}</span>
+                @endif
                 @endforeach
             </div>
         </div>
@@ -412,54 +362,54 @@ $pageTitle = $usuarioPublicate->fantasia . ' Escort ' .
             @endif
         </div>
 
-          <!-- Sección de Experiencias -->
-                  <!-- Sección de Experiencias -->
+        <!-- Sección de Experiencias -->
+        <!-- Sección de Experiencias -->
         <div class="escortperfil-section">
             <h2 class="escortperfil-section-title">Experiencias</h2>
             @php
             $experiencias = \App\Models\Posts::where('id_blog', 16)
-                ->where('chica_id', $usuarioPublicate->id)
-                ->orderBy('created_at', 'desc')
-                ->get();
+            ->where('chica_id', $usuarioPublicate->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
             @endphp
-            
+
             @if($experiencias->count() > 0)
-                <div class="escortperfil-experiences-table">
-                    <table>
-                        <tbody>
-                            @foreach($experiencias as $experiencia)
-                            <tr class="escortperfil-experience-row">
-                                <td class="escortperfil-experience-avatar-cell">
-                                    @if($experiencia->usuario && $experiencia->usuario->foto)
-                                        <img src="{{ asset('storage/' . $experiencia->usuario->foto) }}" 
-                                             alt="Avatar de {{ $experiencia->usuario->name }}"
-                                             class="escortperfil-experience-avatar-img">
-                                    @else
-                                        <div class="escortperfil-experience-avatar-default">
-                                            {{ $experiencia->usuario ? strtoupper(substr($experiencia->usuario->name, 0, 1)) : 'A' }}
-                                        </div>
-                                    @endif
-                                </td>
-                                <td class="escortperfil-experience-content-cell">
-                                    <div class="escortperfil-experience-author">
-                                        {{ $experiencia->usuario->name ?? 'Anónimo' }}
-                                    </div>
-                                    <a href="{{ route('post.show', ['id_blog' => $experiencia->id_blog, 'id' => $experiencia->id]) }}" 
-                                       class="escortperfil-experience-title-link">
-                                        <h3 class="escortperfil-experience-title">{{ $experiencia->titulo }}</h3>
-                                    </a>
-                                    <p class="escortperfil-experience-content">{{ $experiencia->contenido }}</p>
-                                </td>
-                                <td class="escortperfil-experience-date-cell">
-                                    {{ \Carbon\Carbon::parse($experiencia->created_at)->format('d/m/Y') }}
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+            <div class="escortperfil-experiences-table">
+                <table>
+                    <tbody>
+                        @foreach($experiencias as $experiencia)
+                        <tr class="escortperfil-experience-row">
+                            <td class="escortperfil-experience-avatar-cell">
+                                @if($experiencia->usuario && $experiencia->usuario->foto)
+                                <img src="{{ asset('storage/' . $experiencia->usuario->foto) }}"
+                                    alt="Avatar de {{ $experiencia->usuario->name }}"
+                                    class="escortperfil-experience-avatar-img">
+                                @else
+                                <div class="escortperfil-experience-avatar-default">
+                                    {{ $experiencia->usuario ? strtoupper(substr($experiencia->usuario->name, 0, 1)) : 'A' }}
+                                </div>
+                                @endif
+                            </td>
+                            <td class="escortperfil-experience-content-cell">
+                                <div class="escortperfil-experience-author">
+                                    {{ $experiencia->usuario->name ?? 'Anónimo' }}
+                                </div>
+                                <a href="{{ route('post.show', ['id_blog' => $experiencia->id_blog, 'id' => $experiencia->id]) }}"
+                                    class="escortperfil-experience-title-link">
+                                    <h3 class="escortperfil-experience-title">{{ $experiencia->titulo }}</h3>
+                                </a>
+                                <p class="escortperfil-experience-content">{{ $experiencia->contenido }}</p>
+                            </td>
+                            <td class="escortperfil-experience-date-cell">
+                                {{ \Carbon\Carbon::parse($experiencia->created_at)->format('d/m/Y') }}
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
             @else
-                <p class="text-center">No hay experiencias disponibles</p>
+            <p class="text-center">No hay experiencias disponibles</p>
             @endif
         </div>
 
