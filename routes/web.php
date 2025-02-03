@@ -19,6 +19,7 @@ use App\Http\Controllers\MetaTagController;
 use App\Http\Controllers\TarjetaController;
 use App\Models\Servicio;
 use App\Models\Atributo;
+use App\Http\Controllers\PageController;
 
 
 
@@ -288,3 +289,7 @@ Route::get('/get-filter-data', function () {
         'atributos' => $atributos,
     ]);
 });
+Route::get('/contacto', [PageController::class, 'contacto'])->name('contacto');
+// En routes/web.php
+Route::post('/contact/send', [PageController::class, 'send'])->name('contact.send');
+

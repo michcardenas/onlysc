@@ -257,7 +257,7 @@ class InicioController extends Controller
                 $atributosArray = explode(',', $atributosRequest);
                 if (!empty($atributosArray)) {
                     // Debug: Verificar las URLs recibidas
-                    dump("URLs de atributos recibidas:", $atributosArray);
+                    //dump("URLs de atributos recibidas:", $atributosArray);
 
                     // Obtener los IDs de los atributos basados en las URLs
                     $atributosIds = DB::table('atributos')
@@ -266,13 +266,13 @@ class InicioController extends Controller
                         ->toArray();
 
                     // Debug: Verificar los IDs obtenidos
-                    dump("IDs de atributos obtenidos:", $atributosIds);
+                   // dump("IDs de atributos obtenidos:", $atributosIds);
 
                     if (!empty($atributosIds)) {
                         $query->where(function ($q) use ($atributosIds) {
                             foreach ($atributosIds as $atributoId) {
                                 // Debug: Verificar el ID que se está usando en el filtro
-                                dump("Filtrando por atributo ID:", $atributoId);
+                                //dump("Filtrando por atributo ID:", $atributoId);
 
                                 // Filtrar por el ID del atributo en la columna `atributos`
                                 $q->orWhereJsonContains('atributos', $atributoId);
