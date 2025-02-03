@@ -489,7 +489,7 @@ main {
                             <a href="/blog/">BLOG</a>
                         </div>
                         <div class="custom-link-row">
-                            <a href="#">CONTACTO</a>
+                            <a href="{{ route('contacto') }}">CONTACTO</a>
                             <a href="#">POLÍTICA DE PRIVACIDAD</a>
                         </div>
                         <div class="custom-link-row">
