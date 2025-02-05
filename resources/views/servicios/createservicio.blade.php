@@ -29,6 +29,22 @@
                 required>
         </div>
 
+        <div class="form-group">
+            <label style="color: white;" for="url">URL del Servicio</label>
+            <div style="display: flex; align-items: center;">
+                <span style="color: white;">https://onlyescorts.cl/ciudad/</span>
+                <input
+                    type="text"
+                    name="url"
+                    id="url"
+                    class="form-control"
+                    style="margin-left: 10px; width: auto;"
+                    value="{{ old('url', $servicio->url ?? '') }}"
+                    required>
+            </div>
+        </div>
+
+
         <!-- Campo Numérico para la Posición -->
         <div class="form-group">
             <label style="color: white;" for="posicion">Posición</label>
