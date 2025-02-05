@@ -92,6 +92,13 @@ class UsuarioPublicate extends Model
         return $this->belongsTo(Sector::class, 'sectores', 'id');
     }
 
+    public function nacionalidadRelacion()
+    {
+        return $this->belongsTo(Nacionalidad::class, 'nacionalidad', 'id');
+    }
+    
+
+
 
     // /**
     //  * Get the route key for the model.

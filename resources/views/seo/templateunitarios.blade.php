@@ -96,6 +96,17 @@
     </div>
     @endif
 
+    <!-- Ciudad Select - Global Filter -->
+    <div class="form-group mb-4">
+        <label for="ciudad_select" class="text-white">Filtrar por Ciudad</label>
+        <select class="form-control" id="ciudad_select" name="ciudad_id">
+            <option value="">Seleccione una ciudad...</option>
+            @foreach($ciudades as $ciudad)
+            <option value="{{ $ciudad->id }}">{{ $ciudad->nombre }}</option>
+            @endforeach
+        </select>
+    </div>
+
     <div class="card custom-card">
         <div class="card-header">
             <ul class="nav nav-tabs" id="seoTabs" role="tablist">
@@ -109,7 +120,6 @@
                         Atributos
                     </button>
                 </li>
-                <!-- En la sección de nav-tabs, después de atributos-tab -->
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="nacionalidades-tab" data-bs-toggle="tab" data-bs-target="#nacionalidades" type="button" role="tab">
                         Nacionalidades
@@ -118,6 +128,21 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="sectores-tab" data-bs-toggle="tab" data-bs-target="#sectores" type="button" role="tab">
                         Sectores
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="disponibilidad-tab" data-bs-toggle="tab" data-bs-target="#disponibilidad" type="button" role="tab">
+                        Disponibilidad
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="resenas-tab" data-bs-toggle="tab" data-bs-target="#resenas" type="button" role="tab">
+                        Reseñas
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="categorias-tab" data-bs-toggle="tab" data-bs-target="#categorias" type="button" role="tab">
+                        Categorías
                     </button>
                 </li>
             </ul>
@@ -140,94 +165,9 @@
                     <form action="{{ route('seo.servicios.update') }}" method="POST" id="servicioForm">
                         @csrf
                         <input type="hidden" name="servicio_id" id="servicio_id_input">
+                        <input type="hidden" name="ciudad_id" class="ciudad-input">
 
-                        <!-- Meta Title -->
-                        <div class="form-group template-group">
-                            <label for="meta_title" class="text-white">Título Meta</label>
-                            <input type="text"
-                                class="form-control"
-                                id="meta_title_servicio"
-                                name="meta_title"
-                                placeholder="Ingrese el título meta"
-                                required>
-                        </div>
-
-                        <!-- Meta Description -->
-                        <div class="form-group template-group">
-                            <label for="meta_description" class="text-white">Descripción Meta</label>
-                            <textarea class="form-control custom-textarea"
-                                id="meta_description_servicio"
-                                name="meta_description"
-                                rows="3"
-                                placeholder="Ingrese la descripción meta"
-                                required></textarea>
-                        </div>
-
-                        <!-- Meta Keywords -->
-                        <div class="form-group template-group">
-                            <label for="meta_keywords" class="text-white">Palabras Clave Meta</label>
-                            <input type="text"
-                                class="form-control"
-                                id="meta_keywords_servicio"
-                                name="meta_keywords"
-                                placeholder="Ingrese las palabras clave separadas por comas">
-                        </div>
-
-                        <!-- Canonical URL -->
-                        <div class="form-group template-group">
-                            <label for="canonical_url" class="text-white">URL Canónica</label>
-                            <input type="url"
-                                class="form-control"
-                                id="canonical_url_servicio"
-                                name="canonical_url"
-                                placeholder="Ingrese la URL canónica (opcional)">
-                        </div>
-
-                        <!-- Meta Robots -->
-                        <div class="form-group template-group">
-                            <label for="meta_robots" class="text-white">Meta Robots</label>
-                            <select class="form-control" id="meta_robots_servicio" name="meta_robots" required>
-                                <option value="index, follow">Index, Follow</option>
-                                <option value="noindex, nofollow">No Index, No Follow</option>
-                                <option value="index, nofollow">Index, No Follow</option>
-                                <option value="noindex, follow">No Index, Follow</option>
-                            </select>
-                        </div>
-
-                        <!-- Heading H1 -->
-                        <div class="form-group template-group">
-                            <label for="heading_h1" class="text-white">Encabezado H1</label>
-                            <input type="text"
-                                class="form-control"
-                                id="heading_h1_servicio"
-                                name="heading_h1"
-                                placeholder="Ingrese el encabezado H1">
-                        </div>
-
-                        <!-- Heading H2 -->
-                        <div class="form-group template-group">
-                            <label for="heading_h2" class="text-white">Encabezado H2</label>
-                            <input type="text"
-                                class="form-control"
-                                id="heading_h2_servicio"
-                                name="heading_h2"
-                                placeholder="Ingrese el encabezado H2">
-                        </div>
-
-                        <!-- Additional Text -->
-                        <div class="form-group template-group">
-                            <label for="additional_text" class="text-white">Texto Adicional</label>
-                            <textarea class="form-control"
-                                id="additional_text_servicio"
-                                name="additional_text"
-                                rows="4"
-                                placeholder="Ingrese texto adicional"></textarea>
-                        </div>
-
-                        <div class="form-group text-right">
-                            <button type="submit" class="btn custom-button">Guardar Cambios</button>
-                            <a href="{{ route('home') }}" class="btn custom-button">Cancelar</a>
-                        </div>
+                        @include('admin.partials.seo-fields', ['prefix' => 'servicio'])
                     </form>
                 </div>
 
@@ -246,97 +186,13 @@
                     <form action="{{ route('seo.atributos.update') }}" method="POST" id="atributoForm">
                         @csrf
                         <input type="hidden" name="atributo_id" id="atributo_id_input">
+                        <input type="hidden" name="ciudad_id" class="ciudad-input">
 
-                        <!-- Meta Title -->
-                        <div class="form-group template-group">
-                            <label for="meta_title" class="text-white">Título Meta</label>
-                            <input type="text"
-                                class="form-control"
-                                id="meta_title_atributo"
-                                name="meta_title"
-                                placeholder="Ingrese el título meta"
-                                required>
-                        </div>
-
-                        <!-- Meta Description -->
-                        <div class="form-group template-group">
-                            <label for="meta_description" class="text-white">Descripción Meta</label>
-                            <textarea class="form-control custom-textarea"
-                                id="meta_description_atributo"
-                                name="meta_description"
-                                rows="3"
-                                placeholder="Ingrese la descripción meta"
-                                required></textarea>
-                        </div>
-
-                        <!-- Meta Keywords -->
-                        <div class="form-group template-group">
-                            <label for="meta_keywords" class="text-white">Palabras Clave Meta</label>
-                            <input type="text"
-                                class="form-control"
-                                id="meta_keywords_atributo"
-                                name="meta_keywords"
-                                placeholder="Ingrese las palabras clave separadas por comas">
-                        </div>
-
-                        <!-- Canonical URL -->
-                        <div class="form-group template-group">
-                            <label for="canonical_url" class="text-white">URL Canónica</label>
-                            <input type="url"
-                                class="form-control"
-                                id="canonical_url_atributo"
-                                name="canonical_url"
-                                placeholder="Ingrese la URL canónica (opcional)">
-                        </div>
-
-                        <!-- Meta Robots -->
-                        <div class="form-group template-group">
-                            <label for="meta_robots" class="text-white">Meta Robots</label>
-                            <select class="form-control" id="meta_robots_atributo" name="meta_robots" required>
-                                <option value="index, follow">Index, Follow</option>
-                                <option value="noindex, nofollow">No Index, No Follow</option>
-                                <option value="index, nofollow">Index, No Follow</option>
-                                <option value="noindex, follow">No Index, Follow</option>
-                            </select>
-                        </div>
-
-                        <!-- Heading H1 -->
-                        <div class="form-group template-group">
-                            <label for="heading_h1" class="text-white">Encabezado H1</label>
-                            <input type="text"
-                                class="form-control"
-                                id="heading_h1_atributo"
-                                name="heading_h1"
-                                placeholder="Ingrese el encabezado H1">
-                        </div>
-
-                        <!-- Heading H2 -->
-                        <div class="form-group template-group">
-                            <label for="heading_h2" class="text-white">Encabezado H2</label>
-                            <input type="text"
-                                class="form-control"
-                                id="heading_h2_atributo"
-                                name="heading_h2"
-                                placeholder="Ingrese el encabezado H2">
-                        </div>
-
-                        <!-- Additional Text -->
-                        <div class="form-group template-group">
-                            <label for="additional_text" class="text-white">Texto Adicional</label>
-                            <textarea class="form-control"
-                                id="additional_text_atributo"
-                                name="additional_text"
-                                rows="4"
-                                placeholder="Ingrese texto adicional"></textarea>
-                        </div>
-
-                        <div class="form-group text-right">
-                            <button type="submit" class="btn custom-button">Guardar Cambios</button>
-                            <a href="{{ route('home') }}" class="btn custom-button">Cancelar</a>
-                        </div>
+                        @include('admin.partials.seo-fields', ['prefix' => 'atributo'])
                     </form>
                 </div>
 
+                <!-- Tab Nacionalidades -->
                 <div class="tab-pane fade" id="nacionalidades" role="tabpanel">
                     <div class="form-group mb-4">
                         <label for="nacionalidad_select" class="text-white">Seleccionar Nacionalidad</label>
@@ -351,97 +207,12 @@
                     <form action="{{ route('seo.nacionalidades.update') }}" method="POST" id="nacionalidadForm">
                         @csrf
                         <input type="hidden" name="nacionalidad_id" id="nacionalidad_id_input">
+                        <input type="hidden" name="ciudad_id" class="ciudad-input">
 
-                        <!-- Meta Title -->
-                        <div class="form-group template-group">
-                            <label for="meta_title" class="text-white">Título Meta</label>
-                            <input type="text"
-                                class="form-control"
-                                id="meta_title_nacionalidad"
-                                name="meta_title"
-                                placeholder="Ingrese el título meta"
-                                required>
-                        </div>
-
-                        <!-- Meta Description -->
-                        <div class="form-group template-group">
-                            <label for="meta_description" class="text-white">Descripción Meta</label>
-                            <textarea class="form-control custom-textarea"
-                                id="meta_description_nacionalidad"
-                                name="meta_description"
-                                rows="3"
-                                placeholder="Ingrese la descripción meta"
-                                required></textarea>
-                        </div>
-
-                        <!-- Meta Keywords -->
-                        <div class="form-group template-group">
-                            <label for="meta_keywords" class="text-white">Palabras Clave Meta</label>
-                            <input type="text"
-                                class="form-control"
-                                id="meta_keywords_nacionalidad"
-                                name="meta_keywords"
-                                placeholder="Ingrese las palabras clave separadas por comas">
-                        </div>
-
-                        <!-- Canonical URL -->
-                        <div class="form-group template-group">
-                            <label for="canonical_url" class="text-white">URL Canónica</label>
-                            <input type="url"
-                                class="form-control"
-                                id="canonical_url_nacionalidad"
-                                name="canonical_url"
-                                placeholder="Ingrese la URL canónica (opcional)">
-                        </div>
-
-                        <!-- Meta Robots -->
-                        <div class="form-group template-group">
-                            <label for="meta_robots" class="text-white">Meta Robots</label>
-                            <select class="form-control" id="meta_robots_nacionalidad" name="meta_robots" required>
-                                <option value="index, follow">Index, Follow</option>
-                                <option value="noindex, nofollow">No Index, No Follow</option>
-                                <option value="index, nofollow">Index, No Follow</option>
-                                <option value="noindex, follow">No Index, Follow</option>
-                            </select>
-                        </div>
-
-                        <!-- Heading H1 -->
-                        <div class="form-group template-group">
-                            <label for="heading_h1" class="text-white">Encabezado H1</label>
-                            <input type="text"
-                                class="form-control"
-                                id="heading_h1_nacionalidad"
-                                name="heading_h1"
-                                placeholder="Ingrese el encabezado H1">
-                        </div>
-
-                        <!-- Heading H2 -->
-                        <div class="form-group template-group">
-                            <label for="heading_h2" class="text-white">Encabezado H2</label>
-                            <input type="text"
-                                class="form-control"
-                                id="heading_h2_nacionalidad"
-                                name="heading_h2"
-                                placeholder="Ingrese el encabezado H2">
-                        </div>
-
-                        <!-- Additional Text -->
-                        <div class="form-group template-group">
-                            <label for="additional_text" class="text-white">Texto Adicional</label>
-                            <textarea class="form-control"
-                                id="additional_text_nacionalidad"
-                                name="additional_text"
-                                rows="4"
-                                placeholder="Ingrese texto adicional"></textarea>
-                        </div>
-
-                        <div class="form-group text-right">
-                            <button type="submit" class="btn custom-button">Guardar Cambios</button>
-                            <a href="{{ route('home') }}" class="btn custom-button">Cancelar</a>
-                        </div>
+                        @include('admin.partials.seo-fields', ['prefix' => 'nacionalidad'])
                     </form>
                 </div>
-                <!-- En la sección de tab-content, después del div de nacionalidades -->
+
                 <!-- Tab Sectores -->
                 <div class="tab-pane fade" id="sectores" role="tabpanel">
                     <div class="form-group mb-4">
@@ -457,94 +228,52 @@
                     <form action="{{ route('seo.sectores.update') }}" method="POST" id="sectorForm">
                         @csrf
                         <input type="hidden" name="sector_id" id="sector_id_input">
+                        <input type="hidden" name="ciudad_id" class="ciudad-input">
 
-                        <!-- Meta Title -->
-                        <div class="form-group template-group">
-                            <label for="meta_title" class="text-white">Título Meta</label>
-                            <input type="text"
-                                class="form-control"
-                                id="meta_title_sector"
-                                name="meta_title"
-                                placeholder="Ingrese el título meta"
-                                required>
-                        </div>
+                        @include('admin.partials.seo-fields', ['prefix' => 'sector'])
+                    </form>
+                </div>
 
-                        <!-- Meta Description -->
-                        <div class="form-group template-group">
-                            <label for="meta_description" class="text-white">Descripción Meta</label>
-                            <textarea class="form-control custom-textarea"
-                                id="meta_description_sector"
-                                name="meta_description"
-                                rows="3"
-                                placeholder="Ingrese la descripción meta"
-                                required></textarea>
-                        </div>
+                <!-- Tab Disponibilidad -->
+                <div class="tab-pane fade" id="disponibilidad" role="tabpanel">
+                    <form action="{{ route('seo.disponibilidad.update') }}" method="POST" id="disponibilidadForm">
+                        @csrf
+                        <input type="hidden" name="ciudad_id" class="ciudad-input">
 
-                        <!-- Meta Keywords -->
-                        <div class="form-group template-group">
-                            <label for="meta_keywords" class="text-white">Palabras Clave Meta</label>
-                            <input type="text"
-                                class="form-control"
-                                id="meta_keywords_sector"
-                                name="meta_keywords"
-                                placeholder="Ingrese las palabras clave separadas por comas">
-                        </div>
+                        @include('admin.partials.seo-fields', ['prefix' => 'disponibilidad'])
+                    </form>
+                </div>
 
-                        <!-- Canonical URL -->
-                        <div class="form-group template-group">
-                            <label for="canonical_url" class="text-white">URL Canónica</label>
-                            <input type="url"
-                                class="form-control"
-                                id="canonical_url_sector"
-                                name="canonical_url"
-                                placeholder="Ingrese la URL canónica (opcional)">
-                        </div>
+                <!-- Tab Reseñas -->
+                <div class="tab-pane fade" id="resenas" role="tabpanel">
+                    <form action="{{ route('seo.resenas.update') }}" method="POST" id="resenasForm">
+                        @csrf
+                        <input type="hidden" name="ciudad_id" class="ciudad-input">
 
-                        <!-- Meta Robots -->
-                        <div class="form-group template-group">
-                            <label for="meta_robots" class="text-white">Meta Robots</label>
-                            <select class="form-control" id="meta_robots_sector" name="meta_robots" required>
-                                <option value="index, follow">Index, Follow</option>
-                                <option value="noindex, nofollow">No Index, No Follow</option>
-                                <option value="index, nofollow">Index, No Follow</option>
-                                <option value="noindex, follow">No Index, Follow</option>
-                            </select>
-                        </div>
+                        @include('admin.partials.seo-fields', ['prefix' => 'resenas'])
+                    </form>
+                </div>
 
-                        <!-- Heading H1 -->
-                        <div class="form-group template-group">
-                            <label for="heading_h1" class="text-white">Encabezado H1</label>
-                            <input type="text"
-                                class="form-control"
-                                id="heading_h1_sector"
-                                name="heading_h1"
-                                placeholder="Ingrese el encabezado H1">
-                        </div>
+                <!-- Tab Categorías -->
+                <div class="tab-pane fade" id="categorias" role="tabpanel">
+                    <div class="form-group mb-4">
+                        <label for="categoria_select" class="text-white">Seleccionar Categoría</label>
+                        <select class="form-control" id="categoria_select" name="categoria_id">
+                            <option value="">Seleccione una categoría...</option>
+                            <option value="vip">VIP</option>
+                            <option value="premium">Premium</option>
+                            <option value="de_lujo">De Lujo</option>
+                            <option value="under">Under</option>
+                            <option value="masajes">Masajes</option>
+                        </select>
+                    </div>
 
-                        <!-- Heading H2 -->
-                        <div class="form-group template-group">
-                            <label for="heading_h2" class="text-white">Encabezado H2</label>
-                            <input type="text"
-                                class="form-control"
-                                id="heading_h2_sector"
-                                name="heading_h2"
-                                placeholder="Ingrese el encabezado H2">
-                        </div>
+                    <form action="{{ route('seo.categorias.update') }}" method="POST" id="categoriaForm">
+                        @csrf
+                        <input type="hidden" name="categoria_id" id="categoria_id_input">
+                        <input type="hidden" name="ciudad_id" class="ciudad-input">
 
-                        <!-- Additional Text -->
-                        <div class="form-group template-group">
-                            <label for="additional_text" class="text-white">Texto Adicional</label>
-                            <textarea class="form-control"
-                                id="additional_text_sector"
-                                name="additional_text"
-                                rows="4"
-                                placeholder="Ingrese texto adicional"></textarea>
-                        </div>
-
-                        <div class="form-group text-right">
-                            <button type="submit" class="btn custom-button">Guardar Cambios</button>
-                            <a href="{{ route('home') }}" class="btn custom-button">Cancelar</a>
-                        </div>
+                        @include('admin.partials.seo-fields', ['prefix' => 'categoria'])
                     </form>
                 </div>
             </div>

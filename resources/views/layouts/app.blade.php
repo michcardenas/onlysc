@@ -12,11 +12,7 @@
          <link rel="icon" href="{{ asset('images/icono.png') }}?v=2" type="image/png">    
 
          <title>
-    @if(isset($pageTitle) && str_contains($pageTitle, 'Escorts en') && str_ends_with($pageTitle, '| OnlyEscorts'))
-        {{ $meta->meta_title ?? 'OnlyEscorts' }}
-    @else
-        {{ $pageTitle ?? ($meta->meta_title ?? 'OnlyEscorts') }}
-    @endif
+         {{ $meta->meta_title ?? 'OnlyEscorts' }}
 </title>
     <!-- Icono de la pestaña (favicon) -->
     <!-- Meta tags dinámicos -->
@@ -257,15 +253,16 @@
         <select name="nacionalidad" id="nacionalidadSelect" class="form-select">
             <option value="">Todas las nacionalidades</option>
             @foreach($nacionalidades as $nacionalidad)
-                <option value="{{ $nacionalidad->url }}"
-                    {{ isset($nacionalidadSeleccionada) && $nacionalidadSeleccionada == $nacionalidad->id ? 'selected' : '' }}>
-                    {{ $nacionalidad->nombre }}
-                </option>
-            @endforeach
+    @if(is_object($nacionalidad) && isset($nacionalidad->url))
+        <option value="{{ $nacionalidad->url }}">{{ $nacionalidad->nombre }}</option>
+    @else
+        <option value="">Dato inválido</option>
+    @endif
+@endforeach
         </select>
     </div>
 </div>
-            </div>
+</div>
 
             <form id="filterForm">
                 <div class="modal-body">
@@ -1418,30 +1415,35 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 };
 
-    // Obtener datos dinámicamente desde el backend
-    fetch('/get-filter-data')
-        .then(response => {
-            if (!response.ok) throw new Error(`Error en la solicitud: ${response.statusText}`);
-            return response.json();
-        })
-        .then(data => {
-            if (!data.servicios || !data.atributos) throw new Error('Los datos de servicios o atributos no están presentes en la respuesta.');
-            createCheckboxes(data.servicios, document.getElementById('serviciosContainer'), 'servicios');
-            createCheckboxes(data.atributos, document.getElementById('atributosContainer'), 'atributos');
-        })
-        .catch(error => {
-            console.error('Error al obtener los datos:', error);
-            // Fallback a datos estáticos si falla la petición
-            const serviciosContainer = document.getElementById('serviciosContainer');
-            const atributosContainer = document.getElementById('atributosContainer');
+fetch('/get-filter-data')
+    .then(response => {
+        if (!response.ok) throw new Error(`Error en la solicitud: ${response.statusText}`);
+        return response.json();
+    })
+    .then(data => {
+        // Verificar y manejar los datos de nacionalidades
+        if (data.nacionalidades) {
+    nacionalidadSelect.innerHTML = '<option value="">Seleccionar nacionalidad</option>';
+    data.nacionalidades.forEach(nacionalidad => {
+        const option = document.createElement('option');
+        option.value = nacionalidad.url;  // Asegurarte de que aquí se asigna el valor correcto
+        option.textContent = nacionalidad.nombre;
+        nacionalidadSelect.appendChild(option);
+    });
 
-            if (window.servicios) {
-                createCheckboxes(window.servicios, serviciosContainer, 'servicios');
-            }
-            if (window.atributos) {
-                createCheckboxes(window.atributos, atributosContainer, 'atributos');
-            }
-        });
+        } else {
+            console.warn('No se encontraron datos de nacionalidades.');
+        }
+
+        // Crear checkboxes para servicios y atributos
+        createCheckboxes(data.servicios, document.getElementById('serviciosContainer'), 'servicios');
+        createCheckboxes(data.atributos, document.getElementById('atributosContainer'), 'atributos');
+    })
+    .catch(error => {
+        console.error('Error al obtener los datos:', error);
+    });
+
+
 
     // Gestión de barrios
     const toggleBarrioContainer = () => {
@@ -1497,14 +1499,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Procesar nacionalidad
         if (nacionalidadSelect.value) {
-    // Usamos directamente el value que debe contener la URL de la nacionalidad
+    console.log('Valor del select:', nacionalidadSelect.value);
     if (shouldAddToUrl()) {
-        url += `/${nacionalidadSelect.value}`; // El value ya contiene la URL de la tabla
+        url += `/${nacionalidadSelect.value}`;
+        console.log('URL actualizada:', url);
         hasAddedUrlFilter = true;
     } else {
         params.append('n', nacionalidadSelect.value);
+        console.log('Parámetros agregados:', params.toString());
     }
 }
+
 
         // Procesar edad
         const [edadMin, edadMax] = edadRange.noUiSlider.get().map(Number);

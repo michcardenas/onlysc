@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @php
-$pageTitle = $usuarioPublicate->fantasia . ' Escort ' .
-($usuarioPublicate->categorias ? ucfirst(strtolower($usuarioPublicate->categorias)) . ' ' : '') .
-'en ' . $usuarioPublicate->ubicacion . ' | OnlyEscorts';
+$metaTitle = $usuarioPublicate->fantasia . ' Escort ' .
+        ($usuarioPublicate->categorias ? ucfirst(strtolower($usuarioPublicate->categorias)) . ' ' : '') .
+        'en ' . $usuarioPublicate->ubicacion . ' | OnlyEscorts';
 @endphp
 
 @section('content')
@@ -69,13 +69,17 @@ $pageTitle = $usuarioPublicate->fantasia . ' Escort ' .
     </div>
 
     <div class="escortperfil-info-bar">
-        <div class="escortperfil-info-item">
-            <img src="{{ asset('images/pais.svg') }}" alt="Nacionalidad" class="escortperfil-info-icon">
-            <div class="escortperfil-info-text">
-                <span class="escortperfil-info-label">Nacionalidad</span>
-                <span class="escortperfil-info-value">{{ $usuarioPublicate->nacionalidad ?? 'N/A' }}</span>
-            </div>
+    <div class="escortperfil-info-item">
+        <img src="{{ asset('images/pais.svg') }}" alt="Nacionalidad" class="escortperfil-info-icon">
+        <div class="escortperfil-info-text">
+            <span class="escortperfil-info-label">Nacionalidad</span>
+            <span class="escortperfil-info-value">
+                {{ $usuarioPublicate->nacionalidadRelacion->nombre ?? 'N/A' }}
+            </span>
         </div>
+    </div>
+
+
         <div class="escortperfil-info-item">
             <img src="{{ asset('images/calendar.svg') }}" alt="Edad" class="escortperfil-info-icon">
             <div class="escortperfil-info-text">

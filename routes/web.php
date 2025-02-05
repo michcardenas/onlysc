@@ -19,6 +19,7 @@ use App\Http\Controllers\MetaTagController;
 use App\Http\Controllers\TarjetaController;
 use App\Models\Servicio;
 use App\Models\Atributo;
+use App\Models\Nacionalidad;
 use App\Http\Controllers\PageController;
 
 
@@ -142,7 +143,7 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
         // Vista principal
         Route::get('/templates-unitarios', [SEOController::class, 'templatesUnitarios'])
             ->name('seo.templates.unitarios');
-
+    
         // API para obtener datos SEO
         Route::get('/servicios/{servicio}/seo', [SEOController::class, 'getServicioSeo'])
             ->name('api.servicios.seo');
@@ -150,20 +151,35 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
             ->name('api.atributos.seo');
         Route::get('/nacionalidades/{nacionalidad}/seo', [SEOController::class, 'getNacionalidadSeo'])
             ->name('api.nacionalidades.seo');
-
         Route::get('/sectores/{sector}/seo', [SEOController::class, 'getSectorSeo'])
             ->name('api.sectores.seo');
-
-
+    
+        // Nuevas rutas para obtener datos SEO
+        Route::get('/disponibilidad/seo', [SEOController::class, 'getDisponibilidadSeo'])
+            ->name('api.disponibilidad.seo');
+        Route::get('/resenas/seo', [SEOController::class, 'getResenasSeo'])
+            ->name('api.resenas.seo');
+        Route::get('/categorias/{categoria}/seo', [SEOController::class, 'getCategoriaSeo'])
+            ->name('api.categorias.seo');
+    
         // Rutas para actualizar SEO
         Route::post('/servicios/update', [SEOController::class, 'updateServicioSeo'])
             ->name('seo.servicios.update');
         Route::post('/atributos/update', [SEOController::class, 'updateAtributoSeo'])
             ->name('seo.atributos.update');
+        // Corregida esta ruta
         Route::post('/nacionalidades/update', [SEOController::class, 'updateNacionalidadSeo'])
             ->name('seo.nacionalidades.update');
         Route::post('/sectores/update', [SEOController::class, 'updateSectorSeo'])
             ->name('seo.sectores.update');
+        
+        // Nuevas rutas para actualizar SEO
+        Route::post('/disponibilidad/update', [SEOController::class, 'updateDisponibilidadSeo'])
+            ->name('seo.disponibilidad.update');
+        Route::post('/resenas/update', [SEOController::class, 'updateResenasSeo'])
+            ->name('seo.resenas.update');
+        Route::post('/categorias/update', [SEOController::class, 'updateCategoriaSeo'])
+            ->name('seo.categorias.update');
     });
 });
 
@@ -283,10 +299,12 @@ Route::get('/usuario/{id}', [PerfilController::class, 'getUsuario'])->name('usua
 Route::get('/get-filter-data', function () {
     $servicios = Servicio::orderBy('posicion')->get();
     $atributos = Atributo::orderBy('posicion')->get();
+    $nacionalidades = Nacionalidad::orderBy('nombre')->get();
 
     return response()->json([
         'servicios' => $servicios,
         'atributos' => $atributos,
+        'nacionalidades' => $nacionalidades,
     ]);
 });
 Route::get('/contacto', [PageController::class, 'contacto'])->name('contacto');

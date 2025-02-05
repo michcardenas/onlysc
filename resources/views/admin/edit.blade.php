@@ -206,6 +206,9 @@ use App\Models\Sector;
                     @endforeach
                 </select>
             </div>
+            <div class="mt-3">
+                <a href="{{ route('sectores.indexsector') }}" class="btn btn-primary">Sectores</a>
+            </div>
 
             <div class="form-group">
                 <label for="nacionalidad">Nacionalidad</label>
@@ -218,6 +221,9 @@ use App\Models\Sector;
                     </option>
                     @endforeach
                 </select>
+            </div>
+            <div class="mt-3">
+                <a href="{{ route('nacionalidades.indexnacionalidad') }}" class="btn btn-primary">Nacionalidades</a>
             </div>
 
             <div class="form-group">
@@ -309,6 +315,9 @@ use App\Models\Sector;
                     </div>
                 </div>
             </div>
+            <div class="mt-3">
+                <a href="{{ route('servicios.indexservicio') }}" class="btn btn-primary">Servicios</a>
+            </div>
 
             <div class="admin-form-group">
                 <div class="admin-services-wrapper">
@@ -353,6 +362,10 @@ use App\Models\Sector;
                     </div>
                 </div>
             </div>
+            <div class="mt-3">
+                <a href="{{ route('atributos.indexatributo') }}" class="btn btn-primary">Atributos</a>
+            </div>
+
 
             <div class="form-group">
                 <label for="cuentanos">Cuéntanos sobre ti</label>

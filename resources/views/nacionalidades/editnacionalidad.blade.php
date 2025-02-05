@@ -14,8 +14,11 @@
     </div>
     @endif
 
-    <form action="{{ route('nacionalidades.store') }}" method="POST">
+    <!-- Cambiar la acción para enviar el ID -->
+    <form action="{{ route('nacionalidades.update', $nacionalidad->id) }}" method="POST">
         @csrf
+        @method('PUT')  <!-- Este método es importante para la actualización -->
+
         <!-- Nombre de la Nacionalidad -->
         <div class="form-group">
             <label style="color: white;" for="nombre">Nombre de la Nacionalidad</label>
@@ -24,7 +27,7 @@
                 name="nombre" 
                 id="nombre" 
                 class="form-control" 
-                value="{{ old('nombre') }}" 
+                value="{{ old('nombre', $nacionalidad->nombre) }}" 
                 required>
         </div>
 
@@ -36,7 +39,7 @@
                 name="url" 
                 id="url" 
                 class="form-control" 
-                value="{{ old('url') }}" 
+                value="{{ old('url', $nacionalidad->url) }}" 
                 placeholder="Ejemplo: nombre-nacionalidad" 
                 required>
         </div>
@@ -49,7 +52,7 @@
                 name="posicion" 
                 id="posicion" 
                 class="form-control" 
-                value="{{ old('posicion') }}" 
+                value="{{ old('posicion', $nacionalidad->posicion) }}" 
                 placeholder="Ejemplo: 1, 2, 3..." 
                 required>
         </div>

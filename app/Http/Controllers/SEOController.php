@@ -121,6 +121,7 @@ class SEOController extends Controller
     {
         $usuarioAutenticado = Auth::user();
         $servicios = Servicio::all();
+        $ciudades = Ciudad::all();
         $atributos = Atributo::all();
         $nacionalidades = Nacionalidad::all();
         $sectores = Sector::all(); // Agregar esta línea
@@ -129,78 +130,21 @@ class SEOController extends Controller
             'usuarioAutenticado',
             'servicios',
             'atributos',
+            'ciudades',
             'nacionalidades',
             'sectores' // Agregar esta línea
         ));
     }
 
-    public function getSectoresData()
+    public function getServicioSeo(Servicio $servicio, Request $request)
     {
-        $sectores = Sector::with(['metaTag'])->get()
-            ->map(function ($sector) {
-                return [
-                    'id' => $sector->id,
-                    'nombre' => $sector->nombre,
-                    'meta_title' => $sector->metaTag->meta_title ?? '',
-                    'meta_description' => $sector->metaTag->meta_description ?? ''
-                ];
-            });
-
-        return response()->json(['data' => $sectores]);
-    }
-
-    public function getNacionalidadesData()
-    {
-        $nacionalidades = Nacionalidad::with(['metaTag'])->get()
-            ->map(function ($nacionalidad) {
-                return [
-                    'id' => $nacionalidad->id,
-                    'nombre' => $nacionalidad->nombre,
-                    'meta_title' => $nacionalidad->metaTag->meta_title ?? '',
-                    'meta_description' => $nacionalidad->metaTag->meta_description ?? ''
-                ];
-            });
-
-        return response()->json(['data' => $nacionalidades]);
-    }
-
-
-    public function getServiciosData()
-    {
-        $servicios = Servicio::with(['metaTag'])->get()
-            ->map(function ($servicio) {
-                return [
-                    'id' => $servicio->id,
-                    'nombre' => $servicio->nombre,
-                    'meta_title' => $servicio->metaTag->meta_title ?? '',
-                    'meta_description' => $servicio->metaTag->meta_description ?? ''
-                ];
-            });
-
-        return response()->json(['data' => $servicios]);
-    }
-
-    public function getAtributosData()
-    {
-        $atributos = Atributo::with(['metaTag'])->get()
-            ->map(function ($atributo) {
-                return [
-                    'id' => $atributo->id,
-                    'nombre' => $atributo->nombre,
-                    'meta_title' => $atributo->metaTag->meta_title ?? '',
-                    'meta_description' => $atributo->metaTag->meta_description ?? ''
-                ];
-            });
-
-        return response()->json(['data' => $atributos]);
-    }
-
-    public function getServicioSeo(Servicio $servicio)
-    {
-        $seo = MetaTag::where('page', "seo/servicios/{$servicio->id}")
+        $ciudadId = $request->query('ciudad_id');
+        $page = $ciudadId ? "seo/servicios/{$servicio->id}/ciudad/{$ciudadId}" : "seo/servicios/{$servicio->id}";
+    
+        $seo = MetaTag::where('page', $page)
             ->where('tipo', 'servicios')
             ->first();
-
+    
         if (!$seo) {
             return response()->json([
                 'meta_title' => '',
@@ -213,17 +157,19 @@ class SEOController extends Controller
                 'additional_text' => ''
             ]);
         }
-
+    
         return response()->json($seo);
     }
-
-    // Agregar las funciones para obtener y actualizar SEO de sectores
-    public function getSectorSeo(Sector $sector)
+    
+    public function getSectorSeo(Sector $sector, Request $request)
     {
-        $seo = MetaTag::where('page', "seo/sectores/{$sector->id}")
+        $ciudadId = $request->query('ciudad_id');
+        $page = $ciudadId ? "seo/sectores/{$sector->id}/ciudad/{$ciudadId}" : "seo/sectores/{$sector->id}";
+    
+        $seo = MetaTag::where('page', $page)
             ->where('tipo', 'sectores')
             ->first();
-
+    
         if (!$seo) {
             return response()->json([
                 'meta_title' => '',
@@ -236,16 +182,19 @@ class SEOController extends Controller
                 'additional_text' => ''
             ]);
         }
-
+    
         return response()->json($seo);
     }
-
-    public function getAtributoSeo(Atributo $atributo)
+    
+    public function getAtributoSeo(Atributo $atributo, Request $request)
     {
-        $seo = MetaTag::where('page', "seo/atributos/{$atributo->id}")
+        $ciudadId = $request->query('ciudad_id');
+        $page = $ciudadId ? "seo/atributos/{$atributo->id}/ciudad/{$ciudadId}" : "seo/atributos/{$atributo->id}";
+    
+        $seo = MetaTag::where('page', $page)
             ->where('tipo', 'atributos')
             ->first();
-
+    
         if (!$seo) {
             return response()->json([
                 'meta_title' => '',
@@ -258,22 +207,49 @@ class SEOController extends Controller
                 'additional_text' => ''
             ]);
         }
-
+    
         return response()->json($seo);
     }
-
+    
+    public function getNacionalidadSeo(Nacionalidad $nacionalidad, Request $request)
+    {
+        $ciudadId = $request->query('ciudad_id');
+        $page = $ciudadId ? "seo/nacionalidades/{$nacionalidad->id}/ciudad/{$ciudadId}" : "seo/nacionalidades/{$nacionalidad->id}";
+    
+        $seo = MetaTag::where('page', $page)
+            ->where('tipo', 'nacionalidades')
+            ->first();
+    
+        if (!$seo) {
+            return response()->json([
+                'meta_title' => '',
+                'meta_description' => '',
+                'meta_keywords' => '',
+                'canonical_url' => '',
+                'meta_robots' => 'index, follow',
+                'heading_h1' => '',
+                'heading_h2' => '',
+                'additional_text' => ''
+            ]);
+        }
+    
+        return response()->json($seo);
+    }
+    
     public function updateServicioSeo(Request $request)
     {
         try {
             Log::info('Iniciando actualización de SEO para servicio', [
                 'servicio_id' => $request->servicio_id,
+                'ciudad_id' => $request->ciudad_id,
                 'ip' => $request->ip()
             ]);
-
+    
             $servicio = Servicio::findOrFail($request->servicio_id);
             Log::info('Servicio encontrado', ['servicio' => $servicio->nombre]);
-
+    
             $validated = $request->validate([
+                'ciudad_id' => 'required|exists:ciudades,id',
                 'meta_title' => 'required|max:60',
                 'meta_description' => 'required|max:160',
                 'meta_keywords' => 'nullable',
@@ -283,60 +259,52 @@ class SEOController extends Controller
                 'heading_h2' => 'nullable|max:255',
                 'additional_text' => 'nullable'
             ]);
-
+    
             Log::info('Datos validados correctamente', [
                 'meta_title' => $validated['meta_title'],
                 'meta_description' => substr($validated['meta_description'], 0, 50) . '...'
             ]);
-
+    
+            $page = "seo/servicios/{$servicio->id}/ciudad/{$request->ciudad_id}";
+    
             $seo = MetaTag::updateOrCreate(
                 [
-                    'page' => "seo/servicios/{$servicio->id}",
+                    'page' => $page,
                     'tipo' => 'servicios'
                 ],
                 $validated
             );
-
+    
             Log::info('SEO actualizado exitosamente', [
                 'seo_id' => $seo->id,
                 'page' => $seo->page
             ]);
-
+    
             return response()->json(['success' => true, 'data' => $seo]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::warning('Error de validación en actualización SEO', [
-                'servicio_id' => $request->servicio_id,
-                'errores' => $e->errors()
-            ]);
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            Log::error('Servicio no encontrado', [
-                'servicio_id' => $request->servicio_id
-            ]);
-            return response()->json(['success' => false, 'message' => 'Servicio no encontrado'], 404);
         } catch (\Exception $e) {
-            Log::error('Error inesperado actualizando SEO', [
+            Log::error('Error actualizando SEO', [
                 'servicio_id' => $request->servicio_id,
-                'error' => $e->getMessage(),
-                'linea' => $e->getLine(),
-                'archivo' => $e->getFile()
+                'ciudad_id' => $request->ciudad_id,
+                'error' => $e->getMessage()
             ]);
-            return response()->json(['success' => false, 'message' => 'Error interno del servidor'], 500);
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
-
+    
     public function updateAtributoSeo(Request $request)
     {
         try {
             Log::info('Iniciando actualización de SEO para atributo', [
                 'atributo_id' => $request->atributo_id,
+                'ciudad_id' => $request->ciudad_id,
                 'ip' => $request->ip()
             ]);
-
+    
             $atributo = Atributo::findOrFail($request->atributo_id);
             Log::info('Atributo encontrado', ['atributo' => $atributo->nombre]);
-
+    
             $validated = $request->validate([
+                'ciudad_id' => 'required|exists:ciudades,id',
                 'meta_title' => 'required|max:60',
                 'meta_description' => 'required|max:160',
                 'meta_keywords' => 'nullable',
@@ -346,81 +314,47 @@ class SEOController extends Controller
                 'heading_h2' => 'nullable|max:255',
                 'additional_text' => 'nullable'
             ]);
-
-            Log::info('Datos validados correctamente', [
-                'meta_title' => $validated['meta_title'],
-                'meta_description' => substr($validated['meta_description'], 0, 50) . '...'
-            ]);
-
+    
+            $page = "seo/atributos/{$atributo->id}/ciudad/{$request->ciudad_id}";
+    
             $seo = MetaTag::updateOrCreate(
                 [
-                    'page' => "seo/atributos/{$atributo->id}",
+                    'page' => $page,
                     'tipo' => 'atributos'
                 ],
                 $validated
             );
-
+    
             Log::info('SEO actualizado exitosamente', [
                 'seo_id' => $seo->id,
                 'page' => $seo->page
             ]);
-
+    
             return response()->json(['success' => true, 'data' => $seo]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::warning('Error de validación en actualización SEO', [
-                'atributo_id' => $request->atributo_id,
-                'errores' => $e->errors()
-            ]);
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            Log::error('Atributo no encontrado', [
-                'atributo_id' => $request->atributo_id
-            ]);
-            return response()->json(['success' => false, 'message' => 'Atributo no encontrado'], 404);
         } catch (\Exception $e) {
-            Log::error('Error inesperado actualizando SEO', [
+            Log::error('Error actualizando SEO', [
                 'atributo_id' => $request->atributo_id,
-                'error' => $e->getMessage(),
-                'linea' => $e->getLine(),
-                'archivo' => $e->getFile()
+                'ciudad_id' => $request->ciudad_id,
+                'error' => $e->getMessage()
             ]);
-            return response()->json(['success' => false, 'message' => 'Error interno del servidor'], 500);
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
-    public function getNacionalidadSeo(Nacionalidad $nacionalidad)
-    {
-        $seo = MetaTag::where('page', "seo/nacionalidades/{$nacionalidad->id}")
-            ->where('tipo', 'nacionalidades')
-            ->first();
-
-        if (!$seo) {
-            return response()->json([
-                'meta_title' => '',
-                'meta_description' => '',
-                'meta_keywords' => '',
-                'canonical_url' => '',
-                'meta_robots' => 'index, follow',
-                'heading_h1' => '',
-                'heading_h2' => '',
-                'additional_text' => ''
-            ]);
-        }
-
-        return response()->json($seo);
-    }
-
+    
     public function updateNacionalidadSeo(Request $request)
     {
         try {
             Log::info('Iniciando actualización de SEO para nacionalidad', [
                 'nacionalidad_id' => $request->nacionalidad_id,
+                'ciudad_id' => $request->ciudad_id,
                 'ip' => $request->ip()
             ]);
-
+    
             $nacionalidad = Nacionalidad::findOrFail($request->nacionalidad_id);
             Log::info('Nacionalidad encontrada', ['nacionalidad' => $nacionalidad->nombre]);
-
+    
             $validated = $request->validate([
+                'ciudad_id' => 'required|exists:ciudades,id',
                 'meta_title' => 'required|max:60',
                 'meta_description' => 'required|max:160',
                 'meta_keywords' => 'nullable',
@@ -430,54 +364,47 @@ class SEOController extends Controller
                 'heading_h2' => 'nullable|max:255',
                 'additional_text' => 'nullable'
             ]);
-
-            Log::info('Datos validados correctamente', [
-                'meta_title' => $validated['meta_title'],
-                'meta_description' => substr($validated['meta_description'], 0, 50) . '...'
-            ]);
-
+    
+            $page = "seo/nacionalidades/{$nacionalidad->id}/ciudad/{$request->ciudad_id}";
+    
             $seo = MetaTag::updateOrCreate(
                 [
-                    'page' => "seo/nacionalidades/{$nacionalidad->id}",
+                    'page' => $page,
                     'tipo' => 'nacionalidades'
                 ],
                 $validated
             );
-
+    
             Log::info('SEO actualizado exitosamente', [
                 'seo_id' => $seo->id,
                 'page' => $seo->page
             ]);
-
+    
             return response()->json(['success' => true, 'data' => $seo]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::warning('Error de validación en actualización SEO', [
-                'nacionalidad_id' => $request->nacionalidad_id,
-                'errores' => $e->errors()
-            ]);
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            Log::error('Nacionalidad no encontrada', [
-                'nacionalidad_id' => $request->nacionalidad_id
-            ]);
-            return response()->json(['success' => false, 'message' => 'Nacionalidad no encontrada'], 404);
         } catch (\Exception $e) {
-            Log::error('Error inesperado actualizando SEO', [
+            Log::error('Error actualizando SEO', [
                 'nacionalidad_id' => $request->nacionalidad_id,
-                'error' => $e->getMessage(),
-                'linea' => $e->getLine(),
-                'archivo' => $e->getFile()
+                'ciudad_id' => $request->ciudad_id,
+                'error' => $e->getMessage()
             ]);
-            return response()->json(['success' => false, 'message' => 'Error interno del servidor'], 500);
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
-
+    
     public function updateSectorSeo(Request $request)
     {
         try {
+            Log::info('Iniciando actualización de SEO para sector', [
+                'sector_id' => $request->sector_id,
+                'ciudad_id' => $request->ciudad_id,
+                'ip' => $request->ip()
+            ]);
+    
             $sector = Sector::findOrFail($request->sector_id);
-
+            Log::info('Sector encontrado', ['sector' => $sector->nombre]);
+    
             $validated = $request->validate([
+                'ciudad_id' => 'required|exists:ciudades,id',
                 'meta_title' => 'required|max:60',
                 'meta_description' => 'required|max:160',
                 'meta_keywords' => 'nullable',
@@ -487,18 +414,253 @@ class SEOController extends Controller
                 'heading_h2' => 'nullable|max:255',
                 'additional_text' => 'nullable'
             ]);
-
+    
+            $page = "seo/sectores/{$sector->id}/ciudad/{$request->ciudad_id}";
+    
             $seo = MetaTag::updateOrCreate(
                 [
-                    'page' => "seo/sectores/{$sector->id}",
+                    'page' => $page,
                     'tipo' => 'sectores'
                 ],
                 $validated
             );
-
+    
+            Log::info('SEO actualizado exitosamente', [
+                'seo_id' => $seo->id,
+                'page' => $seo->page
+            ]);
+    
             return response()->json(['success' => true, 'data' => $seo]);
         } catch (\Exception $e) {
+            Log::error('Error actualizando SEO', [
+                'sector_id' => $request->sector_id,
+                'ciudad_id' => $request->ciudad_id,
+                'error' => $e->getMessage()
+            ]);
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
+    
+    // Funciones para Disponibilidad
+public function getDisponibilidadSeo(Request $request)
+{
+    $ciudadId = $request->query('ciudad_id');
+    $page = $ciudadId ? "seo/disponibilidad/ciudad/{$ciudadId}" : "seo/disponibilidad";
+
+    $seo = MetaTag::where('page', $page)
+        ->where('tipo', 'disponibilidad')
+        ->first();
+
+    if (!$seo) {
+        return response()->json([
+            'meta_title' => '',
+            'meta_description' => '',
+            'meta_keywords' => '',
+            'canonical_url' => '',
+            'meta_robots' => 'index, follow',
+            'heading_h1' => '',
+            'heading_h2' => '',
+            'additional_text' => ''
+        ]);
+    }
+
+    return response()->json($seo);
+}
+
+public function updateDisponibilidadSeo(Request $request)
+{
+    try {
+        Log::info('Iniciando actualización de SEO para disponibilidad', [
+            'ciudad_id' => $request->ciudad_id,
+            'ip' => $request->ip()
+        ]);
+
+        $validated = $request->validate([
+            'ciudad_id' => 'required|exists:ciudades,id',
+            'meta_title' => 'required|max:60',
+            'meta_description' => 'required|max:160',
+            'meta_keywords' => 'nullable',
+            'canonical_url' => 'nullable|url',
+            'meta_robots' => 'required',
+            'heading_h1' => 'nullable|max:255',
+            'heading_h2' => 'nullable|max:255',
+            'additional_text' => 'nullable'
+        ]);
+
+        $page = "seo/disponibilidad/ciudad/{$request->ciudad_id}";
+
+        $seo = MetaTag::updateOrCreate(
+            [
+                'page' => $page,
+                'tipo' => 'disponibilidad'
+            ],
+            $validated
+        );
+
+        Log::info('SEO de disponibilidad actualizado exitosamente', [
+            'seo_id' => $seo->id,
+            'ciudad_id' => $request->ciudad_id
+        ]);
+
+        return response()->json(['success' => true, 'data' => $seo]);
+    } catch (\Exception $e) {
+        Log::error('Error actualizando SEO de disponibilidad', [
+            'ciudad_id' => $request->ciudad_id,
+            'error' => $e->getMessage(),
+            'linea' => $e->getLine(),
+            'archivo' => $e->getFile()
+        ]);
+        return response()->json(['success' => false, 'message' => 'Error interno del servidor'], 500);
+    }
+}
+
+// Funciones para Reseñas
+public function getResenasSeo(Request $request)
+{
+    $ciudadId = $request->query('ciudad_id');
+    $page = $ciudadId ? "seo/resenas/ciudad/{$ciudadId}" : "seo/resenas";
+
+    $seo = MetaTag::where('page', $page)
+        ->where('tipo', 'resenas')
+        ->first();
+
+    if (!$seo) {
+        return response()->json([
+            'meta_title' => '',
+            'meta_description' => '',
+            'meta_keywords' => '',
+            'canonical_url' => '',
+            'meta_robots' => 'index, follow',
+            'heading_h1' => '',
+            'heading_h2' => '',
+            'additional_text' => ''
+        ]);
+    }
+
+    return response()->json($seo);
+}
+
+public function updateResenasSeo(Request $request)
+{
+    try {
+        Log::info('Iniciando actualización de SEO para reseñas', [
+            'ciudad_id' => $request->ciudad_id,
+            'ip' => $request->ip()
+        ]);
+
+        $validated = $request->validate([
+            'ciudad_id' => 'required|exists:ciudades,id',
+            'meta_title' => 'required|max:60',
+            'meta_description' => 'required|max:160',
+            'meta_keywords' => 'nullable',
+            'canonical_url' => 'nullable|url',
+            'meta_robots' => 'required',
+            'heading_h1' => 'nullable|max:255',
+            'heading_h2' => 'nullable|max:255',
+            'additional_text' => 'nullable'
+        ]);
+
+        $page = "seo/resenas/ciudad/{$request->ciudad_id}";
+
+        $seo = MetaTag::updateOrCreate(
+            [
+                'page' => $page,
+                'tipo' => 'resenas'
+            ],
+            $validated
+        );
+
+        Log::info('SEO de reseñas actualizado exitosamente', [
+            'seo_id' => $seo->id,
+            'ciudad_id' => $request->ciudad_id
+        ]);
+
+        return response()->json(['success' => true, 'data' => $seo]);
+    } catch (\Exception $e) {
+        Log::error('Error actualizando SEO de reseñas', [
+            'ciudad_id' => $request->ciudad_id,
+            'error' => $e->getMessage(),
+            'linea' => $e->getLine(),
+            'archivo' => $e->getFile()
+        ]);
+        return response()->json(['success' => false, 'message' => 'Error interno del servidor'], 500);
+    }
+}
+
+// Funciones para Categorías
+public function getCategoriaSeo($categoria, Request $request)
+{
+    $ciudadId = $request->query('ciudad_id');
+    $page = $ciudadId ? "seo/categorias/{$categoria}/ciudad/{$ciudadId}" : "seo/categorias/{$categoria}";
+
+    $seo = MetaTag::where('page', $page)
+        ->where('tipo', 'categorias')
+        ->first();
+
+    if (!$seo) {
+        return response()->json([
+            'meta_title' => '',
+            'meta_description' => '',
+            'meta_keywords' => '',
+            'canonical_url' => '',
+            'meta_robots' => 'index, follow',
+            'heading_h1' => '',
+            'heading_h2' => '',
+            'additional_text' => ''
+        ]);
+    }
+
+    return response()->json($seo);
+}
+
+public function updateCategoriaSeo(Request $request)
+{
+    try {
+        Log::info('Iniciando actualización de SEO para categoría', [
+            'categoria' => $request->categoria_id,
+            'ciudad_id' => $request->ciudad_id,
+            'ip' => $request->ip()
+        ]);
+
+        $validated = $request->validate([
+            'ciudad_id' => 'required|exists:ciudades,id',
+            'categoria_id' => 'required|in:vip,premium,lujo,under,masajes',
+            'meta_title' => 'required|max:60',
+            'meta_description' => 'required|max:160',
+            'meta_keywords' => 'nullable',
+            'canonical_url' => 'nullable|url',
+            'meta_robots' => 'required',
+            'heading_h1' => 'nullable|max:255',
+            'heading_h2' => 'nullable|max:255',
+            'additional_text' => 'nullable'
+        ]);
+
+        $page = "seo/categorias/{$request->categoria_id}/ciudad/{$request->ciudad_id}";
+
+        $seo = MetaTag::updateOrCreate(
+            [
+                'page' => $page,
+                'tipo' => 'categorias'
+            ],
+            $validated
+        );
+
+        Log::info('SEO de categoría actualizado exitosamente', [
+            'seo_id' => $seo->id,
+            'categoria' => $request->categoria_id,
+            'ciudad_id' => $request->ciudad_id
+        ]);
+
+        return response()->json(['success' => true, 'data' => $seo]);
+    } catch (\Exception $e) {
+        Log::error('Error actualizando SEO de categoría', [
+            'categoria' => $request->categoria_id,
+            'ciudad_id' => $request->ciudad_id,
+            'error' => $e->getMessage(),
+            'linea' => $e->getLine(),
+            'archivo' => $e->getFile()
+        ]);
+        return response()->json(['success' => false, 'message' => 'Error interno del servidor'], 500);
+    }
+}
 }

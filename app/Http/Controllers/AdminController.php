@@ -626,6 +626,7 @@ class AdminController extends Controller
         $nacionalidades = Nacionalidad::all();
         return view('nacionalidades.indexnacionalidad', compact('nacionalidades'));
     }
+    
 
     public function nacionalidadCreate()
     {
@@ -652,16 +653,18 @@ class AdminController extends Controller
 
     public function nacionalidadUpdate(Request $request, Nacionalidad $nacionalidad)
     {
+        
         $request->validate([
-            'nombre' => 'required',
-            'url' => 'required'
+            'nombre' => 'required|string|max:255',
+            'url' => 'required|string|max:255|unique:nacionalidades,url,' . $nacionalidad->id
         ]);
-
+    
         $nacionalidad->update($request->all());
-
+    
         return redirect()->route('nacionalidades.indexnacionalidad')
             ->with('success', 'Nacionalidad actualizada exitosamente.');
     }
+    
 
     public function nacionalidadDestroy(Nacionalidad $nacionalidad)
     {
