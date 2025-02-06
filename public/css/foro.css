@@ -1,3 +1,13 @@
+/* Estilo para la página de login */
+body,
+html {
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif; 
+}
+
 /* Estilos del banner */
 .foro-banner {
     position: relative;

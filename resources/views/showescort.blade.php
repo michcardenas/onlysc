@@ -52,15 +52,53 @@ $metaTitle = $usuarioPublicate->fantasia . ' Escort ' .
         </div>
 
         <h1 class="escortperfil-nombre">
-            {{ strtoupper($usuarioPublicate->fantasia) }}
-        </h1>
+    {{ strtoupper($usuarioPublicate->fantasia) }}
+    @php
+        $now = now();
+        $currentDay = strtolower($now->locale('es')->dayName);
+        $isAvailable = false;
+
+        $disponibilidades = \App\Models\Disponibilidad::where('publicate_id', $usuarioPublicate->id)
+            ->where('estado', 'activo')
+            ->get();
+
+        foreach ($disponibilidades as $disponibilidad) {
+            if (strtolower($disponibilidad->dia) === $currentDay) {
+                // Verificar disponibilidad 24 horas
+                if ($disponibilidad->hora_desde === '00:00:00' && $disponibilidad->hora_hasta === '23:59:00') {
+                    $isAvailable = true;
+                    break;
+                }
+
+                // Verificar horario regular
+                $horaDesde = Carbon\Carbon::parse($disponibilidad->hora_desde);
+                $horaHasta = Carbon\Carbon::parse($disponibilidad->hora_hasta);
+
+                if ($horaHasta->lessThan($horaDesde)) {
+                    if ($now->greaterThanOrEqualTo($horaDesde) || $now->lessThanOrEqualTo($horaHasta)) {
+                        $isAvailable = true;
+                        break;
+                    }
+                } else {
+                    if ($now->between($horaDesde, $horaHasta)) {
+                        $isAvailable = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        $mostrarPuntoVerde = ($usuarioPublicate->estadop == 1 || $usuarioPublicate->estadop == 3) && $isAvailable;
+    @endphp
+    @if($mostrarPuntoVerde)
+        <span class="online-dot"></span>
+    @endif
+</h1>
 
         <h1 class="escortperfil-nombrechikito">
             {{ strtoupper(str_replace('_', ' ', $usuarioPublicate->categorias)) }}
         </h1>
     </header>
-
-
 
     <div class="escortperfil-modal-backdrop" id="escortperfilModalBackdrop" onclick="closeEscortModal()"></div>
     <div class="escortperfil-modal" id="escortperfilImageModal">
@@ -117,7 +155,7 @@ $metaTitle = $usuarioPublicate->fantasia . ' Escort ' .
     <button class="favorite-button {{ $usuarioPublicate->isFavoritedByUser(auth()->id()) ? 'active' : '' }}"
         data-id="{{ $usuarioPublicate->id }}">
         <i class="far fa-heart"></i>
-        <span>AÑADIR A<br>FAVORITOS</span>
+        <span>FAVORITOS</span>
     </button>
 
     <!-- Botón que abre el modal -->
@@ -126,7 +164,7 @@ $metaTitle = $usuarioPublicate->fantasia . ' Escort ' .
             <img src="/images/share-arrows-svgrepo-com.svg" alt="Share icon" class="share-icon">
         </div>
         <div class="text-wrapper">
-            COMPARTIR<br>PERFIL
+            COMPARTIR
         </div>
     </button>
 
@@ -173,7 +211,7 @@ $metaTitle = $usuarioPublicate->fantasia . ' Escort ' .
     <div class="escortperfil-side-section">
         <div class="escortperfil-actions">
             <a href="https://wa.me/{{ $usuarioPublicate->telefono }}?text=Hola%20{{ $usuarioPublicate->fantasia }}!%20Vi%20tu%20anuncio%20en%20OnlyEscorts%20y%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20tus%20servicios.%20%C2%BFC%C3%B3mo%20est%C3%A1s?" class="escortperfil-btn disponible" target="_blank">
-                <i class="fab fa-whatsapp"></i> WHATSAPP
+                <i class="fab fa-whatsapp"></i>WHATSAPP
             </a>
             <button class="escortperfil-btn contactar">CONTACTAR</button>
         </div>
@@ -234,10 +272,18 @@ $metaTitle = $usuarioPublicate->fantasia . ' Escort ' .
 
         </aside>
         <div class="escortperfil-content">
-            <div class="escortperfil-section">
-                <h2 class="escortperfil-section-title">Sobre mí</h2>
-                <p class="escortperfil-description-text">{{ $usuarioPublicate->cuentanos }}</p>
-            </div>
+        <div class="escortperfil-section">
+    <h2 class="escortperfil-section-title">Sobre mí</h2>
+    <p class="escortperfil-description-text">
+        @if(strlen($usuarioPublicate->cuentanos) > 150)
+            <span id="texto-corto">{{ Str::limit($usuarioPublicate->cuentanos, 150) }}</span>
+            <span id="texto-completo" style="display: none;">{{ $usuarioPublicate->cuentanos }}</span>
+            <a href="#" onclick="toggleText(); return false;" id="btn-ver-mas">ver más</a>
+        @else
+            {{ $usuarioPublicate->cuentanos }}
+        @endif
+    </p>
+</div>
 
             <!-- Estas dos secciones deberían estar agrupadas -->
             <div>
@@ -366,7 +412,6 @@ $metaTitle = $usuarioPublicate->fantasia . ' Escort ' .
             @endif
         </div>
 
-        <!-- Sección de Experiencias -->
         <!-- Sección de Experiencias -->
         <div class="escortperfil-section">
             <h2 class="escortperfil-section-title">Experiencias</h2>

@@ -1,3 +1,14 @@
+/* Estilo para la página de login */
+body,
+html {
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif; 
+}
+
+
 /* Estilos generales para títulos */
 .main-admin h2,
 .main-admin h3,

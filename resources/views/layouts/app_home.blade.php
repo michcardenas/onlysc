@@ -647,7 +647,6 @@
 <div id="preloader" class="preloader">
     <div class="loader-content">
     <img src="{{ asset('images/icono.png') }}" alt="Cargando..." class="loading-logo" />
-    <p class="loading-text">onlyescorts.cl</p>
     </div>
 </div>
 <header style="position: fixed; top: 0; left: 0; width: 100%; background-color: #000; z-index: 1000; border-bottom: 1px solid #ffffff78;">

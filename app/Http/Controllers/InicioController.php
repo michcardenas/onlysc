@@ -1248,29 +1248,33 @@ view()->share([
     public function showPerfil($nombre)
     {
         try {
+            // Verificar si la URL contiene mayúsculas
+            if ($nombre !== strtolower($nombre)) {
+                // Redireccionar a la versión en minúsculas
+                return redirect()->to('/escorts/' . strtolower($nombre), 301);
+            }
+    
             // Extraer el ID del nombre
             $id = substr($nombre, strrpos($nombre, '-') + 1);
-
-            // Cargar al usuario con las relaciones necesarias
+    
+            // El resto del código permanece igual
             $usuarioPublicate = UsuarioPublicate::with([
                 'disponibilidad',
                 'estados' => function ($query) {
                     $query->where('created_at', '>=', now()->subHours(24));
                 },
-                'nacionalidadRelacion'  // Relación nacionalidad
+                'nacionalidadRelacion'
             ])
                 ->leftJoin('ciudades', 'usuarios_publicate.ubicacion', '=', 'ciudades.nombre')
                 ->select('usuarios_publicate.*', 'ciudades.url as ciudad_url', 'ciudades.nombre as ciudad_nombre')
                 ->findOrFail($id);
-
-            // Cargar los demás datos necesarios
+    
             $ciudades = Ciudad::all();
             $servicios = Servicio::orderBy('posicion')->get();
             $atributos = Atributo::orderBy('posicion')->get();
             $nacionalidades = Nacionalidad::orderBy('posicion')->get();
             $sectores = Sector::orderBy('nombre')->get();
-
-            // Retornar la vista con los datos
+    
             return view('showescort', compact('usuarioPublicate', 'ciudades', 'sectores', 'nacionalidades', 'atributos', 'servicios'));
         } catch (\Exception $e) {
             \Log::error('Error en showPerfil: ' . $e->getMessage());

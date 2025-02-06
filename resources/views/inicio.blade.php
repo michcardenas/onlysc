@@ -524,7 +524,11 @@
         <section class="BlogInicio">
             <div class="swiper-blog">
                 <div class="category-header">
-                    <h2>Blog</h2>
+                <h2>Blog 
+                @if(isset($ciudadSeleccionada))
+                    <span class="ciudad-title">de {{ $ciudadSeleccionada->nombre }}</span>
+                @endif
+            </h2>
                 </div>
                 <div class="BlogInicio-grid swiper-wrapper">
                     @foreach($blogArticles as $article)

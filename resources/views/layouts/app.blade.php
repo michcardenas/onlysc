@@ -1038,7 +1038,7 @@ function setButtonState(button, isFavorited) {
         heartIcon.style.color = '#e00037';
     } else {
         button.classList.remove('active');
-        textSpan.innerHTML = 'AÑADIR A<br>FAVORITOS';
+        textSpan.innerHTML = 'FAVORITOS';
         heartIcon.classList.remove('fas');
         heartIcon.classList.add('far');
         heartIcon.style.color = 'white';
@@ -1163,9 +1163,45 @@ window.onclick = function(event) {
 }
 
 function openEscortModal(imageSrc) {
-    document.getElementById('escortperfilModalImage').src = imageSrc;
-    document.getElementById('escortperfilImageModal').style.display = 'block';
-    document.getElementById('escortperfilModalBackdrop').style.display = 'block';
+    const modal = document.getElementById('escortperfilImageModal');
+    const modalImage = document.getElementById('escortperfilModalImage');
+    const backdrop = document.getElementById('escortperfilModalBackdrop');
+    
+    modalImage.src = imageSrc;
+    
+    modalImage.onload = function() {
+        const windowHeight = window.innerHeight - 40; // Reducimos el margen a 20px por lado
+        const windowWidth = window.innerWidth - 40;  // Reducimos el margen a 20px por lado
+        
+        const imgWidth = this.naturalWidth;
+        const imgHeight = this.naturalHeight;
+        
+        let newWidth = imgWidth;
+        let newHeight = imgHeight;
+        
+        // Calculamos las dimensiones para que ocupen más espacio
+        if (imgWidth > windowWidth) {
+            newWidth = windowWidth;
+            newHeight = (imgHeight * windowWidth) / imgWidth;
+        }
+        
+        if (newHeight > windowHeight) {
+            newHeight = windowHeight;
+            newWidth = (imgWidth * windowHeight) / imgHeight;
+        }
+        
+        // Aumentamos el tamaño un 20% si hay espacio
+        if (newWidth * 1.2 <= windowWidth && newHeight * 1.2 <= windowHeight) {
+            newWidth *= 1.2;
+            newHeight *= 1.2;
+        }
+        
+        modal.style.width = `${newWidth}px`;
+        modal.style.height = `${newHeight}px`;
+        
+        modal.style.display = 'block';
+        backdrop.style.display = 'block';
+    };
 }
 
 function closeEscortModal() {
@@ -1784,6 +1820,23 @@ document.addEventListener('DOMContentLoaded', function() {
         e.stopPropagation();
     });
 });
+
+function toggleText() {
+    const textoCorto = document.getElementById('texto-corto');
+    const textoCompleto = document.getElementById('texto-completo');
+    const btnVerMas = document.getElementById('btn-ver-mas');
+
+    if (textoCompleto.style.display === 'none') {
+        textoCorto.style.display = 'none';
+        textoCompleto.style.display = 'inline';
+        btnVerMas.textContent = 'ver menos';
+    } else {
+        textoCorto.style.display = 'inline';
+        textoCompleto.style.display = 'none';
+        btnVerMas.textContent = 'ver más';
+    }
+}
+
 </script>
 </body>
 
