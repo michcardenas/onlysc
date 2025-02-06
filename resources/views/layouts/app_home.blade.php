@@ -247,8 +247,7 @@
 }
 
 .loading-logo {
-    width: 60px;
-    height: 60px;
+  
     margin: 0 auto;
     animation: pulseOnce 2s ease-out forwards;
 }
@@ -646,8 +645,8 @@
 <body class="custom-background">
 <div id="preloader" class="preloader">
     <div class="loader-content">
-    <img src="{{ asset('images/icono.png') }}" alt="Cargando..." class="loading-logo" />
-    <p class="loading-text">onlyescorts.cl</p>
+    <img src="{{ asset('images/logo_S.png') }}" alt="Cargando..." class="loading-logo" />
+    <p class="loading-text"></p>
     </div>
 </div>
 <header style="position: fixed; top: 0; left: 0; width: 100%; background-color: #000; z-index: 1000; border-bottom: 1px solid #ffffff78;">
