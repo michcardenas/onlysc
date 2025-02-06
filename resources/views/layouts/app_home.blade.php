@@ -646,7 +646,7 @@
 <body class="custom-background">
 <div id="preloader" class="preloader">
     <div class="loader-content">
-    <img src="{{ asset('images/icono.png') }}" alt="Cargando..." class="loading-logo" />
+    <img src="{{ asset('images/logo_S.png') }}" alt="Cargando..." class="loading-logo" />
     </div>
 </div>
 <header style="position: fixed; top: 0; left: 0; width: 100%; background-color: #000; z-index: 1000; border-bottom: 1px solid #ffffff78;">
