@@ -924,9 +924,11 @@ if ($hasFilter && !$hasSector) {
         if ($metaTag) {
             $description = $metaTag->meta_description;
             $metaTagData = $metaTag->toArray();
+            $metaRobots = $metaTag->meta_robots ?? 'index,follow'; // Usamos el meta_robots del metatag si existe
+        } else {
+            $metaRobots = 'index,follow'; // Valor por defecto si no hay metatag
         }
 
-        $metaRobots = 'index,follow';
         $canonicalUrl = url($ciudadUrl . '/' . $filtroUrl);
     }
 } else if ($hasSector && $hasFilter) {
@@ -960,15 +962,16 @@ if ($hasFilter && !$hasSector) {
             $title = $metaTag->meta_title;
             $description = $metaTag->meta_description;
             $metaTagData = $metaTag->toArray();
+            $metaRobots = $metaTag->meta_robots ?? 'index,follow'; // Usamos el meta_robots del metatag
             Log::info('Usando meta tag encontrado para categoría');
         } else {
             $categoriaNombre = str_replace('_', ' ', ucfirst($filtroUrl));
             $title = "Escorts $categoriaNombre en " . ucfirst($sector->nombre) . " de " . ucfirst($ciudadSeleccionada->nombre);
             $description = "Descubre escorts $categoriaNombre en " . ucfirst($sector->nombre) . " de " . ucfirst($ciudadSeleccionada->nombre);
+            $metaRobots = 'index,follow'; // Valor por defecto
             Log::info('Generando título por defecto para categoría con sector', ['title' => $title]);
         }
         
-        $metaRobots = 'index,follow';
         $canonicalUrl = url($ciudadUrl . '/' . $sectorUrl . '/' . $filtroUrl);
     } else {
         // Para otros tipos de filtros, mantener el comportamiento actual
@@ -991,9 +994,11 @@ if ($hasFilter && !$hasSector) {
         $title = $metaTag->meta_title;
         $description = $metaTag->meta_description;
         $metaTagData = $metaTag->toArray();
+        $metaRobots = $metaTag->meta_robots ?? 'index,follow'; // Usamos el meta_robots del metatag
     } else {
         $title = "Escorts en " . ucfirst($sector->nombre) . " de " . ucfirst($ciudadSeleccionada->nombre);
         $description = "Descubre escorts en " . ucfirst($sector->nombre) . " de " . ucfirst($ciudadSeleccionada->nombre);
+        $metaRobots = 'index,follow'; // Valor por defecto
     }
 
     if ($hasAdditionalFilters) {
