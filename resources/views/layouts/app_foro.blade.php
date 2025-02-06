@@ -264,8 +264,9 @@
     }
 
     .foro-grid {
-        grid-template-columns: repeat(1, 1fr);
-    }
+display:flex;
+flex-wrap:wrap;
+flex-direction:column;    }
 }
 
 @media (max-width: 768px) {
