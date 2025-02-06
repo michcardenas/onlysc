@@ -57,6 +57,19 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
 
     Route::get('/seo', [SEOController::class, 'index'])->name('seo');
     Route::get('/seo-paginas', [SEOPaginasController::class, 'index'])->name('seo.paginas');
+
+// Ruta para mostrar el formulario
+Route::get('/admin/fotos/{id}/descripcion', [UsuarioPublicateController::class, 'fotosDescripcion'])
+    ->name('admin.fotos.descripcion');
+
+// Ruta para actualizar las descripciones
+Route::put('/admin/fotos/{id}/descripcion', [UsuarioPublicateController::class, 'updateFotosDescripcion'])
+    ->name('admin.fotos.updateDescripcion');
+
+Route::get('/usuarios_publicate/{id}/fotos-descripcion', [UsuarioPublicateController::class, 'fotosDescripcion'])
+    ->name('usuarios_publicate.fotos_descripcion');
+
+
     Route::get('/seo-inicio', [SEOController::class, 'home'])->name('seo.home');
     Route::get('/seo-inicio-tarjetas', [SEOController::class, 'inicio'])->name('seo.inicio-tarjetas');
     Route::get('/seo-foro', [SEOController::class, 'foroadmin'])->name('seo.foroadmin');

@@ -364,7 +364,8 @@ if ($sector) {
                     'posicion',
                     'precio',
                     'estadop',
-                    'sectores' // Agregamos el campo sectores si es necesario
+                    'sectores', // Agregamos el campo sectores si es necesario
+                    'descripcion_fotos'
                 )
                 ->orderBy('posicion', 'asc')
                 ->paginate(40);
@@ -410,7 +411,8 @@ if ($sector) {
                     'categorias',
                     'precio',
                     'estadop',
-                    'sectores'  // Agregamos el campo sectores
+                    'sectores',
+                    'descripcion_fotos'  // Agregamos el campo sectores
                 )
                 ->orderBy('updated_at', 'desc')
                 ->first();
@@ -453,7 +455,7 @@ if ($sector) {
                             });
                     });
                 })
-                ->select('id', 'fantasia', 'edad', 'fotos', 'foto_positions', 'estadop')
+                ->select('id', 'fantasia', 'edad', 'fotos', 'foto_positions', 'estadop','descripcion_fotos')
                 ->take(11)
                 ->get();
 
@@ -481,7 +483,8 @@ if ($sector) {
                     'posicion',
                     'precio',
                     'estadop',
-                    'sectores'  // Agregamos el campo sectores
+                    'sectores', // Agregamos el campo sectores
+                    'descripcion_fotos'
                 )
                 ->whereIn('estadop', [1, 3])
                 ->where('ubicacion', $ciudadSeleccionada->nombre)
@@ -513,7 +516,8 @@ if ($sector) {
                     'posicion',
                     'precio',
                     'estadop',
-                    'sectores'  // Agregamos el campo sectores
+                    'sectores',  // Agregamos el campo sectores
+                    'descripcion_fotos'
                 )
                 ->whereIn('estadop', [1, 3])
                 ->where('ubicacion', $ciudadSeleccionada->nombre)
@@ -1147,7 +1151,8 @@ view()->share([
                 'categorias',
                 'posicion',
                 'precio',
-                'estadop'
+                'estadop',
+                'descripcion_fotos'
             )
             ->orderBy('posicion', 'asc')
             ->paginate(12)
@@ -1243,36 +1248,34 @@ view()->share([
     public function showPerfil($nombre)
     {
         try {
-            // Extraer el ID del nombre
             $id = substr($nombre, strrpos($nombre, '-') + 1);
-
-            // Cargar al usuario con las relaciones necesarias
+    
             $usuarioPublicate = UsuarioPublicate::with([
                 'disponibilidad',
                 'estados' => function ($query) {
                     $query->where('created_at', '>=', now()->subHours(24));
                 },
-                'nacionalidadRelacion'  // Relación nacionalidad
+                'nacionalidadRelacion'
             ])
-                ->leftJoin('ciudades', 'usuarios_publicate.ubicacion', '=', 'ciudades.nombre')
-                ->select('usuarios_publicate.*', 'ciudades.url as ciudad_url', 'ciudades.nombre as ciudad_nombre')
-                ->findOrFail($id);
-
-            // Cargar los demás datos necesarios
+            ->leftJoin('ciudades', 'usuarios_publicate.ubicacion', '=', 'ciudades.nombre')
+            ->select('usuarios_publicate.*', 'ciudades.url as ciudad_url', 'ciudades.nombre as ciudad_nombre')
+            ->findOrFail($id);
+    
+            $descripcionFotos = json_decode($usuarioPublicate->descripcion_fotos, true) ?? [];
+    
             $ciudades = Ciudad::all();
             $servicios = Servicio::orderBy('posicion')->get();
             $atributos = Atributo::orderBy('posicion')->get();
             $nacionalidades = Nacionalidad::orderBy('posicion')->get();
             $sectores = Sector::orderBy('nombre')->get();
-
-            // Retornar la vista con los datos
-            return view('showescort', compact('usuarioPublicate', 'ciudades', 'sectores', 'nacionalidades', 'atributos', 'servicios'));
+    
+            return view('showescort', compact('usuarioPublicate', 'descripcionFotos', 'ciudades', 'sectores', 'nacionalidades', 'atributos', 'servicios'));
         } catch (\Exception $e) {
             \Log::error('Error en showPerfil: ' . $e->getMessage());
             return abort(404);
         }
     }
-
+    
 
 
     public function RTA()

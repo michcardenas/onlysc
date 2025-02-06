@@ -144,15 +144,31 @@
                     }
 
                     $mostrarPuntoVerde = ($usuario->estadop == 1 || $usuario->estadop == 3) && $isAvailable;
+                    $fotosDestacado = json_decode($usuarioDestacado->fotos, true);
+                        $positionsDestacado = json_decode($usuarioDestacado->foto_positions, true) ?? [];
+                        $descripcionFotosDestacado = json_decode($usuarioDestacado->descripcion_fotos, true) ?? [];
+                        $primeraFotoDestacado = is_array($fotosDestacado) && !empty($fotosDestacado) ? $fotosDestacado[0] : null;
+                        $posicionFotoDestacado = in_array(($positionsDestacado[$primeraFotoDestacado] ?? ''), ['left', 'right', 'center']) ? $positionsDestacado[$primeraFotoDestacado] : 'center';
+
+                        // Descripción de la foto destacada
+                        $descripcionFotoDestacado = $descripcionFotosDestacado[$primeraFotoDestacado] ?? 'Foto de ' . $usuarioDestacado->fantasia;
+                    $descripcionFotos = json_decode($usuario->descripcion_fotos, true) ?? [];
+
                     @endphp
 
                     <a href="{{ route('perfil.show', ['nombre' => $usuario->fantasia . '-' . $usuario->id]) }}" class="inicio-card">
                         <div class="inicio-card-category">{{ strtoupper(str_replace('_', ' ', $usuario->categorias)) }}</div>
                         <div class="inicio-card-image">
-                            <div class="inicio-image"
-                                style="background-image: url('{{ $primeraFoto ? asset("storage/chicas/{$usuario->id}/{$primeraFoto}") : asset("images/default-avatar.png") }}');
-                                           background-position: {{ $posicionFoto }} center;">
-                            </div>
+                        <div class="inicio-image"
+                            style="background-image: url('{{ $primeraFoto ? asset("storage/chicas/{$usuario->id}/{$primeraFoto}") : asset("images/default-avatar.png") }}');
+                                    background-position: {{ $posicionFoto }} center;">
+                            <img src="{{ $primeraFoto ? asset("storage/chicas/{$usuario->id}/{$primeraFoto}") : asset("images/default-avatar.png") }}"
+                            alt="{{ $descripcionFotos[$primeraFoto] ?? 'Foto de ' . $usuario->fantasia }}"
+ 
+                                style="visibility: hidden; height: 0;">
+                        </div>
+
+
                             <div class="inicio-card-overlay">
                                 <h3 class="inicio-card-title" style="display: flex; align-items: center;">
                                     {{ $usuario->fantasia }}
@@ -228,6 +244,10 @@
                 <div class="inicio-featured-image"
                     style="background-image: url('{{ $primeraFotoDestacado ? asset("storage/chicas/{$usuarioDestacado->id}/{$primeraFotoDestacado}") : asset("images/default-avatar.png") }}');
                background-position: {{ $posicionFotoDestacado }} center;">
+               <img src="{{ $primeraFotoDestacado ? asset("storage/chicas/{$usuarioDestacado->id}/{$primeraFotoDestacado}") : asset("images/default-avatar.png") }}"
+                    alt="{{ $descripcionFotoDestacado }}"
+                    style="visibility: hidden; height: 0;">
+                        
                     <div class="inicio-featured-overlay">
                         <h3 class="inicio-featured-title">
                             {{ $usuarioDestacado->fantasia }}
@@ -343,6 +363,8 @@
                     }
 
                     $mostrarPuntoVerde = ($usuario->estadop == 1 || $usuario->estadop == 3) && $isAvailable;
+                  
+
                     @endphp
                     <a href="{{ route('perfil.show', ['nombre' => $usuario->fantasia . '-' . $usuario->id]) }}" class="swiper-slide2" style="flex: 0 0 auto; margin-right: 0;">
                         <div class="volvieronyprimera-card">
@@ -354,13 +376,18 @@
                             @php
                             $fotos = json_decode($usuario->fotos, true);
                             $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
+                            $descripcionFotos = json_decode($usuario->descripcion_fotos, true) ?? [];
+    $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
+
+    $descripcionFoto = $descripcionFotos[$primeraFoto] ?? 'Foto de ' . $usuario->fantasia;
+                            
                             @endphp
                             <img class="volvieronyprimera-image"
                                 src="{{ $primeraFoto ? (file_exists(storage_path('app/public/chicas/' . $usuario->id . '/thumb_' . $primeraFoto)) ? 
        asset('storage/chicas/' . $usuario->id . '/thumb_' . $primeraFoto) : 
        asset('storage/chicas/' . $usuario->id . '/' . $primeraFoto)) : 
-       asset('images/default-avatar.png') }}"
-                                alt="Foto de perfil" />
+       asset('images/default-avatar.png') }}"alt="{{ $descripcionFoto }}" 
+                                />
                             <div class="volvieronyprimera-content">
                                 <div class="volvieronyprimera-user-info">
                                     <div class="volvieronyprimera-user-main">
@@ -439,6 +466,10 @@
                     }
 
                     $mostrarPuntoVerde = ($usuario->estadop == 1 || $usuario->estadop == 3) && $isAvailable;
+                    $descripcionFotos = json_decode($usuario->descripcion_fotos, true) ?? [];
+    $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
+
+    $descripcionFoto = $descripcionFotos[$primeraFoto] ?? 'Foto de ' . $usuario->fantasia;
                     @endphp
                     <a href="{{ route('perfil.show', ['nombre' => $usuario->fantasia . '-' . $usuario->id]) }}" class="swiper-slide2" style="flex: 0 0 auto; margin-right: 0;">
                         <div class="volvieronyprimera-card">
@@ -454,8 +485,8 @@
                                 src="{{ $primeraFoto ? (file_exists(storage_path('app/public/chicas/' . $usuario->id . '/thumb_' . $primeraFoto)) ? 
        asset('storage/chicas/' . $usuario->id . '/thumb_' . $primeraFoto) : 
        asset('storage/chicas/' . $usuario->id . '/' . $primeraFoto)) : 
-       asset('images/default-avatar.png') }}"
-                                alt="Foto de perfil" />
+       asset('images/default-avatar.png') }}"alt="{{ $descripcionFoto }}" 
+                                 />
                             <div class="volvieronyprimera-content">
                                 <div class="volvieronyprimera-user-info">
                                     <div class="volvieronyprimera-user-main">
