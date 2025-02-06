@@ -247,8 +247,6 @@
 }
 
 .loading-logo {
-    width: 60px;
-    height: 60px;
     margin: 0 auto;
     animation: pulseOnce 2s ease-out forwards;
 }
