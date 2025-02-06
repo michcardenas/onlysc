@@ -556,6 +556,9 @@ use App\Models\Sector;
                     </div>
                 </div>
             </div>
+            <a href="{{ route('usuarios_publicate.fotos_descripcion', ['id' => $usuario->id]) }}" class="btn btn-primary">
+        Descripción de Fotos
+    </a>
             <button type="submit" class="btn-submit">Actualizar</button>
         </form>
     </section>

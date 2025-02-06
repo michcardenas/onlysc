@@ -364,7 +364,8 @@ if ($sector) {
                     'posicion',
                     'precio',
                     'estadop',
-                    'sectores' // Agregamos el campo sectores si es necesario
+                    'sectores', // Agregamos el campo sectores si es necesario
+                    'descripcion_fotos'
                 )
                 ->orderBy('posicion', 'asc')
                 ->paginate(40);
@@ -410,7 +411,8 @@ if ($sector) {
                     'categorias',
                     'precio',
                     'estadop',
-                    'sectores'  // Agregamos el campo sectores
+                    'sectores',
+                    'descripcion_fotos'  // Agregamos el campo sectores
                 )
                 ->orderBy('updated_at', 'desc')
                 ->first();
@@ -453,7 +455,7 @@ if ($sector) {
                             });
                     });
                 })
-                ->select('id', 'fantasia', 'edad', 'fotos', 'foto_positions', 'estadop')
+                ->select('id', 'fantasia', 'edad', 'fotos', 'foto_positions', 'estadop','descripcion_fotos')
                 ->take(11)
                 ->get();
 
@@ -481,7 +483,8 @@ if ($sector) {
                     'posicion',
                     'precio',
                     'estadop',
-                    'sectores'  // Agregamos el campo sectores
+                    'sectores', // Agregamos el campo sectores
+                    'descripcion_fotos'
                 )
                 ->whereIn('estadop', [1, 3])
                 ->where('ubicacion', $ciudadSeleccionada->nombre)
@@ -513,7 +516,8 @@ if ($sector) {
                     'posicion',
                     'precio',
                     'estadop',
-                    'sectores'  // Agregamos el campo sectores
+                    'sectores',  // Agregamos el campo sectores
+                    'descripcion_fotos'
                 )
                 ->whereIn('estadop', [1, 3])
                 ->where('ubicacion', $ciudadSeleccionada->nombre)
@@ -1152,7 +1156,8 @@ view()->share([
                 'categorias',
                 'posicion',
                 'precio',
-                'estadop'
+                'estadop',
+                'descripcion_fotos'
             )
             ->orderBy('posicion', 'asc')
             ->paginate(12)
@@ -1281,7 +1286,7 @@ view()->share([
             return abort(404);
         }
     }
-
+    
 
 
     public function RTA()

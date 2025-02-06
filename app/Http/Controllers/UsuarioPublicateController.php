@@ -601,5 +601,40 @@ class UsuarioPublicateController extends Controller
         return response()->json(['success' => false, 'error' => $e->getMessage()]);
     }
 }
+public function fotosDescripcion($id)
+{
+    $usuario = UsuarioPublicate::findOrFail($id);
+
+    // Decodificar fotos y descripciones
+    $fotos = json_decode($usuario->fotos, true) ?? [];
+    $descripcionFotos = json_decode($usuario->descripcion_fotos, true) ?? [];
+
+    return view('admin.fotos_descripcion', compact('usuario', 'fotos', 'descripcionFotos'));
+}
+
+public function updateFotosDescripcion(Request $request, $id)
+{
+    $usuario = UsuarioPublicate::findOrFail($id);
+
+    // Obtener las fotos actuales
+    $fotos = json_decode($usuario->fotos, true) ?? [];
+    $descripciones = $request->input('descripciones', []);
+
+    // Crear un array asociativo foto => descripción
+    $descripcionFotos = [];
+    foreach ($fotos as $index => $foto) {
+        if (isset($descripciones[$index])) {
+            $descripcionFotos[$foto] = $descripciones[$index];
+        }
+    }
+
+    // Guardar las descripciones en la nueva columna
+    $usuario->descripcion_fotos = json_encode($descripcionFotos);
+    $usuario->save();
+
+    return redirect()
+        ->route('admin.fotos.descripcion', $usuario->id)
+        ->with('success', 'Descripciones actualizadas correctamente.');
+}
 
 }
