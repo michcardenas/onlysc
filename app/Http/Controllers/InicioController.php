@@ -1292,6 +1292,10 @@ view()->share([
     public function RTA()
     {
         $ciudades = Ciudad::all();
+        $servicios = Servicio::orderBy('posicion')->get();
+        $atributos = Atributo::orderBy('posicion')->get();
+        $nacionalidades = Nacionalidad::orderBy('posicion')->get();
+        $sectores = Sector::orderBy('nombre')->get();
 
         // Obtener un usuario específico o todos los usuarios que necesites
         $usuarioPublicate = UsuarioPublicate::with([
@@ -1318,6 +1322,10 @@ view()->share([
 
         return view('rta', [
             'ciudades' => $ciudades,
+            'sectores' => $sectores,
+            'nacionalidades' => $nacionalidades,
+            'servicios' => $servicios,
+            'atributos' => $atributos,
             'usuarioPublicate' => $usuarioPublicate
         ]);
     }
@@ -1326,6 +1334,11 @@ view()->share([
     {
         // Obtener los valores de la base de datos
         $tyc = TYC::first();
+        $ciudades = Ciudad::all();
+        $servicios = Servicio::orderBy('posicion')->get();
+        $atributos = Atributo::orderBy('posicion')->get();
+        $nacionalidades = Nacionalidad::orderBy('posicion')->get();
+        $sectores = Sector::orderBy('nombre')->get();
 
         // Si no hay valores en la base de datos, usar valores por defecto
         $title = $tyc ? $tyc->title : "Términos y Condiciones";
@@ -1362,6 +1375,10 @@ view()->share([
             'title' => $title,
             'content' => $content,
             'ciudades' => $ciudades,
+            'sectores' => $sectores,
+            'nacionalidades' => $nacionalidades,
+            'servicios' => $servicios,
+            'atributos' => $atributos,
             'usuarioPublicate' => $usuarioPublicate
         ]);
     }

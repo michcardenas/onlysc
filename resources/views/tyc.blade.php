@@ -1,6 +1,6 @@
 @extends('layouts.app')
-
 @section('content')
+
 <div class="container mx-auto px-4 py-8">
     <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow" style="font-family: 'Montserrat', sans-serif;">
         <h1 class="text-3xl font-bold mb-4 text-center" style="font-family: 'Montserrat', sans-serif;">
