@@ -243,7 +243,7 @@
                     style="background-image: url('{{ $primeraFotoDestacado ? asset("storage/chicas/{$usuarioDestacado->id}/{$primeraFotoDestacado}") : asset("images/default-avatar.png") }}');
                background-position: {{ $posicionFotoDestacado }} center;">
                <img src="{{ $primeraFotoDestacado ? asset("storage/chicas/{$usuarioDestacado->id}/{$primeraFotoDestacado}") : asset("images/default-avatar.png") }}"
-                    alt="{{ $descripcionFotoDestacado }}"
+               alt="{{ isset($descripcionFotoDestacado) ? $descripcionFotoDestacado : 'Foto de escort' }}"
                     style="visibility: hidden; height: 0;">
                         
                     <div class="inicio-featured-overlay">
