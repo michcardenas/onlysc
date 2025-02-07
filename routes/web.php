@@ -21,7 +21,8 @@ use App\Models\Servicio;
 use App\Models\Atributo;
 use App\Models\Nacionalidad;
 use App\Http\Controllers\PageController;
-
+use Spatie\Sitemap\Sitemap;
+use Spatie\Sitemap\Tags\Url;
 
 
 
@@ -324,3 +325,16 @@ Route::get('/contacto', [PageController::class, 'contacto'])->name('contacto');
 // En routes/web.php
 Route::post('/contact/send', [PageController::class, 'send'])->name('contact.send');
 
+// sitemap
+Route::get('/sitemap.xml', function () {
+    $sitemap = Sitemap::create()
+        ->add(Url::create('/')->setPriority(1.0)->setChangeFrequency('daily'))
+        ->add(Url::create('/escorts')->setPriority(0.8))
+        ->add(Url::create('/blog')->setPriority(0.8))
+        ->add(Url::create('/contacto')->setPriority(0.5));
+
+    // Devuelve la respuesta en formato XML
+    return response($sitemap->render(), 200, [
+        'Content-Type' => 'application/xml'
+    ]);
+});
