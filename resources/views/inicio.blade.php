@@ -108,53 +108,51 @@
                     </div>
                     @else
                     @foreach($usuarios as $usuario)
-                    @php
-                    $fotos = json_decode($usuario->fotos, true);
-                    $positions = json_decode($usuario->foto_positions, true) ?? [];
-                    $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
-                    $posicionFoto = in_array(($positions[$primeraFoto] ?? ''), ['left', 'right', 'center']) ? $positions[$primeraFoto] : 'center';
+   @php
+       $fotos = json_decode($usuario->fotos, true);
+       $positions = json_decode($usuario->foto_positions, true) ?? [];
+       $primeraFoto = is_array($fotos) && !empty($fotos) ? $fotos[0] : null;
+       $posicionFoto = in_array(($positions[$primeraFoto] ?? ''), ['left', 'right', 'center']) ? $positions[$primeraFoto] : 'center';
 
+       $currentDay = strtolower($now->locale('es')->dayName);
+       $isAvailable = false;
+       foreach ($usuario->disponibilidad as $disponibilidad) {
+           if (strtolower($disponibilidad->dia) === $currentDay) {
+               if ($disponibilidad->hora_desde === '00:00:00' && $disponibilidad->hora_hasta === '23:59:00') {
+                   $isAvailable = true;
+                   break;
+               }
 
-                    $currentDay = strtolower($now->locale('es')->dayName);
-                    $isAvailable = false;
-                    foreach ($usuario->disponibilidad as $disponibilidad) {
-                    if (strtolower($disponibilidad->dia) === $currentDay) {
-                    // Check for full time availability
-                    if ($disponibilidad->hora_desde === '00:00:00' && $disponibilidad->hora_hasta === '23:59:00') {
-                    $isAvailable = true;
-                    break;
-                    }
+               $horaDesde = Carbon\Carbon::parse($disponibilidad->hora_desde);
+               $horaHasta = Carbon\Carbon::parse($disponibilidad->hora_hasta);
 
-                    // Regular time slot check
-                    $horaDesde = Carbon\Carbon::parse($disponibilidad->hora_desde);
-                    $horaHasta = Carbon\Carbon::parse($disponibilidad->hora_hasta);
+               if ($horaHasta->lessThan($horaDesde)) {
+                   if ($now->greaterThanOrEqualTo($horaDesde) || $now->lessThanOrEqualTo($horaHasta)) {
+                       $isAvailable = true;
+                       break;
+                   }
+               } else {
+                   if ($now->between($horaDesde, $horaHasta)) {
+                       $isAvailable = true;
+                       break;
+                   }
+               }
+           }
+       }
 
-                    if ($horaHasta->lessThan($horaDesde)) {
-                    if ($now->greaterThanOrEqualTo($horaDesde) || $now->lessThanOrEqualTo($horaHasta)) {
-                    $isAvailable = true;
-                    break;
-                    }
-                    } else {
-                    if ($now->between($horaDesde, $horaHasta)) {
-                    $isAvailable = true;
-                    break;
-                    }
-                    }
-                    }
-                    }
-
-                    $mostrarPuntoVerde = ($usuario->estadop == 1 || $usuario->estadop == 3) && $isAvailable;
-                    $fotosDestacado = json_decode($usuarioDestacado->fotos, true);
-                        $positionsDestacado = json_decode($usuarioDestacado->foto_positions, true) ?? [];
-                        $descripcionFotosDestacado = json_decode($usuarioDestacado->descripcion_fotos, true) ?? [];
-                        $primeraFotoDestacado = is_array($fotosDestacado) && !empty($fotosDestacado) ? $fotosDestacado[0] : null;
-                        $posicionFotoDestacado = in_array(($positionsDestacado[$primeraFotoDestacado] ?? ''), ['left', 'right', 'center']) ? $positionsDestacado[$primeraFotoDestacado] : 'center';
-
-                        // Descripción de la foto destacada
-                        $descripcionFotoDestacado = $descripcionFotosDestacado[$primeraFotoDestacado] ?? 'Foto de ' . $usuarioDestacado->fantasia;
-                    $descripcionFotos = json_decode($usuario->descripcion_fotos, true) ?? [];
-
-                    @endphp
+       $mostrarPuntoVerde = ($usuario->estadop == 1 || $usuario->estadop == 3) && $isAvailable;
+       
+       if ($usuarioDestacado) {
+           $fotosDestacado = json_decode($usuarioDestacado->fotos, true);
+           $positionsDestacado = json_decode($usuarioDestacado->foto_positions, true) ?? [];
+           $descripcionFotosDestacado = json_decode($usuarioDestacado->descripcion_fotos, true) ?? [];
+           $primeraFotoDestacado = is_array($fotosDestacado) && !empty($fotosDestacado) ? $fotosDestacado[0] : null;
+           $posicionFotoDestacado = in_array(($positionsDestacado[$primeraFotoDestacado] ?? ''), ['left', 'right', 'center']) ? $positionsDestacado[$primeraFotoDestacado] : 'center';
+           $descripcionFotoDestacado = $descripcionFotosDestacado[$primeraFotoDestacado] ?? 'Foto de ' . $usuarioDestacado->fantasia;
+       }
+       
+       $descripcionFotos = json_decode($usuario->descripcion_fotos, true) ?? [];
+   @endphp
 
                     <a href="{{ route('perfil.show', ['nombre' => $usuario->fantasia . '-' . $usuario->id]) }}" class="inicio-card">
                         <div class="inicio-card-category">{{ strtoupper(str_replace('_', ' ', $usuario->categorias)) }}</div>
