@@ -95,10 +95,14 @@
 </div>
 
 
+
+
+
 <main class="inicio-container">
     <div class="main-content-wrapper">
         <section class="inicio-usuarios-section">
             <div class="inicio-card-wrapper">
+            @include('components.breadcrumb')
                 <div class="inicio-card-container">
                     @if($usuarios->isEmpty())
                     <div class="no-results" style="width: 100%; text-align: center; padding: 2rem; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin: 1rem;">

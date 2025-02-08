@@ -758,6 +758,8 @@ function showLoginAlert() {
     }, 2700);
 }
 
+
+
 // Función para manejar el estado del botón
 function setButtonState(button, isFavorited) {
     const textSpan = button.querySelector('span');

@@ -19,6 +19,7 @@ use App\Models\TYC;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use stdClass;
 use Illuminate\Support\Facades\Cache;
 use App\Models\MetaTag;
 
@@ -127,8 +128,6 @@ if ($sector) {
         }
     }
 }
-
-
             // Procesamiento de filtros
             if ($filtros) {
                 $variableCount++;
@@ -1034,6 +1033,72 @@ view()->share([
     'canonicalUrl' => $canonicalUrl,
     'metaTagData' => $metaTagData,
 ]);
+
+$breadcrumb = [];
+$breadcrumb[] = [
+    'text' => trim('Inicio'), // Usando trim para limpiar
+    'url' => url('')
+];
+
+$breadcrumb[] = [
+    'text' => trim(ucfirst($ciudadSeleccionada->nombre)), // Usando trim para limpiar
+    'url' => url("escorts-{$ciudadSeleccionada->url}")
+];
+
+// Si hay sector válido (para Santiago)
+if ($sector && $ciudadSeleccionada->url === 'santiago' && $this->validarSector($sector)) {
+    $sectorInfo = Sector::where('url', $sector)->first();
+    if ($sectorInfo) {
+        $breadcrumb[] = [
+            'text' => ucfirst($sectorInfo->nombre),
+            'url' => url("/escorts-{$ciudadSeleccionada->url}/{$sector}")
+        ];
+    }
+}
+
+// Si hay filtro (pero no es un sector inválido redirigido a filtro)
+if ($filtros && (!$sector || ($sector && $this->validarSector($sector)))) {
+    // Determinar el texto del filtro basado en el tipo
+    $filterText = '';
+    
+    // Buscar en nacionalidades
+    $nacionalidad = $nacionalidades->firstWhere('url', $filtros);
+    if ($nacionalidad) {
+        $filterText = ucfirst($nacionalidad->nombre);
+    }
+    // Buscar en servicios
+    elseif ($servicio = $servicios->firstWhere('url', $filtros)) {
+        $filterText = ucfirst($servicio->nombre);
+    }
+    // Buscar en atributos
+    elseif ($atributo = $atributos->firstWhere('url', $filtros)) {
+        $filterText = ucfirst($atributo->nombre);
+    }
+    // Verificar otros tipos de filtros
+    elseif (preg_match('/^edad-(\d+)-(\d+)$/', $filtros, $matches)) {
+        $filterText = "Edad {$matches[1]}-{$matches[2]}";
+    }
+    elseif (preg_match('/^precio-(\d+)-(\d+)$/', $filtros, $matches)) {
+        $filterText = "Precio {$matches[1]}-{$matches[2]}";
+    }
+    elseif ($filtros === 'disponible') {
+        $filterText = "Disponible ahora";
+    }
+    elseif ($filtros === 'resena-verificada') {
+        $filterText = "Reseña verificada";
+    }
+    
+    if ($filterText) {
+        $breadcrumb[] = [
+            'text' => $filterText,
+            'url' => null // El último elemento no tiene enlace
+        ];
+    }
+}
+
+// Compartir el breadcrumb con la vista
+view()->share('breadcrumb', $breadcrumb);
+
             // Retornar vista con todos los datos
             return view('inicio', array_merge([
                 'ciudades' => $ciudades,
@@ -1251,41 +1316,61 @@ view()->share([
     }
 
     public function showPerfil($nombre)
-    {
-        try {
-            // Verificar si la URL contiene mayúsculas
-            if ($nombre !== strtolower($nombre)) {
-                // Redireccionar a la versión en minúsculas
-                return redirect()->to('/escorts/' . strtolower($nombre), 301);
-            }
-    
-            // Extraer el ID del nombre
-            $id = substr($nombre, strrpos($nombre, '-') + 1);
-    
-            // El resto del código permanece igual
-            $usuarioPublicate = UsuarioPublicate::with([
-                'disponibilidad',
-                'estados' => function ($query) {
-                    $query->where('created_at', '>=', now()->subHours(24));
-                },
-                'nacionalidadRelacion'
-            ])
-                ->leftJoin('ciudades', 'usuarios_publicate.ubicacion', '=', 'ciudades.nombre')
-                ->select('usuarios_publicate.*', 'ciudades.url as ciudad_url', 'ciudades.nombre as ciudad_nombre')
-                ->findOrFail($id);
-    
-            $ciudades = Ciudad::all();
-            $servicios = Servicio::orderBy('posicion')->get();
-            $atributos = Atributo::orderBy('posicion')->get();
-            $nacionalidades = Nacionalidad::orderBy('posicion')->get();
-            $sectores = Sector::orderBy('nombre')->get();
-    
-            return view('showescort', compact('usuarioPublicate', 'ciudades', 'sectores', 'nacionalidades', 'atributos', 'servicios'));
-        } catch (\Exception $e) {
-            \Log::error('Error en showPerfil: ' . $e->getMessage());
-            return abort(404);
+{
+    try {
+        // Verificar si la URL contiene mayúsculas
+        if ($nombre !== strtolower($nombre)) {
+            // Redireccionar a la versión en minúsculas
+            return redirect()->to('/escorts/' . strtolower($nombre), 301);
         }
+
+        // Extraer el ID del nombre
+        $id = substr($nombre, strrpos($nombre, '-') + 1);
+
+        // El resto del código permanece igual
+        $usuarioPublicate = UsuarioPublicate::with([
+            'disponibilidad',
+            'estados' => function ($query) {
+                $query->where('created_at', '>=', now()->subHours(24));
+            },
+            'nacionalidadRelacion'
+        ])
+            ->leftJoin('ciudades', 'usuarios_publicate.ubicacion', '=', 'ciudades.nombre')
+            ->select('usuarios_publicate.*', 'ciudades.url as ciudad_url', 'ciudades.nombre as ciudad_nombre')
+            ->findOrFail($id);
+
+        // Crear objeto meta para SEO
+        $meta = new stdClass();
+        $meta->meta_title = $usuarioPublicate->fantasia . ' Escort ' .
+            ($usuarioPublicate->categorias ? ucfirst(strtolower($usuarioPublicate->categorias)) . ' ' : '') .
+            'en ' . $usuarioPublicate->ubicacion . ' | OnlyEscorts';
+        $meta->canonical_url = url("/escorts/{$nombre}");
+        
+        // Definir canonicalUrl para compatibilidad con el layout
+        $canonicalUrl = url("/escorts/{$nombre}");
+
+        $ciudades = Ciudad::all();
+        $servicios = Servicio::orderBy('posicion')->get();
+        $atributos = Atributo::orderBy('posicion')->get();
+        $nacionalidades = Nacionalidad::orderBy('posicion')->get();
+        $sectores = Sector::orderBy('nombre')->get();
+
+        return view('showescort', compact(
+            'usuarioPublicate', 
+            'ciudades', 
+            'sectores', 
+            'nacionalidades', 
+            'atributos', 
+            'servicios',
+            'meta',
+            'canonicalUrl'
+        ));
+
+    } catch (\Exception $e) {
+        \Log::error('Error en showPerfil: ' . $e->getMessage());
+        return abort(404);
     }
+}
     
 
 

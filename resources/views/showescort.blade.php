@@ -1,11 +1,4 @@
 @extends('layouts.app')
-
-@php
-$metaTitle = $usuarioPublicate->fantasia . ' Escort ' .
-        ($usuarioPublicate->categorias ? ucfirst(strtolower($usuarioPublicate->categorias)) . ' ' : '') .
-        'en ' . $usuarioPublicate->ubicacion . ' | OnlyEscorts';
-@endphp
-
 @section('content')
 
 <div class="escortperfil-container">
@@ -43,22 +36,23 @@ if (!Auth::check()) {
 
 @foreach($fotos as $foto)
     <div class="escortperfil-swiper-slide swiper-slide">
-        @if($foto === 'Exclusivo-para-miembros.png')
-            <img src="{{ asset('storage/chicas/Exclusivo-para-miembros.png') }}"
-                 alt="Contenido exclusivo"
-                 class="escortperfil-banner-img"
-                 onclick="openEscortModal(this.src)">
-        @else
-            {{-- Obtener la descripción correspondiente a la foto --}}
-            @php
-                $descripcionFoto = $descripcionFotos[$foto] ?? 'Foto de ' . $usuarioPublicate->fantasia;
-            @endphp
+    @if($foto === 'Exclusivo-para-miembros.png')
+    <img src="{{ asset('storage/chicas/Exclusivo-para-miembros.png') }}"
+         alt="Contenido exclusivo"
+         class="escortperfil-banner-img"
+         onclick="showLoginImageAlert()"
+         style="cursor: pointer;">
+@else
+    {{-- Mantener el código existente para imágenes no bloqueadas --}}
+    @php
+        $descripcionFoto = $descripcionFotos[$foto] ?? 'Foto de ' . $usuarioPublicate->fantasia;
+    @endphp
 
-            <img src="{{ asset("storage/chicas/{$usuarioPublicate->id}/{$foto}") }}"
-                 alt="{{ $descripcionFoto }}"
-                 class="escortperfil-banner-img"
-                 onclick="openEscortModal(this.src)">
-        @endif
+    <img src="{{ asset("storage/chicas/{$usuarioPublicate->id}/{$foto}") }}"
+         alt="{{ $descripcionFoto }}"
+         class="escortperfil-banner-img"
+         onclick="openEscortModal(this.src)">
+@endif
     </div>
 @endforeach
 

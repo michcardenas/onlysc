@@ -4283,12 +4283,12 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 
     .navbar-bottom {
         position: fixed;
-        top: 42px;
+        top: 40px;
         left: 0;
         width: 100%;
         z-index: 999;
         background: white;
-        height: 64px;
+        height: 56px;
     }
 
     main {
@@ -4441,7 +4441,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         border-radius: 10px;
         margin: auto;
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        top: 47px;
+        top: -18px;
         gap: 0; /* Eliminamos cualquier gap */
         align-items: center;
         height: 16px;
@@ -4560,8 +4560,8 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 
     .escortperfil-nombre {
         position: absolute;
-        bottom: 100px;
-        left: 19px;
+        bottom: 121px;
+        left: 135px;
         color: #fff;
         font-size: 3em;
         font-weight: bold;
@@ -4572,8 +4572,8 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 
     .escortperfil-nombrechikito {
         position: absolute;
-        bottom: 60px;
-        left: 19px;
+        bottom: 80px;
+        left: 170px;
         color: #fff;
         font-size: 1em;
         font-weight: bold;
@@ -5017,7 +5017,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     }
 
     .navbar-top {
-        padding: 8px;
+        /* padding: 8px; */
     }
 
     .banner-content h1 {
@@ -5685,8 +5685,16 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         top: 606px;
     }
 
-    .escortperfil-nombre {
+.escortperfil-nombre {
         font-size: 2.5em;
+        bottom: 120px;
+        left: 120px;
+    }
+
+    .escortperfil-nombrechikito {
+        position: absolute;
+        bottom: 80px;
+        left: 160px;
     }
 
     .text-wrapper {
@@ -6156,6 +6164,14 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 
     .escortperfil-nombre {
         font-size: 2.5em;
+        bottom: 120px;
+        left: 100px;
+    }
+
+    .escortperfil-nombrechikito {
+        position: absolute;
+        bottom: 80px;
+        left: 140px;
     }
 
     .text-wrapper {

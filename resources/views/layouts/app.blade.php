@@ -983,40 +983,79 @@ function showLoginAlert() {
     alertDiv.className = 'login-alert';
     alertDiv.style.cssText = `
         position: fixed;
-        top: 895px;
-        right: 688px;
-        background: rgb(42, 42, 42);
-        padding: 10px 15px;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 15px;
+        justify-content: center;
         z-index: 1000;
-        white-space: nowrap;
+        background: rgba(0, 0, 0, 0.7);
     `;
     
-    alertDiv.innerHTML = `
-        <span style="color: white; font-size: 14px;">Para agregar a favoritos debes tener una cuenta</span>
+    // Contenedor interno para el mensaje
+    const messageContainer = document.createElement('div');
+    messageContainer.style.cssText = `
+        background: rgb(42, 42, 42);
+        padding: 30px 40px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 25px;
+    `;
+    
+    messageContainer.innerHTML = `
+        <span style="
+            color: white; 
+            font-size: 18px; 
+            text-align: center;
+            display: block;
+            width: 100%;
+            line-height: 1.5;
+            font-weight: 500;
+        ">
+            Debes tener una cuenta para tener favoritos
+        </span>
         <a href="/login" 
-           style="background: #e00037; 
-                  color: white; 
-                  padding: 8px 16px; 
-                  text-decoration: none; 
-                  text-transform: uppercase; 
-                  font-weight: bold; 
-                  font-size: 14px;">
+           style="
+               background: #e00037; 
+               color: white; 
+               padding: 14px 28px; 
+               text-decoration: none; 
+               text-transform: uppercase; 
+               font-weight: bold; 
+               font-size: 15px;
+               border-radius: 4px;
+               transition: all 0.3s ease;
+               display: inline-block;
+               margin: 0 auto;
+               border: none;
+               cursor: pointer;
+           ">
             ACCEDER
         </a>
     `;
-    
-    // Encontrar el botón de favoritos y añadir la alerta después de él
-    const favoriteButton = document.querySelector('.favorite-button');
-    if (favoriteButton && favoriteButton.parentNode) {
-        favoriteButton.parentNode.insertBefore(alertDiv, favoriteButton.nextSibling);
-    } else {
-        document.body.appendChild(alertDiv);
-    }
 
-    // Remover con animación después de 2.7 segundos
+    alertDiv.appendChild(messageContainer);
+    document.body.appendChild(alertDiv);
+
+    // Cerrar al hacer click en cualquier parte
+    alertDiv.addEventListener('click', (e) => {
+        if (e.target === alertDiv) {
+            alertDiv.classList.add('hiding');
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 300);
+        }
+    });
+
+    // Remover automáticamente después de 2.7 segundos
     setTimeout(() => {
         alertDiv.classList.add('hiding');
         setTimeout(() => {
@@ -1024,6 +1063,22 @@ function showLoginAlert() {
         }, 300); // Duración de la animación
     }, 2700);
 }
+
+// Agregar event listeners a las imágenes bloqueadas
+document.addEventListener('DOMContentLoaded', function() {
+    const blockedImages = document.querySelectorAll('.blocked-image');
+    blockedImages.forEach((img) => {
+        img.addEventListener('click', function(e) {
+            e.preventDefault();
+            showLoginAlert();
+        });
+    });
+});
+
+// Exponer la función globalmente
+window.showLoginAlert = showLoginAlert;
+
+
 
 // Función para manejar el estado del botón
 function setButtonState(button, isFavorited) {
@@ -1838,6 +1893,239 @@ function toggleText() {
 }
 
 </script>
+
+<script>
+console.log('Script iniciado');
+
+function showLoginImageAlert() {
+    console.log('Función showLoginImageAlert llamada');
+    
+    // Eliminar alerta existente si hay alguna
+    const existingAlert = document.querySelector('.login-alert');
+    if (existingAlert) {
+        console.log('Alerta existente encontrada y removida');
+        existingAlert.remove();
+    }
+
+    console.log('Creando nueva alerta');
+    // Crear la alerta
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'login-alert';
+    alertDiv.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.7);
+    `;
+    
+    // Contenedor interno para el mensaje
+    const messageContainer = document.createElement('div');
+    messageContainer.style.cssText = `
+        background: rgb(42, 42, 42);
+        padding: 30px 40px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 25px;
+    `;
+    
+    messageContainer.innerHTML = `
+        <span style="
+            color: white; 
+            font-size: 18px; 
+            text-align: center;
+            display: block;
+            width: 100%;
+            line-height: 1.5;
+            font-weight: 500;
+        ">
+            Debes tener una cuenta para ver este contenido
+        </span>
+        <a href="/login" 
+           style="
+               background: #e00037; 
+               color: white; 
+               padding: 14px 28px; 
+               text-decoration: none; 
+               text-transform: uppercase; 
+               font-weight: bold; 
+               font-size: 15px;
+               border-radius: 4px;
+               transition: all 0.3s ease;
+               display: inline-block;
+               margin: 0 auto;
+               border: none;
+               cursor: pointer;
+           ">
+            ACCEDER
+        </a>
+    `;
+
+    alertDiv.appendChild(messageContainer);
+    document.body.appendChild(alertDiv);
+    console.log('Alerta añadida al DOM');
+
+    // Cerrar al hacer click en cualquier parte
+    alertDiv.addEventListener('click', (e) => {
+        if (e.target === alertDiv) {
+            console.log('Click en overlay detectado');
+            alertDiv.classList.add('hiding');
+            alertDiv.style.opacity = '0';
+            setTimeout(() => {
+                alertDiv.remove();
+                console.log('Alerta removida por click');
+            }, 300);
+        }
+    });
+
+    // Remover automáticamente después de 2.7 segundos
+    setTimeout(() => {
+        console.log('Iniciando eliminación automática');
+        alertDiv.classList.add('hiding');
+        alertDiv.style.opacity = '0';
+        setTimeout(() => {
+            alertDiv.remove();
+            console.log('Alerta removida automáticamente');
+        }, 300);
+    }, 2700);
+}
+
+// Agregar event listeners a las imágenes bloqueadas
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOMContentLoaded disparado');
+    const blockedImages = document.querySelectorAll('.blocked-image');
+    console.log('Imágenes bloqueadas encontradas:', blockedImages.length);
+    
+    blockedImages.forEach((img, index) => {
+        console.log(`Agregando event listener a imagen bloqueada ${index + 1}`);
+        img.addEventListener('click', function(e) {
+            console.log(`Imagen bloqueada ${index + 1} clickeada`);
+            e.preventDefault();
+            showLoginImageAlert();
+        });
+    });
+});
+
+// Exponer la función globalmente para debugging
+window.showLoginImageAlert = showLoginImageAlert;
+console.log('Script completamente cargado');
+</script>
+<script>
+const whatsappStyleSheet = document.createElement('style');
+whatsappStyleSheet.textContent = `
+    @media (max-width: 767px) {
+        body .escortperfil-actions {
+            position: fixed !important;
+            top: 800px !important;
+            bottom: 90px !important;
+            padding: 3px !important;
+            z-index: 1001 !important;
+            display: flex !important;
+            justify-content: space-around !important;
+            transition: transform 0.3s ease !important;
+        }
+
+        body .escortperfil-actions.hidden {
+            transform: translateY(100%) !important;
+        }
+
+        body .escortperfil-btn {
+            margin: -16px 0px !important;
+            flex: 1 !important;
+        }
+    }
+
+    @media screen and (max-width: 430px) {
+        body .escortperfil-actions {
+            top: 825px !important;
+            bottom: 90px !important;
+        }
+    }
+
+    @media screen and (max-width: 415px) {
+        body .escortperfil-actions {
+            top: 825px !important;
+            bottom: 90px !important;
+        }
+    }
+
+    @media screen and (max-width: 413px) {
+        body .escortperfil-actions {
+            top: 840px !important;
+            bottom: 90px !important;
+        }
+    }
+
+    @media screen and (max-width: 393px) {
+        body .escortperfil-actions {
+            top: 772px !important;
+            bottom: 90px !important;
+        }
+    }
+
+    @media screen and (max-width: 391px) {
+        body .escortperfil-actions {
+            top: 762px !important;
+            bottom: 90px !important;
+        }
+    }
+
+    @media screen and (max-width: 375px) {
+        body .escortperfil-actions {
+                        top: 582px !important;
+            bottom: 90px !important;
+        }
+    }
+
+    @media screen and (max-width: 361px) {
+        body .escortperfil-actions {
+                        top: 664px !important;
+            bottom: 90px !important;
+        }
+    }
+`;
+document.head.appendChild(whatsappStyleSheet);
+
+// Script para manejar el scroll
+document.addEventListener('DOMContentLoaded', function() {
+    const actionsBar = document.querySelector('.escortperfil-actions');
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    if (!actionsBar) return;
+
+    window.addEventListener('scroll', function() {
+        if (!ticking) {
+            window.requestAnimationFrame(function() {
+                const currentScrollY = window.scrollY;
+                
+                // Mostrar/ocultar barra de acciones basado en el scroll
+                if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                    actionsBar.classList.add('hidden');
+                } else {
+                    actionsBar.classList.remove('hidden');
+                }
+
+                lastScrollY = currentScrollY;
+                ticking = false;
+            });
+
+            ticking = true;
+        }
+    });
+});
+    </script>
 </body>
 
 </html>
