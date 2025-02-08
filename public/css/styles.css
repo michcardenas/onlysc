@@ -4449,7 +4449,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     /* Cambiamos space-between por un gap pequeño */
         justify-content: flex-start;
         padding: 0px 0px;
-        margin-bottom: 200px;
+        margin-bottom: 150px;
     }
 
 .escortperfil-info-bar > div {
