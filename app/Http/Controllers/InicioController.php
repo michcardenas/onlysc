@@ -82,7 +82,7 @@ class InicioController extends Controller
 
             
 
-            $categorias_especiales = ['premium', 'vip', 'de_lujo', 'de lujo', 'under'];
+            $categorias_especiales = ['premium', 'vip', 'de_lujo', 'de lujo', 'under', 'masajes'];
             
             if ($sector && str_contains($sector, '/')) {
                 $partes = explode('/', $sector);
@@ -216,6 +216,7 @@ if ($sector) {
                     case 'premium':
                     case 'vip':
                     case 'under':
+                    case 'masajes':
                         // Mantener el valor tal cual
                         break;
                     default:
@@ -616,7 +617,7 @@ if ($sector) {
 
 
 // Definir categorías especiales
-$categorias_especiales = ['premium', 'vip', 'de_lujo', 'under'];
+$categorias_especiales = ['premium', 'vip', 'de_lujo', 'under', 'masajes'];
 
 // Obtener los filtros de la URL
 $pathParts = explode('/', trim(request()->path(), '/'));
@@ -769,7 +770,7 @@ if ($filtroUrl) {
         $filterType = 'precio';
     } elseif (preg_match('/^edad-\d+-\d+$/', $filtroUrl)) {
         $filterType = 'edad';
-    } elseif (in_array($filtroUrl, ['vip', 'premium', 'de_lujo', 'under'])) {
+    } elseif (in_array($filtroUrl, ['vip', 'premium', 'de_lujo', 'under', 'masajes'])) {
         $filterType = 'categoria';
     }
 
@@ -1534,7 +1535,7 @@ view()->share('breadcrumb', $breadcrumb);
         } elseif ($lastPart === 'resena-verificada') {
             $request->merge(['resena' => '1']);
             $singleFilter = 'resena';
-        } elseif (in_array($lastPart, ['vip', 'premium', 'de_lujo', 'under'])) {
+        } elseif (in_array($lastPart, ['vip', 'premium', 'de_lujo', 'under', 'masajes'])) {
             $request->merge(['categoria' => $lastPart]);
             $singleFilter = 'categoria';
         } else {

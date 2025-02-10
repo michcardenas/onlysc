@@ -284,14 +284,11 @@
                     <div class="filter-section">
                         <h6 class="range-title">Precio</h6>
                         <div class="price-categories">
-                            <div class="price-category" data-min="0" data-max="300000" data-categorias="Under" style="visibility: hidden; pointer-events: none;">
-                                <span class="category-name">Under</span>
-                            </div>
                             <div class="price-category" data-min="0" data-max="300000" data-categorias="Under">
                                 <span class="category-name">Under</span>
                             </div>
-                            <div class="price-category" data-min="0" data-max="300000" data-categorias="Under" style="visibility: hidden; pointer-events: none;">
-                                <span class="category-name">Under</span>
+                            <div class="price-category" data-min="0" data-max="300000" data-categorias="masajes">
+                                <span class="category-name">Masajes</span>
                             </div>
                         </div>
                         <div class="price-categories">
@@ -2024,6 +2021,32 @@ console.log('Script completamente cargado');
 <script>
 const whatsappStyleSheet = document.createElement('style');
 whatsappStyleSheet.textContent = `
+    /* Específicamente para iPad en modo vertical (portrait) */
+
+    /* Agregar los nuevos media queries para iPad */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+ body .escortperfil-actions {
+            position: fixed !important;
+            top: 908px !important;
+            bottom: 90px !important;
+            padding: 3px !important;
+            z-index: 1001 !important;
+            display: flex !important;
+            justify-content: space-around !important;
+            transition: transform 0.3s ease !important;
+        }
+
+        body .escortperfil-actions.hidden {
+            transform: translateY(100%) !important;
+        }
+
+        body .escortperfil-btn {
+            margin: -16px 0px !important;
+            flex: 1 !important;
+        }
+}
+
+
     @media (max-width: 767px) {
         body .escortperfil-actions {
             position: fixed !important;

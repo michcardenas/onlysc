@@ -4148,6 +4148,90 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     
 }
 
+
+
+/* iPad Pro 12.9" */
+@media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+    .escortperfil-btn {
+        text-decoration: none;
+        /* Elimina la línea del enlace */
+        width: 290px;
+        padding: 12px 0;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: bold;
+        text-align: center;
+        border-radius: 5px;
+        text-transform: uppercase;
+        /* height: 40px; */
+    }
+
+    .escortperfil-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        position: absolute;
+        right: 546px;
+        top: 730px;
+        /* Ajusta según necesites */
+        z-index: 3;
+        width: auto;
+        /* En lugar de un ancho fijo */
+    }
+
+    .escortperfil-nombre {
+        font-size: 2.5em;
+        left: 190px;
+    }
+
+    .escortperfil-nombrechikito {
+        position: absolute;
+        bottom: 80px;
+        left: 160px;
+    } 
+
+
+    .favorite-button {
+        border: none;
+        outline: none;
+        background: transparent;
+        position: absolute;
+        top: 608px;
+        right: 65px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: white;
+        text-align: center;
+        cursor: pointer;
+        z-index: 10;
+        /* text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); */
+        transition: transform 0.2s ease;
+    }
+
+    .share-button {
+        padding: 12px 20px;
+        border: none;
+        background: transparent;
+        color: #ffffff;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        transition: transform 0.2s;
+        position: absolute;
+        top: 511px;
+        right: 219px;
+        flex-direction: column;
+        min-width: 8px;
+    }
+}
+
+
+
 /* Grid para desktop */
 @media (min-width: 768px) {
     .BlogInicio-grid {
@@ -4482,8 +4566,8 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 
     .escortperfil-schedule {
         position: absolute;
-        right: 67px;
-        top: 1780px;
+        right: 203px;
+        top: 1928px;
         /* background-color: #fff; */
         padding: 25px;
         border-radius: 10px;
@@ -4527,8 +4611,8 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         outline: none;
         background: transparent;
         position: absolute;
-        top: 608px;
-        right: 65px;
+        top: 619px;
+        right: 280px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -4553,7 +4637,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         transition: transform 0.2s;
         position: absolute;
         top: 597px;
-        right: 219px;
+        right: 200px;
         flex-direction: column;
         min-width: 8px;
     }
@@ -4561,7 +4645,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     .escortperfil-nombre {
         position: absolute;
         bottom: 121px;
-        left: 135px;
+        left: 256px;
         color: #fff;
         font-size: 3em;
         font-weight: bold;
@@ -4573,7 +4657,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     .escortperfil-nombrechikito {
         position: absolute;
         bottom: 80px;
-        left: 170px;
+        left: 310px;
         color: #fff;
         font-size: 1em;
         font-weight: bold;
@@ -4582,7 +4666,9 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         padding: 0;
     }
 
-    .escortperfil-breadcrumb {}
+    .escortperfil-breadcrumb {
+        margin: 12;
+    }
 
     .escortperfil-btn.contactar {
         background-color: #e00037;
@@ -5390,7 +5476,12 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     }
 
     .escortperfil-nombre {
-        font-size: 2.5em;
+     font-size: 2.5em;
+     left: 140px;
+    }
+
+    .escortperfil-nombrechikito {
+     left: 180px;
     }
 
     .text-wrapper {
@@ -5412,7 +5503,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     }
 
     .escortperfil-schedule {
-        margin: 394px 58px;
+        margin: 220px -79px;
     }
 
     .escortperfil-map-section {
@@ -5560,7 +5651,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     }
 
     .escortperfil-schedule {
-        margin: 382px 58px;
+        margin: 200px -80px;
         margin-left: px;
     }
 
@@ -5716,7 +5807,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     }
 
     .escortperfil-schedule {
-        margin: 385px 54px;
+        margin: 200px -84px;
         /* margin-top:80px; */
     }
 
@@ -5848,6 +5939,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 
     .share-button {
         top: 606px;
+        right: 200px;
     }
 
     .escortperfil-nombre {
@@ -5873,7 +5965,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     }
 
     .escortperfil-schedule {
-        margin: 383px 54px;
+        margin: 181px -83px;
     }
 
     .escortperfil-map-section {
@@ -6037,7 +6129,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     }
 
     .escortperfil-schedule {
-        margin: 392px 48px;
+        margin: 220px -88px;
     }
 
     .escort-map {
@@ -6193,7 +6285,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     }
 
     .escortperfil-schedule {
-        margin: 400px 2px;
+        margin: 200px -136px;
         width: 85%;
         margin-bottom: auto;
         /* margin-right: auto; */
@@ -6632,6 +6724,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         /* text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); */
         transition: transform 0.2s ease;
     }
+
 
     
 }
