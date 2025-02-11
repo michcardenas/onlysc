@@ -478,5 +478,9 @@ if (!Auth::check()) {
         </div>
 
     </div>
+    <script>
+        window.removeEventListener('scroll', anyScrollHandler);
+
+    </script>
     @endsection
     @include('layouts.navigation')
