@@ -2024,7 +2024,7 @@ whatsappStyleSheet.textContent = `
     /* Específicamente para iPad en modo vertical (portrait) */
 
     /* Agregar los nuevos media queries para iPad */
-@media screen and (min-width: 768px) and (max-width: 1023px) {
+@media screen and (min-width: 768px) and (max-width: 779px) {
  body .escortperfil-actions {
             position: fixed !important;
             top: 908px !important;
@@ -2040,8 +2040,10 @@ whatsappStyleSheet.textContent = `
             transform: translateY(100%) !important;
         }
 
-        body .escortperfil-btn {
-            margin: -16px 0px !important;
+ body .escortperfil-btn {
+            margin-left: 8px !important;
+            margin-right: -6px;
+            margin-top: -50px;
             flex: 1 !important;
         }
 }
@@ -2064,7 +2066,9 @@ whatsappStyleSheet.textContent = `
         }
 
         body .escortperfil-btn {
-            margin: -16px 0px !important;
+            margin-left: 8px !important;
+            margin-right: -6px;
+            margin-top: -50px;
             flex: 1 !important;
         }
     }
@@ -2075,8 +2079,10 @@ whatsappStyleSheet.textContent = `
             bottom: 90px !important;
         }
 
-        body .escortperfil-btn {
-            margin: -16px 0px !important;
+         body .escortperfil-btn {
+            margin-left: 8px !important;
+            margin-right: -6px;
+            margin-top: -50px;
             flex: 1 !important;
         }
     }
@@ -2087,8 +2093,10 @@ whatsappStyleSheet.textContent = `
             bottom: 90px !important;
         }
 
-                body .escortperfil-btn {
-            margin: -16px 0px !important;
+               body .escortperfil-btn {
+            margin-left: 8px !important;
+            margin-right: -6px;
+            margin-top: -50px;
             flex: 1 !important;
         }
     }
@@ -2102,15 +2110,19 @@ whatsappStyleSheet.textContent = `
     }
 
     @media screen and (max-width: 414px) and (max-height: 736px) {
-                body .escortperfil-btn {
-            margin: -178px 0px !important;
+                 body .escortperfil-btn {
+            margin-left: 8px !important;
+            margin-right: -6px;
+            margin-top: -50px;
             flex: 1 !important;
         }
 }
 
 @media screen and (max-width: 414px) and (min-height: 737px) {
-                body .escortperfil-btn {
-            margin: -16px 0px !important;
+               body .escortperfil-btn {
+            margin-left: 8px !important;
+            margin-right: -6px;
+            margin-top: -50px;
             flex: 1 !important;
         }
 }
@@ -2121,8 +2133,10 @@ whatsappStyleSheet.textContent = `
             bottom: 90px !important;
         }
 
-        body .escortperfil-btn {
-            margin: -16px 0px !important;
+         body .escortperfil-btn {
+            margin-left: 8px !important;
+            margin-right: -6px;
+            margin-top: -50px;
             flex: 1 !important;
         }
     }
@@ -2133,8 +2147,10 @@ whatsappStyleSheet.textContent = `
             bottom: 90px !important;
         }
 
-                body .escortperfil-btn {
-            margin: -16px 0px !important;
+               body .escortperfil-btn {
+            margin-left: 8px !important;
+            margin-right: -6px;
+            margin-top: -50px;
             flex: 1 !important;
         }
     }
@@ -2159,8 +2175,10 @@ whatsappStyleSheet.textContent = `
             bottom: 90px !important;
         }
 
-                body .escortperfil-btn {
-            margin: -16px 0px !important;
+                 body .escortperfil-btn {
+            margin-left: 8px !important;
+            margin-right: -6px;
+            margin-top: -50px;
             flex: 1 !important;
         }
     }
@@ -2171,8 +2189,10 @@ whatsappStyleSheet.textContent = `
             bottom: 90px !important;
         }
 
-                body .escortperfil-btn {
-            margin: -16px 0px !important;
+                 body .escortperfil-btn {
+            margin-left: 8px !important;
+            margin-right: -6px;
+            margin-top: -50px;
             flex: 1 !important;
         }
     }
@@ -2183,8 +2203,10 @@ whatsappStyleSheet.textContent = `
             bottom: 90px !important;
         }
             
-                body .escortperfil-btn {
-            margin: -149px -10px !important;
+                 body .escortperfil-btn {
+            margin-left: 8px !important;
+            margin-right: -6px;
+            margin-top: -50px;
             flex: 1 !important;
         }
     }
@@ -2195,8 +2217,10 @@ whatsappStyleSheet.textContent = `
             bottom: 90px !important;
         }
 
-                body .escortperfil-btn {
-            margin: -16px 0px !important;
+                 body .escortperfil-btn {
+            margin-left: 8px !important;
+            margin-right: -6px;
+            margin-top: -50px;
             flex: 1 !important;
         }
     }
@@ -2214,7 +2238,9 @@ whatsappStyleSheet.textContent = `
             bottom: 90px !important;
         }
                     body .escortperfil-btn {
-            margin: -16px 0px !important;
+            margin-left: 8px !important;
+            margin-right: -6px;
+            margin-top: -50px;
             flex: 1 !important;
         }
     }
@@ -2224,8 +2250,10 @@ whatsappStyleSheet.textContent = `
             top: 620px !important;
             bottom: 90px !important;
         }
-            body .escortperfil-btn {
-            margin: -16px 0px !important;
+             body .escortperfil-btn {
+            margin-left: 8px !important;
+            margin-right: -6px;
+            margin-top: -50px;
             flex: 1 !important;
         }
     }
@@ -2236,6 +2264,13 @@ whatsappStyleSheet.textContent = `
             top: 720px !important;
             bottom: 90px !important;
         }
+
+         body .escortperfil-btn {
+            margin-left: 8px !important;
+            margin-right: -6px;
+            margin-top: -50px;
+            flex: 1 !important;
+        }
 }
     @media screen and (max-width: 344px) and (min-height: 882px) {
         body .escortperfil-actions {
@@ -2243,8 +2278,10 @@ whatsappStyleSheet.textContent = `
             bottom: 90px !important;
         }
 
-        body .escortperfil-btn {
-            margin: -16px -10px !important;
+         body .escortperfil-btn {
+            margin-left: 8px !important;
+            margin-right: -6px;
+            margin-top: -50px;
             flex: 1 !important;
         }
 }

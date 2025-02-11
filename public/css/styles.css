@@ -5,7 +5,7 @@ html {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Montserrat' !important; 
+    font-family: 'Montserrat' !important;
 }
 
 ::-webkit-scrollbar {
@@ -280,7 +280,7 @@ label .required {
     display: flex;
     justify-content: center;
     margin-top: 100px;
-    
+
 }
 
 /* Contenedor del select y botón */
@@ -580,7 +580,8 @@ label .required {
     position: relative;
     display: inline-block;
     z-index: 10;
-    pointer-events: auto; /* Asegura que el hover funcione en el contenedor */
+    pointer-events: auto;
+    /* Asegura que el hover funcione en el contenedor */
 }
 
 
@@ -596,16 +597,18 @@ label .required {
     text-decoration: none;
     font-family: inherit;
     transition: color 0.3s ease;
-    pointer-events: none; /* Esto evita que el botón cambie al hacer click */
+    pointer-events: none;
+    /* Esto evita que el botón cambie al hacer click */
 }
 
 
 .navbar-right .dropdown-content {
-    display: none; /* Empieza oculto */
+    display: none;
+    /* Empieza oculto */
     position: absolute;
     background-color: #fff;
     min-width: 600px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     z-index: 9999;
     top: 100%;
     left: 50%;
@@ -839,6 +842,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     /* Remove margin-top to prevent unwanted space */
     margin-top: 0;
 }
+
 /* Sección superior: enlaces de ubicación */
 .footer-top {
     padding: 20px 0;
@@ -1832,7 +1836,8 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     width: 100%;
     border-radius: 8px;
     overflow: hidden;
-    aspect-ratio: 16 / 9; /* Mantiene proporción del video */
+    aspect-ratio: 16 / 9;
+    /* Mantiene proporción del video */
 }
 
 .escortperfil-video {
@@ -1953,7 +1958,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     width: 100%;
     background: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .escortperfil-experience-row {
@@ -2105,10 +2110,14 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-    max-width: calc(100vw - 40px); /* Reducimos el margen de 80px a 40px */
-    max-height: calc(100vh - 40px); /* Reducimos el margen de 80px a 40px */
-    width: 90vw; /* Hacemos que ocupe el 90% del viewport por defecto */
-    height: 90vh; /* Hacemos que ocupe el 90% del viewport por defecto */
+    max-width: calc(100vw - 40px);
+    /* Reducimos el margen de 80px a 40px */
+    max-height: calc(100vh - 40px);
+    /* Reducimos el margen de 80px a 40px */
+    width: 90vw;
+    /* Hacemos que ocupe el 90% del viewport por defecto */
+    height: 90vh;
+    /* Hacemos que ocupe el 90% del viewport por defecto */
 }
 
 .escortperfil-modal-image {
@@ -2120,7 +2129,8 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 
 .escortperfil-modal-close {
     position: absolute;
-    top: -40px; /* Ajustamos la posición del botón de cerrar */
+    top: -40px;
+    /* Ajustamos la posición del botón de cerrar */
     right: -20px;
     font-size: 42px;
     cursor: pointer;
@@ -2128,6 +2138,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     border: none;
     color: #fff;
 }
+
 /* Hacer las imágenes clickeables */
 .escortperfil-banner-img {
     cursor: pointer;
@@ -4052,13 +4063,13 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 }
 
 .seo-section {
-        display: flex;
-        border-radius: 0.5rem;
-        margin: 2rem 0;
-        padding: 1.5rem;
-        max-width: 100%;
-        flex-direction: column;
-        align-items: center;
+    display: flex;
+    border-radius: 0.5rem;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    max-width: 100%;
+    flex-direction: column;
+    align-items: center;
 }
 
 .seo-title {
@@ -4145,7 +4156,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         width: 307px;
     }
 
-    
+
 }
 
 
@@ -4190,7 +4201,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         position: absolute;
         bottom: 80px;
         left: 160px;
-    } 
+    }
 
 
     .favorite-button {
@@ -4526,36 +4537,37 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         margin: auto;
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         top: -18px;
-        gap: 0; /* Eliminamos cualquier gap */
+        gap: 0;
+        /* Eliminamos cualquier gap */
         align-items: center;
         height: 16px;
         width: 100%;
-    /* Cambiamos space-between por un gap pequeño */
+        /* Cambiamos space-between por un gap pequeño */
         justify-content: flex-start;
         padding: 0px 0px;
         margin-bottom: 150px;
     }
 
-.escortperfil-info-bar > div {
-    background-color: #fff;
-    padding: 15px 20px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-right: 0;
-    border-bottom: 0;
-}
+    .escortperfil-info-bar>div {
+        background-color: #fff;
+        padding: 15px 20px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-right: 0;
+        border-bottom: 0;
+    }
 
-/* Línea vertical del medio */
-.escortperfil-info-bar > div:nth-child(2n-1) {
-    border-right: 3px solid #e5e7eb;
-}
+    /* Línea vertical del medio */
+    .escortperfil-info-bar>div:nth-child(2n-1) {
+        border-right: 3px solid #e5e7eb;
+    }
 
-/* Línea horizontal del medio */
-.escortperfil-info-bar > div:nth-child(-n+2) {
-    border-bottom: 3px solid #e5e7eb;
-}
+    /* Línea horizontal del medio */
+    .escortperfil-info-bar>div:nth-child(-n+2) {
+        border-bottom: 3px solid #e5e7eb;
+    }
 
     .escortperfil-section {
         width: 363px;
@@ -4612,7 +4624,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         background: transparent;
         position: absolute;
         top: 619px;
-        right: 280px;
+        right: 455px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -4637,7 +4649,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         transition: transform 0.2s;
         position: absolute;
         top: 597px;
-        right: 200px;
+        right: 256px;
         flex-direction: column;
         min-width: 8px;
     }
@@ -5261,7 +5273,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 }
 
 @media screen and (max-width: 430px) {
- .escortperfil-section {
+    .escortperfil-section {
         width: 326px;
         /* O el ancho que prefieras */
         margin-bottom: 40px;
@@ -5473,15 +5485,16 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 
     .share-button {
         top: 606px;
+        right: 220px;
     }
 
     .escortperfil-nombre {
-     font-size: 2.5em;
-     left: 140px;
+        font-size: 2.5em;
+        left: 140px;
     }
 
     .escortperfil-nombrechikito {
-     left: 180px;
+        left: 180px;
     }
 
     .text-wrapper {
@@ -5776,7 +5789,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         top: 606px;
     }
 
-.escortperfil-nombre {
+    .escortperfil-nombre {
         font-size: 2.5em;
         bottom: 120px;
         left: 120px;
@@ -6323,11 +6336,11 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     }
 }
 
-@media screen and (min-width: 1024px) and (max-width: 1280px) {
+@media screen and (min-width: 990px) and (max-width: 1280px) {
     .inicio-container {
-        max-width: 1024px; 
+        max-width: 1024px;
         margin: auto;
-        padding: 10px; 
+        padding: 10px;
     }
 
 
@@ -6361,9 +6374,9 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     }
 
     .escortperfil-nombrechikito {
-    position: absolute;
-    bottom: 18px;
-    left: 40px;
+        position: absolute;
+        bottom: 18px;
+        left: 40px;
     }
 
 
@@ -6436,7 +6449,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     /* Aquí van tus estilos específicos para 1024px */
 }
 
-@media screen and (min-width: 1093px) and (max-width: 1279px){
+@media screen and (min-width: 1093px) and (max-width: 1279px) {
     .inicio-container {
         max-width: 1090px;
         margin: auto;
@@ -6555,10 +6568,10 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         right: 28px;
     }
 
-/* Contenedor del horario */
-.escortperfil-schedule {
-    right: 5px;
-}
+    /* Contenedor del horario */
+    .escortperfil-schedule {
+        right: 5px;
+    }
 
     .inicio-container {
         max-width: 1360px;
@@ -6659,11 +6672,11 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         left: 120px;
     }
 
-.escortperfil-nombrechikito {
-    position: absolute;
-    bottom: 18px;
-    left: 120px;
-}
+    .escortperfil-nombrechikito {
+        position: absolute;
+        bottom: 18px;
+        left: 120px;
+    }
 
     .share-button {
         padding: 12px 20px;
@@ -6726,5 +6739,5 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     }
 
 
-    
+
 }
