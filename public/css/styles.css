@@ -3512,9 +3512,9 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 }
 
 .filtro-modal .modal-body {
-    padding: 1.5rem;
+    padding: 0.5rem 1.5rem;
     overflow-y: auto;
-    max-height: calc(100vh - 310px);
+    max-height: calc(108vh - 310px);
 }
 
 .filtro-modal .modal-header {
@@ -3756,7 +3756,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 }
 
 .filter-ciudad .form-select {
-    width: 90%;
+    width: 143%;
     padding: 8px 12px;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -3772,6 +3772,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     background-position: right 12px center;
     background-size: 12px;
     margin: 0 34px;
+    flex: 1;
 }
 
 .filter-ciudad .form-select:hover {
@@ -3791,7 +3792,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 }
 
 .filtro-nac .form-select {
-    width: 90%;
+    /* width: 90%; */
     padding: 8px 12px;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -3806,7 +3807,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     background-repeat: no-repeat;
     background-position: right 12px center;
     background-size: 12px;
-    margin: 0 34px;
+    /* margin: 0 34px; */
 }
 
 .filtro-nac .form-select:hover {
@@ -4307,6 +4308,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         align-items: center;
         opacity: 0.5;
     }
+
 
     .location-price {
         margin-top: 15px;
@@ -5038,6 +5040,10 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         margin: 3px 3px 3px -20px;
     }
 
+.filter-section .review-container {
+    margin: 0 0px;
+}
+
     .filtro-modal .range-container {
         padding: 10px 15px;
         margin-top: 16px;
@@ -5060,9 +5066,9 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     }
 
     .filtro-modal .modal-body {
-        padding: 1.5rem;
+        padding: 0.5rem 1.5rem;
         overflow-y: auto;
-        max-height: calc(100vh - 410px);
+        max-height: calc(133vh - 410px);
     }
 
 }

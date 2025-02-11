@@ -96,6 +96,8 @@ class UsuarioPublicate extends Model
     {
         return $this->belongsTo(Nacionalidad::class, 'nacionalidad', 'id');
     }
+
+    
     
 
 

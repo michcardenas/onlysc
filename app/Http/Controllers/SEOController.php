@@ -624,7 +624,7 @@ public function updateCategoriaSeo(Request $request)
 
         $validated = $request->validate([
             'ciudad_id' => 'required|exists:ciudades,id',
-            'categoria_id' => 'required|in:vip,premium,lujo,under,masajes',
+            'categoria_id' => 'required|in:vip,premium,de_lujo,under,masajes',
             'meta_title' => 'required|max:60',
             'meta_description' => 'required|max:160',
             'meta_keywords' => 'nullable',
