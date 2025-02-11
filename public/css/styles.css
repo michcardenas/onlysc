@@ -4413,7 +4413,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         width: 100%;
         right: 0px;
         top: 38rem;
-        transform: translateY(-50%);
+        transform: translateY(-100%);
         z-index: 9999;
     }
 
@@ -5197,7 +5197,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     .escortperfil-btn {
         position: fixed;
         width: 100%;
-        transform: translateY(-50%);
+        transform: translateY(-100%);
         right: 13px;
         top: 38rem;
         z-index: 9999;
@@ -5329,7 +5329,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         width: 100%;
         right: 0px;
         top: 38rem;
-        transform: translateY(-50%);
+        transform: translateY(-100%);
         z-index: 9999;
     }
 
@@ -5480,7 +5480,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         width: 100%;
         right: 0px;
         top: 38rem;
-        transform: translateY(-50%);
+        transform: translateY(-100%);
         z-index: 9999;
     }
 
@@ -5631,7 +5631,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         width: 100%;
         right: 0px;
         top: 38rem;
-        transform: translateY(-50%);
+        transform: translateY(-100%);
         z-index: 9999;
     }
 
@@ -5799,7 +5799,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         width: 100%;
         right: 0px;
         top: 38rem;
-        transform: translateY(-50%);
+        transform: translateY(-100%);
         z-index: 9999;
     }
 
@@ -5964,7 +5964,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         width: 100%;
         right: 0px;
         top: 38rem;
-        transform: translateY(-50%);
+        transform: translateY(-100%);
         z-index: 9999;
     }
 
@@ -6116,7 +6116,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         width: 100%;
         right: 0px;
         top: 38rem;
-        transform: translateY(-50%);
+        transform: translateY(-100%);
         z-index: 9999;
     }
 
