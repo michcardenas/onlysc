@@ -4413,6 +4413,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         width: 100%;
         right: 0px;
         top: 38rem;
+        transform: translateY(-50%);
     }
 
     .escortperfil-info-bar {
@@ -5195,7 +5196,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     .escortperfil-btn {
         position: fixed;
         width: 100%;
-    
+        transform: translateY(-50%);
         right: 13px;
         top: 38rem;
     }
@@ -5326,6 +5327,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         width: 100%;
         right: 0px;
         top: 38rem;
+        transform: translateY(-50%);
     }
 
     .escortperfil-actions {
@@ -5475,6 +5477,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         width: 100%;
         right: 0px;
         top: 38rem;
+        transform: translateY(-50%);
     }
 
     .escortperfil-actions {
@@ -5624,6 +5627,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         width: 100%;
         right: 0px;
         top: 38rem;
+        transform: translateY(-50%);
     }
 
     .escortperfil-actions {
@@ -5790,6 +5794,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         width: 100%;
         right: 0px;
         top: 38rem;
+        transform: translateY(-50%);
     }
 
     .escortperfil-actions {
@@ -5953,6 +5958,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         width: 100%;
         right: 0px;
         top: 38rem;
+        transform: translateY(-50%);
     }
 
     .escortperfil-actions {
@@ -6103,6 +6109,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         width: 100%;
         right: 0px;
         top: 38rem;
+        transform: translateY(-50%);
     }
 
     .escortperfil-actions {
