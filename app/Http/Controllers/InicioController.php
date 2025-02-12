@@ -795,6 +795,8 @@ $canonicalUrl = url($ciudadUrl);
 $metaTagData = $baseMetaTag?->toArray() ?? [];
 $metaTag = $baseMetaTag;
 
+
+
 Log::info('Valores inicializados:', [
     'title' => $title,
     'description' => $description,
@@ -942,8 +944,9 @@ if ($hasFilter && !$hasSector) {
         $metaTagData = $metaTag->toArray();
         $metaRobots = $metaTag->meta_robots ?? 'index,follow'; // Usamos el meta_robots del metatag
     } else {
-        $title = "Escorts en " . ucfirst($sector->nombre) . " de " . ucfirst($ciudadSeleccionada->nombre);
-        $description = "Descubre escorts en " . ucfirst($sector->nombre) . " de " . ucfirst($ciudadSeleccionada->nombre);
+        $title = "Escorts en " . ucfirst($sector?->nombre ?? $ciudadSeleccionada?->nombre ?? "Ubicación desconocida") . " de " . ucfirst($ciudadSeleccionada?->nombre ?? "Ciudad desconocida");
+$description = "Descubre escorts en " . ucfirst($sector?->nombre ?? $ciudadSeleccionada?->nombre ?? "Ubicación desconocida") . " de " . ucfirst($ciudadSeleccionada?->nombre ?? "Ciudad desconocida");
+
         $metaRobots = 'index,follow'; // Valor por defecto
     }
 
@@ -954,6 +957,18 @@ if ($hasFilter && !$hasSector) {
         $canonicalUrl = url($ciudadUrl . '/' . $sectorUrl);
     }
 
+// 🚀 Si el filtro es edad o precio, aplicar noindex y usar los meta tags de la ciudad
+if (in_array($filterType, ['edad', 'precio'])) {
+    Log::info('Aplicando noindex,follow y meta tags de la ciudad debido a filtro de edad o precio');
+
+    $metaRobots = 'noindex,follow';
+    
+    // Usar los metatags de la ciudad
+    $title = $baseMetaTag?->meta_title ?? 'Escorts en ' . ucfirst($ciudadSeleccionada->nombre);
+    $description = $baseMetaTag?->meta_description ?? 'Encuentra escorts en ' . ucfirst($ciudadSeleccionada->nombre) . ' disponibles hoy.';
+    $metaTagData = $baseMetaTag?->toArray() ?? [];
+    $metaTag = $baseMetaTag;
+}
 
 // Para cualquier combinación con 2 o más filtros, noindex
 if ($totalFilters >= 2) {
