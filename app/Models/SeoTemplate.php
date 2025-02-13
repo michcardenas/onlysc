@@ -13,6 +13,7 @@ class SeoTemplate extends Model
         'filtro', // Agregar la nueva columna
         'description_template',
         'ciudad_id',
+        'titulo'
     ];
 
     /**

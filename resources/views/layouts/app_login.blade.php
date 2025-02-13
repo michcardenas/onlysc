@@ -1728,7 +1728,7 @@ function toggleVideoBlock(button) {
 }
 </script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+   document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('templatesForm');
     const ciudadSelect = document.getElementById('global_ciudad');
     const selectedCiudadInput = document.getElementById('selected_ciudad_id');
@@ -1749,9 +1749,12 @@ function toggleVideoBlock(button) {
         // Recopilar todos los templates
         const templates = [];
         document.querySelectorAll('textarea[data-tipo]').forEach(textarea => {
-            if (textarea.value.trim()) { // Solo incluir templates con contenido
+            if (!textarea.dataset.tipo.includes('title') && textarea.value.trim()) {
+                // Buscar el título correspondiente
+                const titleTextarea = document.querySelector(`textarea[data-tipo="${textarea.dataset.tipo}_title"]`);
                 templates.push({
                     tipo: textarea.dataset.tipo,
+                    titulo: titleTextarea ? titleTextarea.value : '',
                     description_template: textarea.value,
                 });
             }

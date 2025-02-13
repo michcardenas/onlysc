@@ -2,127 +2,128 @@
 
 @section('content')
 <style>
-/* Estilos generales */
-.template-group {
-    position: relative;
-    margin-bottom: 1rem;
-}
+    /* Estilos generales */
+    .template-group {
+        position: relative;
+        margin-bottom: 1rem;
+    }
 
-.template-group:last-child {
-    margin-bottom: 0;
-}
+    .template-group:last-child {
+        margin-bottom: 0;
+    }
 
-.tinymce-editor {
-    display: block;
-    width: 100%;
-    background-color: #1a1a1a;
-    color: white !important;
-}
+    .tinymce-editor {
+        display: block;
+        width: 100%;
+        background-color: #1a1a1a;
+        color: white !important;
+    }
 
-.preview-section {
-    margin-top: 0.5rem;
-}
+    .preview-section {
+        margin-top: 0.5rem;
+    }
 
-/* Estilos para la vista previa */
-.preview-content {
-    min-height: 50px;
-    max-height: 150px;
-    overflow-y: auto;
-    padding: 0.75rem;
-    border: 1px solid #333;
-    border-radius: 0.25rem;
-    background-color: #1a1a1a;
-}
+    /* Estilos para la vista previa */
+    .preview-content {
+        min-height: 50px;
+        max-height: 150px;
+        overflow-y: auto;
+        padding: 0.75rem;
+        border: 1px solid #333;
+        border-radius: 0.25rem;
+        background-color: #1a1a1a;
+    }
 
-.preview-content p {
-    margin: 0;
-    padding: 0;
+    .preview-content p {
+        margin: 0;
+        padding: 0;
 
-}
+    }
 
-.preview-content strong {
-    font-weight: bold;
-}
+    .preview-content strong {
+        font-weight: bold;
+    }
 
-.preview-content em {
-    font-style: italic;
-}
+    .preview-content em {
+        font-style: italic;
+    }
 
-.preview-content ul, .preview-content ol {
-    margin-left: 20px;
-}
+    .preview-content ul,
+    .preview-content ol {
+        margin-left: 20px;
+    }
 
-.preview-content a {
-    color: #e00037;
-    text-decoration: underline;
-}
+    .preview-content a {
+        color: #e00037;
+        text-decoration: underline;
+    }
 
-/* Asegurarse de que los estilos del TinyMCE se apliquen */
-.preview-content [style] {
-    all: revert;
-}
+    /* Asegurarse de que los estilos del TinyMCE se apliquen */
+    .preview-content [style] {
+        all: revert;
+    }
 
-/* Control específico para el espacio entre pestañas */
-.tab-content > .tab-pane {
-    display: none;
-}
+    /* Control específico para el espacio entre pestañas */
+    .tab-content>.tab-pane {
+        display: none;
+    }
 
-.tab-content > .active {
-    display: block;
-}
+    .tab-content>.active {
+        display: block;
+    }
 
-/* Ajustes TinyMCE */
-.tox-tinymce {
-    margin-bottom: 0.5rem !important;
-    min-height: 150px !important;
-    max-height: 300px !important;
-    border: 1px solid #333 !important;
-    background-color: #1a1a1a !important;
-}
+    /* Ajustes TinyMCE */
+    .tox-tinymce {
+        margin-bottom: 0.5rem !important;
+        min-height: 150px !important;
+        max-height: 300px !important;
+        border: 1px solid #333 !important;
+        background-color: #1a1a1a !important;
+    }
 
-.tox .tox-toolbar {
-    background-color: #2d2d2d !important;
-    border-bottom: 1px solid #333 !important;
-}
+    .tox .tox-toolbar {
+        background-color: #2d2d2d !important;
+        border-bottom: 1px solid #333 !important;
+    }
 
-.tox .tox-edit-area {
-    background-color: #1a1a1a !important;
-}
+    .tox .tox-edit-area {
+        background-color: #1a1a1a !important;
+    }
 
-/* Elimina espacios innecesarios en los contenedores */
-#templateTabsContent {
-    margin-top: 1rem;
-}
+    /* Elimina espacios innecesarios en los contenedores */
+    #templateTabsContent {
+        margin-top: 1rem;
+    }
 
-.custom-tabs {
-    border-bottom: 1px solid #333;
-}
+    .custom-tabs {
+        border-bottom: 1px solid #333;
+    }
 
-/* Estilos para las pestañas */
-.nav-tabs .nav-link {
-    margin-bottom: -1px;
-    background-color: #2d2d2d;
-    border: 1px solid #333;
-    color: #fff !important;
-}
+    /* Estilos para las pestañas */
+    .nav-tabs .nav-link {
+        margin-bottom: -1px;
+        background-color: #2d2d2d;
+        border: 1px solid #333;
+        color: #fff !important;
+    }
 
-.nav-tabs .nav-link.active {
-    background-color: #1a1a1a;
-    border-color: #333 #333 #1a1a1a;
-    color: #fff !important;
-}
+    .nav-tabs .nav-link.active {
+        background-color: #1a1a1a;
+        border-color: #333 #333 #1a1a1a;
+        color: #fff !important;
+    }
 
-.nav-tabs .nav-link:hover {
-    border-color: #444;
-    background-color: #333;
-}
+    .nav-tabs .nav-link:hover {
+        border-color: #444;
+        background-color: #333;
+    }
 
-.card.custom-card {
-    background-color: #1a1a1a;
-    border: 1px solid #333;
-    border-radius: 0.5rem;
-    width: 100%;
-}
+    .card.custom-card {
+        background-color: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 0.5rem;
+        width: 100%;
+    }
 
     /* Botón de logout */
     .logout-button {
@@ -140,63 +141,65 @@
     }
 
 
-.card-header {
-    background-color: #2d2d2d !important;
-    border-bottom: 1px solid #333;
-    border-radius: 0.5rem 0.5rem 0 0 !important;
-}
+    .card-header {
+        background-color: #2d2d2d !important;
+        border-bottom: 1px solid #333;
+        border-radius: 0.5rem 0.5rem 0 0 !important;
+    }
 
-/* Formularios y botones */
-.form-control, .custom-textarea {
-    background-color: #2d2d2d;
-    border: 1px solid #333;
-    color: white;
-}
+    /* Formularios y botones */
+    .form-control,
+    .custom-textarea {
+        background-color: #2d2d2d;
+        border: 1px solid #333;
+        color: white;
+    }
 
-.form-control:focus, .custom-textarea:focus {
-    background-color: #2d2d2d;
-    border-color: #444;
-    color: white;
-    box-shadow: 0 0 0 0.2rem rgba(66, 70, 73, 0.5);
-}
+    .form-control:focus,
+    .custom-textarea:focus {
+        background-color: #2d2d2d;
+        border-color: #444;
+        color: white;
+        box-shadow: 0 0 0 0.2rem rgba(66, 70, 73, 0.5);
+    }
 
-.custom-button {
-    background-color: #3d3d3d;
-    border: 1px solid #444;
-    color: white;
-}
+    .custom-button {
+        background-color: #3d3d3d;
+        border: 1px solid #444;
+        color: white;
+    }
 
-.custom-button:hover {
-    background-color: #444;
-    border-color: #555;
-}
+    .custom-button:hover {
+        background-color: #444;
+        border-color: #555;
+    }
 
-/* Lista de variables */
-.list-group.custom-list .list-group-item {
-    background-color: #2d2d2d;
-    border: 1px solid #333;
-    color: white;
-}
+    /* Lista de variables */
+    .list-group.custom-list .list-group-item {
+        background-color: #2d2d2d;
+        border: 1px solid #333;
+        color: white;
+    }
 
-.list-group.custom-list code {
-    background-color: #1a1a1a;
-    color: #e00037;
-    padding: 0.2rem 0.4rem;
-    border-radius: 0.25rem;
-}
+    .list-group.custom-list code {
+        background-color: #1a1a1a;
+        color: #e00037;
+        padding: 0.2rem 0.4rem;
+        border-radius: 0.25rem;
+    }
 
-/* Alertas */
-.alert-success {
-    background-color: #1e4620;
-    border-color: #255827;
-    color: #75b798;
-}
+    /* Alertas */
+    .alert-success {
+        background-color: #1e4620;
+        border-color: #255827;
+        color: #75b798;
+    }
 
-.alert-danger {
-    background-color: #461e1e;
-    border-color: #582525;
-    color: #b77575;
-}
+    .alert-danger {
+        background-color: #461e1e;
+        border-color: #582525;
+        color: #b77575;
+    }
 </style>
 <header>
     <nav class="navbar-admin">
@@ -285,13 +288,20 @@
                     <!-- Templates Generales -->
                     <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
                         @foreach(['single' => '1 Filtro', 'multiple' => '2-4 Filtros', 'complex' => '+4 Filtros'] as $tipo => $titulo)
-                        <div class="template-group mb-3">
+                        <div class="template-group" data-tipo="{{ $tipo }}">
+                            <label for="{{ $tipo }}_title" class="form-label text-white">Título para {{ $titulo }}</label>
+                            <textarea
+                                class="tinymce-editor"
+                                id="{{ $tipo }}_title"
+                                data-tipo="{{ $tipo }}_title"
+                                data-is-title="true">{{ isset($templates[$tipo][$ciudades->first()->id]['titulo']) ? $templates[$tipo][$ciudades->first()->id]['titulo'] : $defaultTemplates[$tipo]['titulo'] }}</textarea>
+
                             <label for="{{ $tipo }}_template" class="form-label text-white">Template para {{ $titulo }}</label>
                             <textarea
                                 class="tinymce-editor"
                                 id="{{ $tipo }}_template"
-                                name="templates[{{ $tipo }}][description_template]"
-                                data-tipo="{{ $tipo }}">{{ isset($templates[$tipo][$ciudades->first()->id]) ? $templates[$tipo][$ciudades->first()->id] : $defaultTemplates[$tipo] }}</textarea>
+                                data-tipo="{{ $tipo }}"
+                                data-is-description="true">{{ isset($templates[$tipo][$ciudades->first()->id]['description_template']) ? $templates[$tipo][$ciudades->first()->id]['description_template'] : $defaultTemplates[$tipo]['description_template'] }}</textarea>
                             <div class="preview-section mt-2">
                                 <label class="text-white">Vista previa:</label>
                                 <div id="{{ $tipo }}_preview" class="preview-content bg-light"></div>
@@ -300,16 +310,22 @@
                         @endforeach
                     </div>
 
-                    <!-- Templates Unitarios -->
                     <div class="tab-pane fade" id="unitary" role="tabpanel" aria-labelledby="unitary-tab">
-                        @foreach(['ciudad', 'nacionalidad', 'edad', 'precio', 'atributos', 'servicios', 'disponible', 'resena', 'categorias'] as $filtro)
-                        <div class="template-group mb-3">
+                        @foreach(['ciudad', 'nacionalidad', 'edad', 'precio', 'atributos', 'servicios', 'disponible', 'resena', 'categorias', 'sector'] as $filtro)
+                        <div class="template-group" data-tipo="{{ $filtro }}">
+                            <label for="{{ $filtro }}_title" class="form-label text-white">Título para {{ ucfirst($filtro) }}</label>
+                            <textarea
+                                class="tinymce-editor"
+                                id="{{ $filtro }}_title"
+                                data-tipo="{{ $filtro }}_title"
+                                data-is-title="true">{{ isset($templates['filtros'][$filtro][$ciudades->first()->id]['titulo']) ? $templates['filtros'][$filtro][$ciudades->first()->id]['titulo'] : $defaultTemplates[$filtro]['titulo'] }}</textarea>
+
                             <label for="{{ $filtro }}_template" class="form-label text-white">Template para {{ ucfirst($filtro) }}</label>
                             <textarea
                                 class="tinymce-editor"
                                 id="{{ $filtro }}_template"
-                                name="templates[{{ $filtro }}][description_template]"
-                                data-tipo="{{ $filtro }}">{{ isset($templates['filtros'][$filtro][$ciudades->first()->id]) ? $templates['filtros'][$filtro][$ciudades->first()->id] : $defaultTemplates[$filtro] }}</textarea>
+                                name="description_template"
+                                data-tipo="{{ $filtro }}">{{ isset($templates['filtros'][$filtro][$ciudades->first()->id]['description_template']) ? $templates['filtros'][$filtro][$ciudades->first()->id]['description_template'] : $defaultTemplates[$filtro]['description_template'] }}</textarea>
                             <div class="preview-section mt-2">
                                 <label class="text-white">Vista previa:</label>
                                 <div id="{{ $filtro }}_preview" class="preview-content bg-light"></div>

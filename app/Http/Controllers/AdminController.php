@@ -204,36 +204,82 @@ class AdminController extends Controller
     {
         $ciudades = Ciudad::all();
         $templates = [];
-
+    
         // Obtener todos los templates y organizarlos por tipo y ciudad
-        $allTemplates = SeoTemplate::select('id', 'tipo', 'filtro', 'ciudad_id', 'description_template')
+        $allTemplates = SeoTemplate::select('id', 'tipo', 'filtro', 'ciudad_id', 'description_template', 'titulo')
             ->orderBy('ciudad_id')
             ->orderBy('tipo')
             ->get();
-
+    
         foreach ($allTemplates as $template) {
             if ($template->filtro) {
-                $templates['filtros'][$template->filtro][$template->ciudad_id] = $template->description_template;
+                $templates['filtros'][$template->filtro][$template->ciudad_id] = [
+                    'description_template' => $template->description_template,
+                    'titulo' => $template->titulo
+                ];
             } else {
-                $templates[$template->tipo][$template->ciudad_id] = $template->description_template;
+                $templates[$template->tipo][$template->ciudad_id] = [
+                    'description_template' => $template->description_template,
+                    'titulo' => $template->titulo
+                ];
             }
         }
-
+    
         $defaultTemplates = [
-            'ciudad' => 'Explora escorts en {ciudad}.',
-            'nacionalidad' => 'Encuentra escorts {nacionalidad} en {ciudad}.',
-            'edad' => 'Descubre escorts en {ciudad} de {edad_min} a {edad_max} años.',
-            'precio' => 'Encuentra escorts con precios desde {precio_min} hasta {precio_max} en {ciudad}.',
-            'atributos' => 'Escorts en {ciudad} con atributos como {atributos}.',
-            'servicios' => 'Escorts en {ciudad} que ofrecen servicios como {servicios}.',
-            'disponible' => 'Escorts en {ciudad} con disponibilidad: {disponible}.',
-            'resena' => 'Encuentra escorts en {ciudad} con estado de reseñas: {resena}.',
-            'categorias' => 'Explora escorts en {ciudad} clasificadas en {categorias}.',
-            'single' => 'Descubre escorts únicas en {ciudad}.',
-            'multiple' => 'Encuentra escorts con tus filtros favoritos en {ciudad}.',
-            'complex' => 'Personaliza tu búsqueda y encuentra escorts en {ciudad} que se adapten a todas tus preferencias.'
+            'ciudad' => [
+                'titulo' => 'Escorts en {ciudad}',
+                'description_template' => 'Explora escorts en {ciudad}.'
+            ],
+            'nacionalidad' => [
+                'titulo' => 'Escorts {nacionalidad} en {ciudad}',
+                'description_template' => 'Encuentra escorts {nacionalidad} en {ciudad}.'
+            ],
+            'edad' => [
+                'titulo' => 'Escorts de {edad_min} a {edad_max} años en {ciudad}',
+                'description_template' => 'Descubre escorts en {ciudad} de {edad_min} a {edad_max} años.'
+            ],
+            'precio' => [
+                'titulo' => 'Escorts desde {precio_min} hasta {precio_max} en {ciudad}',
+                'description_template' => 'Encuentra escorts con precios desde {precio_min} hasta {precio_max} en {ciudad}.'
+            ],
+            'atributos' => [
+                'titulo' => 'Escorts con {atributos} en {ciudad}',
+                'description_template' => 'Escorts en {ciudad} con atributos como {atributos}.'
+            ],
+            'servicios' => [
+                'titulo' => 'Escorts que ofrecen {servicios} en {ciudad}',
+                'description_template' => 'Escorts en {ciudad} que ofrecen servicios como {servicios}.'
+            ],
+            'disponible' => [
+                'titulo' => 'Escorts disponibles en {ciudad}',
+                'description_template' => 'Escorts en {ciudad} con disponibilidad: {disponible}.'
+            ],
+            'resena' => [
+                'titulo' => 'Escorts con reseñas en {ciudad}',
+                'description_template' => 'Encuentra escorts en {ciudad} con estado de reseñas: {resena}.'
+            ],
+            'categorias' => [
+                'titulo' => 'Escorts {categorias} en {ciudad}',
+                'description_template' => 'Explora escorts en {ciudad} clasificadas en {categorias}.'
+            ],
+            'single' => [
+                'titulo' => 'Escorts en {ciudad}',
+                'description_template' => 'Descubre escorts únicas en {ciudad}.'
+            ],
+            'multiple' => [
+                'titulo' => 'Escorts destacadas en {ciudad}',
+                'description_template' => 'Encuentra escorts con tus filtros favoritos en {ciudad}.'
+            ],
+            'complex' => [
+                'titulo' => 'Búsqueda personalizada de escorts en {ciudad}',
+                'description_template' => 'Personaliza tu búsqueda y encuentra escorts en {ciudad} que se adapten a todas tus preferencias.'
+            ],
+            'sector' => [
+                'titulo' => 'Escorts en {sector}, {ciudad}',
+                'description_template' => '<p>Encuentra escorts en el sector de {sector} en {ciudad}.</p>'
+            ]
         ];
-
+    
         return view('seo.templates', [
             'templates' => $templates,
             'defaultTemplates' => $defaultTemplates,
@@ -246,19 +292,13 @@ class AdminController extends Controller
     {
         $request->validate([
             'description_template' => 'required|string',
+            'titulo' => 'required|string',  // Agregamos validación para título
             'tipo' => 'nullable|in:single,multiple,complex',
             'filtro' => 'nullable|string',
             'ciudad_id' => 'required|exists:ciudades,id'
         ]);
-
+    
         try {
-            Log::info('Starting single SEO template update', [
-                'ciudad_id' => $request->ciudad_id,
-                'tipo' => $request->tipo,
-                'filtro' => $request->filtro,
-                'user_id' => auth()->id()
-            ]);
-
             $template = SeoTemplate::updateOrCreate(
                 [
                     'ciudad_id' => $request->ciudad_id,
@@ -266,7 +306,8 @@ class AdminController extends Controller
                     'filtro' => $request->filtro
                 ],
                 [
-                    'description_template' => $request->description_template
+                    'description_template' => $request->description_template,
+                    'titulo' => $request->titulo  // Agregamos el título
                 ]
             );
 
@@ -274,6 +315,7 @@ class AdminController extends Controller
                 'template_id' => $template->id,
                 'ciudad_id' => $request->ciudad_id,
                 'tipo' => $request->tipo,
+                'titulo' => $request->titulo,
                 'filtro' => $request->filtro
             ]);
 
@@ -345,85 +387,56 @@ class AdminController extends Controller
     }
 
     public function updateAllTemplates(Request $request)
-    {
+{
+    try {
         $request->validate([
             'ciudad_id' => 'required|exists:ciudades,id',
             'templates' => 'required|array'
         ]);
 
-        try {
-            DB::beginTransaction();
+        DB::beginTransaction();
 
-            Log::info('Starting SEO template batch update', [
-                'ciudad_id' => $request->ciudad_id,
-                'template_count' => count($request->templates)
-            ]);
-
-            $filtroTypes = [
-                'ciudad',
-                'nacionalidad',
-                'edad',
-                'precio',
-                'atributos',
-                'servicios',
-                'disponible',
-                'resena',
-                'categorias'
-            ];
-
-            foreach ($request->templates as $templateData) {
-                $isFilter = in_array($templateData['tipo'], $filtroTypes);
-                $updateData = [
-                    'ciudad_id' => $request->ciudad_id,
-                    'tipo' => $isFilter ? 'filtro' : $templateData['tipo'],
-                    'filtro' => $isFilter ? $templateData['tipo'] : null
-                ];
-
-                try {
-                    $template = SeoTemplate::updateOrCreate(
-                        $updateData,
-                        ['description_template' => $templateData['description_template']]
-                    );
-
-                    Log::info('SEO Template updated', [
-                        'ciudad_id' => $request->ciudad_id,
-                        'template_id' => $template->id,
-                        'tipo' => $updateData['tipo'],
-                        'filtro' => $updateData['filtro']
-                    ]);
-                } catch (QueryException $qe) {
-                    Log::error('SEO Template update failed', [
-                        'ciudad_id' => $request->ciudad_id,
-                        'tipo' => $updateData['tipo'],
-                        'filtro' => $updateData['filtro'],
-                        'sql' => $qe->getSql(),
-                        'bindings' => $qe->getBindings(),
-                        'error' => $qe->getMessage()
-                    ]);
-                    throw $qe;
-                }
+        foreach ($request->templates as $template) {
+            if (!isset($template['tipo']) || !isset($template['titulo']) || !isset($template['description_template'])) {
+                continue;
             }
 
-            DB::commit();
-            Log::info('SEO Template batch update completed', [
-                'ciudad_id' => $request->ciudad_id
+            $tipo = $template['tipo'];
+            $isFilter = in_array($tipo, [
+                'ciudad', 'nacionalidad', 'edad', 'precio', 
+                'atributos', 'servicios', 'disponible', 'resena', 
+                'sector', 'categorias'
             ]);
 
-            return response()->json(['success' => true]);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('SEO Template batch update failed', [
-                'ciudad_id' => $request->ciudad_id,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 500);
+            SeoTemplate::updateOrCreate(
+                [
+                    'ciudad_id' => $request->ciudad_id,
+                    'tipo' => $isFilter ? 'filtro' : $tipo,
+                    'filtro' => $isFilter ? $tipo : null
+                ],
+                [
+                    'titulo' => $template['titulo'],
+                    'description_template' => $template['description_template']
+                ]
+            );
         }
+
+        DB::commit();
+        return response()->json(['success' => true]);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Error actualizando templates:', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al actualizar los templates: ' . $e->getMessage()
+        ], 500);
     }
+}
 
 
     public function tycadmin()
