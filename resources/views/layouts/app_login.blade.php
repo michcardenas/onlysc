@@ -1659,80 +1659,10 @@ function toggleContentBlock(button) {
 
 </script>
 <script>
-// Validación para el tamaño de los videos
-document.getElementById('videosInput').addEventListener('change', function(e) {
-    const maxSize = 20 * 1024 * 1024; // 20MB en bytes
-    const files = e.target.files;
-    
-    for(let i = 0; i < files.length; i++) {
-        if(files[i].size > maxSize) {
-            alert('El video ' + files[i].name + ' excede el tamaño máximo permitido de 20MB');
-            e.target.value = ''; // Limpiar la selección
-            return;
-        }
-    }
-});
-
-// Función para eliminar videos existentes
-function removeExistingVideo(videoName, button) {
-    if(confirm('¿Está seguro de que desea eliminar este video?')) {
-        const userId = button.closest('[data-user-id]').dataset.userId;
-        
-        fetch('/admin/eliminar-video', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify({
-                video: videoName,
-                user_id: userId
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.success) {
-                button.closest('.video-item').remove();
-            } else {
-                alert('Error al eliminar el video');
-            }
-        });
-    }
-}
-
-// Función para alternar el bloqueo de videos
-function toggleVideoBlock(button) {
-    const videoItem = button.closest('.video-item');
-    const userId = videoItem.dataset.userId;
-    const videoName = videoItem.dataset.video;
-    
-    fetch('/admin/toggle-video-block', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({
-            video: videoName,
-            user_id: userId
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data.success) {
-            button.classList.toggle('active');
-            button.textContent = button.classList.contains('active') ? 'Desbloquear' : 'Bloquear';
-            videoItem.querySelector('.content-overlay').style.display = button.classList.contains('active') ? 'flex' : 'none';
-        }
-    });
-}
-</script>
-<script>
    document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('templatesForm');
     const ciudadSelect = document.getElementById('global_ciudad');
     const selectedCiudadInput = document.getElementById('selected_ciudad_id');
-
     // Manejar el envío del formulario
     form.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -1742,10 +1672,8 @@ function toggleVideoBlock(button) {
             alert('Por favor, seleccione una ciudad');
             return;
         }
-
         // Actualizar el ID de la ciudad seleccionada
         selectedCiudadInput.value = ciudadSelect.value;
-
         // Recopilar todos los templates
         const templates = [];
         document.querySelectorAll('textarea[data-tipo]').forEach(textarea => {
@@ -1759,7 +1687,6 @@ function toggleVideoBlock(button) {
                 });
             }
         });
-
         // Enviar los datos usando fetch
         fetch('/seo/templates/update-all', {
             method: 'POST',
@@ -1786,13 +1713,11 @@ function toggleVideoBlock(button) {
             alert('Error al guardar los templates');
         });
     });
-
     // Inicializar previews al cargar la página
     document.querySelectorAll('textarea[data-tipo]').forEach(textarea => {
         const tipo = textarea.dataset.tipo;
         updatePreview(tipo);
     });
-
     // Actualizar previews cuando cambia la ciudad
     ciudadSelect.addEventListener('change', function() {
         const ciudadId = this.value;
@@ -1803,7 +1728,6 @@ function toggleVideoBlock(button) {
         }
     });
 });
-
 // Función para actualizar la vista previa de cualquier template
 function updatePreview(tipo) {
     // Obtener el textarea y el contenedor de vista previa
@@ -1811,11 +1735,9 @@ function updatePreview(tipo) {
     const previewContainer = document.getElementById(`${tipo}_preview`);
     
     if (!textarea || !previewContainer) return;
-
     // Obtener la ciudad seleccionada
     const ciudadSelect = document.getElementById('global_ciudad');
     const ciudadNombre = ciudadSelect.options[ciudadSelect.selectedIndex]?.text || 'Ciudad';
-
     // Datos de ejemplo para la vista previa
     const previewData = {
         ciudad: ciudadNombre,
@@ -1831,20 +1753,16 @@ function updatePreview(tipo) {
         resena: 'con reseñas verificadas',
         categorias: 'VIP, Premium'
     };
-
     // Obtener el template actual
     let preview = textarea.value;
-
     // Reemplazar todas las variables en el template
     Object.entries(previewData).forEach(([key, value]) => {
         const regex = new RegExp(`{${key}}`, 'g');
         preview = preview.replace(regex, value);
     });
-
     // Actualizar el contenedor de vista previa
     previewContainer.textContent = preview || 'Vista previa del template...';
 }
-
 // Inicializar los event listeners cuando el DOM está listo
 document.addEventListener('DOMContentLoaded', function() {
     // Agregar event listeners a todos los textareas
@@ -1858,7 +1776,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Actualizar preview inicial
         updatePreview(tipo);
     });
-
     // Actualizar todas las previews cuando cambia la ciudad
     const ciudadSelect = document.getElementById('global_ciudad');
     if (ciudadSelect) {
@@ -1869,11 +1786,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
 // Función para cargar templates desde el servidor
 function loadTemplatesByCiudad(ciudadId) {
     if (!ciudadId) return;
-
     fetch(`/seo/templates/${ciudadId}`)
         .then(response => response.json())
         .then(data => {
@@ -1885,7 +1800,6 @@ function loadTemplatesByCiudad(ciudadId) {
                     updatePreview(tipo);
                 }
             });
-
             // Cargar templates unitarios
             ['ciudad', 'nacionalidad', 'edad', 'precio', 'atributos', 
              'servicios', 'disponible', 'resena', 'categorias'].forEach(filtro => {
@@ -1900,7 +1814,6 @@ function loadTemplatesByCiudad(ciudadId) {
             console.error('Error cargando templates:', error);
         });
 }
-
 document.addEventListener('DOMContentLoaded', function() {
     tinymce.init({
         selector: '.tinymce-editor',
@@ -1948,7 +1861,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     previewContent.style.cssText = computedStyle.cssText;
                 }
             });
-
             // Modo de visualización sin código
             editor.on('BeforeSetContent', function(e) {
                 // Mantener el HTML pero mostrar solo el texto formateado
@@ -1964,7 +1876,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-
 document.addEventListener('DOMContentLoaded', function() {
     // Selectores principales
     const servicioSelect = document.getElementById('servicio_select');
@@ -1973,7 +1884,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const sectorSelect = document.getElementById('sector_select');
     const categoriaSelect = document.getElementById('categoria_select');
     const ciudadSelect = document.getElementById('ciudad_select');
-
     // Selectores de formularios
     const servicioForm = document.getElementById('servicioForm');
     const atributoForm = document.getElementById('atributoForm');
@@ -1982,7 +1892,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const disponibilidadForm = document.getElementById('disponibilidadForm');
     const resenasForm = document.getElementById('resenasForm');
     const categoriaForm = document.getElementById('categoriaForm');
-
     // Función para actualizar los inputs hidden de ciudad
     function actualizarCiudadInputs() {
         const ciudadId = ciudadSelect.value;
@@ -1990,7 +1899,6 @@ document.addEventListener('DOMContentLoaded', function() {
             input.value = ciudadId;
         });
     }
-
     // Mapeo de tipos a nombres de rutas
     const routeNames = {
         'servicio': 'api.servicios.seo',
@@ -2001,7 +1909,6 @@ document.addEventListener('DOMContentLoaded', function() {
         'disponibilidad': 'api.disponibilidad.seo',
         'resenas': 'api.resenas.seo'
     };
-
     const updateRouteNames = {
         'servicio': 'seo.servicios.update',
         'atributo': 'seo.atributos.update',
@@ -2011,7 +1918,6 @@ document.addEventListener('DOMContentLoaded', function() {
         'disponibilidad': 'seo.disponibilidad.update',
         'resenas': 'seo.resenas.update'
     };
-
     
     // Función para obtener la URL correcta
     function getUrl(tipo, id = null, isUpdate = false) {
@@ -2024,19 +1930,15 @@ document.addEventListener('DOMContentLoaded', function() {
         
         return url;
     }
-
     // Función genérica para cargar datos SEO
     function cargarDatosSEO(tipo, id) {
         if (!id) return;
-
         const ciudadId = ciudadSelect.value;
         document.getElementById(`${tipo}_id_input`).value = id;
-
         let url = getUrl(tipo, id);
         if (ciudadId) {
             url += (url.includes('?') ? '&' : '?') + 'ciudad_id=' + ciudadId;
         }
-
         fetch(url)
             .then(response => {
                 if (!response.ok) throw new Error('Error al cargar los datos');
@@ -2053,7 +1955,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     'heading_h2',
                     'additional_text'
                 ];
-
                 campos.forEach(campo => {
                     const elemento = document.getElementById(`${campo}_${tipo}`);
                     if (elemento) {
@@ -2066,23 +1967,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert(`Error al cargar los datos del ${tipo}`);
             });
     }
-
     // Función genérica para manejar el envío de formularios
     function manejarEnvioFormulario(e, tipo) {
         e.preventDefault();
         const id = document.getElementById(`${tipo}_id_input`)?.value;
         const ciudadId = ciudadSelect.value;
-
         if (!id && tipo !== 'disponibilidad' && tipo !== 'resenas') {
             alert(`Por favor, seleccione un ${tipo}`);
             return;
         }
-
         if (!ciudadId) {
             alert('Por favor, seleccione una ciudad');
             return;
         }
-
         const formData = new FormData(e.target);
         
         fetch(getUrl(tipo, null, true), {
@@ -2110,7 +2007,6 @@ document.addEventListener('DOMContentLoaded', function() {
             alert(error.message || `Error al actualizar el SEO de ${tipo}`);
         });
     }
-
     // Event Listeners para los selects
     const selectores = {
         'servicio': servicioSelect,
@@ -2119,7 +2015,6 @@ document.addEventListener('DOMContentLoaded', function() {
         'sector': sectorSelect,
         'categoria': categoriaSelect
     };
-
     Object.entries(selectores).forEach(([tipo, selector]) => {
         if (selector) {
             selector.addEventListener('change', function() {
@@ -2127,7 +2022,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
-
     // Event Listeners para los formularios
     const formularios = {
         'servicio': servicioForm,
@@ -2138,13 +2032,11 @@ document.addEventListener('DOMContentLoaded', function() {
         'resenas': resenasForm,
         'categoria': categoriaForm
     };
-
     Object.entries(formularios).forEach(([tipo, formulario]) => {
         if (formulario) {
             formulario.addEventListener('submit', (e) => manejarEnvioFormulario(e, tipo));
         }
     });
-
     // Event listener para el select de ciudad
     if (ciudadSelect) {
         ciudadSelect.addEventListener('change', function() {
@@ -2159,7 +2051,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
     // Event listener para cambios de tab
     const tabLinks = document.querySelectorAll('[data-bs-toggle="tab"]');
     tabLinks.forEach(tabLink => {
@@ -2171,12 +2062,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
     // Inicialización
     actualizarCiudadInputs();
 });
     </script>
-
 <script>
     const routeUrls = {
         'servicio': {

@@ -204,13 +204,13 @@ class AdminController extends Controller
     {
         $ciudades = Ciudad::all();
         $templates = [];
-    
+
         // Obtener todos los templates y organizarlos por tipo y ciudad
         $allTemplates = SeoTemplate::select('id', 'tipo', 'filtro', 'ciudad_id', 'description_template', 'titulo')
             ->orderBy('ciudad_id')
             ->orderBy('tipo')
             ->get();
-    
+
         foreach ($allTemplates as $template) {
             if ($template->filtro) {
                 $templates['filtros'][$template->filtro][$template->ciudad_id] = [
@@ -224,7 +224,7 @@ class AdminController extends Controller
                 ];
             }
         }
-    
+
         $defaultTemplates = [
             'ciudad' => [
                 'titulo' => 'Escorts en {ciudad}',
@@ -279,7 +279,7 @@ class AdminController extends Controller
                 'description_template' => '<p>Encuentra escorts en el sector de {sector} en {ciudad}.</p>'
             ]
         ];
-    
+
         return view('seo.templates', [
             'templates' => $templates,
             'defaultTemplates' => $defaultTemplates,
@@ -297,7 +297,7 @@ class AdminController extends Controller
             'filtro' => 'nullable|string',
             'ciudad_id' => 'required|exists:ciudades,id'
         ]);
-    
+
         try {
             $template = SeoTemplate::updateOrCreate(
                 [
@@ -387,56 +387,61 @@ class AdminController extends Controller
     }
 
     public function updateAllTemplates(Request $request)
-{
-    try {
-        $request->validate([
-            'ciudad_id' => 'required|exists:ciudades,id',
-            'templates' => 'required|array'
-        ]);
-
-        DB::beginTransaction();
-
-        foreach ($request->templates as $template) {
-            if (!isset($template['tipo']) || !isset($template['titulo']) || !isset($template['description_template'])) {
-                continue;
-            }
-
-            $tipo = $template['tipo'];
-            $isFilter = in_array($tipo, [
-                'ciudad', 'nacionalidad', 'edad', 'precio', 
-                'atributos', 'servicios', 'disponible', 'resena', 
-                'sector', 'categorias'
+    {
+        try {
+            $request->validate([
+                'ciudad_id' => 'required|exists:ciudades,id',
+                'templates' => 'required|array'
             ]);
 
-            SeoTemplate::updateOrCreate(
-                [
-                    'ciudad_id' => $request->ciudad_id,
-                    'tipo' => $isFilter ? 'filtro' : $tipo,
-                    'filtro' => $isFilter ? $tipo : null
-                ],
-                [
-                    'titulo' => $template['titulo'],
-                    'description_template' => $template['description_template']
-                ]
-            );
+            DB::beginTransaction();
+
+            foreach ($request->templates as $template) {
+                if (!isset($template['tipo']) || !isset($template['titulo']) || !isset($template['description_template'])) {
+                    continue;
+                }
+
+                $tipo = $template['tipo'];
+                $isFilter = in_array($tipo, [
+                    'ciudad',
+                    'nacionalidad',
+                    'edad',
+                    'precio',
+                    'atributos',
+                    'servicios',
+                    'disponible',
+                    'resena',
+                    'sector',
+                    'categorias'
+                ]);
+
+                SeoTemplate::updateOrCreate(
+                    [
+                        'ciudad_id' => $request->ciudad_id,
+                        'tipo' => $isFilter ? 'filtro' : $tipo,
+                        'filtro' => $isFilter ? $tipo : null
+                    ],
+                    [
+                        'titulo' => $template['titulo'],
+                        'description_template' => $template['description_template']
+                    ]
+                );
+            }
+            DB::commit();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error actualizando templates:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar los templates: ' . $e->getMessage()
+            ], 500);
         }
-
-        DB::commit();
-        return response()->json(['success' => true]);
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        Log::error('Error actualizando templates:', [
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ]);
-        
-        return response()->json([
-            'success' => false,
-            'message' => 'Error al actualizar los templates: ' . $e->getMessage()
-        ], 500);
     }
-}
 
 
     public function tycadmin()
@@ -509,11 +514,11 @@ class AdminController extends Controller
             'nombre' => 'required',
             'url' => 'required'
         ]);
-    
+
         $sector->nombre = $validatedData['nombre'];
         $sector->url = $validatedData['url'];
         $sector->save();
-    
+
         return redirect()->route('sectores.indexsector')
             ->with('success', 'Sector actualizado exitosamente.');
     }
@@ -639,7 +644,7 @@ class AdminController extends Controller
         $nacionalidades = Nacionalidad::all();
         return view('nacionalidades.indexnacionalidad', compact('nacionalidades'));
     }
-    
+
 
     public function nacionalidadCreate()
     {
@@ -666,18 +671,18 @@ class AdminController extends Controller
 
     public function nacionalidadUpdate(Request $request, Nacionalidad $nacionalidad)
     {
-        
+
         $request->validate([
             'nombre' => 'required|string|max:255',
             'url' => 'required|string|max:255|unique:nacionalidades,url,' . $nacionalidad->id
         ]);
-    
+
         $nacionalidad->update($request->all());
-    
+
         return redirect()->route('nacionalidades.indexnacionalidad')
             ->with('success', 'Nacionalidad actualizada exitosamente.');
     }
-    
+
 
     public function nacionalidadDestroy(Nacionalidad $nacionalidad)
     {
