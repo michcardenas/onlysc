@@ -59,7 +59,7 @@
                             alt="{{ $primerEstado->usuarioPublicate->fantasia }}">
                         @endif
                     </div>
-                    <span class="historia-nombre">{{ Str::lower($primerEstado->usuarioPublicate->fantasia) }}</span>
+                    <span class="historia-nombre">{{ ucfirst(Str::lower($primerEstado->usuarioPublicate->fantasia)) }}</span>
                     <span class="historia-tiempo">hace {{ $primerEstado->created_at->diffForHumans(null, true) }}</span>
                 </div>
                 @endif
@@ -602,7 +602,10 @@
 </main>
 @if(isset($seoTitle) && isset($seoDescription))
 <div class="seo-section">
-    <h2 class="seo-title">{{ $seoTitle }}</h2>
+<h2 class="seo-title">
+    {{ strip_tags(html_entity_decode($seoTitle)) }}
+</h2>
+
     <div class="seo-description">{!! $seoDescription !!}</div>
 </div>
 @endif

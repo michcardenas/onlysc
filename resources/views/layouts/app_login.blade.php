@@ -1240,7 +1240,7 @@ function confirmarEliminarCategoria(id) {
     <!-- Justo antes de cerrar el </body> -->
 <!-- JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.tiny.cloud/1/grz9xs9xkslcyiomigsaezo439rjdxjxzbl483z5a17k9z70/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.tiny.cloud/1/kql75cq5qezo4szqfurmv0g3uxe4cpksh2e1f4zzk1autj96/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
 tinymce.init({
     selector: '#contenido',

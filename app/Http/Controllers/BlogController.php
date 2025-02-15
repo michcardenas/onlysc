@@ -8,6 +8,8 @@ use App\Models\BlogArticle;
 use App\Models\BlogCategory;
 use App\Models\BlogTag;
 use App\Models\Ciudad;
+use App\Models\Nacionalidad;
+use App\Models\Sector;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\MetaTag;
@@ -21,15 +23,17 @@ class BlogController extends Controller
             ->where('estado', 'publicado')
             ->orderBy('fecha_publicacion', 'desc')
             ->get();
-    
+
         // Obtener ciudades, categorías y tags
         $ciudades = Ciudad::all();
+        $sectores = Sector::all();
+        $nacionalidades = Nacionalidad::all();
         $categorias = BlogCategory::all();
         $tags = BlogTag::all();
-    
+
         // Obtener los metadatos específicos para la página 'blog'
         $meta = MetaTag::where('page', 'blog')->first();
-    
+
         // Si no existe un registro de meta para 'blog', crear un objeto vacío con valores por defecto
         if (!$meta) {
             $meta = new MetaTag([
@@ -41,11 +45,13 @@ class BlogController extends Controller
                 'canonical_url' => url()->current(),
             ]);
         }
-    
+
         // Pasar los datos a la vista
         return view('blog', [
             'articulos' => $articulos,
             'ciudades' => $ciudades,
+            'nacionalidades' => $nacionalidades,
+            'sectores' => $sectores,
             'categorias' => $categorias,
             'tags' => $tags,
             'meta' => $meta, // Pasar el objeto meta para usar en el head
@@ -56,22 +62,24 @@ class BlogController extends Controller
     {
         // Buscar artículo por slug
         $articulo = BlogArticle::with(['categories', 'tags'])->where('slug', $slug)->firstOrFail();
-    
+
         // Incrementar visitas
         $articulo->increment('visitas');
-    
+
         // Obtener artículos relacionados y otros datos
         $articulos = BlogArticle::with(['user', 'categories', 'tags'])
             ->where('estado', 'publicado')
             ->orderBy('fecha_publicacion', 'desc')
             ->get();
-    
+
         $ciudades = Ciudad::all();
+        $sectores = Sector::all();
+        $nacionalidades = Nacionalidad::all();
         $categorias = BlogCategory::all();
         $tags = BlogTag::all();
-    
+
         $meta = MetaTag::where('page', 'blog')->first();
-    
+
         if (!$meta) {
             $meta = new MetaTag([
                 'page' => 'blog',
@@ -82,18 +90,20 @@ class BlogController extends Controller
                 'canonical_url' => url()->current(),
             ]);
         }
-    
+
         return view('showblog', [
             'articulo' => $articulo,
             'articulos' => $articulos,
             'ciudades' => $ciudades,
+            'nacionalidades' => $nacionalidades,
+            'sectores' => $sectores,
             'categorias' => $categorias,
             'tags' => $tags,
             'meta' => $meta,
             'usuarioAutenticado' => Auth::user(),
         ]);
     }
-    
+
 
     public function blogadmin()
     {
@@ -256,13 +266,13 @@ class BlogController extends Controller
     {
         try {
             $article = BlogArticle::findOrFail($id);
-            
+
             if ($article->imagen) {
                 Storage::disk('public')->delete($article->imagen);
             }
-            
+
             $article->delete();
-            
+
             return back();
         } catch (\Exception $e) {
             \Log::error('Error al eliminar artículo: ' . $e->getMessage());
@@ -468,27 +478,27 @@ class BlogController extends Controller
     {
         // Obtener la categoría específica por slug con sus artículos relacionados
         $categoria = BlogCategory::where('slug', $slug)->firstOrFail();
-        
+
         // Obtener los artículos de esta categoría
         $articulos = BlogArticle::with(['user', 'categories', 'tags'])
-            ->whereHas('categories', function($query) use ($categoria) {
+            ->whereHas('categories', function ($query) use ($categoria) {
                 $query->where('blog_categories.id', $categoria->id);
             })
             ->where('estado', 'publicado')
             ->orderBy('fecha_publicacion', 'desc')
             ->get();
-    
+
         // Obtener todas las categorías con el conteo de artículos
-        $categorias = BlogCategory::withCount(['articles' => function($query) {
+        $categorias = BlogCategory::withCount(['articles' => function ($query) {
             $query->where('estado', 'publicado');
         }])->get();
-    
+
         $ciudades = Ciudad::all();
         $tags = BlogTag::all();
 
-         
+
         $meta = MetaTag::where('page', 'blog')->first();
-    
+
         if (!$meta) {
             $meta = new MetaTag([
                 'page' => 'blog',
@@ -499,15 +509,14 @@ class BlogController extends Controller
                 'canonical_url' => url()->current(),
             ]);
         }
-    
+
         return view('showcategory', [
             'articulos' => $articulos,
             'ciudades' => $ciudades,
             'categorias' => $categorias,
             'tags' => $tags,
-            'metaTags' => $meta, 
+            'metaTags' => $meta,
             'categoria' => $categoria
         ]);
     }
-    
 }

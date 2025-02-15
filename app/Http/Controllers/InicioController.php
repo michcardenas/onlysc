@@ -45,7 +45,7 @@ class InicioController extends Controller
             $firstFilter = null;
 
             // Si es Santiago y tiene sector válido, añadirlo al canonical
-            if ($sector && $ciudadSeleccionada->url === 'santiago' && $this->validarSector($sector)) {
+            if ($sector && $ciudadSeleccionada->url === 'santiago' && $this->getSectorFromDB($sector)) {
                 $canonicalUrl .= "/{$sector}";
             }
 
@@ -803,7 +803,7 @@ class InicioController extends Controller
                     $canonicalUrl = url($ciudadUrl);
                 }
             } else if ($hasSector) {
-                $metaTag = MetaTag::where('page', 'seo/sectores/' . $sector->id)->first();
+                $metaTag = MetaTag::where('page', 'seo/sectores/' . $sector->id . '/ciudad/' . $ciudadSeleccionada->id)->first();
             }
 
             if ($metaTag) {
@@ -844,6 +844,10 @@ class InicioController extends Controller
                 $canonicalUrl = url($ciudadUrl);
             }
 
+            if ($metaTag && !empty($metaTag->canonical_url)) {
+                $canonicalUrl = $metaTag->canonical_url;
+            }
+            
             // Compartir datos con la vista
             view()->share([
                 'pageTitle' => $title,
@@ -853,6 +857,8 @@ class InicioController extends Controller
                 'canonicalUrl' => $canonicalUrl,
                 'metaTagData' => $metaTagData,
             ]);
+
+
             $breadcrumb = [];
             $breadcrumb[] = [
                 'text' => trim('Inicio'), // Usando trim para limpiar
@@ -863,18 +869,30 @@ class InicioController extends Controller
                 'text' => trim(ucfirst($ciudadSeleccionada->nombre)), // Usando trim para limpiar
                 'url' => url("escorts-{$ciudadSeleccionada->url}")
             ];
-            // Si hay sector válido (para Santiago)
-            if ($sector && $ciudadSeleccionada->url === 'santiago' && $this->validarSector($sector)) {
-                $sectorInfo = Sector::where('url', $sector)->first();
-                if ($sectorInfo) {
-                    $breadcrumb[] = [
-                        'text' => ucfirst($sectorInfo->nombre),
-                        'url' => url("/escorts-{$ciudadSeleccionada->url}/{$sector}")
-                    ];
-                }
-            }
+
+// Si hay sector (y la ciudad es Santiago) intentamos obtenerlo de la BD.
+if ($sector && $ciudadSeleccionada->url === 'santiago') {
+    $sectorInfo = $this->getSectorFromDB($sector);
+    if ($sectorInfo) {
+        $breadcrumb[] = [
+            'text' => ucfirst($sectorInfo->nombre),
+            'url' => url("escorts-{$ciudadSeleccionada->url}/{$sectorInfo->url}")
+        ];
+    } else {
+        \Log::debug('No se encontró el sector en la BD', ['sector' => $sector]);
+    }
+} else {
+    \Log::debug('Condición de sector no se cumplió', [
+        'sector' => $sector,
+        'ciudad' => $ciudadSeleccionada->url,
+        'validarSector' => $sector ? 'Se requiere validación personalizada' : 'No hay sector'
+    ]);
+}
+
+
+
             // Si hay filtro (pero no es un sector inválido redirigido a filtro)
-            if ($filtros && (!$sector || ($sector && $this->validarSector($sector)))) {
+            if ($filtros && (!$sector || ($sector && $this->getSectorFromDB($sector)))) {
                 // Determinar el texto del filtro basado en el tipo
                 $filterText = '';
                 // Buscar en nacionalidades
@@ -907,8 +925,39 @@ class InicioController extends Controller
                     ];
                 }
             }
+
+            // Agregar categoría especial si existe en la request
+            if (request()->has('categoria')) {
+                $categoria = strtolower(request()->get('categoria'));
+                $categoriaText = '';
+                switch ($categoria) {
+                    case 'premium':
+                        $categoriaText = 'Premiun';
+                        break;
+                    case 'vip':
+                        $categoriaText = 'VIP';
+                        break;
+                    case 'de_lujo':
+                        $categoriaText = 'De Lujo';
+                        break;
+                    case 'under':
+                        $categoriaText = 'Under';
+                        break;
+                    case 'masajes':
+                        $categoriaText = 'Masajes';
+                        break;
+                }
+                if ($categoriaText) {
+                    $breadcrumb[] = [
+                        'text' => $categoriaText,
+                        'url' => null // Último elemento sin enlace
+                    ];
+                }
+            }
+
             // Compartir el breadcrumb con la vista
             view()->share('breadcrumb', $breadcrumb);
+
 
             // Retornar vista con todos los datos
             return view('inicio', array_merge([
@@ -952,23 +1001,21 @@ class InicioController extends Controller
         }
     }
 
-    private function validarSector($sector)
-    {
-        // Si el sector contiene una barra, tomamos solo la primera parte
-        if (str_contains($sector, '/')) {
-            $sector = explode('/', $sector)[0];
-        }
-
-        // Normalizar el sector para comparar
-        $sectorNormalizado = str_replace('-', ' ', strtolower($sector));
-
-        // Obtener barrios del caché
-        $barriosSantiago = Cache::get('barrios_santiago', []);
-
-        // Verificar si el sector normalizado está en los barrios
-        return in_array($sectorNormalizado, array_map('strtolower', $barriosSantiago));
+    private function getSectorFromDB($sectorInput)
+{
+    // Si ya es un objeto y tiene la propiedad "url", lo retornamos directamente.
+    if (is_object($sectorInput) && isset($sectorInput->url)) {
+        return $sectorInput;
     }
 
+    // Si es un string, intentamos buscarlo por 'url' primero.
+    $sector = Sector::where('url', $sectorInput)->first();
+    if (!$sector) {
+        // Si no se encontró por 'url', se intenta buscar por 'nombre' (ignorando mayúsculas/minúsculas).
+        $sector = Sector::whereRaw('LOWER(nombre) = ?', [strtolower($sectorInput)])->first();
+    }
+    return $sector;
+}
 
     public function showByCategory($nombreCiudad, $categoria)
     {
@@ -1313,242 +1360,340 @@ class InicioController extends Controller
 
         return redirect($filterUrl);
     }
+    
     private function generateSeoText($request, $ciudadSeleccionada, $sectorSeleccionado = null)
-    {
-        $path = $request->path();
-        $parts = explode('/', $path);
-        $lastPart = strtolower(end($parts));
-        \Log::debug('Inicio de generación SEO:', [
-            'path' => $path,
-            'ciudad' => $ciudadSeleccionada->nombre,
-            'sector' => $sectorSeleccionado,
-            'last_part' => $lastPart
-        ]);
-        $clasificacionUrl = null;
-        $singleFilter = null;
-        $isNationalityFilter = false;
-        $nacionalidadFromUrl = null;
-        // Detectar filtros en la URL
-        if (preg_match('/^edad-(\d+)-(\d+)$/', $lastPart, $matches)) {
-            $request->merge(['e' => "{$matches[1]}-{$matches[2]}"]);
-            $singleFilter = 'edad';
-            $request->merge(['singleFilter' => 'edad']);
-        } elseif (preg_match('/^precio-(\d+)-(\d+)$/', $lastPart, $matches)) {
-            $request->merge(['p' => "{$matches[1]}-{$matches[2]}"]);
-            $singleFilter = 'precio';
-        } elseif ($lastPart === 'disponible') {
-            $request->merge(['disponible' => '1']);
-            $singleFilter = 'disponible';
-        } elseif ($lastPart === 'resena-verificada') {
-            $request->merge(['resena' => '1']);
-            $singleFilter = 'resena';
-        } elseif (in_array($lastPart, ['vip', 'premium', 'de_lujo', 'under', 'masajes'])) {
-            $request->merge(['categoria' => $lastPart]);
-            $singleFilter = 'categoria';
+{
+    $path = $request->path();
+    $parts = explode('/', $path);
+    $lastPart = strtolower(end($parts));
+    \Log::debug('Inicio de generación SEO:', [
+        'path'      => $path,
+        'ciudad'    => $ciudadSeleccionada->nombre,
+        'sector'    => $sectorSeleccionado,
+        'last_part' => $lastPart
+    ]);
+
+    $clasificacionUrl = null;
+    $singleFilter = null;
+    $isNationalityFilter = false;
+    $nacionalidadFromUrl = null;
+    
+    // Detectar filtros en la URL
+    if (preg_match('/^edad-(\d+)-(\d+)$/', $lastPart, $matches)) {
+        $request->merge(['e' => "{$matches[1]}-{$matches[2]}"]);
+        $singleFilter = 'edad';
+        $request->merge(['singleFilter' => 'edad']);
+    } elseif (preg_match('/^precio-(\d+)-(\d+)$/', $lastPart, $matches)) {
+        $request->merge(['p' => "{$matches[1]}-{$matches[2]}"]);
+        $singleFilter = 'precio';
+    } elseif ($lastPart === 'disponible') {
+        $request->merge(['disponible' => '1']);
+        $singleFilter = 'disponible';
+    } elseif ($lastPart === 'resena-verificada') {
+        $request->merge(['resena' => '1']);
+        $singleFilter = 'resena';
+    } elseif (in_array($lastPart, ['vip', 'premium', 'de_lujo', 'under', 'masajes'])) {
+        $request->merge(['categoria' => $lastPart]);
+        $singleFilter = 'categoria';
+    } else {
+        // Primero buscar si es una nacionalidad
+        $nacionalidad = Nacionalidad::where('url', $lastPart)->first();
+        if ($nacionalidad) {
+            \Log::debug('Filtro de nacionalidad detectado en URL:', [
+                'nombre' => $nacionalidad->nombre,
+                'url'    => $nacionalidad->url
+            ]);
+            $isNationalityFilter = true;
+            $nacionalidadFromUrl = $nacionalidad->url;
+            $request->merge(['n' => $nacionalidadFromUrl]);
+            $singleFilter = 'nacionalidad';
         } else {
-            // Primero buscar si es una nacionalidad
-            $nacionalidad = Nacionalidad::where('url', $lastPart)->first();
-            if ($nacionalidad) {
-                $isNationalityFilter = true;
-                $nacionalidadFromUrl = $nacionalidad->url;
-                $request->merge(['n' => $nacionalidadFromUrl]);
-                $singleFilter = 'nacionalidad';
-            } else {
-                // Buscar si es un servicio
-                $servicio = Servicio::where('url', $lastPart)->first();
-                if ($servicio) {
-                    if ($request->has('s')) {
-                        $servicios = explode(',', $request->get('s'));
-                        $servicios[] = $servicio->url;
-                        $request->merge(['s' => implode(',', array_unique($servicios))]);
-                    } else {
-                        $request->merge(['s' => $servicio->url]);
-                    }
-                    $singleFilter = 'servicios';
+            // Buscar si es un servicio
+            $servicio = Servicio::where('url', $lastPart)->first();
+            if ($servicio) {
+                if ($request->has('s')) {
+                    $servicios = explode(',', $request->get('s'));
+                    $servicios[] = $servicio->url;
+                    $request->merge(['s' => implode(',', array_unique($servicios))]);
                 } else {
-                    // Buscar si es un atributo
-                    $atributo = Atributo::where('url', $lastPart)->first();
-                    if ($atributo) {
-                        if ($request->has('a')) {
-                            $atributos = explode(',', $request->get('a'));
-                            $atributos[] = $atributo->url;
-                            $request->merge(['a' => implode(',', array_unique($atributos))]);
-                        } else {
-                            $request->merge(['a' => $atributo->url]);
-                        }
-                        $singleFilter = 'atributos';
+                    $request->merge(['s' => $servicio->url]);
+                }
+                $singleFilter = 'servicios';
+            } else {
+                // Buscar si es un atributo
+                $atributo = Atributo::where('url', $lastPart)->first();
+                if ($atributo) {
+                    if ($request->has('a')) {
+                        $atributos = explode(',', $request->get('a'));
+                        $atributos[] = $atributo->url;
+                        $request->merge(['a' => implode(',', array_unique($atributos))]);
                     } else {
-                        // Buscar si es un sector
-                        $sector = Sector::where('url', $lastPart)->first();
-                        if ($sector) {
-                            $sectorSeleccionado = $sector->nombre;
-                            $singleFilter = 'sector';
-                        }
+                        $request->merge(['a' => $atributo->url]);
+                    }
+                    $singleFilter = 'atributos';
+                } else {
+                    // Buscar si es un sector
+                    $sector = Sector::where('url', $lastPart)->first();
+                    if ($sector) {
+                        $sectorSeleccionado = $sector->nombre;
+                        $singleFilter = 'sector';
                     }
                 }
             }
         }
-        $activeFilters = [
-            'nacionalidad' => null,
-            'edad' => null,
-            'precio' => null,
-            'atributos' => [],
-            'servicios' => [],
-            'categoria' => null,
-            'disponible' => false,
-            'resena' => false,
-            'sector' => null
+    }
+    
+    // Inicializar filtros activos
+    $activeFilters = [
+        'nacionalidad' => null,
+        'edad'         => null,
+        'precio'       => null,
+        'atributos'    => [],
+        'servicios'    => [],
+        'categoria'    => null,
+        'disponible'   => false,
+        'resena'       => false,
+        'sector'       => null
+    ];
+    
+    // Procesar sector si existe
+    if ($sectorSeleccionado) {
+        $activeFilters['sector'] = $sectorSeleccionado;
+    }
+    
+    if ($request->has('n') || $isNationalityFilter) {
+        $nacionalidadUrl = $request->get('n') ?? $nacionalidadFromUrl;
+        $nacionalidad = Nacionalidad::where('url', $nacionalidadUrl)->first();
+        if ($nacionalidad) {
+            $activeFilters['nacionalidad'] = $nacionalidad->nombre;
+        }
+    }
+    
+    if ($request->has('e')) {
+        list($min, $max) = explode('-', $request->get('e'));
+        $activeFilters['edad'] = ['min' => $min, 'max' => $max];
+    }
+    
+    if ($request->has('p')) {
+        list($min, $max) = explode('-', $request->get('p'));
+        $activeFilters['precio'] = [
+            'min' => number_format($min, 0, ',', '.'),
+            'max' => number_format($max, 0, ',', '.')
         ];
-        // Procesar sector si existe
-        if ($sectorSeleccionado) {
-            $activeFilters['sector'] = $sectorSeleccionado;
-        }
-        if ($request->has('n') || $isNationalityFilter) {
-            $nacionalidadUrl = $request->get('n') ?? $nacionalidadFromUrl;
-            $nacionalidad = Nacionalidad::where('url', $nacionalidadUrl)->first();
-            if ($nacionalidad) {
-                $activeFilters['nacionalidad'] = $nacionalidad->nombre;
-            }
-        }
-        if ($request->has('e')) {
-            list($min, $max) = explode('-', $request->get('e'));
-            $activeFilters['edad'] = ['min' => $min, 'max' => $max];
-        }
-        if ($request->has('p')) {
-            list($min, $max) = explode('-', $request->get('p'));
-            $activeFilters['precio'] = [
-                'min' => number_format($min, 0, ',', '.'),
-                'max' => number_format($max, 0, ',', '.')
-            ];
-        }
-        if ($request->has('a')) {
-            $atributos = explode(',', $request->get('a'));
-            $activeFilters['atributos'] = array_map(function ($atributoUrl) {
-                $atributo = Atributo::where('url', $atributoUrl)->first();
-                return $atributo ? $atributo->nombre : ucwords(str_replace('-', ' ', $atributoUrl));
-            }, $atributos);
-        }
-        if ($request->has('s')) {
-            $servicios = explode(',', $request->get('s'));
-            $activeFilters['servicios'] = array_map(function ($servicioUrl) {
-                $servicio = Servicio::where('url', $servicioUrl)->first();
-                return $servicio ? $servicio->nombre : ucwords(str_replace('-', ' ', $servicioUrl));
-            }, $servicios);
-        }
-        if ($request->has('categoria')) {
-            $categoria = $request->get('categoria');
-            $activeFilters['categoria'] = ucwords(str_replace('_', ' ', $categoria));
-        }
-        $activeFilters['disponible'] = $request->has('disponible');
-        $activeFilters['resena'] = $request->has('resena');
-        // Contar filtros activos
-        $totalActiveFilters = 0;
-        $pathParts = explode('/', trim($request->path(), '/'));
-        $baseUrl = 'escorts-' . strtolower($ciudadSeleccionada->url);
-        // Si es un path tipo escorts-santiago/anal, solo contamos el filtro primario
-        if (isset($pathParts[1]) && $pathParts[1] !== $baseUrl) {
-            $totalActiveFilters = 1;
-        }
-        // Contar filtros adicionales de GET solo si no hay un filtro principal
-        if ($singleFilter === null) {
-            $getFilters = [
-                's' => 'servicio',
-                'a' => 'atributo',
-                'n' => 'nacionalidad',
-                'z' => 'sector',
-                'categoria' => 'categoria',
-                'resena' => 'resena',
-                'e' => 'edad',
-                'p' => 'precio',
-                'disponible' => 'disponible'
-            ];
-            foreach ($getFilters as $param => $type) {
-                if ($request->has($param)) {
-                    if (in_array($param, ['s', 'a'])) {
-                        $values = explode(',', $request->get($param));
-                        $totalActiveFilters += count($values);
-                    } else {
-                        $totalActiveFilters++;
-                    }
+    }
+    
+    if ($request->has('a')) {
+        $atributos = explode(',', $request->get('a'));
+        $activeFilters['atributos'] = array_map(function ($atributoUrl) {
+            $atributo = Atributo::where('url', $atributoUrl)->first();
+            return $atributo ? $atributo->nombre : ucwords(str_replace('-', ' ', $atributoUrl));
+        }, $atributos);
+    }
+    
+    if ($request->has('s')) {
+        $servicios = explode(',', $request->get('s'));
+        $activeFilters['servicios'] = array_map(function ($servicioUrl) {
+            $servicio = Servicio::where('url', $servicioUrl)->first();
+            return $servicio ? $servicio->nombre : ucwords(str_replace('-', ' ', $servicioUrl));
+        }, $servicios);
+    }
+    
+    if ($request->has('categoria')) {
+        $categoria = $request->get('categoria');
+        $activeFilters['categoria'] = ucwords(str_replace('_', ' ', $categoria));
+    }
+    
+    $activeFilters['disponible'] = $request->has('disponible');
+    $activeFilters['resena'] = $request->has('resena');
+    
+    // Contar filtros activos desde el path (ignorando la ciudad)
+    $pathParts = explode('/', trim($request->path(), '/'));
+    $baseUrl = 'escorts-' . strtolower($ciudadSeleccionada->url);
+    $totalActiveFilters = 0;
+    if (count($pathParts) > 1) {
+        // Se cuentan todos los segmentos excepto el de la ciudad
+        $totalActiveFilters = count($pathParts) - 1;
+    }
+    \Log::debug('Filtros detectados desde la URL', [
+        'pathParts'              => $pathParts,
+        'baseUrl'                => $baseUrl,
+        'totalActiveFilters_ini' => $totalActiveFilters
+    ]);
+    
+    $getFilters = [
+        's'           => 'servicio',
+        'a'           => 'atributo',
+        'n'           => 'nacionalidad',
+        'z'           => 'sector',
+        'categoria'   => 'categoria',
+        'resena'      => 'resena',
+        'e'           => 'edad',
+        'p'           => 'precio',
+        'disponible'  => 'disponible'
+    ];
+    
+    \Log::debug('Antes de contar GET filters', ['GET' => $request->all()]);
+    
+    // Mapeo de singleFilter a su correspondiente clave GET
+    $singleFilterMapping = [
+        'nacionalidad' => 'n',
+        'edad'         => 'e',
+        'precio'       => 'p',
+        'disponible'   => 'disponible',
+        'resena'       => 'resena',
+        'categoria'    => 'categoria',
+        'servicios'    => 's',
+        'atributos'    => 'a'
+    ];
+    
+    foreach ($getFilters as $param => $type) {
+        if ($request->has($param)) {
+            $value = $request->get($param);
+            \Log::debug('Contando filtro GET', [
+                'param' => $param,
+                'value' => $value
+            ]);
+            
+            // Si este parámetro corresponde al filtro detectado en la URL, lo omitimos para evitar duplicación.
+            if (isset($singleFilterMapping[$singleFilter]) && $singleFilterMapping[$singleFilter] === $param) {
+                if (in_array($param, ['s', 'a'])) {
+                    $values = explode(',', $value);
+                    $filteredValues = array_filter($values, function ($v) use ($lastPart) {
+                        return strtolower($v) !== strtolower($lastPart);
+                    });
+                    $count = count($filteredValues);
+                    $totalActiveFilters += $count;
+                    \Log::debug("Filtro GET array para $param (después de eliminar duplicado):", [
+                        'count'          => $count,
+                        'filteredValues' => $filteredValues
+                    ]);
+                    continue;
+                } else {
+                    \Log::debug("Filtro GET $param ya contado desde URL, se omite en GET", [
+                        'value' => $value
+                    ]);
+                    continue;
                 }
             }
+            
+            // Conteo normal
+            if (in_array($param, ['s', 'a'])) {
+                $values = explode(',', $value);
+                $totalActiveFilters += count($values);
+            } else {
+                $totalActiveFilters++;
+            }
         }
-        // Determinar tipo de template
-        if ($totalActiveFilters > 2) {
+    }
+    
+    \Log::debug('Total filtros activos después de contar GET', [
+        'totalActiveFilters' => $totalActiveFilters
+    ]);
+    
+    \Log::debug('Total filtros activos', [
+        'totalActiveFilters' => $totalActiveFilters,
+        'activeFilters'      => $activeFilters,
+        'GET'                => $request->all(),
+        'pathParts'          => $pathParts,
+    ]);
+    
+    // Determinar tipo de template
+    if ($totalActiveFilters > 3) {
+        $templateType = 'filtro';
+        $filtroType = 'ciudad';
+    } else {
+        if ($totalActiveFilters === 0) {
             $templateType = 'filtro';
             $filtroType = 'ciudad';
+        } elseif ($totalActiveFilters === 1 || $singleFilter !== null) {
+            $templateType = 'filtro';
+            $filtroType = match ($singleFilter) {
+                'nacionalidad' => 'nacionalidad',
+                'edad'         => 'edad',
+                'precio'       => 'precio',
+                'disponible'   => 'disponibilidad',
+                'resena'       => 'resena',
+                'categoria'    => 'categorias',
+                'servicios'    => 'servicios',
+                'atributos'    => 'atributos',
+                'sector'       => 'sector',
+                default        => $singleFilter
+            };
         } else {
-            if ($totalActiveFilters === 0) {
-                $templateType = 'filtro';
-                $filtroType = 'ciudad';
-            } elseif ($totalActiveFilters === 1 || $singleFilter !== null) {
-                $templateType = 'filtro';
-                $filtroType = match ($singleFilter) {
-                    'nacionalidad' => 'nacionalidad',
-                    'edad' => 'edad',
-                    'precio' => 'precio',
-                    'disponible' => 'disponibilidad',
-                    'resena' => 'resena',
-                    'categoria' => 'categorias',
-                    'servicios' => 'servicios',
-                    'atributos' => 'atributos',
-                    'sector' => 'sector',
-                    default => $singleFilter
-                };
-            } else {
-                $templateType = 'multiple';
-                $filtroType = null;
-            }
+            $templateType = 'multiple';
+            $filtroType = null;
         }
-        \Log::debug('Criterios de búsqueda de template:', [
-            'template_type' => $templateType,
-            'filtro_type' => $filtroType,
-            'single_filter' => $singleFilter,
-            'total_active_filters' => $totalActiveFilters,
-            'active_filters' => $activeFilters,
-        ]);
-        // Construir query del template
-        $templateQuery = SeoTemplate::query()
-            ->where(function ($query) use ($ciudadSeleccionada) {
-                $query->where('ciudad_id', $ciudadSeleccionada->id)
-                    ->orWhereNull('ciudad_id');
-            })
-            ->where('tipo', $templateType);
-        if ($filtroType) {
-            if ($singleFilter === 'disponible') {
-                $templateQuery = SeoTemplate::query()
-                    ->where(function ($query) use ($ciudadSeleccionada) {
-                        $query->where('ciudad_id', $ciudadSeleccionada->id)
-                            ->orWhereNull('ciudad_id');
-                    })
-                    ->where('tipo', 'filtro')
-                    ->where('filtro', 'disponible');
-            } else {
-                $templateQuery->where('filtro', $filtroType);
-            }
+    }
+    
+    \Log::debug('Criterios de búsqueda de template:', [
+        'template_type'        => $templateType,
+        'filtro_type'          => $filtroType,
+        'single_filter'        => $singleFilter,
+        'total_active_filters' => $totalActiveFilters,
+        'active_filters'       => $activeFilters,
+    ]);
+    
+    // Construir query del template
+    $templateQuery = SeoTemplate::query()
+        ->where(function ($query) use ($ciudadSeleccionada) {
+            $query->where('ciudad_id', $ciudadSeleccionada->id)
+                  ->orWhereNull('ciudad_id');
+        })
+        ->where('tipo', $templateType);
+    
+    if ($filtroType) {
+        if ($singleFilter === 'disponible') {
+            $templateQuery = SeoTemplate::query()
+                ->where(function ($query) use ($ciudadSeleccionada) {
+                    $query->where('ciudad_id', $ciudadSeleccionada->id)
+                          ->orWhereNull('ciudad_id');
+                })
+                ->where('tipo', 'filtro')
+                ->where('filtro', 'disponible');
+        } else {
+            $templateQuery->where('filtro', $filtroType);
         }
-        $template = $templateQuery->orderBy('ciudad_id', 'desc')->first();
-        if (!$template) {
-            return null;
+    }
+    
+    $template = $templateQuery->orderBy('ciudad_id', 'desc')->first();
+    if (!$template) {
+        return null;
+    }
+    
+    // Generar contenido SEO
+    $replacements = [
+        '{ciudad}'       => $ciudadSeleccionada->nombre,
+        '{sector}'       => $sectorSeleccionado ? ucwords($sectorSeleccionado) : '',
+        '{nacionalidad}' => $activeFilters['nacionalidad'] ?? '',
+        '{edad_min}'     => $activeFilters['edad']['min'] ?? '18',
+        '{edad_max}'     => $activeFilters['edad']['max'] ?? '50',
+        '{precio_min}'   => $activeFilters['precio']['min'] ?? '50.000',
+        '{precio_max}'   => $activeFilters['precio']['max'] ?? '300.000',
+        '{atributos}'    => !empty($activeFilters['atributos']) ? implode(', ', array_unique($activeFilters['atributos'])) : '',
+        '{servicios}'    => !empty($activeFilters['servicios']) ? implode(', ', array_unique($activeFilters['servicios'])) : '',
+        '{disponible}'   => $activeFilters['disponible'] ? 'ahora' : '',
+        '{resena}'       => $activeFilters['resena'] ? 'verificada' : '',
+        '{categorias}'   => $activeFilters['categoria'] ?? ''
+    ];
+    $description = $template->description_template;
+    
+    // Si hay 2 o más filtros activos (sin contar la ciudad), forzamos título y descripción usando los datos base de la ciudad de la BD
+    if ($totalActiveFilters >= 2) {
+        $title = "Escorts " . $ciudadSeleccionada->nombre;
+        if ($sectorSeleccionado) {
+            $sectorObj = Sector::where('nombre', $sectorSeleccionado)->first();
+            $title .= " - " . ($sectorObj ? $sectorObj->nombre : ucwords($sectorSeleccionado));
         }
-        // Generar contenido SEO
-        $replacements = [
-            '{ciudad}' => $ciudadSeleccionada->nombre,
-            '{sector}' => $sectorSeleccionado ? ucwords($sectorSeleccionado) : '',
-            '{nacionalidad}' => $activeFilters['nacionalidad'] ?? '',
-            '{edad_min}' => $activeFilters['edad']['min'] ?? '18',
-            '{edad_max}' => $activeFilters['edad']['max'] ?? '50',
-            '{precio_min}' => $activeFilters['precio']['min'] ?? '50.000',
-            '{precio_max}' => $activeFilters['precio']['max'] ?? '300.000',
-            '{atributos}' => !empty($activeFilters['atributos']) ? implode(', ', array_unique($activeFilters['atributos'])) : '',
-            '{servicios}' => !empty($activeFilters['servicios']) ? implode(', ', array_unique($activeFilters['servicios'])) : '',
-            '{disponible}' => $activeFilters['disponible'] ? 'ahora' : '',
-            '{resena}' => $activeFilters['resena'] ? 'verificada' : '',
-            '{categorias}' => $activeFilters['categoria'] ?? ''
-        ];
-        $description = $template->description_template;
-        $title = $template->titulo;  // Usar el título del template si existe
-        // Si el template tiene título, aplicar los reemplazos
+        // Usamos el meta tag base para la ciudad de la BD
+        $baseMetaTag = MetaTag::where('page', 'inicio-' . $ciudadSeleccionada->id)->first();
+        if ($baseMetaTag && !empty($baseMetaTag->meta_description)) {
+            $description = str_replace('{ciudad}', $ciudadSeleccionada->nombre, $baseMetaTag->meta_description);
+        } else {
+            $description = "Encuentra escorts en " . ucfirst($ciudadSeleccionada->nombre) . " disponibles hoy.";
+        }
+    } else {
+        // Si existe título en el template, aplicar los reemplazos
+        $title = $template->titulo;
         if ($title) {
             foreach ($replacements as $key => $value) {
                 $title = str_replace($key, $value, $title);
@@ -1556,215 +1701,225 @@ class InicioController extends Controller
             $title = preg_replace('/\{[^}]+\}/', '', $title);
             $title = trim($title);
         } else {
-            // Usar el generador de título existente como fallback
-            $title = $totalActiveFilters > 2
-                ? "Escorts " . $ciudadSeleccionada->nombre
-                : $this->generateSeoTitle($ciudadSeleccionada, $sectorSeleccionado, $activeFilters, $singleFilter);
+            $title = $this->generateSeoTitle($ciudadSeleccionada, $sectorSeleccionado, $activeFilters, $singleFilter);
         }
         foreach ($replacements as $key => $value) {
             $description = str_replace($key, $value, $description);
         }
         $description = preg_replace('/\{[^}]+\}/', '', $description);
         $description = trim($description);
-        if ($template) {
-            \Log::debug('Template seleccionado:', [
-                'template_id' => $template->id,
-                'template_tipo' => $template->tipo,
-                'template_filtro' => $template->filtro,
-                'ciudad_id' => $template->ciudad_id,
-                'description_raw' => $template->description_template,
-                'title_raw' => $template->titulo  // Agregar log del título
-            ]);
-        }
-        \Log::debug('SEO generado:', [
-            'title' => $title,
-            'description' => $description
-        ]);
-        return [
-            'title' => $title,
-            'description' => $description
-        ];
     }
+    
+    \Log::debug('Template seleccionado:', [
+        'template_id'    => $template->id,
+        'template_tipo'  => $template->tipo,
+        'template_filtro'=> $template->filtro,
+        'ciudad_id'      => $template->ciudad_id,
+        'description_raw'=> $template->description_template,
+        'title_raw'      => $template->titulo
+    ]);
+    
+    \Log::debug('SEO generado:', [
+        'title'       => $title,
+        'description' => $description
+    ]);
+    
+    return [
+        'title'       => $title,
+        'description' => $description
+    ];
+}
 
+    
+    
+    
+    
     private function generateSeoTitle($ciudad, $sector, $filters, $singleFilter = null)
-    {
-        // Contar filtros activos según la lógica del método show
-        $totalActiveFilters = 0;
-        $pathParts = explode('/', trim(request()->path(), '/'));
+{
+    // Contar filtros activos sin contar la ciudad (que se asume en la primera parte del path)
+    $totalActiveFilters = 0;
+    $pathParts = explode('/', trim(request()->path(), '/'));
+    
+    // La ciudad es la primera parte (índice 0); se cuentan los filtros a partir de la segunda parte
+    if (isset($pathParts[1])) {
+        $segundaParte = $pathParts[1];
         // Definir categorías especiales
         $categorias_especiales = ['premium', 'vip', 'de_lujo', 'under', 'masajes'];
-        // Contar filtros de la URL
-        if (isset($pathParts[1])) {
-            $segundaParte = $pathParts[1];
-            if (!in_array(strtolower($segundaParte), $categorias_especiales)) {
-                $sectorCheck = Sector::where('url', $segundaParte)->first();
-                if (!$sectorCheck) {
-                    $totalActiveFilters++; // Es un filtro
-                }
-            } else {
-                $totalActiveFilters++; // Es una categoría especial
-            }
-        }
-        if (isset($pathParts[2])) {
-            $totalActiveFilters++;
-        }
-        // Contar filtros de los parámetros GET
-        $getFilters = [
-            's' => 'servicio',
-            'a' => 'atributo',
-            'n' => 'nacionalidad',
-            'z' => 'sector',
-            'categoria' => 'categoria',
-            'resena' => 'resena',
-            'e' => 'edad',
-            'p' => 'precio',
-            'disponible' => 'disponible'
-        ];
-        foreach ($getFilters as $param => $type) {
-            if (request()->has($param)) {
-                if (in_array($param, ['s', 'a'])) {
-                    // Para servicios y atributos, contar cada valor separado por coma
-                    $values = explode(',', request()->get($param));
-                    $totalActiveFilters += count($values);
-                } else {
-                    $totalActiveFilters++;
-                }
-            }
-        }
-        // Si hay más de dos filtros, retornar título simple
-        if ($totalActiveFilters > 2) {
-            $title = "Escorts " . $ciudad->nombre;
-            if ($sector) {
-                $sectorObj = Sector::where('nombre', $sector)->first();
-                $title .= " - " . ($sectorObj ? $sectorObj->nombre : ucwords($sector));
-            }
-            return $title;
-        }
-        // Lógica original para 0-2 filtros
-        $title = "Escorts";
-        if ($singleFilter) {
-            switch ($singleFilter) {
-                case 'nacionalidad':
-                    if (!empty($filters['nacionalidad'])) {
-                        if ($nacionalidad = Nacionalidad::where('nombre', $filters['nacionalidad'])->first()) {
-                            $title = "Escorts " . $nacionalidad->nombre;
-                        } else {
-                            $title = "Escorts " . $filters['nacionalidad'];
-                        }
-                    }
-                    break;
-                case 'servicios':
-                    if (!empty($filters['servicios'])) {
-                        if (count($filters['servicios']) > 1) {
-                            $serviciosList = array_map(function ($servicio) {
-                                $servicioObj = Servicio::where('nombre', $servicio)->first();
-                                return $servicioObj ? $servicioObj->nombre : $servicio;
-                            }, $filters['servicios']);
-                            $title = "Escorts con servicios de " . implode(' y ', $serviciosList);
-                        } else {
-                            $servicio = Servicio::where('nombre', reset($filters['servicios']))->first();
-                            $title = "Escorts con servicio de " . ($servicio ? $servicio->nombre : reset($filters['servicios']));
-                        }
-                    }
-                    break;
-                case 'atributos':
-                    if (!empty($filters['atributos'])) {
-                        if (count($filters['atributos']) > 1) {
-                            $atributosList = array_map(function ($atributo) {
-                                $atributoObj = Atributo::where('nombre', $atributo)->first();
-                                return $atributoObj ? $atributoObj->nombre : $atributo;
-                            }, $filters['atributos']);
-                            $title = "Escorts con " . implode(' y ', $atributosList);
-                        } else {
-                            $atributo = Atributo::where('nombre', reset($filters['atributos']))->first();
-                            $title = "Escorts " . ($atributo ? $atributo->nombre : reset($filters['atributos']));
-                        }
-                    }
-                    break;
-                case 'sector':
-                    if ($sector) {
-                        $sectorObj = Sector::where('nombre', $sector)->first();
-                        $title = "Escorts en " . ($sectorObj ? $sectorObj->nombre : $sector);
-                    }
-                    break;
-                case 'categoria':
-                    if (!empty($filters['categoria'])) {
-                        $title = "Escorts " . $filters['categoria'];
-                    }
-                    break;
-                case 'precio':
-                    if (!empty($filters['precio'])) {
-                        $title = "Escorts desde $" . $filters['precio']['min'] . " hasta $" . $filters['precio']['max'];
-                    }
-                    break;
-                case 'edad':
-                    if (!empty($filters['edad'])) {
-                        $title = "Escorts de " . $filters['edad']['min'] . " a " . $filters['edad']['max'] . " años";
-                    }
-                    break;
-                case 'disponible':
-                    $title = "Escorts disponibles ahora";
-                    break;
-                case 'resena':
-                    $title = "Escorts con reseñas verificadas";
-                    break;
+        if (!in_array(strtolower($segundaParte), $categorias_especiales)) {
+            $sectorCheck = Sector::where('url', $segundaParte)->first();
+            if (!$sectorCheck) {
+                $totalActiveFilters++; // Se considera un filtro
             }
         } else {
-            if (!empty($filters['nacionalidad'])) {
-                if ($nacionalidad = Nacionalidad::where('nombre', $filters['nacionalidad'])->first()) {
-                    $title .= " " . $nacionalidad->nombre;
-                } else {
-                    $title .= " " . $filters['nacionalidad'];
-                }
-            }
-            if (!empty($filters['categoria'])) {
-                $title .= " " . $filters['categoria'];
-            }
-            if (!empty($filters['servicios'])) {
-                if (count($filters['servicios']) > 1) {
-                    $serviciosList = array_map(function ($servicio) {
-                        $servicioObj = Servicio::where('nombre', $servicio)->first();
-                        return $servicioObj ? $servicioObj->nombre : $servicio;
-                    }, $filters['servicios']);
-                    $title .= " con servicios de " . implode(' y ', $serviciosList);
-                } else {
-                    $servicio = Servicio::where('nombre', reset($filters['servicios']))->first();
-                    $title .= " con servicio de " . ($servicio ? $servicio->nombre : reset($filters['servicios']));
-                }
-            }
-            if (!empty($filters['atributos'])) {
-                if (count($filters['atributos']) > 1) {
-                    $atributosList = array_map(function ($atributo) {
-                        $atributoObj = Atributo::where('nombre', $atributo)->first();
-                        return $atributoObj ? $atributoObj->nombre : $atributo;
-                    }, $filters['atributos']);
-                    $title .= " con " . implode(' y ', $atributosList);
-                } else {
-                    $atributo = Atributo::where('nombre', reset($filters['atributos']))->first();
-                    $title .= " " . ($atributo ? $atributo->nombre : reset($filters['atributos']));
-                }
-            }
-            if (!empty($filters['edad'])) {
-                $title .= " de " . $filters['edad']['min'] . " a " . $filters['edad']['max'] . " años";
-            }
-            if (!empty($filters['precio'])) {
-                $title .= " desde $" . $filters['precio']['min'] . " hasta $" . $filters['precio']['max'];
-            }
-            if ($filters['disponible'] === true) {
-                $title .= " disponibles ahora";
-            }
-            if ($filters['resena'] === true) {
-                $title .= " con reseñas verificadas";
+            $totalActiveFilters++; // Categoría especial también se cuenta como filtro
+        }
+    }
+    if (isset($pathParts[2])) {
+        $totalActiveFilters++;
+    }
+    
+    // Contar filtros de los parámetros GET
+    $getFilters = [
+        's'           => 'servicio',
+        'a'           => 'atributo',
+        'n'           => 'nacionalidad',
+        'z'           => 'sector',
+        'categoria'   => 'categoria',
+        'resena'      => 'resena',
+        'e'           => 'edad',
+        'p'           => 'precio',
+        'disponible'  => 'disponible'
+    ];
+    foreach ($getFilters as $param => $type) {
+        if (request()->has($param)) {
+            if (in_array($param, ['s', 'a'])) {
+                // Para servicios y atributos, cada valor separado por coma se cuenta individualmente
+                $values = explode(',', request()->get($param));
+                $totalActiveFilters += count($values);
+            } else {
+                $totalActiveFilters++;
             }
         }
-        $title .= " en " . $ciudad->nombre;
+    }
+    
+    // Si hay 2 o más filtros activos (sin contar la ciudad), usar el título simple basado en la ciudad
+    if ($totalActiveFilters >= 2) {
+        $title = "Escorts " . $ciudad->nombre;
         if ($sector) {
             $sectorObj = Sector::where('nombre', $sector)->first();
             $title .= " - " . ($sectorObj ? $sectorObj->nombre : ucwords($sector));
         }
         return $title;
     }
+    
+    // Lógica original para 0-1 filtro
+    $title = "Escorts";
+    if ($singleFilter) {
+        switch ($singleFilter) {
+            case 'nacionalidad':
+                if (!empty($filters['nacionalidad'])) {
+                    if ($nacionalidad = Nacionalidad::where('nombre', $filters['nacionalidad'])->first()) {
+                        $title = "Escorts " . $nacionalidad->nombre;
+                    } else {
+                        $title = "Escorts " . $filters['nacionalidad'];
+                    }
+                }
+                break;
+            case 'servicios':
+                if (!empty($filters['servicios'])) {
+                    if (count($filters['servicios']) > 1) {
+                        $serviciosList = array_map(function ($servicio) {
+                            $servicioObj = Servicio::where('nombre', $servicio)->first();
+                            return $servicioObj ? $servicioObj->nombre : $servicio;
+                        }, $filters['servicios']);
+                        $title = "Escorts con servicios de " . implode(' y ', $serviciosList);
+                    } else {
+                        $servicio = Servicio::where('nombre', reset($filters['servicios']))->first();
+                        $title = "Escorts con servicio de " . ($servicio ? $servicio->nombre : reset($filters['servicios']));
+                    }
+                }
+                break;
+            case 'atributos':
+                if (!empty($filters['atributos'])) {
+                    if (count($filters['atributos']) > 1) {
+                        $atributosList = array_map(function ($atributo) {
+                            $atributoObj = Atributo::where('nombre', $atributo)->first();
+                            return $atributoObj ? $atributoObj->nombre : $atributo;
+                        }, $filters['atributos']);
+                        $title = "Escorts con " . implode(' y ', $atributosList);
+                    } else {
+                        $atributo = Atributo::where('nombre', reset($filters['atributos']))->first();
+                        $title = "Escorts " . ($atributo ? $atributo->nombre : reset($filters['atributos']));
+                    }
+                }
+                break;
+            case 'sector':
+                if ($sector) {
+                    $sectorObj = Sector::where('nombre', $sector)->first();
+                    $title = "Escorts en " . ($sectorObj ? $sectorObj->nombre : $sector);
+                }
+                break;
+            case 'categoria':
+                if (!empty($filters['categoria'])) {
+                    $title = "Escorts " . $filters['categoria'];
+                }
+                break;
+            case 'precio':
+                if (!empty($filters['precio'])) {
+                    $title = "Escorts desde $" . $filters['precio']['min'] . " hasta $" . $filters['precio']['max'];
+                }
+                break;
+            case 'edad':
+                if (!empty($filters['edad'])) {
+                    $title = "Escorts de " . $filters['edad']['min'] . " a " . $filters['edad']['max'] . " años";
+                }
+                break;
+            case 'disponible':
+                $title = "Escorts disponibles ahora";
+                break;
+            case 'resena':
+                $title = "Escorts con reseñas verificadas";
+                break;
+        }
+    } else {
+        if (!empty($filters['nacionalidad'])) {
+            if ($nacionalidad = Nacionalidad::where('nombre', $filters['nacionalidad'])->first()) {
+                $title .= " " . $nacionalidad->nombre;
+            } else {
+                $title .= " " . $filters['nacionalidad'];
+            }
+        }
+        if (!empty($filters['categoria'])) {
+            $title .= " " . $filters['categoria'];
+        }
+        if (!empty($filters['servicios'])) {
+            if (count($filters['servicios']) > 1) {
+                $serviciosList = array_map(function ($servicio) {
+                    $servicioObj = Servicio::where('nombre', $servicio)->first();
+                    return $servicioObj ? $servicioObj->nombre : $servicio;
+                }, $filters['servicios']);
+                $title .= " con servicios de " . implode(' y ', $serviciosList);
+            } else {
+                $servicio = Servicio::where('nombre', reset($filters['servicios']))->first();
+                $title .= " con servicio de " . ($servicio ? $servicio->nombre : reset($filters['servicios']));
+            }
+        }
+        if (!empty($filters['atributos'])) {
+            if (count($filters['atributos']) > 1) {
+                $atributosList = array_map(function ($atributo) {
+                    $atributoObj = Atributo::where('nombre', $atributo)->first();
+                    return $atributoObj ? $atributoObj->nombre : $atributo;
+                }, $filters['atributos']);
+                $title .= " con " . implode(' y ', $atributosList);
+            } else {
+                $atributo = Atributo::where('nombre', reset($filters['atributos']))->first();
+                $title .= " " . ($atributo ? $atributo->nombre : reset($filters['atributos']));
+            }
+        }
+        if (!empty($filters['edad'])) {
+            $title .= " de " . $filters['edad']['min'] . " a " . $filters['edad']['max'] . " años";
+        }
+        if (!empty($filters['precio'])) {
+            $title .= " desde $" . $filters['precio']['min'] . " hasta $" . $filters['precio']['max'];
+        }
+        if ($filters['disponible'] === true) {
+            $title .= " disponibles ahora";
+        }
+        if ($filters['resena'] === true) {
+            $title .= " con reseñas verificadas";
+        }
+    }
 
+    
+    $title .= " en " . $ciudad->nombre;
+    if ($sector) {
+        $sectorObj = Sector::where('nombre', $sector)->first();
+        $title .= " - " . ($sectorObj ? $sectorObj->nombre : ucwords($sector));
+    }
+    return $title;
+}
+
+    
 
     protected function obtenerResenas($usuarioId)
     {

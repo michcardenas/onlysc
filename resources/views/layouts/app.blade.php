@@ -44,7 +44,7 @@
     <script src="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <style>
         .heading-container {
     display: flex;
@@ -298,7 +298,7 @@
                            <div class="price-category" data-min="70000" data-max="130000" data-categorias="vip">
                                <span class="category-name">VIP</span>
                            </div>
-                           <div class="price-category" data-min="130000" data-max="250000" data-categorias="de_lujo">
+                           <div class="price-category" data-min="130000" data-max="300000" data-categorias="de_lujo">
                                <span class="category-name">De Lujo</span>
                            </div>
                        </div>

@@ -13,6 +13,8 @@ use App\Models\Posts;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\Models\MetaTag;
+use App\Models\Nacionalidad;
+use App\Models\Sector;
 
 class ForoController extends Controller
 {
@@ -28,6 +30,9 @@ class ForoController extends Controller
     
         // Obtenemos las ciudades
         $ciudades = Ciudad::all();
+        $sectores = Sector::all();
+        $nacionalidades = Nacionalidad::all();
+
     
         // Obtenemos la información de MetaTag para la página 'foro'
         $metaTags = MetaTag::where('page', 'foro')->first();
@@ -35,6 +40,8 @@ class ForoController extends Controller
         return view('foro', [
             'foros' => $foros,
             'ciudades' => $ciudades,
+            'nacionalidades' => $nacionalidades,
+            'sectores' => $sectores,
             'metaTags' => $metaTags // Agregamos los metaTags a la vista
         ]);
     }
@@ -43,6 +50,10 @@ class ForoController extends Controller
     public function show_foro($categoria)
     {
         $ciudades = Ciudad::all();
+        // Obtenemos las ciudades
+        $ciudades = Ciudad::all();
+        $sectores = Sector::all();
+        $nacionalidades = Nacionalidad::all();
     
         $foros = DB::table('foro')
             ->select('foro.*', 'users.name as nombre_usuario')
@@ -66,6 +77,9 @@ class ForoController extends Controller
     
         return view('show_foro', [
             'categoria' => $categoriaActual,
+            'ciudades' => $ciudades,
+            'nacionalidades' => $nacionalidades,
+            'sectores' => $sectores,
             'ciudades' => $ciudades
         ]);
     }

@@ -1,4 +1,4 @@
-/* Estilo para la página de login */
+/* Estilo para la pÃ¡gina de login */
 body,
 html {
     overflow-x: hidden;
@@ -33,7 +33,7 @@ html {
     padding-top: 80px;
 }
 
-/* Contenedor para el logo y el título */
+/* Contenedor para el logo y el tÃ­tulo */
 .logo-title-container {
     display: flex;
     flex-direction: column;
@@ -51,7 +51,7 @@ html {
 }
 
 
-/* Título */
+/* TÃ­tulo */
 .title {
     font-size: 30px;
     margin-bottom: 20px;
@@ -130,7 +130,7 @@ label .required {
 }
 
 
-/* Estilo para el botón de login */
+/* Estilo para el botÃ³n de login */
 .login-btn {
     width: 100%;
     padding: 10px;
@@ -146,7 +146,7 @@ label .required {
     background-color: #ff6699;
 }
 
-/* Estilo para el link de "Olvidaste tu contraseña" */
+/* Estilo para el link de "Olvidaste tu contraseÃ±a" */
 .forgot-link {
     display: block;
     margin-top: 10px;
@@ -202,7 +202,7 @@ label .required {
 }
 
 .custom-checkbox input[type="checkbox"]:checked::before {
-    content: '✓';
+    content: 'âœ“';
     position: absolute;
     color: #1e1e1e;
     font-size: 14px;
@@ -233,7 +233,7 @@ label .required {
     outline: none;
 }
 
-/* Sección de "Registrarse ahora" */
+/* SecciÃ³n de "Registrarse ahora" */
 .register-link {
     margin-top: 20px;
     font-size: 14px;
@@ -262,7 +262,7 @@ label .required {
 }
 
 
-/* Fondo de la página */
+/* Fondo de la pÃ¡gina */
 
 /* Logo */
 .logo-container1 {
@@ -283,7 +283,7 @@ label .required {
     
 }
 
-/* Contenedor del select y botón */
+/* Contenedor del select y botÃ³n */
 .location-selector {
     display: flex;
     align-items: center;
@@ -296,7 +296,7 @@ label .required {
     flex-wrap: nowrap;
 }
 
-/* Ícono de ubicación */
+/* Ãcono de ubicaciÃ³n */
 .location-selector i {
     font-size: 18px;
     color: #000;
@@ -324,7 +324,7 @@ label .required {
     display: none;
 }
 
-/* Botón de "Entrar" */
+/* BotÃ³n de "Entrar" */
 .location-selector .btn-location {
     background-color: #e00037;
     color: white;
@@ -375,7 +375,7 @@ label .required {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     position: relative;
     transition: transform 0.5s ease, box-shadow 0.5s ease;
-    /* Transición más suave */
+    /* TransiciÃ³n mÃ¡s suave */
 
 
 }
@@ -427,7 +427,7 @@ label .required {
     font-family: 'Montserrat', sans-serif;
 }
 
-/* Estilos para la barra de navegación superior negra */
+/* Estilos para la barra de navegaciÃ³n superior negra */
 .navbar-top {
     background-color: #1a1a1a;
     display: flex;
@@ -439,7 +439,7 @@ label .required {
     font-family: 'Montserrat', sans-serif;
 }
 
-/* Botón PUBLICATE */
+/* BotÃ³n PUBLICATE */
 .btn-publish {
     background-color: #e00037;
     color: white;
@@ -454,7 +454,7 @@ label .required {
     background-color: #ff6699;
 }
 
-/* Dropdown de ubicación */
+/* Dropdown de ubicaciÃ³n */
 .location-dropdown {
     display: flex;
     align-items: center;
@@ -531,7 +531,7 @@ label .required {
 }
 
 
-/* Para asegurar que el texto se vea siempre pequeño */
+/* Para asegurar que el texto se vea siempre pequeÃ±o */
 .btn-login,
 .btn-register {
     font-size: 12px;
@@ -545,7 +545,7 @@ label .required {
 
 
 
-/* Barra de navegación inferior */
+/* Barra de navegaciÃ³n inferior */
 .navbar-bottom {
     display: flex;
     justify-content: center;
@@ -560,7 +560,7 @@ label .required {
     height: 3rem;
 }
 
-/* Botón de Filtros */
+/* BotÃ³n de Filtros */
 .btn-filters {
     background-color: #fff;
     border: 1px solid #ccc;
@@ -584,7 +584,7 @@ label .required {
 }
 
 
-/* Estilos para el botón del dropdown */
+/* Estilos para el botÃ³n del dropdown */
 .navbar-right .dropdown-button {
     background-color: transparent;
     color: #333;
@@ -596,7 +596,7 @@ label .required {
     text-decoration: none;
     font-family: inherit;
     transition: color 0.3s ease;
-    pointer-events: none; /* Esto evita que el botón cambie al hacer click */
+    pointer-events: none; /* Esto evita que el botÃ³n cambie al hacer click */
 }
 
 
@@ -611,7 +611,7 @@ label .required {
     left: 50%;
     transform: translateX(-50%);
     padding: 20px;
-    /* Quitamos el display: flex de aquí */
+    /* Quitamos el display: flex de aquÃ­ */
     gap: 30px;
     border-radius: 4px;
 }
@@ -622,7 +622,7 @@ label .required {
     min-width: 150px;
 }
 
-/* Títulos de las columnas */
+/* TÃ­tulos de las columnas */
 .dropdown-column h3 {
     color: #333;
     font-size: 14px;
@@ -656,25 +656,25 @@ label .required {
     display: flex;
 }
 
-/* Efecto hover en el botón */
+/* Efecto hover en el botÃ³n */
 .navbar-right .dropdown:hover .dropdown-button {
     color: #e00037;
 }
 
-/* Alinear el ícono SVG y el texto */
+/* Alinear el Ã­cono SVG y el texto */
 .btn-filters .icon-filter {
     width: 16px;
     height: 16px;
     margin-right: 5px;
 }
 
-/* Cambiar el color del botón al hacer hover */
+/* Cambiar el color del botÃ³n al hacer hover */
 .btn-filters:hover {
     background-color: #e00037;
     color: white;
 }
 
-/* Cambiar el color del ícono SVG al hacer hover (opcional) */
+/* Cambiar el color del Ã­cono SVG al hacer hover (opcional) */
 .btn-filters:hover .icon-filter {
     filter: invert(100%);
 }
@@ -694,7 +694,7 @@ label .required {
     color: #fff;
 }
 
-/* Ajuste general de enlaces en la barra de navegación */
+/* Ajuste general de enlaces en la barra de navegaciÃ³n */
 .nav-link {
     font-weight: bold;
     color: #333;
@@ -707,7 +707,7 @@ label .required {
 
 }
 
-/* Barra de búsqueda */
+/* Barra de bÃºsqueda */
 .search-bar {
     display: none;
     align-items: center;
@@ -748,7 +748,7 @@ label .required {
     font-size: 16px;
 }
 
-/* Enlaces de navegación */
+/* Enlaces de navegaciÃ³n */
 .navbar-right .nav-link {
     color: #333;
     text-decoration: none;
@@ -756,7 +756,7 @@ label .required {
     font-weight: bold;
 }
 
-/* Select de categorías estilo limpio */
+/* Select de categorÃ­as estilo limpio */
 .navbar-right select#categorias {
     border: none;
     background-color: transparent;
@@ -839,7 +839,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     /* Remove margin-top to prevent unwanted space */
     margin-top: 0;
 }
-/* Sección superior: enlaces de ubicación */
+/* SecciÃ³n superior: enlaces de ubicaciÃ³n */
 .footer-top {
     padding: 20px 0;
     border-bottom: 1px solid #4e4e4e;
@@ -899,7 +899,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     color: #ff3366;
 }
 
-/* Animación del checkmark */
+/* AnimaciÃ³n del checkmark */
 @keyframes checkmark {
     0% {
         transform: rotate(45deg) scale(0);
@@ -917,7 +917,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     font-family: 'Montserrat', sans-serif;
 }
 
-/* Sección de enlaces en la parte media */
+/* SecciÃ³n de enlaces en la parte media */
 .footer-middle {
     padding: 20px 0;
     text-align: center;
@@ -1004,15 +1004,15 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     background-color: #ff3366;
     /* Color de fondo para los botones de redes sociales */
     width: 50px;
-    /* Tamaño del botón */
+    /* TamaÃ±o del botÃ³n */
     height: 50px;
     border-radius: 50%;
-    /* Hacer el botón circular */
+    /* Hacer el botÃ³n circular */
     display: flex;
     justify-content: center;
     align-items: center;
     transition: background-color 0.3s ease, transform 0.3s ease;
-    /* Transición para el hover */
+    /* TransiciÃ³n para el hover */
 }
 
 .custom-social-links a:hover {
@@ -1024,15 +1024,15 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 
 .custom-social-icon {
     width: 24px;
-    /* Ajuste del tamaño del ícono dentro del botón */
+    /* Ajuste del tamaÃ±o del Ã­cono dentro del botÃ³n */
     height: 24px;
     filter: invert(100%);
-    /* Cambiar color del ícono a blanco */
+    /* Cambiar color del Ã­cono a blanco */
 }
 
 .custom-social-icon:hover {
     transform: scale(1.2);
-    /* Aumentar el tamaño en hover */
+    /* Aumentar el tamaÃ±o en hover */
 }
 
 .custom-container {
@@ -1069,7 +1069,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     color: #ff3366;
 }
 
-/* Sección de derechos reservados */
+/* SecciÃ³n de derechos reservados */
 .footer-info {
     background-color: #111;
     padding: 10px 0;
@@ -1173,7 +1173,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 }
 
 .alert::before {
-    content: '✔';
+    content: 'âœ”';
     font-size: 18px;
     position: absolute;
     left: 15px;
@@ -1182,7 +1182,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 }
 
 .alert-danger::before {
-    content: '✖';
+    content: 'âœ–';
 }
 
 @keyframes fadeIn {
@@ -1202,7 +1202,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     padding: 20px;
 }
 
-/* Sección de tarjetas */
+/* SecciÃ³n de tarjetas */
 .inicio-usuarios-section {
     display: flex;
     margin-bottom: 250px;
@@ -1238,9 +1238,9 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     width: calc((100% - 20px) / 4);
     /* 4 tarjetas por fila con gap de 10px */
     max-width: 265px;
-    /* Ancho máximo original */
+    /* Ancho mÃ¡ximo original */
     min-width: 265px;
-    /* Mantiene el ancho mínimo */
+    /* Mantiene el ancho mÃ­nimo */
     text-decoration: none;
     color: inherit;
     display: block;
@@ -1304,7 +1304,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     border-radius: 8px;
 }
 
-/* Título de la tarjeta (nombre) */
+/* TÃ­tulo de la tarjeta (nombre) */
 .inicio-card-title {
     font-size: 16px;
     font-weight: bold;
@@ -1321,7 +1321,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     font-weight: bold;
 }
 
-/* Ubicación y precio en la misma línea */
+/* UbicaciÃ³n y precio en la misma lÃ­nea */
 .inicio-card-location,
 .inicio-card-price {
     font-size: 14px;
@@ -1339,7 +1339,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     margin-left: auto;
 }
 
-/* Paginación */
+/* PaginaciÃ³n */
 .inicio-pagination {
     margin-top: 20px;
     display: flex;
@@ -1356,7 +1356,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     color: #fff;
 }
 
-/* Tarjeta de presentación */
+/* Tarjeta de presentaciÃ³n */
 .inicio-featured-card {
     width: 189px;
     margin-left: -60px;
@@ -1393,7 +1393,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     align-items: flex-end;
 }
 
-/* Contenedor de la superposición en la tarjeta destacada */
+/* Contenedor de la superposiciÃ³n en la tarjeta destacada */
 .inicio-featured-overlay {
     padding: 10px;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0) 60%);
@@ -1407,7 +1407,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     text-decoration: none;
 }
 
-/* Título de la tarjeta destacada (nombre) y edad en la misma línea */
+/* TÃ­tulo de la tarjeta destacada (nombre) y edad en la misma lÃ­nea */
 .inicio-featured-title {
     font-size: 18px;
     font-weight: bold;
@@ -1427,7 +1427,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     width: 100%;
 }
 
-/* Contenedor para ubicación y precio */
+/* Contenedor para ubicaciÃ³n y precio */
 .location-price {
     display: flex;
     align-items: center;
@@ -1437,7 +1437,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     margin-top: -12px;
 }
 
-/* Ubicación de la tarjeta destacada */
+/* UbicaciÃ³n de la tarjeta destacada */
 .inicio-featured-location {
     font-size: 13px;
     color: #ccc;
@@ -1453,7 +1453,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     color: #fff;
 }
 
-/* Categoría destacada */
+/* CategorÃ­a destacada */
 .inicio-featured-category {
     position: absolute;
     top: 10px;
@@ -1493,7 +1493,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     z-index: 10;
 }
 
-/* Título del panel */
+/* TÃ­tulo del panel */
 .online-panel-title {
     font-size: 20px;
     font-weight: bold;
@@ -1537,7 +1537,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     margin-right: 10px;
 }
 
-/* Información de la chica online */
+/* InformaciÃ³n de la chica online */
 .online-info {
     flex-grow: 1;
 }
@@ -1576,7 +1576,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     margin-right: 4px;
 }
 
-/* Botón de ver perfil */
+/* BotÃ³n de ver perfil */
 .online-profile-button {
     background-color: #000;
     color: white;
@@ -1634,7 +1634,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     width: 100%;
 }
 
-/* Quitamos márgenes y espaciados del wrapper */
+/* Quitamos mÃ¡rgenes y espaciados del wrapper */
 .escortperfil-swiper-wrapper {
     display: flex;
 }
@@ -1653,7 +1653,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     display: none;
 }
 
-/* Estilo de los botones como en tu diseño original */
+/* Estilo de los botones como en tu diseÃ±o original */
 .escortperfil-swiper .carousel-control {
     position: absolute;
     top: 50%;
@@ -1684,7 +1684,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     right: 20px;
 }
 
-/* Indicadores como en tu diseño original */
+/* Indicadores como en tu diseÃ±o original */
 .escortperfil-swiper .carousel-indicators {
     position: absolute;
     bottom: 20px;
@@ -1759,10 +1759,10 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     align-items: center;
     height: 65px;
     width: 643px;
-    /* Cambiamos space-between por un gap pequeño */
+    /* Cambiamos space-between por un gap pequeÃ±o */
     justify-content: flex-start;
     gap: 32px;
-    /* Espacio mínimo entre items */
+    /* Espacio mÃ­nimo entre items */
     background-color: #fff;
     border-radius: 5px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
@@ -1782,7 +1782,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 
 .escortperfil-info-icon {
     width: 25px;
-    /* Reducimos ligeramente el tamaño del icono */
+    /* Reducimos ligeramente el tamaÃ±o del icono */
     height: 25px;
 }
 
@@ -1810,7 +1810,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     position: absolute;
     right: 342px;
     top: 730px;
-    /* Ajusta según necesites */
+    /* Ajusta segÃºn necesites */
     z-index: 3;
     width: auto;
     /* En lugar de un ancho fijo */
@@ -1832,7 +1832,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     width: 100%;
     border-radius: 8px;
     overflow: hidden;
-    aspect-ratio: 16 / 9; /* Mantiene proporción del video */
+    aspect-ratio: 16 / 9; /* Mantiene proporciÃ³n del video */
 }
 
 .escortperfil-video {
@@ -1845,7 +1845,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 
 .escortperfil-btn {
     text-decoration: none;
-    /* Elimina la línea del enlace */
+    /* Elimina la lÃ­nea del enlace */
     width: 290px;
     padding: 12px 0;
     border: none;
@@ -1858,6 +1858,12 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     text-transform: uppercase;
     /* height: 40px; */
 }
+
+/* Por defecto, ocultamos el botÃ³n en pantallas grandes */
+.escortperfil-btn-movil {
+    display: none;
+  }
+  
 
 .escortperfil-btn.disponible {
     background-color: #7ed321;
@@ -1888,10 +1894,10 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     padding-bottom: 1px;
     border-bottom: 1.8px solid;
     border-image: linear-gradient(to right, #e00037 0%, #cccccc 40%) 2;
-    /* Transición entre 20% y 50% */
+    /* TransiciÃ³n entre 20% y 50% */
     display: inline-block;
     width: 100%;
-    /* Ajusta este valor para hacer la línea más larga */
+    /* Ajusta este valor para hacer la lÃ­nea mÃ¡s larga */
 }
 
 .escortperfil-description-text {
@@ -2047,7 +2053,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     text-decoration: underline;
 }
 
-/* Asegura una transición suave al expandir/contraer */
+/* Asegura una transiciÃ³n suave al expandir/contraer */
 #texto-corto,
 #texto-completo {
     transition: all 0.3s ease;
@@ -2083,7 +2089,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     z-index: 999;
 }
 
-/* Botón de cerrar */
+/* BotÃ³n de cerrar */
 .escortperfil-modal-close {
     position: absolute;
     top: -5px;
@@ -2120,7 +2126,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 
 .escortperfil-modal-close {
     position: absolute;
-    top: -40px; /* Ajustamos la posición del botón de cerrar */
+    top: -40px; /* Ajustamos la posiciÃ³n del botÃ³n de cerrar */
     right: -20px;
     font-size: 42px;
     cursor: pointer;
@@ -2128,7 +2134,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     border: none;
     color: #fff;
 }
-/* Hacer las imágenes clickeables */
+/* Hacer las imÃ¡genes clickeables */
 .escortperfil-banner-img {
     cursor: pointer;
 }
@@ -2255,7 +2261,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     font-weight: 700;
 }
 
-/* Nuevo estilo para el botón */
+/* Nuevo estilo para el botÃ³n */
 .share-button {
     display: flex;
     flex-direction: column;
@@ -2343,7 +2349,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     margin-top: 52px;
 }
 
-/* Título del horario */
+/* TÃ­tulo del horario */
 .escortperfil-schedule .escortperfil-section-title {
     font-size: 1.5em;
     font-weight: 700;
@@ -2361,7 +2367,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     gap: 8px;
 }
 
-/* Cada ítem del horario */
+/* Cada Ã­tem del horario */
 .escortperfil-schedule-item {
     display: flex;
     justify-content: space-between;
@@ -2372,7 +2378,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     font-size: 0.95em;
 }
 
-/* Badge del día */
+/* Badge del dÃ­a */
 .day-badge {
     background-color: #e00037;
     color: white;
@@ -2390,12 +2396,12 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     font-size: 0.9em;
 }
 
-/* Día actual */
+/* DÃ­a actual */
 .escortperfil-schedule-item.current-day {
     background-color: #f8fff4;
 }
 
-/* Día actual badge */
+/* DÃ­a actual badge */
 .escortperfil-schedule-item.current-day .day-badge {
     background-color: #7ed321;
 }
@@ -2451,7 +2457,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     color: #e00037;
 }
 
-/* Añade estos estilos a tu archivo CSS */
+/* AÃ±ade estos estilos a tu archivo CSS */
 .notification {
     position: fixed;
     top: 20px;
@@ -2494,11 +2500,11 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 /* Contenedor principal */
 .pagination-container nav {
     margin-top: 100px;
-    /* Ajusta según la altura del panel online */
+    /* Ajusta segÃºn la altura del panel online */
     font-family: 'Montserrat', sans-serif;
 }
 
-/* Lista de paginación */
+/* Lista de paginaciÃ³n */
 .pagination {
     display: flex;
     justify-content: center;
@@ -2507,7 +2513,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     padding: 0;
 }
 
-/* Items de la paginación */
+/* Items de la paginaciÃ³n */
 .pagination li {
     display: inline-flex;
 }
@@ -2528,7 +2534,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     border-color: #ccc;
 }
 
-/* Página activa */
+/* PÃ¡gina activa */
 .pagination .active>span {
     background-color: #dc3545;
     color: white;
@@ -2549,7 +2555,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     scrollbar-width: thin;
 }
 
-/* Estilos específicos para posiciones */
+/* Estilos especÃ­ficos para posiciones */
 .inicio-image[style*="background-position: left"] {
     background-position: left center !important;
 }
@@ -2606,7 +2612,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     font-size: 16px;
 }
 
-/* Colores específicos de cada red social */
+/* Colores especÃ­ficos de cada red social */
 .linkedin,
 .twitter,
 .github,
@@ -2630,7 +2636,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     letter-spacing: 1px;
     /* Espacio entre letras */
     text-transform: uppercase;
-    /* Para que esté en mayúsculas */
+    /* Para que estÃ© en mayÃºsculas */
     font-weight: 800;
     /* Un peso de fuente medio */
 }
@@ -2654,7 +2660,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     flex: 1;
 }
 
-/* Títulos */
+/* TÃ­tulos */
 .blog-content h1 {
     color: #333333;
     font-size: 32px;
@@ -2713,7 +2719,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     color: #333;
 }
 
-/* Selector de formato (botón desplegable) */
+/* Selector de formato (botÃ³n desplegable) */
 .tox .tox-tbtn--select,
 .tox .tox-tbtn[aria-haspopup="true"],
 .tox .tox-tbtn[aria-label="Blocks"] {
@@ -2724,32 +2730,32 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     border: none !important;
 }
 
-/* Ajuste para el menú desplegable */
+/* Ajuste para el menÃº desplegable */
 .tox .tox-collection--list,
 .tox .tox-menu {
     background-color: #2b2b2b !important;
-    /* Fondo del menú */
+    /* Fondo del menÃº */
     border: 1px solid #3b3b3b !important;
 }
 
-/* Estilo de los ítems dentro del menú desplegable */
+/* Estilo de los Ã­tems dentro del menÃº desplegable */
 .tox .tox-collection__item {
     background-color: #2b2b2b !important;
-    /* Fondo de los ítems */
+    /* Fondo de los Ã­tems */
     color: #ffffff !important;
     /* Texto blanco */
 }
 
-/* Hover sobre los ítems */
+/* Hover sobre los Ã­tems */
 .tox .tox-collection__item:hover {
     background-color: #3b3b3b !important;
-    /* Fondo al pasar el ratón */
+    /* Fondo al pasar el ratÃ³n */
 }
 
-/* Estilo para el ítem seleccionado */
+/* Estilo para el Ã­tem seleccionado */
 .tox .tox-collection__item--active {
     background-color: #3b3b3b !important;
-    /* Fondo del ítem seleccionado */
+    /* Fondo del Ã­tem seleccionado */
     color: #ffffff !important;
     /* Texto blanco */
 }
@@ -3316,7 +3322,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     z-index: 1;
 }
 
-/* Navegación del Swiper */
+/* NavegaciÃ³n del Swiper */
 .swiper-pagination {
     position: relative;
     margin-top: 1rem;
@@ -3432,16 +3438,16 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     /* Cambiado de 948px a 146px como en tu ejemplo */
 }
 
-/* El modal por defecto está oculto */
+/* El modal por defecto estÃ¡ oculto */
 .filtro-modal {
     display: none;
     /* Oculto por defecto */
 }
 
-/* Cuando Bootstrap añade la clase 'show' */
+/* Cuando Bootstrap aÃ±ade la clase 'show' */
 .filtro-modal.show {
     display: flex !important;
-    /* Se muestra cuando está activo */
+    /* Se muestra cuando estÃ¡ activo */
     align-items: center;
     justify-content: center;
     position: fixed;
@@ -3531,11 +3537,14 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 .filtro-modal .modal-footer {
     border-top: 1px solid #dee2e6;
     padding: 1rem;
-    position: sticky;
+    position: sticky; /* Fija el footer en la ventana */
     bottom: 0;
+    left: 0;        /* Asegura que se alinee al borde izquierdo */
+    width: 100%;    /* Cubre todo el ancho de la pantalla */
     background: white;
     z-index: 1;
 }
+
 
 .filtro-modal .servicios-grid {
     display: grid;
@@ -3574,7 +3583,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     appearance: none;
     -webkit-appearance: none;
     width: 18px;
-    /* Ligeramente más grande */
+    /* Ligeramente mÃ¡s grande */
     height: 18px;
     min-width: 18px;
     border: 1.5px solid #e00037;
@@ -3584,7 +3593,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     position: relative;
     background: white;
     margin: 0;
-    /* Quitamos el margin-top para mejor alineación */
+    /* Quitamos el margin-top para mejor alineaciÃ³n */
 }
 
 
@@ -3606,7 +3615,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 
 
 
-/* Estilos específicos de los rangos */
+/* Estilos especÃ­ficos de los rangos */
 .filtro-modal .range-title {
     font-weight: bold;
     margin-bottom: 15px;
@@ -3615,10 +3624,10 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 .filtro-modal .range-title1 {
     font-weight: bold;
     margin-bottom: 20px;
-    /* Más espacio después del título */
+    /* MÃ¡s espacio despuÃ©s del tÃ­tulo */
     text-align: left;
     font-size: 16px;
-    /* Tamaño ligeramente mayor */
+    /* TamaÃ±o ligeramente mayor */
     color: #333;
     padding-left: 15px;
 }
@@ -3760,7 +3769,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     background-repeat: no-repeat;
     background-position: right 12px center;
     background-size: 12px;
-    margin: 0 34px;
+    margin: 0px 22px;
     flex: 1;
 }
 
@@ -3887,7 +3896,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     margin: 0 34px;
 }
 
-/* Estilos para las categorías de precio */
+/* Estilos para las categorÃ­as de precio */
 .price-categories {
     display: flex;
     justify-content: space-between;
@@ -3972,7 +3981,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 
 /* Icono de error */
 .filtro-custom-alert::before {
-    content: "⚠️";
+    content: "âš ï¸";
     margin-right: 10px;
     font-size: 16px;
 }
@@ -3986,7 +3995,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     flex-grow: 1;
 }
 
-/* Botón de cerrar */
+/* BotÃ³n de cerrar */
 .filtro-alert-close {
     background: none;
     border: none;
@@ -4009,9 +4018,9 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     background-color: #E00037;
     padding: 0.75rem;
     border-top-left-radius: 8px;
-    /* Añadido */
+    /* AÃ±adido */
     border-top-right-radius: 8px;
-    /* Añadido */
+    /* AÃ±adido */
     margin-bottom: 10px;
 }
 
@@ -4047,7 +4056,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     }
 }
 
-/* Clase para la animación de salida */
+/* Clase para la animaciÃ³n de salida */
 .filtro-custom-alert.filtro-fade-out {
     animation: filtroFadeOut 0.3s ease-out forwards;
 }
@@ -4106,7 +4115,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     cursor: pointer;
     font-size: 12px;
     z-index: 20;
-    /* Asegurarse que esté por encima del overlay */
+    /* Asegurarse que estÃ© por encima del overlay */
 }
 
 .publicate-block-button.active {
@@ -4232,7 +4241,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         max-width: 500px;
     }
 
-    /* Título de la tarjeta destacada (nombre) y edad en la misma línea */
+    /* TÃ­tulo de la tarjeta destacada (nombre) y edad en la misma lÃ­nea */
     .inicio-featured-title {
         margin-bottom: 0rem;
     }
@@ -4264,7 +4273,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         padding: 0 2px;
     }
 
-    /* Ocultar elementos en móvil */
+    /* Ocultar elementos en mÃ³vil */
     .navbar-top .navbar-left,
     .navbar-top .navbar-right .btn-login,
     .navbar-top .navbar-right .btn-register,
@@ -4411,6 +4420,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     }
 
     .escortperfil-btn {
+        display: none;
         position: fixed;
         width: 100%;
         right: 0px;
@@ -4433,7 +4443,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         align-items: center;
         height: 16px;
         width: 100%;
-    /* Cambiamos space-between por un gap pequeño */
+    /* Cambiamos space-between por un gap pequeÃ±o */
         justify-content: flex-start;
         padding: 0px 0px;
         margin-bottom: 150px;
@@ -4450,12 +4460,12 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     border-bottom: 0;
 }
 
-/* Línea vertical del medio */
+/* LÃ­nea vertical del medio */
 .escortperfil-info-bar > div:nth-child(2n-1) {
     border-right: 3px solid #e5e7eb;
 }
 
-/* Línea horizontal del medio */
+/* LÃ­nea horizontal del medio */
 .escortperfil-info-bar > div:nth-child(-n+2) {
     border-bottom: 3px solid #e5e7eb;
 }
@@ -4503,10 +4513,10 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         padding-bottom: 1px;
         border-bottom: 1.8px solid;
         border-image: linear-gradient(to right, #e00037 0%, #cccccc 40%) 2;
-        /* Transición entre 20% y 50% */
+        /* TransiciÃ³n entre 20% y 50% */
         display: inline-block;
         width: 139%;
-        /* Ajusta este valor para hacer la línea más larga */
+        /* Ajusta este valor para hacer la lÃ­nea mÃ¡s larga */
     }
 
     .favorite-button {
@@ -4548,7 +4558,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     .escortperfil-nombre {
         position: absolute;
         bottom: 121px;
-        left: 135px;
+        left: 22px;
         color: #fff;
         font-size: 3em;
         font-weight: bold;
@@ -4560,7 +4570,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     .escortperfil-nombrechikito {
         position: absolute;
         bottom: 80px;
-        left: 170px;
+        left: 24px;
         color: #fff;
         font-size: 1em;
         font-weight: bold;
@@ -4614,7 +4624,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         /* width: 109%; */
     }
 
-    /* También es recomendable ajustar el contenedor padre */
+    /* TambiÃ©n es recomendable ajustar el contenedor padre */
     .escortperfil-swiper-slide {
         display: flex;
         justify-content: center;
@@ -4800,7 +4810,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         font-size: 0.75rem;
     }
 
-    /* Nueva paginación */
+    /* Nueva paginaciÃ³n */
     .swiper-pagination {
         display: flex;
         justify-content: center;
@@ -4819,19 +4829,18 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     .swiper-pagination .swiper-pagination-bullet-active {
         background: #E00037;
     }
-
     /* Badge Destacado */
     .BlogInicio-destacado {
         padding: 0.25rem 0.75rem;
         font-size: 0.75rem;
     }
 
-    /* Ocultar elementos no necesarios en móvil */
+    /* Ocultar elementos no necesarios en mÃ³vil */
     .desktop-only {
         display: none !important;
     }
 
-    /* Ocultar botones de navegación en móvil */
+    /* Ocultar botones de navegaciÃ³n en mÃ³vil */
     .swiper-button-next,
     .swiper-button-prev {
         display: none !important;
@@ -4843,7 +4852,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         font-size: 0.75rem;
     }
 
-    /* Ocultar elementos no necesarios en móvil */
+    /* Ocultar elementos no necesarios en mÃ³vil */
     .desktop-only {
         display: none !important;
     }
@@ -4869,28 +4878,41 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 
     .filtro-modal .modal-content {
         width: 100vw;
-        /* Cubre todo el ancho de la ventana */
         height: 100vh;
-        /* Cubre todo el alto de la ventana */
         background-color: #fff;
         color: #333;
         text-align: center;
         position: fixed;
-        /* Cambiado a fixed para cubrir toda la pantalla */
         top: 0;
-        /* Asegura que comience desde la parte superior */
         left: 0;
-        /* Asegura que comience desde la izquierda */
         margin: 0;
-        /* Eliminado el margen auto */
         display: flex;
         flex-direction: column;
         border-radius: 0;
-        /* Eliminado el border-radius ya que cubrirá toda la pantalla */
-        overflow: auto;
-        /* Cambiado a auto para permitir scroll si es necesario */
+        overflow-x: hidden;
+        overflow-y: auto;
+        /* Se reserva espacio para que el contenido no quede oculto detrÃ¡s del footer fijo */
+        padding-bottom: 70px; /* Ajusta este valor segÃºn la altura real del footer */
     }
 
+    .filtro-modal .modal-footer {
+        border-top: 1px solid #dee2e6;
+        padding: 1rem;
+        position: fixed; /* Fija el footer en la ventana */
+        bottom: 0;
+        left: 0;        /* Asegura que se alinee al borde izquierdo */
+        width: 100%;    /* Cubre todo el ancho de la pantalla */
+        background: white;
+        z-index: 1;
+    }
+
+    @supports(padding: env(safe-area-inset-bottom)) {
+        .ios-device .filtro-modal .modal-footer {
+            padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+        }
+      }
+      
+    
     .category-name {
         display: block;
         font-weight: 600;
@@ -4955,14 +4977,34 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     .filtro-modal .modal-body {
         padding: 0.5rem 1.5rem;
         overflow-y: auto;
-        max-height: calc(133vh - 410px);
+        max-height: calc(121vh - 410px);
     }
+
+    .escortperfil-btn-movil {
+        display: block;         /* Se comporta como bloque */
+        margin: 0 auto;         /* Se centra horizontalmente */
+        text-decoration: none;
+        width: 100%;
+        max-width: 320px;
+        padding: 12px 0;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: bold;
+        text-align: center;
+        border-radius: 5px;
+        text-transform: uppercase;
+        background-color: #7ed321; /* Color de fondo de ejemplo */
+        height: 46px;
+        z-index: 23;
+      }
 
 }
 
 
 
-/* Móviles (480px y menor) */
+/* MÃ³viles (480px y menor) */
 @media screen and (max-width: 480px) {
     .inicio-container {
         padding: 0;
@@ -5106,7 +5148,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         gap: 0.25rem;
     }
 
-    /* Paginación */
+    /* PaginaciÃ³n */
     .swiper-pagination2 {
         display: flex;
         justify-content: center;
@@ -5691,13 +5733,13 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 .escortperfil-nombre {
         font-size: 2.5em;
         bottom: 120px;
-        left: 120px;
+
     }
 
     .escortperfil-nombrechikito {
         position: absolute;
         bottom: 80px;
-        left: 160px;
+
     }
 
     .text-wrapper {
@@ -5915,7 +5957,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
 
 
 
-/* Móviles muy pequeños (320px y menor) */
+/* MÃ³viles muy pequeÃ±os (320px y menor) */
 @media screen and (max-width: 375px) {
     .escortperfil-section {
         width: 326px;
@@ -6080,7 +6122,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     }
 }
 
-/* Móviles muy pequeños (320px y menor) */
+/* MÃ³viles muy pequeÃ±os (320px y menor) */
 @media screen and (max-width: 361px) {
     .escortperfil-section {
         width: 326px;
@@ -6177,13 +6219,11 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     .escortperfil-nombre {
         font-size: 2.5em;
         bottom: 120px;
-        left: 100px;
     }
 
     .escortperfil-nombrechikito {
         position: absolute;
         bottom: 80px;
-        left: 140px;
     }
 
     .text-wrapper {
@@ -6251,7 +6291,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
     }
 
 
-    /* Barra de navegación inferior */
+    /* Barra de navegaciÃ³n inferior */
     .navbar-bottom {
         display: flex;
         justify-content: center;
@@ -6266,7 +6306,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         height: 3rem;
     }
 
-    /* Barra de búsqueda */
+    /* Barra de bÃºsqueda */
     .search-bar {
         display: none;
         align-items: center;
@@ -6312,7 +6352,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         position: absolute;
         right: 28px;
         top: 730px;
-        /* Ajusta según necesites */
+        /* Ajusta segÃºn necesites */
         z-index: 3;
         width: auto;
         /* En lugar de un ancho fijo */
@@ -6353,7 +6393,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         margin-bottom: 40px;
     }
 
-    /* Aquí van tus estilos específicos para 1024px */
+    /* AquÃ­ van tus estilos especÃ­ficos para 1024px */
 }
 
 @media screen and (min-width: 1093px) and (max-width: 1279px){
@@ -6610,7 +6650,7 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         position: absolute;
         right: 106px;
         top: 730px;
-        /* Ajusta según necesites */
+        /* Ajusta segÃºn necesites */
         z-index: 3;
         width: auto;
         /* En lugar de un ancho fijo */
@@ -6644,6 +6684,4 @@ video:not(.banner-img):not(.historia-circle video):not(.escortperfil-video):not(
         /* text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); */
         transition: transform 0.2s ease;
     }
-
-    
 }

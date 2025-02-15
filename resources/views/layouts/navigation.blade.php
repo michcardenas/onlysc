@@ -17,7 +17,6 @@
             width: 24px;
             height: 24px;
             fill: #7f7f7f;
-            /* Color morado */
         }
 
         .mobile-bottom-nav {
@@ -84,7 +83,7 @@
             background-size: cover;
             background-position: center;
             box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.5);
-            padding: 0px 0px;
+            padding: 0;
             transform: translateX(100%);
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             font-family: 'Montserrat', sans-serif;
@@ -92,8 +91,8 @@
 
         .menu-logo {
             text-align: center;
-            margin-bottom: 20px;
             margin-top: 40px;
+            margin-bottom: 20px;
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.3s ease, transform 0.3s ease;
@@ -192,73 +191,103 @@
             transform: rotate(0);
             transition-delay: 0.5s;
         }
+
+        /* Dropdown */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            flex-wrap: wrap;
+            background-color: rgba(255, 255, 255, 0.9);
+            width: 100%;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 10001;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 8px;
+        }
+
+        .dropdown-button {
+            width: 100%;
+            text-align: center;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dropdown-column {
+            flex: 1;
+            padding: 15px;
+            min-width: 200px;
+        }
+
+        .dropdown-column h3 {
+            color: #7f7f7f;
+            margin-bottom: 10px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .ciudad-link {
+            display: block;
+            padding: 8px 12px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .ciudad-link:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Botón WhatsApp para móviles */
+        .escortperfil-btn-movil {
+            display: none;
+        }
     }
 
+    /* Mostrar y posicionar el botón WhatsApp en móviles (arriba del menú inferior) */
     @media (max-width: 767px) {
-   .dropdown-content {
-       display: none;
-       position: absolute;
-       flex-wrap: wrap;
-       background-color: rgba(255, 255, 255, 0.9);
-       width: 100%;
-       box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-       z-index: 10001;
-       max-height: 80vh;
-       overflow-y: auto;
-       border-radius: 8px;
-   }
-
-   .dropdown-button {
-   width: 100%;
-   text-align: center;
-   background: none;
-   border: none;
-   color: white;
-   font-size: 24px;
-   cursor: pointer;
-   font-family: 'Montserrat', sans-serif;
-}
-
-
-   @keyframes fadeIn {
-       from {
-           opacity: 0;
-           transform: translateY(-10px);
-       }
-       to {
-           opacity: 1;
-           transform: translateY(0);
-       }
-   }
-
-   .dropdown-column {
-       flex: 1;
-       padding: 15px;
-       min-width: 200px;
-   }
-
-   .dropdown-column h3 {
-       color: #7f7f7f;
-       margin-bottom: 10px;
-       font-size: 16px;
-       text-align: center;
-   }
-
-   .ciudad-link {
-       display: block;
-       padding: 8px 12px;
-       color: #333;
-       text-decoration: none;
-       font-size: 14px;
-       text-align: center;
-   }
-
-   .ciudad-link:hover {
-       background-color: #f5f5f5;
-   }
-}
+        .escortperfil-btn-movil {
+            display: block;
+            position: fixed;
+            /* Posicionado arriba del menú inferior (ajusta bottom según la altura de tu nav) */
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-decoration: none;
+            width: 90%;
+            max-width: 290px;
+            padding: 12px 0;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 5px;
+            text-transform: uppercase;
+            background-color: #25D366;
+            /* Verde de WhatsApp */
+            z-index: 1100;
+        }
+    }
 </style>
-
 
 <div class="mobile-nav">
     <!-- Menú desplegable -->
@@ -271,34 +300,33 @@
             </div>
 
             <div class="menu-links">
-               <div class="dropdown">
-                   <button class="dropdown-button menu-link">CIUDADES</button>
-                   <div class="dropdown-content">
-                       @php
-                           $ciudadesPorZona = $ciudades->groupBy('zona');
-                           $ordenZonas = ['Zona Norte', 'Zona Centro', 'Zona Sur']; 
-                       @endphp
+                <div class="dropdown">
+                    <button class="dropdown-button menu-link">CIUDADES</button>
+                    <div class="dropdown-content">
+                        @php
+                        $ciudadesPorZona = $ciudades->groupBy('zona');
+                        $ordenZonas = ['Zona Norte', 'Zona Centro', 'Zona Sur'];
+                        @endphp
 
-                       @foreach($ordenZonas as $zona)
-                           @if(isset($ciudadesPorZona[$zona]))
-                               <div class="dropdown-column">
-                                   <h3>{{ $zona }}</h3>
-                                   @foreach($ciudadesPorZona[$zona] as $ciudad)
-                                       <a href="/escorts-{{ $ciudad->url }}" 
-                                          class="ciudad-link">
-                                           {{ strtoupper($ciudad->nombre) }}
-                                       </a>
-                                   @endforeach
-                               </div>
-                           @endif
-                       @endforeach
-                   </div>
-               </div>
-               <a href="{{ route('favoritos.show') }}" class="menu-link">Favoritos</a>
-               <a href="{{ route('blog') }}" class="menu-link">Blog</a>
-               <a href="{{ route('foro') }}" class="menu-link">Foro Escorts</a>
-               <a href="{{ route('publicate.form') }}" class="menu-link">Publícate</a>
-           </div>
+                        @foreach($ordenZonas as $zona)
+                        @if(isset($ciudadesPorZona[$zona]))
+                        <div class="dropdown-column">
+                            <h3>{{ $zona }}</h3>
+                            @foreach($ciudadesPorZona[$zona] as $ciudad)
+                            <a href="/escorts-{{ $ciudad->url }}" class="ciudad-link">
+                                {{ strtoupper($ciudad->nombre) }}
+                            </a>
+                            @endforeach
+                        </div>
+                        @endif
+                        @endforeach
+                    </div>
+                </div>
+                <a href="{{ route('favoritos.show') }}" class="menu-link">Favoritos</a>
+                <a href="{{ route('blog') }}" class="menu-link">Blog</a>
+                <a href="{{ route('foro') }}" class="menu-link">Foro Escorts</a>
+                <a href="{{ route('publicate.form') }}" class="menu-link">Publícate</a>
+            </div>
         </div>
     </div>
 
@@ -317,8 +345,6 @@
                 <span class="nav-text">Filtro avanzado</span>
             </a>
 
-
-
             <a href="{{ route('favoritos.show') }}" class="nav-item">
                 <svg class="nav-icon" viewBox="0 0 24 24">
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
@@ -334,6 +360,15 @@
             </button>
         </div>
     </nav>
+
+    @if(Route::currentRouteName() == 'perfil.show')
+    <!-- Botón WhatsApp exclusivo para móviles -->
+    <a href="https://wa.me/{{ isset($usuarioPublicate) ? $usuarioPublicate->telefono : '0000000000' }}?text=Hola%20{{ isset($usuarioPublicate) ? $usuarioPublicate->fantasia : 'usuario' }}!%20Vi%20tu%20anuncio%20en%20OnlyEscorts%20y%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20tus%20servicios." 
+       class="escortperfil-btn-movil disponible" target="_blank">
+        <i class="fab fa-whatsapp"></i> WHATSAPP
+    </a>
+@endif
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -360,8 +395,16 @@
         });
 
         document.querySelector('.dropdown-button').addEventListener('click', function(e) {
-    e.preventDefault();
-    this.classList.toggle('active');
-});
+            e.preventDefault();
+            this.classList.toggle('active');
+
+            // Mostrar u ocultar el contenido del dropdown
+            const dropdownContent = this.nextElementSibling;
+            if (dropdownContent.style.display === 'flex') {
+                dropdownContent.style.display = 'none';
+            } else {
+                dropdownContent.style.display = 'flex';
+            }
+        });
     </script>
 </div>

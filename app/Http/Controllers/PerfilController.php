@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\View;
 use App\Models\MetaTag;
+use App\Models\Nacionalidad;
+use App\Models\Sector;
 use App\Models\Tarjeta;
 
 class PerfilController extends Controller
@@ -76,6 +78,8 @@ class PerfilController extends Controller
     
             // Obtener ciudades
             $ciudades = Ciudad::all();
+            $sectores = Sector::all();
+            $nacionalidades = Nacionalidad::all();
     
             // Agrupar las ciudades por zona
             $ciudadesPorZona = $ciudades->groupBy('zona');
@@ -106,6 +110,8 @@ class PerfilController extends Controller
     
             // Retornar vista con array_merge para combinar los datos
             return view('showfavorites', array_merge([
+                'nacionalidades' => $nacionalidades,
+                'sectores' => $sectores,
                 'favorites' => $favorites,
                 'ciudades' => $ciudades,
                 'ciudadesPorZona' => $ciudadesPorZona,
@@ -294,7 +300,7 @@ class PerfilController extends Controller
             // Validación con logging detallado
             try {
                 $validator = \Validator::make($request->all(), [
-                    'fotos.*' => 'required|mimes:jpeg,png,jpg,gif,mp4,mov,avi,wmv|max:100000'
+                    'fotos.*' => 'required|mimes:jpeg,png,jpg,gif,mp4,mov,avi,wmv|max:3145728'
                 ]);
 
                 if ($validator->fails()) {
